@@ -9,6 +9,6 @@ This should become a working prototype that can handle the following scenario:
 
 (optional):
 - The virtual coach asks the user whether it can plan these activities.
-- If affirmative, the virtual coach adds these activities to the calendar of the client.
+- If affirmative, the virtual coach adds these activities to the in-app calendar of the user.
 
 See [the preliminary design](https://whimsical.com/perfectfit-UtvRnxdP8P79humXTnjb9J)

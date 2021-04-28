@@ -9,5 +9,5 @@ services:
     command:
       - run
   app:
-    image: gbna4/perfect_fit_prototype_actions
+    image: gbna4/perfect_fit_prototype_actions:latest
     expose: 5055

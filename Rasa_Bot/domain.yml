@@ -1,0 +1,46 @@
+session_config:
+  session_expiration_time: 60 # these are minutes
+  carry_over_slots_to_new_session: true
+intents:
+- confirm
+- deny
+- request_plan_week
+slots:
+  # The user's name
+  name:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+  # The plan for the week
+  plan_week:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+  success_save_calendar_plan_week:
+    type: bool
+    influence_conversation: true
+  
+responses:
+  utter_greet:
+  - text: "Hey {name}!"
+  - text: "Hi {name}!"
+  - text: "Hello {name}!"
+  utter_plan_week:
+  - text: "{plan_week}"
+  utter_ask_plan_calendar:
+  - text: "Do you awnt me to add this plan to your calendar?"
+  - text: "Would you like me to add this plan to your calendar?"
+  - text: "Should I add this to your calendar?"
+  utter_plan_calendar_confirmation:
+  - text: "Cool, I've added it to your calendar for next week."
+  - text: "Okay, it's in your calendar now."
+  utter_okay:
+  - text: "Okay!"
+  - text: "OK!"
+  utter_error_save_plan_week_calendar:
+  - text: "I'm sorry, I can't save the plan in your calendar at the moment."
+  
+actions:
+- action_get_plan_week
+- action_get_name_from_database
+- action_save_plan_week_calendar

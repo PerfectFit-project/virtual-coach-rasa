@@ -8,8 +8,9 @@ The steps are as follows:
 - Make sure that you have Docker and Docker Compose installed. You can check whether you do by typing `docker -v && docker-compose -v`.
 - Navigate to the "Rasa_Bot"-folder on your laptop.
 - Type `docker-compose up`.
-- Now you can communicate with the both via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Could you please send me the planning for next week?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
-
+- Now you can communicate with the bot via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Could you please send me the planning for next week?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
+   - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
+   
 ## Conversation Flow
 The agent is built for a very simple conversation, as shown in the image below.
 

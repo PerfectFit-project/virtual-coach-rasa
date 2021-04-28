@@ -1,13 +1,13 @@
-version: '2.0'  # orig 3.0
+version: '3.0'  # orig 3.0
 services:
   rasa:
     image: rasa/rasa:2.0.2-full
     ports:
-      - 5005:5005
+      - "5005:5005"
     volumes:
       - ./:/app
     command:
       - run
   app:
     image: gbna4/perfect_fit_prototype_actions:latest
-    expose: 5055
+    expose: "5055"

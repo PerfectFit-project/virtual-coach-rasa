@@ -2,13 +2,13 @@ This is a simple conversational agent implemented in Rasa 2.0.2.
 
 ## How to Run
 
-WORK IN PROGRESS
+See here for the instructions from Rasa: https://rasa.com/docs/rasa/docker/deploying-in-docker-compose/.
 
-These instructions do not allow the custom actions to be executed:
-- Type `docker run -it -v $(pwd):/app rasa/rasa:2.0.2-full shell` within the "Rasa_Bot"-folder.
-   - On Windows, replace `$(pwd)` with `%cd%`.
-- Then you can communicate with the agent. Note that custom actions taken by the agent fail.
-- See here for the instructions: https://rasa.com/docs/rasa/docker/building-in-docker/.
+The steps are as follows:
+- Make sure that you have Docker installed.
+- Navigate to the "Rasa_Bot"-folder on your laptop.
+- Type `docker-compose up`.
+- Now you can communicate with the both via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Could you please send me the planning for next week?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
 
 ## Conversation Paths
 The agent is built for a very simple conversation, as shown in the image below.

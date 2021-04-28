@@ -9,7 +9,7 @@ The steps are as follows:
 - Navigate to the "Rasa_Bot"-folder on your laptop.
 - Type `docker-compose up`.
 - Now you can communicate with the bot via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Could you please send me the planning for next week?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
-   - The output should be something like this: [{"recipient_id":"user","text":"Hey Kees!"},{recipient_id":"user","text":"Sure, you should ...
+   - The output should be something like this: [{"recipient_id":"user","text":"Hey Kees!"},{"recipient_id":"user","text":"Sure, you should ...
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
    
 ## Conversation Flow

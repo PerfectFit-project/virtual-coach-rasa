@@ -28,7 +28,7 @@ responses:
   utter_plan_week:
   - text: "{plan_week}"
   utter_ask_plan_calendar:
-  - text: "Do you awnt me to add this plan to your calendar?"
+  - text: "Do you want me to add this plan to your calendar?"
   - text: "Would you like me to add this plan to your calendar?"
   - text: "Should I add this to your calendar?"
   utter_plan_calendar_confirmation:

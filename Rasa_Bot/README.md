@@ -3,7 +3,7 @@ This is a simple conversational agent implemented in Rasa 2.0.2.
 ## Conversation Paths
 The agent is built for a very simple conversation, as shown in the image below.
 
-<img src = "Readme_Images/Dialog_Flow.PNG" width = "400" title="Dialog Flow">
+<img src = "Readme_Images/Dialog_Flow.PNG" width = "800" title="Dialog Flow">
 
 ## Components
 

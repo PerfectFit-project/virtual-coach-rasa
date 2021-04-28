@@ -11,6 +11,7 @@ stories:
   - action: utter_plan_week
   - action: utter_ask_plan_calendar
   - intent: confirm
+  - action: action_save_plan_week_calendar
   - slot_was_set:
     - success_save_calendar_plan_week: True
   - action: utter_plan_calendar_confirmation
@@ -25,10 +26,12 @@ stories:
   - action: utter_plan_week
   - action: utter_ask_plan_calendar
   - intent: confirm
+  - action: action_save_plan_week_calendar
   - slot_was_set:
     - success_save_calendar_plan_week: False
   - action: utter_error_save_plan_week_calendar
   
+# User does not want to save plan in calendar
 - story: request_plan_week_calendarNo
   steps:
   - intent: request_plan_week

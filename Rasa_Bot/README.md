@@ -1,5 +1,7 @@
 This is a simple conversational agent implemented in Rasa 2.0.2.
 
+All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
+
 ## How to Run
 
 See here for the instructions from Rasa: https://rasa.com/docs/rasa/docker/deploying-in-docker-compose/.

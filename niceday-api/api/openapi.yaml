@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: Niceday REST API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+servers:
+- url: /
+paths:
+  /messages:
+    post:
+      tags:
+      - messages
+      summary: Send a text message
+      operationId: sendTextMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        "200":
+          description: Success
+      x-swagger-router-controller: Messages
+components:
+  schemas:
+    Message:
+      required:
+      - recipient_id
+      - text
+      type: object
+      properties:
+        recipient_id:
+          type: integer
+          description: ID of the user we want to send message to
+          example: 38527
+        text:
+          type: string
+          description: Message to send
+          example: Hello World
+      description: A Message to Send.

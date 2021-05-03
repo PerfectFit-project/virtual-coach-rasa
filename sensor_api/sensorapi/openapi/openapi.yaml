@@ -24,7 +24,7 @@ paths:
       tags:
         - Accelerometer
       summary: Create Accelerometer Data
-      operationId: perfectfitapp.api.sensor.Accelerometer.post
+      operationId: sensorapi.api.sensor.Accelerometer.post
       requestBody:
         $ref: '#/components/requestBodies/Accelerometer'
       responses:

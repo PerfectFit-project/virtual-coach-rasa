@@ -1,6 +1,6 @@
 import pytest
 
-from perfectfitapp.run import create_app
+from sensorapi.run import create_app
 
 
 @pytest.fixture(scope='class')

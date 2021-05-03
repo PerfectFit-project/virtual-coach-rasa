@@ -17,6 +17,8 @@ servers:
 #   - name: Sensor Data
 #     description: Sensor Data Controller
 paths:
+  # TODO: rename the endpoint if it's needed to organize data in other way
+  # e.g. to "activity", "session", etc.
   /accelerometer:
     post:
       tags:

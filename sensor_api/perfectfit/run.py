@@ -13,7 +13,7 @@ def create_app(host, port):
     options = {"swagger_ui": True}
     app.add_api('openapi.yaml',
                 options=options,
-                arguments={'title': 'PerfectFit server'},
+                arguments={'title': 'PerfectFit sensor data server'},
                 strict_validation=True,
                 validate_responses=True
                 )

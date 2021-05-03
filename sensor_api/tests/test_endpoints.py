@@ -1,6 +1,6 @@
 import pytest
 
-from perfectfit.run import create_app
+from perfectfitapp.run import create_app
 
 
 @pytest.fixture(scope='class')

@@ -15,7 +15,9 @@
   "dependencies": {
     "@sense-os/goalie-js": "git+ssh://git@github.com/senseobservationsystems/goalie-js.git#v0.39.2",
     "connect": "^3.2.0",
+    "dotenv": "^8.2.0",
     "js-yaml": "^3.3.0",
-    "oas3-tools": "^2.2.3"
+    "oas3-tools": "^2.2.3",
+    "isomorphic-fetch": "^3.0.0"
   }
 }

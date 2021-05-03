@@ -4,7 +4,11 @@ var goalieJs = require('@sense-os/goalie-js')
 var Chat = goalieJs.Chat
 var SenseServerEnvironment = goalieJs.SenseServerEnvironment
 var ConnectionStatus = goalieJs.ConnectionStatus
-//import { Chat, SenseServerEnvironment, ConnectionStatus } from '@sense-os/goalie-js';
+
+//Read in environment variables from .env file
+require('dotenv').config()
+const THERAPIST_USER_ID = parseInt(process.env.THERAPIST_USER_ID)
+const TOKEN = process.env.NICEDAY_TOKEN
 
 /**
  * Send a text message
@@ -17,9 +21,7 @@ exports.sendTextMessage = function(body) {
     const chatSdk = new Chat();
     chatSdk.init(SenseServerEnvironment.Alpha);
 
-    var userId = 38714
-    var token = 'e74f99d4131e9a525140f1ccd100fc834ae5b90c7e60f128b3a2f7cfa5e3adeb'
-    chatSdk.connect(userId, token)
+    chatSdk.connect(THERAPIST_USER_ID, TOKEN)
 
     chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
         if (connectionStatus === ConnectionStatus.Connected) {

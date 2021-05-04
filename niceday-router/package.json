@@ -7,7 +7,7 @@
     "prestart": "npm install",
     "start": "node index.js"
   },
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "private": false,
   "dependencies": {
     "@sense-os/goalie-js": "git+ssh://git@github.com/senseobservationsystems/goalie-js.git#v0.39.2",

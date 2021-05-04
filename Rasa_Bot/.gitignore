@@ -1,0 +1,5 @@
+.spyproject
+rasa
+events
+events.db-shm
+events.db-wal

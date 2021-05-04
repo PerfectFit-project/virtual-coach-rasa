@@ -1,0 +1,30 @@
+version: "2.0"
+
+nlu:
+- intent: request_plan_week
+  examples: |
+    - Can I get the planning for next week?
+    - Could you please send me the planning for next week?
+    - What is the planning for the coming week?
+    - What is planned for next week?
+    - Could you please tell me the plan for next week?
+    - Hey, can I get the planning for next week?
+    
+- intent: confirm
+  examples: |
+    - Yes, please
+    - Yeah
+    - Of course
+    - Yes
+    - Yes please do that
+    - That would be great
+    - Yes that would be nice
+    - Ah yes please
+    
+- intent: deny
+  examples: |
+    - "No thanks."
+    - "Thanks, but that's not needed."
+    - "No thank you."
+    - "Not this time, thanks."
+  

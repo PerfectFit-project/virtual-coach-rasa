@@ -4,22 +4,39 @@ var goalieJs = require('@sense-os/goalie-js')
 var Chat = goalieJs.Chat
 var SenseServerEnvironment = goalieJs.SenseServerEnvironment
 var ConnectionStatus = goalieJs.ConnectionStatus
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 //Read in environment variables from .env file
 require('dotenv').config()
 const THERAPIST_USER_ID = parseInt(process.env.THERAPIST_USER_ID)
 const TOKEN = process.env.NICEDAY_TOKEN
 
-function getRasaResponse(text) {
-  return 'you said: ' + text;
+function requestRasa(text, userId, callback) {
+    var xhr = new XMLHttpRequest();
+    var url = 'http://localhost:5005/webhooks/rest/webhook';
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = callback
+    var data = JSON.stringify({"sender": userId, "message": text});
+    xhr.send(data);
 }
+
+function handleRasaResponse() {
+        if (this.readyState === 4 && this.status === 200) {
+            var responseJson = JSON.parse(this.responseText);
+            for (const message of responseJson) {
+                chatSdk.sendTextMessage(parseInt(message.recipient_id), message.text).then(response => {
+                    console.log("Successfully sent the message", response)});
+            }
+        } else if (this.readyState === 4) {
+            console.log('Something went wrong, status:', this.status)
+        }
+    };
 
 function handleIncomingMessage(message) {
   console.log(message);
-  if (message.from !== THERAPIST_USER_ID) {
-    var rasaResponse = getRasaResponse(message.content.TEXT)
-    chatSdk.sendTextMessage(message.from, rasaResponse).then(response => {
-      console.log("Successfully sent the message", response)});
+  if (message.from !== THERAPIST_USER_ID && message.to === THERAPIST_USER_ID) {
+      requestRasa(message.content.TEXT, message.from, handleRasaResponse)
   }
 };
 

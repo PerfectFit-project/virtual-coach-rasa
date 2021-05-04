@@ -31,7 +31,7 @@ open http://localhost:8080/docs
 
 From there you can easily test out the different endpoints
 
-This project leverages the mega-awesome [swagger-tools](https://github.com/apigee-127/swagger-tools) middleware which does most all the work.
+This project leverages [oas3-tools](https://www.npmjs.com/package/oas3-tools) middleware which does most all the work.
 
 ### What is my user id?
 Just run `node login.mjs emailaddress password` with a user's credentials to find out the user id.

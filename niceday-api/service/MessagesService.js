@@ -27,7 +27,7 @@ exports.sendTextMessage = function(body) {
         if (connectionStatus === ConnectionStatus.Connected) {
         chatSdk.sendInitialPresence();
         chatSdk.sendTextMessage(body.recipient_id, body.text).then(response => {
-            console.log("Succesfully sent the message", response)
+            console.log("Successfully sent the message", response)
         })}
     });
     resolve();

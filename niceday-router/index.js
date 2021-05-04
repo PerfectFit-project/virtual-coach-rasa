@@ -11,6 +11,9 @@ require('dotenv').config()
 const THERAPIST_USER_ID = parseInt(process.env.THERAPIST_USER_ID)
 const TOKEN = process.env.NICEDAY_TOKEN
 
+/**
+ * Request a response from rasa for a given text message
+ **/
 function requestRasa(text, userId, callback) {
     var xhr = new XMLHttpRequest();
     var url = 'http://localhost:5005/webhooks/rest/webhook';
@@ -21,6 +24,9 @@ function requestRasa(text, userId, callback) {
     xhr.send(data);
 }
 
+/**
+ * Handle the response from rasa, send each message to the Niceday user.
+ **/
 function handleRasaResponse() {
         if (this.readyState === 4 && this.status === 200) {
             var responseJson = JSON.parse(this.responseText);
@@ -33,6 +39,9 @@ function handleRasaResponse() {
         }
     };
 
+/**
+ * Handle an incoming Niceday message
+ **/
 function handleIncomingMessage(message) {
   console.log(message);
   if (message.from !== THERAPIST_USER_ID && message.to === THERAPIST_USER_ID) {

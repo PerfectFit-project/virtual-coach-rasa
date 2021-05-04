@@ -3,28 +3,30 @@ version: "2.0"
 nlu:
 - intent: request_plan_week
   examples: |
-    - Can I get the planning for next week?
-    - Could you please send me the planning for next week?
-    - What is the planning for the coming week?
-    - What is planned for next week?
-    - Could you please tell me the plan for next week?
-    - Hey, can I get the planning for next week?
+    - "Kan ik de agende voor de week krijgen?"
+    - "Kun je de agenda voor de week opsturen?"
+    - "Wat is de agenda voor de komende week?"
+    - "Wat is er gepland voor de komende week?"
+    - "Kun je me de agenda voor de komende week vertellen?"
+    - "Hey, kun je me de agenda voor de week vertellen?"
     
 - intent: confirm
   examples: |
-    - Yes, please
-    - Yeah
-    - Of course
-    - Yes
-    - Yes please do that
-    - That would be great
-    - Yes that would be nice
-    - Ah yes please
+    - Ja graag
+    - Zeker
+    - Natuurlijk
+    - Ja doe dat alsjeblieft
+    - Ja
+    - Dat zou fijn zijn
+    - Ah ja
+    - Graag
     
 - intent: deny
   examples: |
-    - "No thanks."
-    - "Thanks, but that's not needed."
-    - "No thank you."
-    - "Not this time, thanks."
+    - "Nee, dank je wel."
+    - "Nee, dank u wel."
+    - "Bedankt, maar dat hoeft niet."
+    - "Deze keer niet, dank je."
+    - "Dat hoeft niet."
+    - "Nee, bedankt."
   

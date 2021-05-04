@@ -21,3 +21,8 @@ To run the server, run:
 ```
 npm start
 ```
+
+### Running the full Niceday conversational agent application
+You'll need to run both this niceday-router and the Rasa_Bot 
+(see Readme in Rasa_Bot) to have a working conversational agent in the
+Niceday app.

@@ -14,6 +14,9 @@ The steps are as follows:
    - The output for the above command should be something like this: [{"recipient_id":"user","text":"Hey Kees!"},{"recipient_id":"user","text":"Sure, you should ...
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
    
+## Language
+Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."
+
 ## Conversation Flow
 The agent is built for a very simple conversation, as shown in the image below.
 

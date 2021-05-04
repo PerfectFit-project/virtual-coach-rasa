@@ -6,6 +6,7 @@ services:
     image: postgres
     restart: always
     environment:
+      POSTGRES_DB: perfectfit
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
 
@@ -14,3 +15,9 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  manage:
+    build: .
+    tty: true
+    depends_on:
+      - db

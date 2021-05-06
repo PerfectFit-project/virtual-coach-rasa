@@ -28,10 +28,16 @@ Then generate the revision to upgrade to the new schema defined in `models.py`:
 docker-compose exec manage alembic revision --autogenerate
 ```
 
+## 3. Apply the new revision
+
 Finally, apply migrations again to upgrade to the latest revision:
 ```
 docker-compose exec manage alembic upgrade head
 ```
+
+If you want this revision to be permanent and available to others, please
+remember to `git add` it to the repo. It will be found in the `dbschema/migrations/versions/`
+directory. Use `git status` to see which files in there are new.
 
 
 # Checking the schema of the currently running database

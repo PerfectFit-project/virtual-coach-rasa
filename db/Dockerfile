@@ -11,7 +11,5 @@ RUN python3 -m pip install wheel
 ADD requirements.txt .
 RUN python3 -m pip install -r requirements.txt
 
-RUN mkdir /opt/manage
-WORKDIR /opt/manage
-
-COPY . /opt/manage/
+RUN mkdir /dbschema
+WORKDIR /dbschema

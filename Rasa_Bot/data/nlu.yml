@@ -27,4 +27,49 @@ nlu:
     - "Thanks, but that's not needed."
     - "No thank you."
     - "Not this time, thanks."
+    
+- intent: greeting
+  examples: |
+    - Hi
+    - Hey
+    - Hallo
+    - Hoi
+    - Hoi Kris
+    - Hi Kris
+    - Goedemorgen
+    - Goedenavond
+    - Hallo coach
+    
+- intent: goodbye
+  examples: |
+    - Doei
+    - Tot ziens
+    - Tot straks
+    - "Fijne dag"
+    - "Fijne dag verder!"
+    
+- intent: how_are_you
+  examples: |
+    - "Hoe gaat het met je?"
+    
+- intent: who_are_you
+  examples: |
+    - "Wie ben je?"
+    - "Wat kan je?"
+    - "Wat is dit?"
+    - "Wat kan je doen?"
+    
+- intent: positive_mood
+  examples: |
+    - "Ik voel me ook goed."
+    - "Ik ben in orde."
+    - "Super goed!"
+    - "Heel goed!"
+
+- intent: negative_mood
+  examples: |
+    - "Ik voel me niet zo goed."
+    - "Ik voe me niet lekker."
+    - "Niet goed."
+    - "Slecht."
   

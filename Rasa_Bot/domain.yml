@@ -21,10 +21,29 @@ slots:
     influence_conversation: true
   
 responses:
+  # General
   utter_greet:
   - text: "Hey {name}!"
   - text: "Hi {name}!"
   - text: "Hello {name}!"
+  utter_goodbye:
+  - text: "Doei!"
+  - text: "Tot straks!"
+  - text: "Tot ziens!"
+  utter_ask_back:
+  - text: "En jij?"
+  utter_agent_name:
+  - text: "Ik ben Kris. Ik ben je virtuele coach."
+  utter_agent_purpose:
+  - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
+  utter_agent_mood:
+  - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
+  utter_response_mood_positive:
+  - text: "Ik ben blij dat te horen!"
+  utter_response_mood_negative:
+  - text: "Aww, het spijt me. Ik hoop dat je je snel beter voelt."
+  
+  # Weekly planning
   utter_plan_week:
   - text: "{plan_week}"
   utter_ask_plan_calendar:
@@ -39,6 +58,7 @@ responses:
   - text: "OK!"
   utter_error_save_plan_week_calendar:
   - text: "I'm sorry, I can't save the plan in your calendar at the moment."
+ 
   
 actions:
 - action_get_plan_week

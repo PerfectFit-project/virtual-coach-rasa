@@ -1,4 +1,4 @@
-# Niceday Router
+# Niceday Broker
 
 ## Overview
 This application listens to incoming messages from the Niceday server.

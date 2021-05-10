@@ -35,7 +35,7 @@ function handleRasaResponse() {
                     console.log("Successfully sent the message", response)});
             }
         } else if (this.readyState === 4) {
-            console.log('Something went wrong, status:', this.status)
+            console.log('Something went wrong, status:', this.status, this.responseText)
         }
     };
 

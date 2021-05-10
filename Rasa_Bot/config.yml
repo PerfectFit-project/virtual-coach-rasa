@@ -31,6 +31,6 @@ policies:
   - name: TEDPolicy
     max_history: 10
     epochs: 10
-    augmentation: 1 # augmentation of stories
+  - name: RulePolicy
   
   

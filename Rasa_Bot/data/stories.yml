@@ -60,3 +60,15 @@ stories:
   - action: utter_ask_back
   - intent: negative_mood
   - intent: utter_response_mood_negative
+
+# user has a positive mood
+- story: user_positive_mood
+  steps:
+  - intent: positive_mood
+  - action: utter_response_mood_positive
+
+# user has a negative mood
+- story: utter_negative_mood
+  steps:
+  - intent: negative_mood
+  - action: utter_response_mood_negative

@@ -1,7 +1,5 @@
 This is a simple conversational agent implemented in Rasa 2.0.2 with a Dutch language model.
 
-All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
-
 ## How to Run
 
 See here for the instructions from Rasa: https://rasa.com/docs/rasa/docker/deploying-in-docker-compose/.
@@ -13,9 +11,22 @@ The steps are as follows:
 - Now you can communicate with the bot via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Kan ik de agenda voor de week krijgen?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
    - The output for the above command should be something like this: [{"recipient_id":"user","text":"Hoi Kees!"},{"recipient_id":"user","text":"Sure, you should ...
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
-   
-## Language
+
+## Future Changes
+### Language
 Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."
+
+### Agent Name
+The agent name is set in the "domain.yml"-file in the slot"agent_name." Changing this name in said file requires retraining the model. 
+
+### Storage of Conversations
+All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
+
+### Custom Actions
+Any changes made to the actions-folder requires re-building the custom action image and pushing it to Dockerhub.
+
+### Language Model
+Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training.
 
 ## Conversation Flow
 The agent is built for very simple conversations. It's capabilities are twofold. First, it will always respond according to the rules shown below. For example, it will always respond with a goodbye-message if the user sends a goodbye-message.

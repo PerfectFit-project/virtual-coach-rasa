@@ -2,13 +2,6 @@ version: "2.0"
 
 rules:
 
-- rule: say hello back whenever the user says hello
-  steps:
-  - intent: greeting
-  - action: action_get_name_from_database
-  - action: utter_greet
-  - action: utter_ask_user_mood
-
 - rule: say goodbye whenever the user says bye
   steps:
   - intent: goodbye

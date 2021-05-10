@@ -29,7 +29,7 @@ nlu:
     - "Deze keer niet, dank je."
     - "Dat hoeft niet."
     - "Nee, bedankt."
-    
+
 - intent: greeting
   examples: |
     - Hi
@@ -42,7 +42,7 @@ nlu:
     - Goedenavond
     - "Hallo coach"
     - "Hi Kris"
-    
+
 - intent: goodbye
   examples: |
     - Doei
@@ -50,18 +50,18 @@ nlu:
     - Tot straks
     - "Fijne dag"
     - "Fijne dag verder!"
-    
+
 - intent: how_are_you
   examples: |
     - "Hoe gaat het met je?"
-    
+
 - intent: who_are_you
   examples: |
     - "Wie ben je?"
     - "Wat kan je?"
     - "Wat is dit?"
     - "Wat kan je doen?"
-    
+
 - intent: positive_mood
   examples: |
     - "Ik voel me ook goed."

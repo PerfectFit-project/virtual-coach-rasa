@@ -41,7 +41,7 @@ responses:
   - text: "Ik ben Kris. Ik ben je virtuele coach."
   utter_agent_purpose:
   - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
-  
+
   # Mood
   utter_agent_mood:
   - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
@@ -51,7 +51,7 @@ responses:
   - text: "Ik ben blij dat te horen!"
   utter_response_mood_negative:
   - text: "Aww, het spijt me. Ik hoop dat je je snel beter voelt."
-  
+
   # Weekly planning
   utter_plan_week:
   - text: "{plan_week}"
@@ -66,7 +66,7 @@ responses:
   - text: "OK!"
   utter_error_save_plan_week_calendar:
   - text: "Sorry, ik kan het plan nu niet invoeren."
- 
+
   
 actions:
 - action_get_plan_week

@@ -43,4 +43,41 @@ stories:
   - intent: deny
   - action: utter_okay
       
+# User asks agent how he/she is doing, and user is doing well
+- story: user_asks_agent_mood_positive
+  steps:
+  - intent: how_are_you
+  - action: utter_agent_mood
+  - action: utter_ask_back
+  - checkpoint: user_mood_response
+  
+# User asks agent how he/she is doing, and user is not doing well
+- story: user_asks_agent_mood_negative
+  steps:
+  - intent: how_are_you
+  - action: utter_agent_mood
+  - action: utter_ask_back
+  - checkpoint: user_mood_response
+  
+# when user says hello, we say hello back and ask about the user's mood
+- story: user_hello
+  steps:
+  - intent: greeting
+  - action: action_get_name_from_database
+  - action: utter_greet
+  - action: utter_ask_user_mood
+  - checkpoint: user_mood_response
 
+# user has a positive mood
+- story: user_positive_mood
+  steps:
+  - checkpoint: user_mood_response
+  - intent: positive_mood
+  - action: utter_response_mood_positive
+
+# user has a negative mood
+- story: utter_negative_mood
+  steps:
+  - checkpoint: user_mood_response
+  - intent: negative_mood
+  - action: utter_response_mood_negative

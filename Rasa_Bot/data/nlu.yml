@@ -3,12 +3,13 @@ version: "2.0"
 nlu:
 - intent: request_plan_week
   examples: |
-    - "Kan ik de agende voor de week krijgen?"
+    - "Kan ik de agenda voor de week krijgen?"
     - "Kun je de agenda voor de week opsturen?"
     - "Wat is de agenda voor de komende week?"
     - "Wat is er gepland voor de komende week?"
     - "Kun je me de agenda voor de komende week vertellen?"
     - "Hey, kun je me de agenda voor de week vertellen?"
+    - "Mag ik de planning?"
     
 - intent: confirm
   examples: |
@@ -19,7 +20,7 @@ nlu:
     - Ja
     - Dat zou fijn zijn
     - Ah ja
-    - Graag
+    - "Graag"
     
 - intent: deny
   examples: |
@@ -29,4 +30,50 @@ nlu:
     - "Deze keer niet, dank je."
     - "Dat hoeft niet."
     - "Nee, bedankt."
+
+- intent: greeting
+  examples: |
+    - Hi
+    - Hey
+    - Hallo
+    - Hoi
+    - Hoi coach
+    - Hi coach
+    - Goedemorgen
+    - Goedenavond
+    - "Hallo coach"
+    - "Hi Kris"
+
+- intent: goodbye
+  examples: |
+    - Doei
+    - Tot ziens
+    - Tot straks
+    - "Fijne dag"
+    - "Fijne dag verder!"
+
+- intent: how_are_you
+  examples: |
+    - "Hoe gaat het met je?"
+
+- intent: who_are_you
+  examples: |
+    - "Wie ben je?"
+    - "Wat kan je?"
+    - "Wat is dit?"
+    - "Wat kan je doen?"
+
+- intent: positive_mood
+  examples: |
+    - "Ik voel me ook goed."
+    - "Ik ben in orde."
+    - "Super goed!"
+    - "Heel goed!"
+
+- intent: negative_mood
+  examples: |
+    - "Ik voel me niet zo goed."
+    - "Ik voe me niet lekker."
+    - "Niet goed."
+    - "Slecht."
   

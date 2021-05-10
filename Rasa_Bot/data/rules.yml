@@ -1,3 +1,14 @@
 version: "2.0"
 
 rules:
+
+- rule: say goodbye whenever the user says bye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: introduce and define purpose when user asks who the agent is
+  steps: 
+  - intent: who_are_you
+  - action: utter_agent_name
+  - action: utter_agent_purpose

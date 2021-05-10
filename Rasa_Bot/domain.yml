@@ -44,6 +44,8 @@ responses:
   # Mood
   utter_agent_mood:
   - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
+  utter_ask_user_mood:
+  - text: "Hoe gaat het met je?"
   utter_response_mood_positive:
   - text: "Ik ben blij dat te horen!"
   utter_response_mood_negative:

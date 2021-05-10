@@ -1,4 +1,4 @@
-This is a simple conversational agent implemented in Rasa 2.0.2.
+This is a simple conversational agent implemented in Rasa 2.0.2 with a Dutch language model.
 
 All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
 
@@ -14,6 +14,9 @@ The steps are as follows:
    - The output for the above command should be something like this: [{"recipient_id":"user","text":"Hoi Kees!"},{"recipient_id":"user","text":"Sure, you should ...
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
    
+## Language
+Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."
+
 ## Conversation Flow
 The agent is built for very simple conversations. It's capabilities are twofold. First, it will always respond according to the rules shown below. For example, it will always respond with a goodbye-message if the user sends a goodbye-message.
 

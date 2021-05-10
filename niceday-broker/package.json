@@ -1,0 +1,21 @@
+{
+  "name": "niceday-router",
+  "version": "0.1.0",
+  "description": "This application listens to incoming messages from the Niceday server.\nWhen a message comes in from a user sent to the therapist account, \nthe message is forwarded to the rasa agent rest API. \nThe rasa response is then sent back to the user in the Niceday app. ",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "@sense-os/goalie-js": "git+ssh://git@github.com/senseobservationsystems/goalie-js.git#v0.39.2",
+    "connect": "^3.2.0",
+    "dotenv": "^8.2.0",
+    "isomorphic-fetch": "^3.0.0",
+    "js-yaml": "^3.3.0",
+    "oas3-tools": "^2.2.3",
+    "xmlhttprequest": "^1.8.0"
+  }
+}

@@ -1,5 +1,5 @@
 session_config:
-  session_expiration_time: 60 # these are minutes
+  session_expiration_time: 5 # these are minutes
   carry_over_slots_to_new_session: true
 intents:
 - confirm
@@ -21,6 +21,10 @@ slots:
     influence_conversation: true
   
 responses:
+  # Fallback
+  utter_default:
+  - text: "Sorry I couldn't understand that (yet). Can you rephrase?"
+
   # General
   utter_greet:
   - text: "Hey {name}!"
@@ -36,6 +40,8 @@ responses:
   - text: "Ik ben Kris. Ik ben je virtuele coach."
   utter_agent_purpose:
   - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
+  
+  # Mood
   utter_agent_mood:
   - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
   utter_response_mood_positive:

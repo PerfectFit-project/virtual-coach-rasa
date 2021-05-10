@@ -32,7 +32,7 @@ policies:
     max_history: 10
     epochs: 10
   - name: RulePolicy
-    core_fallback_threshold: 0.3
+    core_fallback_threshold: 0.2
     core_fallback_action_name: action_default_fallback # will be called when confidence below above value
     enable_fallback_prediction: true
   

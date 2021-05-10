@@ -15,9 +15,11 @@ The steps are as follows:
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
    
 ## Conversation Flow
-The agent is built for a very simple conversation, as shown in the image below.
+The agent is built for very simple conversations. It's capabilities are twofold. First, it will always respond according to the rules shown below. For example, it will always respond with a goodbye-message if the user sends a goodbye-message.
 
-<img src = "Readme_Images/Dialog_Flow.PNG" width = "800" title="Dialog Flow">
+<img src = "Readme_Images/Dialog_Rules.PNG" width = "600" title="Dialog Rules">
+
+Secondly, the agent is trained for two simple conversations. One is about the weekly planning, and the other one is about the agent's mood, as asked about by the user.
 
 ## Components
 

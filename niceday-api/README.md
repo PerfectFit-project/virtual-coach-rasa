@@ -14,7 +14,9 @@ where emailaddress and password should be the credentials for the therapist acco
 This will print the user id of the therapist as well as the token that you need to authenticate.
 4. Create a file called `.env` in the root of this app.
 Save the therapist user id and token in your `.env` file as THERAPIST_USER_ID and NICEDAY_TOKEN respectively,
-see .env-example. These will be loaded as environment variables and will thus be available in the app.
+see .env-example. These will be loaded as environment variables and will thus be available in the app. 
+NB: The token expires, so you need to replace it once in a while.
+You will get a `ChatNotAuthorizedError` if the token is invalid.
 
 ### Running the server
 To run the server, run:

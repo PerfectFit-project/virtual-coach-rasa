@@ -9,12 +9,14 @@ The rasa response is then sent back to the user in the Niceday app.
 ### Setup
 1. Install npm and node-js, following [these instructions](https://www.npmjs.com/get-npm).
 2. Install dependencies: Run `npm install`.
-3. Run `node login.mjs emailaddress password`, 
+3. Run `node ../niceday-api/login.mjs emailaddress password`, 
 where emailaddress and password should be the credentials for the therapist account. 
 This will print the user id of the therapist as well as the token that you need to authenticate.
 4. Create a file called `.env` in the root of this app.
 Save the therapist user id and token in your `.env` file as THERAPIST_USER_ID and NICEDAY_TOKEN respectively,
 see .env-example. These will be loaded as environment variables and will thus be available in the app.
+NB: The token expires, so you need to replace it once in a while. 
+You will get a `ChatNotAuthorizedError` if the token is invalid.
 
 ### Running the server
 To run the server, run:
@@ -24,5 +26,5 @@ npm start
 
 ### Running the full Niceday conversational agent application
 You'll need to run both this niceday-router and the Rasa_Bot 
-(see Readme in Rasa_Bot) to have a working conversational agent in the
-Niceday app.
+(see [Readme of Rasa_Bot](https://github.com/PerfectFit-project/virtual-coach-server/blob/main/Rasa_Bot/README.md)) 
+to have a working conversational agent in the Niceday app.

@@ -17,9 +17,17 @@ The steps are as follows:
 ## Conversation Flow
 The agent is built for very simple conversations. It's capabilities are twofold. First, it will always respond according to the rules shown below. For example, it will always respond with a goodbye-message if the user sends a goodbye-message.
 
-<img src = "Readme_Images/Dialog_Rules.PNG" width = "600" title="Dialog Rules">
+<img src = "Readme_Images/Dialog_Rules.PNG" width = "500" title="Dialog Rules">
 
-Secondly, the agent is trained for two simple conversations. One is about the weekly planning, and the other one is about the agent's mood, as asked about by the user.
+Secondly, the agent is trained for three simple conversations. One is about the weekly planning, one is about the agent's mood, as asked about by the user, and one is about a greeting, initiated by the user.
+
+<img src = "Readme_Images/Dialog_Flow.PNG" width = "500" title="Dialog on weekly plan, iniated by the user.">
+
+<img src = "Readme_Images/Dialog_Flow_Hi.PNG" width = "500" title="Dialog based on greeting by user.">
+
+<img src = "Readme_Images/Dialog_Flow_Mood_User_Initiated.PNG" width = "600" title="Dialog on mood, initiated by the user.">
+
+The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is the period of time after which the agent assumes that the current conversation is over. Sending a message from the user after this timeout period has passed then starts a new conversation. 
 
 ## Components
 

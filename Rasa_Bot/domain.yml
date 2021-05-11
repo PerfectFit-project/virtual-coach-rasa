@@ -1,43 +1,80 @@
 session_config:
-  session_expiration_time: 60 # these are minutes
+  session_expiration_time: 5 # these are minutes
   carry_over_slots_to_new_session: true
 intents:
 - confirm
 - deny
 - request_plan_week
 slots:
+  ### General
   # The user's name
   name:
     type: text
     initial_value: ''
     influence_conversation: false
+  # The name of the agent
+  agent_name:
+    type: text
+    initial_value: 'Kris'
+    influence_conversation: false
+    
+  ### Weekly planning
   # The plan for the week
   plan_week:
     type: text
     initial_value: ''
     influence_conversation: false
+  # Whether saving the weekly plan in the calendar succeeded
   success_save_calendar_plan_week:
     type: bool
     influence_conversation: true
   
 responses:
+  # Fallback
+  utter_default:
+  - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
+
+  # General
   utter_greet:
   - text: "Hey {name}!"
   - text: "Hi {name}!"
   - text: "Hallo {name}!"
+  - text: "Hoi {name}!"
+  utter_goodbye:
+  - text: "Doei!"
+  - text: "Tot straks!"
+  - text: "Tot ziens!"
+  utter_ask_back:
+  - text: "En jij?"
+  utter_agent_name:
+  - text: "Ik ben {agent_name}. Ik ben je virtuele coach."
+  utter_agent_purpose:
+  - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
+
+  # Mood
+  utter_agent_mood:
+  - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
+  utter_ask_user_mood:
+  - text: "Hoe gaat het met je?"
+  utter_response_mood_positive:
+  - text: "Ik ben blij dat te horen!"
+  utter_response_mood_negative:
+  - text: "Aww, het spijt me. Ik hoop dat je je snel beter voelt."
+
+  # Weekly planning
   utter_plan_week:
   - text: "{plan_week}"
   utter_ask_plan_calendar:
-  - text: "Zal ik het plan in je agenda zetten?"
-  - text: "Wil je dat ik het plan in je agenda zet?"
+  - text: "Zal ik de planning in je NiceDay agenda zetten?"
+  - text: "Wil je dat ik de planning in je NiceDay agenda zet?"
   utter_plan_calendar_confirmation:
-  - text: "Cool, ik heb het plan in je agenda ingevoerd."
-  - text: "Okay, het plan staat nu in je agenda."
+  - text: "Cool, ik heb de planning in je NiceDay agenda ingevoerd."
+  - text: "Okay, de planning staat nu in je NiceDay agenda."
   utter_okay:
   - text: "Okay!"
   - text: "OK!"
   utter_error_save_plan_week_calendar:
-  - text: "Sorry, ik kan het plan nu niet invoeren."
+  - text: "Sorry, ik kan de planning nu niet invoeren."
   
 actions:
 - action_get_plan_week

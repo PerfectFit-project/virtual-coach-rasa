@@ -1,5 +1,7 @@
-# Design PerfectFit Virtual Coach system
-<img src = "img/design.png" width = "500" title="Design">
+# Design (v2.0) PerfectFit Virtual Coach system
+A sketch of all the system architecture:
+<img src = "img/design.png" width = "1000" title="Design">
+See it also on [whimsical](https://whimsical.com/perfectfit-UtvRnxdP8P79humXTnjb9J)
 
 ## Smartphone applications
 ### Niceday app (already developed)

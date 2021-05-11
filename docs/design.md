@@ -37,9 +37,9 @@ A Sensor REST API that allows for the sensor data collection app to send data to
 The conversational agent developed in the [Rasa](https://rasa.com/) framework.
 * Given an input message of the user, perform the appropriate action.
 * Actions can range from a simple text message response to something more complex, such as:
- - calling an algorithm 
- - querying the perfectfit database
- - calling the niceday-api for information from niceday-server
+  - calling an algorithm 
+  - querying the perfectfit database
+  - calling the niceday-api for information from niceday-server
 
 ## Rasa agent REST API
 Allows for other components to interact with the agent.
@@ -57,9 +57,12 @@ It is a node.js REST API that wraps functions that we need from the javascript N
 * Interact with Niceday app calendar.
 
 ## PostgreSQL database
-Stores PerfectFit-specific data, stores:
-* Data about the user (name, age, stage of patient journey, preferences)
-* Sensor data.
+Stores PerfectFit-specific data, 
+* Stores:
+  - Data about the user (name, age, stage of patient journey, preferences)
+  - Sensor data.
+  - Any data that we need to conduct research
+* The interface to it will be an SqlAlchemy ORM (so no API abstraction)
 
 ## Content Management System
 Interface for domain experts to control the content of the application 

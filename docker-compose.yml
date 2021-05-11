@@ -1,0 +1,15 @@
+version: "3.0"  # orig 3.0
+services:
+  rasa_agent:
+    image: rasa/rasa:2.0.2-full
+    ports:
+      - 5005:5005
+    volumes:
+      - ./Rasa_Bot/:/app
+    command:
+      - run
+  rasa_actions:
+    image: gbna4/perfect_fit_prototype_actions:latest
+    expose: ["5055"]
+  niceday-broker:
+    build: niceday-broker/

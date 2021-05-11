@@ -10,14 +10,14 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 require('dotenv').config()
 const THERAPIST_USER_ID = parseInt(process.env.THERAPIST_USER_ID)
 const TOKEN = process.env.NICEDAY_TOKEN
+const RASA_AGENT_URL = process.env.RASA_AGENT_URL
 
 /**
  * Request a response from rasa for a given text message
  **/
 function requestRasa(text, userId, callback) {
     var xhr = new XMLHttpRequest();
-    var url = 'http://localhost:5005/webhooks/rest/webhook';
-    xhr.open("POST", url, true);
+    xhr.open("POST", RASA_AGENT_URL, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = callback
     var data = JSON.stringify({"sender": userId, "message": text});

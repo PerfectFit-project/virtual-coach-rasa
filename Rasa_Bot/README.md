@@ -52,9 +52,10 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 
 - actions
    - actions.py: custom actions, e.g. for reading from a database or file.
+   - requirements-actions.txt: requirements for the custom action code to be installed in the Docker container for the custom actions.
 - data:
-   - nlu.yml: contains the intents that the agent can recognize and training examples for each such intent. Currently there is a total of 3 intents, one for confirming, one for denying, and one for requesting the weekly planning.
-   - rules.yml: *default file, not used at the moment.*
+   - nlu.yml: contains the intents that the agent can recognize and training examples for each such intent. We have intents e.g. for a positive mood, for confirming, and for requesting the weekly planning.
+   - rules.yml: rules override actions predicted based on stories. We currently use them to e.g. always say bye back after the user says goodbye.
    - stories.yml: training stories, i.e. the conversation paths the agent can take.
 - models: contains trained models
-- domain.yml: contains all slots, utterances, etc.
+- domain.yml: contains all slots, utterances, etc. Also defines the time period after which a new conversation starts in case of inactivity.

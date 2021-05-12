@@ -139,3 +139,7 @@ It could be that the algorithsm processing (or preprocessing before sending to a
 sensor or user data will be too compute-heavy. To solve that we can have dedicated workers that process
 data. The system should then get some more queuing, i.e. the sensor data REST api just writes data to a queue.
 The workers are subscribed to this queue and process the data, then notify other components or write to the database.
+
+### Expiration of data
+Some data might only be needed for a certain time period, especially sensor data. 
+A specific worker should remove data if it is expired (data should have an expiry-date field in db).

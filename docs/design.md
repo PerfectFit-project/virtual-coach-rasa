@@ -5,14 +5,32 @@ and increasing physical activity based on personal (sensor) data
 
 This document describes the intended architecture for the eCoach.
 
-A sketch of the system architecture:
+--- 
+
+## Non-functional requirements
+* **No need for scalability**. We expect max 500 participants for the research that will be conducted with the system,
+thus probably only max 50 users simultaneously using the app. 
+Scalability is nice-to-have for generalisation of the system, but not critical.
+* **Privacy & Security**. Sensitive data such as sensor data and conversations will flow through the app. 
+Privacy and security are critical.
+* **No need for high performance**. Unless it results in an awful user experience
+* **Generalization**. We want the virtual coach system as well as individual components to be reusable outside of the 
+PerfectFit project. So individual components should be modular, and Niceday should be swappable with any other chat 
+framework.
+
+## Functional requirements
+See [this overview](https://nlesc.sharepoint.com/:x:/s/team-flow/EUCPwrKzPY1BikrYk_BDhCcB8vBLgsI-xsT63dedExPQaA?e=GlfxeO)
+
+---
+
+## Architecture sketch
 <img src = "img/design.png" width = "1000" title="Design">
 See it also on [whimsical](https://whimsical.com/perfectfit-UtvRnxdP8P79humXTnjb9J)
 
 ---
-
-## Smartphone applications
-### Niceday app (already developed)
+## Components
+### Smartphone applications
+#### Niceday app (already developed)
 The user interacts with the
 [NiceDay smartphone app](https://play.google.com/store/apps/details?id=nl.sense.goalie2&hl=nl&gl=US).
 This app is developed by [sense-health](https://sense-health.com/) which is part of the consortium.
@@ -22,7 +40,7 @@ It's main features are:
 * Daily planner: overview of planned actions
 * Messaging
  
-### Sensor data collection app (out of scope)
+#### Sensor data collection app (out of scope)
 A separate app for collecting sensor data that is needed to estimate physical capacity. 
 * The Niceday app itself cannot gather this data.
 * At the start of an activity the sensor data collector is triggered to start recording sensor data.
@@ -31,8 +49,8 @@ A separate app for collecting sensor data that is needed to estimate physical ca
 virtual coach system.
 --- 
 
-## Niceday components
-### Niceday server (already developed)
+### Niceday components
+#### Niceday server (already developed)
 * Backend for the Niceday app.
 * Data storage: 
   - user profile data, 
@@ -41,18 +59,18 @@ virtual coach system.
 * Handles authentication
 
 --- 
-## PerfectFit virtual coach system components
+### PerfectFit virtual coach system components
 We cannot change much in the NiceDay app, new PerfectFit features will be implemented 
 through the virtual coach that interacts with the user through the messaging function of the 
 NiceDay app. We will make use of Niceday trackers to gather data, 
 and make use of the Niceday daily planner to plan activities.
 
 
-## Sensor data REST API
+### Sensor data REST API
 A Sensor REST API that allows for the sensor data collection app to send data to PerfectFit system.
 * Writes data directly to the database using the ORM
 
-## Rasa agent
+### Rasa agent
 The conversational agent developed in the [Rasa](https://rasa.com/) framework.
 * Given an input message of the user, perform the appropriate action.
 * Actions can range from a simple text message response to something more complex, such as:
@@ -60,16 +78,16 @@ The conversational agent developed in the [Rasa](https://rasa.com/) framework.
   - querying the perfectfit database using ORM
   - calling the niceday-api for information from niceday-server
 
-## Rasa agent REST API
+### Rasa agent REST API
 Allows for other components to interact with the agent.
 
-## niceday-broker
+### niceday-broker
 Sends back and forth messages from a niceday user between the Niceday server and the rasa agent.
 * Depends on the javascript Niceday client [goalie-js](https://github.com/senseobservationsystems/goalie-js).
 * Listens to incoming messages, upon an incoming message it sends a request to the rasa agent REST API
 * It forwards any text response from rasa back to the user through Niceday
 
-## niceday-api
+### niceday-api
 Allows control over certain functionalities in the niceday app.
 It is a node.js REST API that wraps functions that we need from the javascript Niceday client 
 [goalie-js](https://github.com/senseobservationsystems/goalie-js).
@@ -77,7 +95,7 @@ It is a node.js REST API that wraps functions that we need from the javascript N
 * Read from and manage Niceday (custom) trackers
 * Interact with Niceday daily planner
 
-## PostgreSQL database
+### PostgreSQL database
 Stores PerfectFit-specific data, 
 * Stores:
   - Data about the user (name, age, stage of patient journey, preferences)
@@ -85,7 +103,7 @@ Stores PerfectFit-specific data,
   - Any data that we need to conduct research
 * The interface to it will be an SqlAlchemy ORM (so no API abstraction)
 
-## Content Management System
+### Content Management System
 Interface for domain experts to control the content of the application 
 (I.e. what the conversational agent responds with).
 Together with domain experts in the consortium we will decide on 
@@ -102,12 +120,12 @@ behavior of the agent.
 The CMS is basically a mapping from a response identifier (i.e. UTTER_WELCOME) to the actual 
 response (i.e. 'Welcome to this app')
 
-## Algorithm components
+### Algorithm components
 A number of algorithm components
 * For example: a Sensor Data Processor, that has as input sensor data for an activity, 
 and outputs some useful information about the activity (i.e. was the capacity threshold reached).
-* Are Python libraries that are imported and used by Rasa agent
+* Are standalone Python libraries that are imported and used by Rasa agent, but can also be used outside of this project.
 
-## Admin UI
+### Admin UI
 Interface to inspect data, monitor the system, and perform actions in the system.
 * Design for this will emerge based on the need for certain control/insights while progressing in the project

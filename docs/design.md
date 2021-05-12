@@ -68,6 +68,7 @@ and make use of the Niceday daily planner to plan activities.
 
 ### Sensor data REST API
 A Sensor REST API that allows for the sensor data collection app to send data to PerfectFit system.
+* Validates and preprocesses data
 * Writes data directly to the database using the ORM
 
 ### Rasa agent

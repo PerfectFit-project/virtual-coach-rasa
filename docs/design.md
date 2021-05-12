@@ -73,8 +73,8 @@ A Sensor REST API that allows for the sensor data collection app to send data to
 ### Rasa agent
 The conversational agent developed in the [Rasa](https://rasa.com/) framework.
 * Given an input message of the user, perform the appropriate action.
-* Actions can range from a simple text message response to something more complex, such as:
-  - using an algorithm (through importing the library) 
+* Actions can range from a simple text message response to something more complex, using any combination of:
+  - using an algorithm (through calling functions from imported libraries, often with data from db or niceday) 
   - querying the perfectfit database using ORM
   - calling the niceday-api for information from niceday-server
 
@@ -125,6 +125,8 @@ A number of algorithm components
 * For example: a Sensor Data Processor, that has as input sensor data for an activity, 
 and outputs some useful information about the activity (i.e. was the capacity threshold reached).
 * Are standalone Python libraries that are imported and used by Rasa agent, but can also be used outside of this project.
+* Should be setup in a modular and functional way. So no connections to the database or other components,
+the interface should be functions or methods that take as input all the required data used by the algorithm.
 
 ### Admin UI
 Interface to inspect data, monitor the system, and perform actions in the system.

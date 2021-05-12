@@ -132,3 +132,10 @@ the interface should be functions or methods that take as input all the required
 ### Admin UI
 Interface to inspect data, monitor the system, and perform actions in the system.
 * Design for this will emerge based on the need for certain control/insights while progressing in the project
+
+## Possible future components
+### Data workers
+It could be that the algorithsm processing (or preprocessing before sending to algorithms) of 
+sensor or user data will be too compute-heavy. To solve that we can have dedicated workers that process
+data. The system should then get some more queuing, i.e. the sensor data REST api just writes data to a queue.
+The workers are subscribed to this queue and process the data, then notify other components or write to the database.

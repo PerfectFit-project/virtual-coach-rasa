@@ -25,6 +25,7 @@ See [this overview](https://nlesc.sharepoint.com/:x:/s/team-flow/EUCPwrKzPY1Bikr
 
 ## Architecture sketch
 <img src = "img/design.png" width = "1000" title="Design">
+
 See it also on [whimsical](https://whimsical.com/perfectfit-UtvRnxdP8P79humXTnjb9J)
 
 ---

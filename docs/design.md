@@ -83,7 +83,7 @@ The conversational agent developed in the [Rasa](https://rasa.com/) framework.
 Allows for other components to interact with the agent.
 
 ### niceday-broker
-Sends back and forth messages from a niceday user between the Niceday server and the rasa agent.
+A worker that sends back and forth messages from a niceday user between the Niceday server and the rasa agent.
 * Depends on the javascript Niceday client [goalie-js](https://github.com/senseobservationsystems/goalie-js).
 * Listens to incoming messages, upon an incoming message it sends a request to the rasa agent REST API
 * It forwards any text response from rasa back to the user through Niceday

@@ -18,7 +18,7 @@ And an example conversation:
 <img src="https://user-images.githubusercontent.com/9945255/116060273-054fb080-a682-11eb-9fe4-d864305bf4d2.png" width="300" >
 
 ## Architecture design
-Take a look at the design [here](https://github.com/PerfectFit-project/virtual-coach-server/blob/main/docs/design.md).
+Take a look at the design [here](docs/design.md).
 
 ## Setup using docker-compose
 1. See `niceday-api/` for getting the therapist user id and token. 

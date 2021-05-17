@@ -11,8 +11,6 @@ This should become a working prototype that can handle the following scenario:
 - The virtual coach asks the user whether it can plan these activities.
 - If affirmative, the virtual coach adds these activities to the in-app calendar of the user.
 
-See [the preliminary design](https://whimsical.com/perfectfit-UtvRnxdP8P79humXTnjb9J)
-
 And an example conversation:
 
 <img src="https://user-images.githubusercontent.com/9945255/116060273-054fb080-a682-11eb-9fe4-d864305bf4d2.png" width="300" >

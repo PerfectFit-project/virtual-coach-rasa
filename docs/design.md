@@ -36,7 +36,7 @@ The user interacts with the
 [NiceDay smartphone app](https://play.google.com/store/apps/details?id=nl.sense.goalie2&hl=nl&gl=US).
 This app is developed by [sense-health](https://sense-health.com/) which is part of the consortium.
 
-It's main features are:
+Its main features are:
 * Trackers: simple panels that track amongst others: mood, number of cigarettes smoked, step count, thought records.
 * Daily planner: overview of planned actions
 * Messaging
@@ -105,7 +105,7 @@ Stores PerfectFit-specific data,
   - Any data that we need to conduct research
 * The interface to it will be an SqlAlchemy ORM (so no API abstraction)
 
-### Content Management System
+### Content Management System (CMS)
 Interface for domain experts to control the content of the application 
 (I.e. what the conversational agent responds with).
 Together with domain experts in the consortium we will decide on 
@@ -126,7 +126,8 @@ response (i.e. 'Welcome to this app')
 A number of algorithm components
 * For example: a Sensor Data Processor, that has as input sensor data for an activity, 
 and outputs some useful information about the activity (i.e. was the capacity threshold reached).
-* Are standalone Python libraries that are imported and used by Rasa agent, but can also be used outside of this project.
+* They are standalone Python libraries that are imported and used by Rasa agent, 
+but can also be used outside of this project.
 * Should be setup in a modular and functional way. So no connections to the database or other components,
 the interface should be functions or methods that take as input all the required data used by the algorithm.
 

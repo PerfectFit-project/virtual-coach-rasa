@@ -1,2 +1,3 @@
 requests==2.25.1
 pandas_ods_reader==0.0.7
+paalgorithms==0.1

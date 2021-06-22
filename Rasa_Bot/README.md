@@ -22,9 +22,6 @@ The agent name is set in the "domain.yml"-file in the slot"agent_name." Changing
 ### Storage of Conversations
 All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
 
-### Custom Actions
-Any changes made to the actions-folder requires re-building the custom action image and pushing it to Dockerhub.
-
 ### Language Model
 Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training.
 

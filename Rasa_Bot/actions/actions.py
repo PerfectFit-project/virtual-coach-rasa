@@ -30,9 +30,9 @@ class GetPlanWeek(Action):
         return "action_get_plan_week"
 
     async def run(self, dispatcher, tracker, domain):
-        age = 30 # We should get this value from a database.
-        WeeklyKilometers = weekly_kilometers(age) # Calculates weekly kilometers based on age
-        plan = "Sure, you should run %.1f kilometers this week. And please read through this psycho-education: www.link-to-psycho-education.nl." %WeeklyKilometers
+        AGE = 30 # We should get this value from a database.
+        weekly_kilometers = weekly_kilometers(AGE) # Calculates weekly kilometers based on age
+        plan = "Sure, you should run %.1f kilometers this week. And please read through this psycho-education: www.link-to-psycho-education.nl." %weekly_kilometers
         
         return [SlotSet("plan_week", plan)]
 

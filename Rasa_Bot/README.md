@@ -12,7 +12,7 @@ The steps are as follows:
    - The output for the above command should be something like this: [{"recipient_id":"user","text":"Hoi Kees!"},{"recipient_id":"user","text":"Sure, you should ...
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
 
-Note that while the requirements-file lists Rasa 2.0.2 as a requirement, this is only needed to train a language model.
+Note that while the requirements-file lists Rasa 2.0.2 as a requirement, this is only needed to train a language model and handy when developing.
 
 ## Future Changes
 ### Language

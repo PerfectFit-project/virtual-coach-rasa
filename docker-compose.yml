@@ -5,9 +5,11 @@ services:
     ports:
       - 5005:5005
     volumes:
-      - ./:/app
+      - ./Rasa_Bot/:/app
     command:
       - run
   rasa_actions:
-    build: actions/
+    build: Rasa_Bot/actions/
     expose: ["5055"]
+  niceday-broker:
+    build: niceday-broker/

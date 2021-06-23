@@ -10,7 +10,11 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.events import ConversationResumed
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.events import FollowupAction
-    
+from paalgorithms import weekly_kilometers
+
+AGE = 30  # We should get this value from a database.
+
+
 # Get the user's name from the database.
 # Save the extracted name to a slot.
 class GetNameFromDatabase(Action):
@@ -22,15 +26,16 @@ class GetNameFromDatabase(Action):
         name = "Kees"
         
         return [SlotSet("name", name)]
-    
+
+
 # Get weekly plan
 class GetPlanWeek(Action):
     def name(self):
         return "action_get_plan_week"
 
     async def run(self, dispatcher, tracker, domain):
-        
-        plan = "Sure, you should do 2 half-hour running sessions. And please read through this psycho-education: www.link-to-psycho-education.nl."
+        kilometers = weekly_kilometers(AGE)  # Calculates weekly kilometers based on age
+        plan = "Sure, you should run %.1f kilometers this week. And please read through this psycho-education: www.link-to-psycho-education.nl." %kilometers
         
         return [SlotSet("plan_week", plan)]
 

@@ -12,15 +12,23 @@ The steps are as follows:
    - The output for the above command should be something like this: [{"recipient_id":"user","text":"Hoi Kees!"},{"recipient_id":"user","text":"Sure, you should ...
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
 
+Note that while the requirements-file lists Rasa 2.0.2 as a requirement, this is only needed to train a language model and handy when developing.
+
 ## Future Changes
 ### Language
 Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."
+
+### Rasa Version
+Currently, the model is trained in Rasa 2.0.2. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one (2.6.0 at the time of this writing). See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source.
 
 ### Agent Name
 The agent name is set in the "domain.yml"-file in the slot"agent_name." Changing this name in said file requires retraining the model. 
 
 ### Storage of Conversations
 All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
+
+### Custom Actions
+Any changes made to the actions-folder requires re-building the custom action image and pushing it to Dockerhub. In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder. Moreover, the Dockerfile needs to be adapted so that those requirements are installed in the custom action container.
 
 ### Language Model
 Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training.
@@ -44,9 +52,10 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 
 - actions
    - actions.py: custom actions, e.g. for reading from a database or file.
+   - requirements-actions.txt: requirements for the custom action code to be installed in the Docker container for the custom actions.
 - data:
-   - nlu.yml: contains the intents that the agent can recognize and training examples for each such intent. Currently there is a total of 3 intents, one for confirming, one for denying, and one for requesting the weekly planning.
-   - rules.yml: *default file, not used at the moment.*
+   - nlu.yml: contains the intents that the agent can recognize and training examples for each such intent. We have intents e.g. for a positive mood, for confirming, and for requesting the weekly planning.
+   - rules.yml: rules override actions predicted based on stories. We currently use them to e.g. always say bye back after the user says goodbye.
    - stories.yml: training stories, i.e. the conversation paths the agent can take.
 - models: contains trained models
-- domain.yml: contains all slots, utterances, etc.
+- domain.yml: contains all slots, utterances, etc. Also defines the time period after which a new conversation starts in case of inactivity.

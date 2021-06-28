@@ -27,12 +27,6 @@ The agent name is set in the "domain.yml"-file in the slot"agent_name." Changing
 ### Storage of Conversations
 All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
 
-### Custom Actions
-Any changes made to the actions-folder requires re-building the custom action image and pushing it to Dockerhub. In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder. Moreover, the Dockerfile needs to be adapted so that those requirements are installed in the custom action container.
-
-### Language Model
-Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training.
-
 ## Conversation Flow
 The agent is built for very simple conversations. It's capabilities are twofold. First, it will always respond according to the rules shown below. For example, it will always respond with a goodbye-message if the user sends a goodbye-message.
 
@@ -59,3 +53,11 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
    - stories.yml: training stories, i.e. the conversation paths the agent can take.
 - models: contains trained models
 - domain.yml: contains all slots, utterances, etc. Also defines the time period after which a new conversation starts in case of inactivity.
+
+## Tips for developers
+
+### Add dependencies for action server to requirements
+In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder.
+
+### Retraining when making changes to Language Model
+Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training.

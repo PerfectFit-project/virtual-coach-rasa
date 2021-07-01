@@ -9,5 +9,5 @@ services:
     command:
       - run
   rasa_actions:
-    build: actions/
+    build: .
     expose: ["5055"]

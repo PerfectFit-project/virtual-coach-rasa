@@ -1,6 +1,6 @@
-# PerfectFit virtual coach backend prototype
+# PerfectFit virtual coach server functional prototype
+This should become a working functional prototype that can handle the following scenario. It is a functional system that facilitates a subset of the must have requirements, that can easily be extended with specific content to match the patient journey. It is not yet production ready.  
 
-This should become a working prototype that can handle the following scenario: 
 * User sends a message in the NiceDay app with the intent to get the planning for the next week 
 * In response the Virtual Coach sends back the weekly planning that should include: 
   - Hey {name}, where the name is retrieved from the database 
@@ -14,6 +14,9 @@ This should become a working prototype that can handle the following scenario:
 And an example conversation:
 
 <img src="https://user-images.githubusercontent.com/9945255/116060273-054fb080-a682-11eb-9fe4-d864305bf4d2.png" width="300" >
+
+## Software development planning
+See [software development planning document](https://nlesc.sharepoint.com/:w:/r/sites/team-flow/Shared%20Documents/PerfectFit/Perfect%20Fit%20-%20RFCs/PerfectFit-RFC-0007-software-development-planning.docx?d=w434661cbf10c458998e9e45ea6451ea4&csf=1&web=1&e=8cxoLW)
 
 ## Architecture design
 Take a look at the design [here](docs/design.md).

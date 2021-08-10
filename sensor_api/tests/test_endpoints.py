@@ -4,9 +4,9 @@ from sensor_api.sensorapi.run import create_app
 
 
 @pytest.fixture(scope='class')
-def client(request):
+def client():
     '''Build http client'''
-    app = create_app(host='0.0.0.0', port=8080)
+    app = create_app()
     with app.test_client() as client:
         yield client
 

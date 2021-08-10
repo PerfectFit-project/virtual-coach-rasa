@@ -5,8 +5,8 @@ on: [push, pull_request]
 jobs:
 
   build:
-    name: Build for (${{ '{{ ' -}} matrix.python-version }}, ${{ '{{ ' -}} matrix.os }})
-    runs-on: ${{ '{{ ' -}} matrix.os }}
+    name: Build for (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -14,10 +14,10 @@ jobs:
         python-version: ['3.7']
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ '{{ ' -}} matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ '{{ ' -}} matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
       - name: Python info
         shell: bash -l {0}
         run: |

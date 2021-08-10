@@ -1,3 +1,4 @@
+rasa==2.0.2
 requests==2.25.1
 pandas_ods_reader==0.0.7
-paalgorithms==0.1
+git+https://github.com/PerfectFit-project/pa-algorithms

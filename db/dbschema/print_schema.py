@@ -12,4 +12,3 @@ for table in inspector.get_table_names():
     for column in inspector.get_columns(table):
         print(column['name'], column['type'])
     print('')
-

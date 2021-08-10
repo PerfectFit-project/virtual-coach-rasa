@@ -1,6 +1,6 @@
 import pytest
 
-from sensorapi.run import create_app
+from sensor_api.sensorapi.run import create_app
 
 
 @pytest.fixture(scope='class')

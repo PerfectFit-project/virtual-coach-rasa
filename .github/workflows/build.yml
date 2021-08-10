@@ -33,4 +33,6 @@ jobs:
       - name: Check import order
         run: isort --recursive --check-only virtual-coach-server
       - name: Run unit tests
-        run: pytest -v
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$PWD
+          pytest -v

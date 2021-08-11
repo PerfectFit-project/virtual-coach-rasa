@@ -27,7 +27,7 @@ jobs:
       - name: Test niceday-api
         run: npm test --prefix niceday-api
       - name: Run ESLint for niceday-api
-        run: eslint niceday-api --ext .js,.jsx,.ts,.tsx
+        run: npx eslint niceday-api
 
       - run: cd../niceday-broker
       - run: npm ci

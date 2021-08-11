@@ -23,9 +23,9 @@ jobs:
       - run: git config --global url."https://${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       - run: npm ci --prefix niceday-api
-      - run: npm run build --if-present -- prefix niceday-api
+      - run: npm run build --if-present --prefix niceday-api
       - name: Test niceday-api
-        run: npm test -- prefix niceday-api
+        run: npm test --prefix niceday-api
       - name: Run ESLint for niceday-api
         run: eslint niceday-api --ext .js,.jsx,.ts,.tsx
 

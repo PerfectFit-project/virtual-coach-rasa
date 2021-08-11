@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "@sense-os/goalie-js": "git+ssh://git@github.com/senseobservationsystems/goalie-js.git#v0.39.2",
+    "@sense-os/goalie-js": "senseobservationsystems/goalie-js#v0.39.2",
     "connect": "^3.2.0",
     "dotenv": "^8.2.0",
     "js-yaml": "^3.3.0",

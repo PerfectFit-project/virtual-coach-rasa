@@ -1,7 +1,7 @@
 import connexion
 
 
-def create_app(host, port):
+def create_app():
 
     app = connexion.FlaskApp(
         __name__,
@@ -24,5 +24,5 @@ def create_app(host, port):
 if __name__ == "__main__":
     host = '0.0.0.0'
     port = 8080
-    app = create_app(host, port)
+    app = create_app()
     app.run(host=host, port=port, debug=True)

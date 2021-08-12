@@ -1,5 +1,6 @@
 from flask import make_response, request
 
+
 def http_response(sensor_type):
     """HTTP responce to a POST request.
 

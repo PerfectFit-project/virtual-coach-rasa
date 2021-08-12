@@ -46,7 +46,7 @@ jobs:
       run: npm test --prefix niceday-api
 
     - run: npm ci --prefix niceday-broker
-    - name: Test niceday-broker
+    - name: Test niceday-broker with coverage
       run: npm test --prefix niceday-broker
 
     # Perform sonarcloud scan

@@ -1,3 +1,5 @@
+name: Python + Node.js CI
+
 on:
   # Trigger analysis when pushing in master or pull requests, and when creating
   # a pull request.
@@ -6,27 +8,36 @@ on:
       - main
   pull_request:
       types: [opened, synchronize, reopened]
-name: Sonar Cloud Check
+
 jobs:
-  sonarcloud:
+  tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
+        # Disabling shallow clone is recommended for improving relevancy of reporting to sonarcloud
         fetch-depth: 0
         persist-credentials: false  # To make Github uses personal access token
 
-    # Gather coverage for Python
+    # Tests for Python
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+    - name: Python info
+      shell: bash -l {0}
+      run: |
+        which python3
+        python3 --version
     - name: Upgrade pip and install dependencies
       run: |
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r requirements-dev.txt
+    - name: Check style against standards using prospector
+      run: prospector
+    - name: Check import order
+      run: isort --recursive --check-only virtual-coach-server
     - name: Run unit tests with coverage
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD
@@ -34,7 +45,7 @@ jobs:
     - name: Correct coverage paths
       run: sed -i "s+$PWD/++g" coverage.xml
 
-    # Gather coverage for node.js
+    # Tests for node.js
     - name: Use Node.js
       uses: actions/setup-node@v2
       with:
@@ -42,12 +53,18 @@ jobs:
     - run: git config --global url."https://${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
     - run: npm ci --prefix niceday-api
-    - name: Test niceday-api with coverage
+    - run: npm run build --if-present --prefix niceday-api
+    - name: Test niceday-api
       run: npm test --prefix niceday-api
+    - name: Run ESLint for niceday-api
+      run: npx eslint niceday-api
 
     - run: npm ci --prefix niceday-broker
-    - name: Test niceday-broker with coverage
+    - run: npm run build --if-present --prefix niceday-broker
+    - name: Test niceday-broker
       run: npm test --prefix niceday-broker
+    - name: Run ESLint for niceday-broker
+      run: npx eslint niceday-broker
 
     # Perform sonarcloud scan
     - name: SonarCloud Scan

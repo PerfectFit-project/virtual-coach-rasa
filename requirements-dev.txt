@@ -1,2 +1,3 @@
 prospector[with_pyroma]
 pytest
+pytest-cov

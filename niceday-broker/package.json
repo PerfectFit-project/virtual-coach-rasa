@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "npm install",
     "start": "node index.js",
-    "test": "jest --config ./jest.config.json"
+    "test": "jest --config ./jest.config.json --coverage"
   },
   "license": "Apache-2.0",
   "private": false,

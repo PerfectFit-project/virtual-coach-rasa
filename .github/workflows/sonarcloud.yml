@@ -15,6 +15,9 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
+        persist-credentials: false  # To make Github uses personal access token
+
+    # Gather coverage for Python
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -30,6 +33,23 @@ jobs:
         pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml
     - name: Correct coverage paths
       run: sed -i "s+$PWD/++g" coverage.xml
+
+    # Gather coverage for node.js
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 15.x
+    - run: git config --global url."https://${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+
+    - run: npm ci --prefix niceday-api
+    - name: Test niceday-api with coverage
+      run: npm test --prefix niceday-api
+
+    - run: npm ci --prefix niceday-broker
+    - name: Test niceday-broker
+      run: npm test --prefix niceday-broker
+
+    # Perform sonarcloud scan
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
       env:

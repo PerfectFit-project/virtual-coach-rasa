@@ -1,3 +1,6 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=PerfectFit-project_virtual-coach-server&metric=alert_status)](https://sonarcloud.io/dashboard?id=PerfectFit-project_virtual-coach-server)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=PerfectFit-project_virtual-coach-server&metric=coverage)](https://sonarcloud.io/dashboard?id=PerfectFit-project_virtual-coach-server)
+
 # PerfectFit virtual coach server functional prototype
 This should become a working functional prototype that can handle the following scenario. It is a functional system that facilitates a subset of the must have requirements, that can easily be extended with specific content to match the patient journey. It is not yet production ready.  
 

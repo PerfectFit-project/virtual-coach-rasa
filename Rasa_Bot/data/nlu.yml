@@ -77,3 +77,8 @@ nlu:
     - "Niet goed."
     - "Slecht."
   
+- intent: completed_pa
+   examples:
+    - "Ik heb net gesport."
+    - "Ik heb net gelopen."
+    - "Ik heb net gewandeld."

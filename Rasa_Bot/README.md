@@ -22,7 +22,7 @@ Currently, the NLU-model does not use any pre-trained embeddings. If in the futu
 Currently, the model is trained in Rasa 2.8.0. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one (2.8.2 at the time of this writing). See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. See [#55](https://github.com/PerfectFit-project/virtual-coach-server/issues/55).
 
 ### Agent Name
-The agent name is set in the "domain.yml"-file in the slot"agent_name." Changing this name in said file requires retraining the model. 
+The agent name is set in the "domain.yml"-file in the slot "agent_name." Changing this name in said file requires retraining the model. 
 
 ### Storage of Conversations
 All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
@@ -60,4 +60,4 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder.
 
 ### Retraining when making changes to Language Model
-Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile also needs to be updated.
+Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.

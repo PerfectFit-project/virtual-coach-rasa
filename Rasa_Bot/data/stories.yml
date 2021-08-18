@@ -81,3 +81,9 @@ stories:
   - checkpoint: user_mood_response
   - intent: negative_mood
   - action: utter_response_mood_negative
+
+# User indicates completion PA and was positive
+- story: user_indicate_pa_mood_positive
+  steps:
+  - intent: completed_pa
+  - action: utter_aks_how_was

@@ -76,6 +76,11 @@ responses:
   utter_error_save_plan_week_calendar:
   - text: "Sorry, ik kan de planning nu niet invoeren."
   
+  # Activity evaluation
+  utter_ask_how_was:
+  - text: "Wat goed! Hoe vond je dat het ging?"
+
+  
 actions:
 - action_get_plan_week
 - action_get_name_from_database

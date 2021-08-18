@@ -31,4 +31,5 @@ Save the therapist user id and token in your `.env` file as THERAPIST_USER_ID an
 see .env-example. These will be loaded as environment variables and will thus be available in the app.
 NB: The token expires, so you need to replace it once in a while. 
 You will get a `ChatNotAuthorizedError` if the token is invalid.
-3. Run `docker-compose --env-file .env up`
+3. Run `./script/server`. This will install the right dependencies, build docker images, and 
+run them.

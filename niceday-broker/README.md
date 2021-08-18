@@ -24,7 +24,13 @@ To run the server, run:
 npm start
 ```
 
-### Running the full Niceday conversational agent application
-You'll need to run both this niceday-router and the Rasa_Bot 
-(see [Readme of Rasa_Bot](https://github.com/PerfectFit-project/virtual-coach-server/blob/main/Rasa_Bot/README.md)) 
-to have a working conversational agent in the Niceday app.
+### Running with docker
+Run the following commands:
+```
+./script/bootstrap
+docker build -t niceday-broker .
+docker run --env-file .env niceday-broker
+```
+
+See [root README](../README.md) for instructions of running 
+the full application with docker-compose.

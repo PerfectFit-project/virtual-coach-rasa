@@ -26,7 +26,7 @@ paths:
   /profiles/{userId}:
     get:
       summary: Get user profile by ID
-      operationId: getUserProfileById
+      operationId: getUserProfile
       parameters:
         - in: path
           name: userId

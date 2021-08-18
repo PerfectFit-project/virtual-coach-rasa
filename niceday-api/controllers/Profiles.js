@@ -1,6 +1,12 @@
 const utils = require('../utils/writer.jsx');
+const Profiles = require('../service/ProfilesService');
 
-module.exports.getUserProfileById = function getUserProfile(req, res, next, body) {
-    response = {'profile': 'test'};
-    utils.writeJson(res, response);
+module.exports.getUserProfile = function getUserProfile(req, res, next, body) {
+  Profiles.getUserProfile(body)
+    .then((response) => {
+      utils.writeJson(res, response);
+    })
+    .catch((response) => {
+      utils.writeJson(res, response);
+    });
 };

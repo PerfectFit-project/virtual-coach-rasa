@@ -73,7 +73,7 @@ nlu:
 - intent: negative_mood
   examples: |
     - "Ik voel me niet zo goed."
-    - "Ik voe me niet lekker."
+    - "Ik voel me niet lekker."
     - "Niet goed."
     - "Slecht."
   

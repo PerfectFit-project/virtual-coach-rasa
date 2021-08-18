@@ -1,11 +1,34 @@
 import requests
 
 class NicedayClient:
+    """
+    Client for interacting with the niceday-api component of the PerfectFit stack.
+    """
 
     def __init__(self, niceday_api_uri='http://localhost:8080/'):
+        """
+        Construct a client for interacting with the given niceday API URI.
+        By default, this is assumed to be on http://localhost:8080/, but
+        can be set with the niceday_api_uri parameter.
+        """
+
         self._niceday_api_uri = niceday_api_uri
 
     def _niceday_api(self, endpoint: str, query_params: dict, path_param: str) -> dict:
+        """
+        Handles http requests with the niceday-api.
+
+        endpoint: str
+            Specifies the desired endpoint e.g. 'profiles' or 'messages'
+
+        query_params: dict
+            Parameters that should go in the query string of the request URL
+
+        path_param: str
+            The parameter that goes at the end of the path.
+            i.e. [nice-day-api-url]/endpoint/path_param
+        """
+
         if not endpoint.endswith('/'):
             endpoint += '/'
 
@@ -22,6 +45,10 @@ class NicedayClient:
         return results
 
     def get_profile(self, user_id) -> dict:
+        """
+        Returns the niceday user profile corresponding to the given user id
+        """
+
         endpoint = 'profiles'
         query_params = []
         path_param = str(user_id)

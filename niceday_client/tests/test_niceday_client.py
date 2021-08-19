@@ -1,5 +1,6 @@
 from niceday_client import NicedayClient
 
+
 def test_get_profile():
     client = NicedayClient()
     existing_user_id = 38527

@@ -1,15 +1,15 @@
 """Unit tests for the custom actions"""
 import pytest
 
-from rasa_sdk.executor import CollectingDispatcher, Tracker
-from rasa_sdk.events import SlotSet, ActionExecuted, SessionStarted
+from rasa_sdk.events import SlotSet
 
-from tests.conftest import EMPTY_TRACKER, PAY_CC_CONFIRMED, PAY_CC_NOT_CONFIRMED
+from tests.conftest import WEEKLY_PLAN_TRACKER
+
 from actions import actions
 
 @pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar(dispatcher, domain):
-    tracker = EMPTY_TRACKER
+    tracker = WEEKLY_PLAN_TRACKER
     action = actions.SavePlanWeekCalendar()
     events = await action.run(dispatcher, tracker, domain)
     expected_events = [

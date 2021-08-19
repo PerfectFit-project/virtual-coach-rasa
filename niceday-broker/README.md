@@ -34,3 +34,4 @@ docker run --env-file .env niceday-broker
 
 See [root README](../README.md) for instructions of running 
 the full application with docker-compose.
+

@@ -37,7 +37,7 @@ jobs:
     - name: Check style against standards using prospector
       run: prospector
     - name: Check import order
-      run: isort --recursive --check-only virtual-coach-server
+      run: isort --recursive --check-only
     - name: Run unit tests with coverage
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD

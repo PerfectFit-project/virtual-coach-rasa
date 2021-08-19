@@ -3,7 +3,7 @@ import pytest
 
 from rasa_sdk.events import SlotSet
 
-from conftest import WEEKLY_PLAN_TRACKER
+from tests.conftest import WEEKLY_PLAN_TRACKER
 
 import os, sys
 currentdir = os.path.dirname(os.path.realpath(__file__))

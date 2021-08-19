@@ -1,0 +1,12 @@
+version: "2.0"
+stories:
+- story: Get weekly planning, user initiated
+  steps: 
+  * request_plan_week: Mag ik de planning?
+  - action_get_name_from_database
+  - utter_greet
+  - action_get_plan_week
+  - utter_plan_week
+  - utter_ask_plan_calendar
+  * deny: Nee
+  - utter_okay

@@ -51,7 +51,13 @@ class NicedayClient:
 
     def get_profile(self, user_id) -> dict:
         """
-        Returns the niceday user profile corresponding to the given user id
+        Returns the niceday user data corresponding to the given user id.
+        This is in the form of a dict, containing the user's
+            'networks' (memberId, role etc)
+            'userProfile' (name, location, bio, birthdate etc)
+            'user' info (username, email, date joined etc.)
+        The exact contents of this returned data depends on what is stored
+        on the SenseServer.
         """
 
         endpoint = 'profiles'

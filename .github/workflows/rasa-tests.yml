@@ -28,6 +28,7 @@ jobs:
         pip install -r Rasa_Bot/requirements.txt
     - name: Validate stories
       run: | 
+        cd Rasa_Bot
         rasa data validate --max-history 10
     - name: Train model
       run: |

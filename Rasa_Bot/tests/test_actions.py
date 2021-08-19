@@ -12,6 +12,7 @@ sys.path.append(parentdir)
 
 from actions import actions
 
+# Update once the function tested here works correctly
 @pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar(dispatcher, domain):
     tracker = WEEKLY_PLAN_TRACKER

@@ -3,7 +3,7 @@ import pytest
 
 from rasa_sdk.events import SlotSet
 
-from tests.conftest import WEEKLY_PLAN_TRACKER
+from conftests import WEEKLY_PLAN_TRACKER
 
 from actions import actions
 

@@ -8,7 +8,7 @@ print(pathlib.Path(__file__).parent.resolve())
 
 print(pathlib.Path().resolve())
 
-from conftests import WEEKLY_PLAN_TRACKER
+from conftest import WEEKLY_PLAN_TRACKER
 
 from actions import actions
 

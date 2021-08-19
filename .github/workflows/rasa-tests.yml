@@ -11,8 +11,8 @@ on:
       types: [opened, synchronize, reopened]
 
 jobs:
-  build-model:
-    name: Build and test model
+  data-validation:
+    name: Validate Data
     runs-on: ubuntu-latest
     env:
       working-directory: ./Rasa_Bot
@@ -26,13 +26,33 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r Rasa_Bot/requirements.txt
-    - name: Validate stories
+    - name: Rasa Data Validation
       run: | 
         cd Rasa_Bot
         rasa telemetry disable
         rasa data validate --max-history 10
+  training-testing:
+    name: Train and Test model
+    runs-on: ubuntu-latest
+    needs: 
+    - data-validation
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r Rasa_Bot/requirements.txt
+        rasa --version
     - name: Train model
       run: |
         cd Rasa_Bot
         rasa train
+    - name: Test End 2 End Stories
+      run: |
+        rasa --version
+        rasa test core --stories tests/test_conversations.yml --fail-on-prediction-errors
    

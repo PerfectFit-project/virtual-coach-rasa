@@ -1,4 +1,0 @@
--r requirements.txt
-
-# Python Testing
-pytest

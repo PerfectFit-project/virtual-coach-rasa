@@ -27,6 +27,7 @@ jobs:
     - name: Type Checking
       working-directory: ${{ github.workspace }}/Rasa_Bot
       run: |
+        pip install -e .
         pip list
         make types
   data-validation:

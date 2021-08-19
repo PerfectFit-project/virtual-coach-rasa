@@ -29,6 +29,7 @@ jobs:
     - name: Validate stories
       run: | 
         cd Rasa_Bot
+        rasa telemetry disable
         rasa data validate --max-history 10
     - name: Train model
       run: |

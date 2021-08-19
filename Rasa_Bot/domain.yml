@@ -5,6 +5,13 @@ intents:
 - confirm
 - deny
 - request_plan_week
+- who_are_you
+- goodbye
+- positive_mood
+- how_are_you
+- negative_mood
+- greeting
+
 slots:
   ### General
   # The user's name

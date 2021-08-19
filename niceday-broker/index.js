@@ -1,16 +1,19 @@
 const goalieJs = require('@sense-os/goalie-js');
 
-const { Chat, Authentication, SenseServer, SenseServerEnvironment,
-       ConnectionStatus } = goalieJs;
+const {
+  Chat, Authentication, SenseServer, SenseServerEnvironment,
+  ConnectionStatus,
+} = goalieJs;
 const { XMLHttpRequest } = require('xmlhttprequest');
-require('isomorphic-fetch')
-
+require('isomorphic-fetch');
 
 // Read in environment variables from .env file
 require('dotenv').config();
 
-const { RASA_AGENT_URL, THERAPIST_PASSWORD,
-        THERAPIST_EMAIL_ADDRESS } = process.env;
+const {
+  RASA_AGENT_URL, THERAPIST_PASSWORD,
+  THERAPIST_EMAIL_ADDRESS,
+} = process.env;
 
 const chatSdk = new Chat();
 const authSdk = new Authentication(SenseServer.Alpha);
@@ -46,8 +49,9 @@ function onRasaResponse() {
 class MessageHandler {
   constructor(therapistId, token) {
     this.therapistId = therapistId;
-    this.token = token
+    this.token = token;
   }
+
   /**
    * Handle an incoming Niceday message
    * */
@@ -71,13 +75,11 @@ function setup(therapistId, token) {
     }
   });
 
-  const handler = new MessageHandler(therapistId, token)
+  const handler = new MessageHandler(therapistId, token);
   console.log('Listening to incoming message...');
   chatSdk.subscribeToIncomingMessage(handler.onIncomingMessage);
 }
 
-authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then(response => {
-    setup(response.user.id, response.token)
-  });
-
-
+authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
+  setup(response.user.id, response.token);
+});

@@ -47,7 +47,7 @@ jobs:
     - name: Run unit tests
       working-directory: ${{ github.workspace }}/Rasa_Bot
       run: |
-        pytest Rasa_Bot/tests/test_actions.py
+        pytest tests/test_actions.py
   training-testing:
     name: Train and Test model
     runs-on: ubuntu-latest

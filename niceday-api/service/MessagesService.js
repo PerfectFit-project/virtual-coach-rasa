@@ -1,4 +1,3 @@
-
 const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/goalie-js');
 
 /**

@@ -53,6 +53,7 @@ jobs:
         rasa train
     - name: Test End 2 End Stories
       run: |
+        cd Rasa_Bot
         rasa --version
         rasa test core --stories tests/test_conversations.yml --fail-on-prediction-errors
    

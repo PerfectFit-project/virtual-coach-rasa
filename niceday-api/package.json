@@ -21,8 +21,7 @@
     "dotenv": "^8.2.0",
     "isomorphic-fetch": "^3.0.0",
     "js-yaml": "^3.3.0",
-    "oas3-tools": "^2.2.3",
-    "xmlhttprequest": "^1.8.0"
+    "oas3-tools": "^2.2.3"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

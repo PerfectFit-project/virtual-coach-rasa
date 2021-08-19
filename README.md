@@ -25,10 +25,8 @@ See [software development planning document](https://nlesc.sharepoint.com/:w:/r/
 Take a look at the design [here](docs/design.md).
 
 ## Setup using docker-compose
-1. See `niceday-api/` for getting the therapist user id and token. 
-2. Create a file called `.env` in the root of this app.
-Save the therapist user id and token in your `.env` file as THERAPIST_USER_ID and NICEDAY_TOKEN respectively,
-see .env-example. These will be loaded as environment variables and will thus be available in the app.
-NB: The token expires, so you need to replace it once in a while. 
-You will get a `ChatNotAuthorizedError` if the token is invalid.
-3. Run `docker-compose --env-file .env up`
+1. Create a file called `.env` in the root of this app.
+Set THERAPIST_EMAIL_ADDRESS and THERAPIST_PASSWORD in your `.env` file, see .env-example. 
+These will be loaded as environment variables and will thus be available in the app.
+You will get a `InvalidUsernamePasswordError` if the username or password is invalid.
+2. Run `docker-compose --env-file .env up`

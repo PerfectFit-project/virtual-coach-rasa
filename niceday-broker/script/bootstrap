@@ -1,2 +1,2 @@
 #!/bin/bash
-npm install .
+git clone git@github.com:senseobservationsystems/goalie-js.git --single-branch --branch v0.39.2 ./build/goalie-js

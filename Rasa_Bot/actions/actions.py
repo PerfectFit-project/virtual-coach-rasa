@@ -37,8 +37,6 @@ class GetPlanWeek(Action):
         return [SlotSet("plan_week", plan)]
 
 # Save weekly plan in calendar
-
-
 class SavePlanWeekCalendar(Action):
     def name(self):
         return "action_save_plan_week_calendar"

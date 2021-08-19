@@ -27,7 +27,6 @@ jobs:
     - name: Type Checking
       working-directory: ${{ github.workspace }}/Rasa_Bot
       run: |
-        pip install -e .
         pip list
         make types
   data-validation:
@@ -69,6 +68,7 @@ jobs:
       working-directory: ${{ github.workspace }}/Rasa_Bot
       run: |
         #pytest . --capture=no
+        pip install -e .
         make test-actions
   training-testing:
     name: Train and Test model

@@ -45,9 +45,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r Rasa_Bot/requirements_dev.txt
     - name: Run unit tests
-      working-directory: ${{ github.workspace }}/Rasa_Bot
+      # working-directory: ${{ github.workspace }}/Rasa_Bot
       run: |
-        pytest tests/test_actions.py
+        #pytest tests/test_actions.py
+        make test-actions
   training-testing:
     name: Train and Test model
     runs-on: ubuntu-latest

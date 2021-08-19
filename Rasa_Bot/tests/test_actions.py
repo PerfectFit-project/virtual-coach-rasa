@@ -3,9 +3,9 @@ import pytest
 
 from rasa_sdk.events import SlotSet
 
-from conftest import WEEKLY_PLAN_TRACKER
+from tests.conftest import WEEKLY_PLAN_TRACKER
 
-from ..actions import actions
+from actions import actions
 
 @pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar(dispatcher, domain):

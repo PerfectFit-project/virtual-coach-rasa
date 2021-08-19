@@ -1,0 +1,2 @@
+test-actions:
+	pytest . -vv

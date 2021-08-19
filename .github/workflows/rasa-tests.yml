@@ -45,7 +45,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r Rasa_Bot/requirements_dev.txt
     - name: Run unit tests
-      working-directory: ${{ github.workspace }}
+      working-directory: ${{ github.workspace }}/Rasa_Bot
       run: |
         pytest .
   training-testing:

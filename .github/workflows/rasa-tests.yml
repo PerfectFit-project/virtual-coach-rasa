@@ -44,7 +44,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r Rasa_Bot/requirements.txt
-        pip install -r Rasa_Bot/Actions/requirements-actions.txt
+        pip install -r Rasa_Bot/actions/requirements-actions.txt
     - name: Run unit tests
       run: |
         pytest Rasa_Bot/tests/test_actions.py

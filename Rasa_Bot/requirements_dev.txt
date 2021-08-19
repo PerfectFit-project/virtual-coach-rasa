@@ -2,3 +2,4 @@
 
 # Python Testing
 pytest
+pytype

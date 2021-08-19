@@ -11,6 +11,23 @@ on:
       types: [opened, synchronize, reopened]
 
 jobs:
+  type-testing:
+    name: Test Types
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r Rasa_Bot/requirements_dev.txt
+    - name: Type Checking
+      run: |
+        pip list
+        make types
   data-validation:
     name: Validate Data
     runs-on: ubuntu-latest
@@ -33,6 +50,8 @@ jobs:
         rasa data validate --max-history 10
   action-unit-tests:
     name: Custom Actions Unit Testing
+    needs:
+    - type-testing
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1

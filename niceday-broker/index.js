@@ -1,18 +1,19 @@
 const goalieJs = require('@sense-os/goalie-js');
 
-const { Chat } = goalieJs;
-const { SenseServerEnvironment } = goalieJs;
-const { ConnectionStatus } = goalieJs;
+const { Chat, Authentication, SenseServer, SenseServerEnvironment,
+       ConnectionStatus } = goalieJs;
 const { XMLHttpRequest } = require('xmlhttprequest');
+require('isomorphic-fetch')
+
 
 // Read in environment variables from .env file
 require('dotenv').config();
 
-const THERAPIST_USER_ID = parseInt(process.env.THERAPIST_USER_ID, 10);
-const TOKEN = process.env.NICEDAY_TOKEN;
-const { RASA_AGENT_URL } = process.env;
+const { RASA_AGENT_URL, THERAPIST_PASSWORD,
+        THERAPIST_EMAIL_ADDRESS } = process.env;
 
 const chatSdk = new Chat();
+const authSdk = new Authentication(SenseServer.Alpha);
 
 /**
  * Request a response from rasa for a given text message
@@ -29,7 +30,7 @@ function requestRasa(text, userId, callback) {
 /**
  * Handle the response from rasa, send each message to the Niceday user.
  * */
-function handleRasaResponse() {
+function onRasaResponse() {
   if (this.readyState === 4 && this.status === 200) {
     const responseJson = JSON.parse(this.responseText);
     responseJson.forEach((message) => {
@@ -42,25 +43,41 @@ function handleRasaResponse() {
   }
 }
 
-/**
- * Handle an incoming Niceday message
- * */
-function handleIncomingMessage(message) {
-  console.log(message);
-  if (message.from !== THERAPIST_USER_ID && message.to === THERAPIST_USER_ID) {
-    requestRasa(message.content.TEXT, message.from, handleRasaResponse);
+class MessageHandler {
+  constructor(therapistId, token) {
+    this.therapistId = therapistId;
+    this.token = token
+  }
+  /**
+   * Handle an incoming Niceday message
+   * */
+  onIncomingMessage(message) {
+    console.log(message);
+    if (message.from !== this.therapistId && message.to === this.therapistId) {
+      requestRasa(message.content.TEXT, message.from, onRasaResponse);
+    }
   }
 }
 
-// Setup connection
-chatSdk.init(SenseServerEnvironment.Alpha);
-chatSdk.connect(THERAPIST_USER_ID, TOKEN);
+function setup(therapistId, token) {
+  // Setup connection
+  chatSdk.init(SenseServerEnvironment.Alpha);
+  chatSdk.connect(therapistId, token);
 
-// Send initial presence when connected
-chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
-  if (connectionStatus === ConnectionStatus.Connected) {
-    chatSdk.sendInitialPresence();
-  }
-});
-console.log('Listening to incoming message...');
-chatSdk.subscribeToIncomingMessage(handleIncomingMessage);
+  // Send initial presence when connected
+  chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
+    if (connectionStatus === ConnectionStatus.Connected) {
+      chatSdk.sendInitialPresence();
+    }
+  });
+
+  const handler = new MessageHandler(therapistId, token)
+  console.log('Listening to incoming message...');
+  chatSdk.subscribeToIncomingMessage(handler.onIncomingMessage);
+}
+
+authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then(response => {
+    setup(response.user.id, response.token)
+  });
+
+

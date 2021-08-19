@@ -33,5 +33,6 @@ jobs:
         rasa data validate --max-history 10
     - name: Train model
       run: |
+        cd Rasa_Bot
         rasa train
    

@@ -10,6 +10,7 @@ from rasa_sdk.events import SlotSet
 from actions import actions
 
 # NB: Update once the function tested here works correctly
+@pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar( 
     dispatcher: CollectingDispatcher,
     domain: DomainDict):

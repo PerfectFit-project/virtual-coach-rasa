@@ -3,3 +3,4 @@
 # Python Testing
 pytest
 pytype
+pytest-asyncio

@@ -10,7 +10,7 @@ from rasa_sdk.events import SlotSet
 from actions import actions
 
 # NB: Update once the function tested here works correctly
-def test_run_action_save_plan_week_calendar( 
+async def test_run_action_save_plan_week_calendar( 
     dispatcher: CollectingDispatcher,
     domain: DomainDict):
     tracker = WEEKLY_PLAN_TRACKER

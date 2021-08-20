@@ -67,7 +67,6 @@ jobs:
     - name: Run unit tests
       working-directory: ${{ github.workspace }}/Rasa_Bot
       run: |
-        #pytest . --capture=no
         pip install -e .
         make test-actions
   training-testing:

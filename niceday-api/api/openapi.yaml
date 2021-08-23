@@ -4,7 +4,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.1.0
+  version: 0.2.0
 servers:
 - url: /
 paths:
@@ -23,6 +23,23 @@ paths:
         "200":
           description: Success
       x-swagger-router-controller: Messages
+  /profiles/{userId}:
+    get:
+      summary: Get user profile by ID
+      operationId: getUserProfile
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Integer ID of the user whose profile is desired
+          example: 38527
+      responses:
+        "200":
+          description: Success
+      x-swagger-router-controller: Profiles
+
 components:
   schemas:
     Message:

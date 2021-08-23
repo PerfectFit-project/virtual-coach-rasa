@@ -7,6 +7,9 @@ MOCK_PROFILE_RESPONSE = {'id': 12345, 'networks': [{'networkMemberId': 123456, '
 
 @pytest.mark.integration
 def test_get_profile_from_server():
+    """
+    Test fetching of a (known) user from the Sensehealth server
+    """
     client = NicedayClient()
     existing_user_id = 38527
     profile = client.get_profile(existing_user_id)
@@ -17,6 +20,9 @@ def test_get_profile_from_server():
 
 @mock.patch('niceday_client.NicedayClient._niceday_api')
 def test_get_profile(mock_niceday_api):
+    """
+    Unit test for NanopubClient.get_profile() method with mocked server
+    """
     mock_niceday_api.return_value = MOCK_PROFILE_RESPONSE
     client = NicedayClient()
     profile = client.get_profile(12345)

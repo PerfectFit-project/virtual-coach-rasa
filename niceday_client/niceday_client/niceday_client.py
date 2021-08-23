@@ -61,6 +61,6 @@ class NicedayClient:
         """
 
         endpoint = 'profiles'
-        query_params = []
+        query_params = {}
         path_param = str(user_id)
         return self._niceday_api(endpoint, query_params, path_param)

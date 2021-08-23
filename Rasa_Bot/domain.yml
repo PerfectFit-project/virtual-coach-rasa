@@ -5,6 +5,8 @@ intents:
 - confirm
 - deny
 - request_plan_week
+- EXTERNAL_set_reminder
+- EXTERNAL_send_reminder
 slots:
   ### General
   # The user's name
@@ -17,7 +19,7 @@ slots:
     type: text
     initial_value: 'Kris'
     influence_conversation: false
-    
+
   ### Weekly planning
   # The plan for the week
   plan_week:
@@ -28,7 +30,7 @@ slots:
   success_save_calendar_plan_week:
     type: bool
     influence_conversation: true
-  
+
 responses:
   # Fallback
   utter_default:
@@ -75,8 +77,10 @@ responses:
   - text: "OK!"
   utter_error_save_plan_week_calendar:
   - text: "Sorry, ik kan de planning nu niet invoeren."
-  
+
 actions:
 - action_get_plan_week
 - action_get_name_from_database
 - action_save_plan_week_calendar
+- action_set_reminder
+- action_react_to_reminder

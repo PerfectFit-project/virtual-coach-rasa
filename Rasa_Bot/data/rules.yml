@@ -8,7 +8,17 @@ rules:
   - action: utter_goodbye
 
 - rule: introduce and define purpose when user asks who the agent is
-  steps: 
+  steps:
   - intent: who_are_you
   - action: utter_agent_name
   - action: utter_agent_purpose
+
+- rule: set reminder
+  steps:
+  - intent: EXTERNAL_set_reminder
+  - action: action_set_reminder
+
+- rule: trigger `action_react_to_reminder` for `EXTERNAL_reminder`
+  steps:
+  - intent: EXTERNAL_send_reminder
+  - action: action_react_to_reminder

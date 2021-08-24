@@ -89,6 +89,6 @@ class NicedayClient:
                                  f'niceday-api does not contain expected '
                                  f'key "{k}". Has the data structure '
                                  f'stored on the Senseserver changed?')
-            return_profile[k] = user_data['userProfile']
+            return_profile[k] = user_data['userProfile'][k]
 
         return return_profile

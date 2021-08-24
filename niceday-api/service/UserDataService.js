@@ -11,10 +11,10 @@ require('dotenv').config();
 const TOKEN = process.env.NICEDAY_TOKEN;
 
 /**
- * Fetch the user profile corresponding to the given user ID.
- * Returns the profile as JSON.
+ * Fetch the user data corresponding to the given user ID.
+ * Returns the JSON as received from the SenseServer.
  * */
-exports.getUserProfile = (userId) => new Promise((resolve, reject) => {
+exports.getUserData = (userId) => new Promise((resolve, reject) => {
   userNetwork
     .getContact(TOKEN, userId)
     .then((result) => {

@@ -29,5 +29,11 @@ def test_get_profile(mock_niceday_api):
     client = NicedayClient()
     profile = client.get_profile(12345)
     assert isinstance(profile, dict)
-    assert 'id' in profile
-    assert 'userProfile' in profile
+
+    assert 'id' not in profile
+    assert 'userProfile' not in profile
+    assert 'firstName' in profile
+    assert 'lastName' in profile
+    assert 'location' in profile
+    assert 'birthDate' in profile
+    assert 'gender' in profile

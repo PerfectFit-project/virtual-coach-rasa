@@ -32,8 +32,10 @@ def test_get_profile(mock_niceday_api):
 
     assert 'id' not in profile
     assert 'userProfile' not in profile
-    assert 'firstName' in profile
-    assert 'lastName' in profile
-    assert 'location' in profile
-    assert 'birthDate' in profile
-    assert 'gender' in profile
+
+
+    keys = ['firstName','lastName', 'location',
+            'birthDate', 'gender']
+    for k in keys:
+        assert k in profile
+        assert isinstance(profile[k], str)

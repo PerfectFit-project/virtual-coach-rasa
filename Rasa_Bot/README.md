@@ -9,7 +9,7 @@ The steps are as follows:
 - Navigate to the "Rasa_Bot"-folder on your laptop.
 - Type `docker-compose up`.
 - Now you can communicate with the bot via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Kan ik de agenda voor de week krijgen?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
-   - The output for the above command should be something like this: [{"recipient_id":"user","text":"Hoi Kees!"},{"recipient_id":"user","text":"Sure, you should ...
+   - The output for the above command should be something like this: [{"recipient_id":"user","text":"Sure, you should ...
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
 
 Note that while the requirements-file lists Rasa 2.8.0 as a requirement, this is only needed to train a language model and handy when developing.
@@ -49,10 +49,11 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
    - requirements-actions.txt: requirements for the custom action code to be installed in the Docker container for the custom actions.
 - data:
    - nlu.yml: contains the intents that the agent can recognize and training examples for each such intent. We have intents e.g. for a positive mood, for confirming, and for requesting the weekly planning.
-   - rules.yml: rules override actions predicted based on stories. We currently use them to e.g. always say bye back after the user says goodbye.
+   - rules.yml: rules override actions predicted based on stories. We currently use them to e.g. always say bye back after the user says goodbye. There is also a fallback rule for low NLU confidence.
    - stories.yml: training stories, i.e. the conversation paths the agent can take.
 - models: contains trained models
 - domain.yml: contains all slots, utterances, etc. Also defines the time period after which a new conversation starts in case of inactivity.
+- config.yml: sets the training configuration for rasa core (e.g. which policies to use, what the fallback should be when the agent is not sure what the next action should be, ...), the threshold for low NLU confidence (the threshold for the FallbackClassifier), etc.
 
 ## Tips for developers
 

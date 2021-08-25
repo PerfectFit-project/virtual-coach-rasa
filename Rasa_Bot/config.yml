@@ -17,17 +17,19 @@ pipeline:
   - name: EntitySynonymMapper
   - name: ResponseSelector
     epochs: 100
+  - name: FallbackClassifier
+    threshold: 0.7
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
 policies:
-  - name: MemoizationPolicy
-    max_history: 10
+  - name: AugmentedMemoizationPolicy
+    max_history: 5
   - name: TEDPolicy
     max_history: 10
-    epochs: 10
-    augmentation: 1 # if 0, no augmentation of stories
+    epochs: 300
+    #augmentation: 50 # if 0, no augmentation of stories
   - name: RulePolicy
-    core_fallback_threshold: 0.2
+    core_fallback_threshold: 0.2 # NB: important to tune this carefully.
     core_fallback_action_name: action_default_fallback # will be called when confidence below above value
     enable_fallback_prediction: true

@@ -1,0 +1,3 @@
+#!/bin/bash
+(cd ./niceday-broker || exit; ./script/bootstrap) || exit
+docker-compose up --build --force-recreate

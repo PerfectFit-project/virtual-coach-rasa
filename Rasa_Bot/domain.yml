@@ -5,11 +5,17 @@ intents:
 - goodbye
 - greet
 - who_are_you
+- greeting
 - confirm
 - deny
+- positive_mood
+- negative_mood
+- who_are_you
+- how_are_you
 - request_plan_week
 - EXTERNAL_set_reminder
 - EXTERNAL_utter_reminder
+
 slots:
   ### General
   # The user's name

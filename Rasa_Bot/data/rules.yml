@@ -23,3 +23,16 @@ rules:
   steps:
     - intent: EXTERNAL_utter_reminder
     - action: utter_reminder
+  
+- rule:  when user says hi at start of conversation, say hi back and ask for mood
+  conversation_start: true # only applies at a conversation start
+  steps: 
+  - intent: greeting
+  - action: action_get_name_from_database
+  - action: utter_greet
+  - action: utter_ask_user_mood
+  
+- rule: Ask the user to rephrase whenever they send a message with low NLU confidence
+  steps:
+  - intent: nlu_fallback
+  - action: utter_default

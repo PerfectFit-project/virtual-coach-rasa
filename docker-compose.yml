@@ -13,3 +13,5 @@ services:
     expose: ["5055"]
   niceday-broker:
     build: niceday-broker/
+    env_file:
+      - .env

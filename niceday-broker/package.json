@@ -1,6 +1,6 @@
 {
-  "name": "niceday-router",
-  "version": "0.1.0",
+  "name": "niceday-broker",
+  "version": "0.1.1",
   "description": "This application listens to incoming messages from the Niceday server.\nWhen a message comes in from a user sent to the therapist account, \nthe message is forwarded to the rasa agent rest API. \nThe rasa response is then sent back to the user in the Niceday app. ",
   "main": "index.js",
   "scripts": {

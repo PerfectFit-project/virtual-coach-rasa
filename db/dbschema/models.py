@@ -7,6 +7,7 @@ Base = declarative_base()
 class Users(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
+    nicedayuid = Column(Integer)
     firstname = Column(String)
     lastname = Column(String)
     location = Column(String)

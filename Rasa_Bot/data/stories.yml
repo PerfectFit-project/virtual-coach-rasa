@@ -80,4 +80,4 @@ stories:
 - story: user_indicate_pa_mood_positive
   steps:
   - intent: completed_pa
-  - action: utter_aks_how_was
+  - action: utter_ask_how_was

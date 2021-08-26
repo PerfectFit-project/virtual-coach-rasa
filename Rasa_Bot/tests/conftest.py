@@ -11,11 +11,11 @@ import pytest
 here = Path(__file__).parent.resolve()
 WEEKLY_PLAN_TRACKER = Tracker.from_dict(json.load(open(here / "./data/weekly_plan_tracker.json")))
 
+
 @pytest.fixture
 def dispatcher() -> CollectingDispatcher:
     """Create a clean dispatcher"""
     return CollectingDispatcher()
-
 
 @pytest.fixture
 def domain() -> DomainDict:

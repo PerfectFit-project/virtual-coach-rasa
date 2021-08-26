@@ -96,7 +96,7 @@ responses:
   # Activity evaluation
   utter_ask_likert_form_likert_scale:
   - text: >
-      Hoe vond je dat het ging? Geef dit aan op een schaal
+      Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
 
   

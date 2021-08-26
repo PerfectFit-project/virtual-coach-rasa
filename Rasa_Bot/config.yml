@@ -26,8 +26,8 @@ policies:
   - name: AugmentedMemoizationPolicy
     max_history: 5
   - name: TEDPolicy
-    max_history: 10
-    epochs: 300
+    max_history: 8
+    epochs: 100
     #augmentation: 50 # if 0, no augmentation of stories
   - name: RulePolicy
     core_fallback_threshold: 0.2 # NB: important to tune this carefully.

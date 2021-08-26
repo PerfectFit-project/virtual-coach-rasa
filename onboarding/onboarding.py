@@ -41,6 +41,7 @@ def onboard_user(userid):
     session.add(new_user)
     session.commit()
 
+    print(f'Added new user profile (niceday uid {userid}) to db')
 
 def main(args=None):
     parser = argparse.ArgumentParser(description="Onboard the user with the given ID")

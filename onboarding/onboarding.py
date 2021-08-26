@@ -1,10 +1,9 @@
 import argparse
 import sys
 
-from niceday_client.niceday_client import NicedayClient
-
 from db.dbschema.models import Users
 from db.helper import get_db_session
+from niceday_client.niceday_client import NicedayClient
 
 
 def onboard_user(userid):

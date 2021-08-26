@@ -10,24 +10,6 @@ on:
       types: [opened, synchronize, reopened]
 
 jobs:
-  type-testing:
-    name: Test Types
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r Rasa_Bot/requirements_dev.txt
-    - name: Type Checking
-      working-directory: ${{ github.workspace }}/Rasa_Bot
-      run: |
-        pip list
-        make types
   # Validate the Rasa data, e.g. check whether the same example
   # is used for 2 different intents, etc.
   data-validation:
@@ -51,26 +33,6 @@ jobs:
         cd Rasa_Bot
         rasa telemetry disable
         rasa data validate --max-history 10
-  action-unit-tests:
-    name: Custom Actions Unit Testing
-    needs:
-    - type-testing
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r Rasa_Bot/requirements_dev.txt
-    - name: Run unit tests
-      working-directory: ${{ github.workspace }}/Rasa_Bot
-      run: |
-        pip install -e .
-        make test-actions
   training-testing:
     name: Train and Test model
     runs-on: ubuntu-latest

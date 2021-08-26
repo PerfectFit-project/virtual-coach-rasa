@@ -1,5 +1,4 @@
 import pytest
-
 from sensor_api.sensorapi.run import create_app
 
 

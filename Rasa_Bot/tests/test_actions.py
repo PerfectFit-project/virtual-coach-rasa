@@ -3,9 +3,9 @@ import pytest
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from tests.conftest import WEEKLY_PLAN_TRACKER
 
 from actions import actions
+from tests.conftest import WEEKLY_PLAN_TRACKER
 
 
 # NB: Update once the function tested here works correctly

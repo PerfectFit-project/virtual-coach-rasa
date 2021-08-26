@@ -35,7 +35,7 @@ class GetPlanWeek(Action):
                "psycho-education: www.link-to-psycho-education.nl." % kilometers
 
         return [SlotSet("plan_week", plan)]
-    
+
 
 # Save weekly plan in calendar
 class SavePlanWeekCalendar(Action):

@@ -23,22 +23,22 @@ paths:
         "200":
           description: Success
       x-swagger-router-controller: Messages
-  /profiles/{userId}:
+  /userdata/{userId}:
     get:
-      summary: Get user profile by ID
-      operationId: getUserProfile
+      summary: Get user data by ID
+      operationId: getUserData
       parameters:
         - in: path
           name: userId
           schema:
             type: integer
           required: true
-          description: Integer ID of the user whose profile is desired
+          description: Integer ID of the user whose data is desired
           example: 38527
       responses:
         "200":
           description: Success
-      x-swagger-router-controller: Profiles
+      x-swagger-router-controller: UserData
 
 components:
   schemas:

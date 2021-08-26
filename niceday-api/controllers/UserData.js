@@ -1,8 +1,8 @@
 const utils = require('../utils/writer.jsx');
-const Profiles = require('../service/ProfilesService');
+const UserData = require('../service/UserDataService');
 
-module.exports.getUserProfile = function getUserProfile(req, res, next, body) {
-  Profiles.getUserProfile(req, body)
+module.exports.getUserData = function getUserData(req, res, next, body) {
+  UserData.getUserData(req, body)
     .then((response) => {
       utils.writeJson(res, response);
     })

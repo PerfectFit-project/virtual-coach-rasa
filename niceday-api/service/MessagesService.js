@@ -3,6 +3,9 @@ const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/go
 /**
  * Send a text message
  *
+ * @param req - The node.js express request object
+ * @param req - The node.js express body object
+ *
  * no response value expected for this operation
  * */
 exports.sendTextMessage = function (req, body) {

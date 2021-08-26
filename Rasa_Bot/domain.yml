@@ -10,6 +10,7 @@ intents:
 - who_are_you
 - how_are_you
 - request_plan_week
+- completed_pa
 
 slots:
   ### General
@@ -84,7 +85,9 @@ responses:
   
   # Activity evaluation
   utter_ask_how_was:
-  - text: "Wat goed! Hoe vond je dat het ging?"
+  - text: >
+      Wat goed! Hoe vond je dat het ging? Geef dit aan op een schaal 
+      van 1 tot 10, waarbij 1 zeer slecht en 10 zeer goed.
 
   
 actions:

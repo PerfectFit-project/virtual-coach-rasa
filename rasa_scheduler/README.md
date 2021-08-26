@@ -76,5 +76,5 @@ curl -H "Content-Type: application/json" -X POST -d '{"name": "EXTERNAL_utter_re
 ```
 you should see a response like
 ```
-{"tracker":{"sender_id":"Kees" ... "messages":[{"recipient_id":"AAA","text":"Voorziet u vandaag risicovolle situaties voor het roken?"}]}
+{"tracker":{"sender_id":"Kees" ... "messages":[{"recipient_id":"Kees","text":"Voorziet u vandaag risicovolle situaties voor het roken?"}]}
 ```

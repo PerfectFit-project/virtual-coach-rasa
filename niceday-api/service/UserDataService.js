@@ -1,14 +1,7 @@
-const goalieJs = require('@sense-os/goalie-js');
-
-const { SenseNetwork, SenseServer } = goalieJs;
-const userNetwork = new SenseNetwork(SenseServer.Alpha);
-
+const { SenseNetwork, SenseServer } = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
 
-// Read in environment variables from .env file
-require('dotenv').config();
-
-const TOKEN = process.env.NICEDAY_TOKEN;
+const userNetwork = new SenseNetwork(SenseServer.Alpha);
 
 /**
  * Fetch the user data corresponding to the given user ID.
@@ -16,7 +9,7 @@ const TOKEN = process.env.NICEDAY_TOKEN;
  * */
 exports.getUserData = (userId) => new Promise((resolve, reject) => {
   userNetwork
-    .getContact(TOKEN, userId)
+    .getContact(req.app.get('token'), body)
     .then((result) => {
       console.log('Result:', result);
       resolve(result);

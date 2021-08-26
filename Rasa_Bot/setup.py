@@ -1,7 +1,7 @@
-from setuptools import setup, find_packages
 import io
 import os
 
+from setuptools import find_packages, setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 

@@ -1,12 +1,11 @@
 import json
-import pytest
 from pathlib import Path
 
+import pytest
+from rasa.shared.core.domain import Domain
 from rasa_sdk import Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from rasa.shared.core.domain import Domain
-
 
 here = Path(__file__).parent.resolve()
 WEEKLY_PLAN_TRACKER = Tracker.from_dict(json.load(open(here / "./data/weekly_plan_tracker.json")))

@@ -1,9 +1,9 @@
 import logging
 
 import requests
-from pandas_ods_reader import read_ods
 
 from config import MANAGED_CONTENT_TEMP_ODS_LOCATION, MANAGED_CONTENT_URL
+from pandas_ods_reader import read_ods
 
 
 class ManagedContentReader:

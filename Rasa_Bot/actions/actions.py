@@ -7,8 +7,7 @@ import datetime
 
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action
-from rasa_sdk.events import SlotSet, ReminderScheduled
-
+from rasa_sdk.events import ReminderScheduled, SlotSet
 
 AGE = 30  # We should get this value from a database.
 

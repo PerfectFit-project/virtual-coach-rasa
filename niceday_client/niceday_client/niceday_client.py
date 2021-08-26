@@ -1,5 +1,6 @@
 import requests
 
+from niceday_client.definitions import USER_PROFILE_KEYS
 
 class NicedayClient:
     """
@@ -47,17 +48,19 @@ class NicedayClient:
         except ValueError as e:
             raise ValueError('The niceday-api did not return JSON.') from e
 
-        # Check for 'Unauthorized error'
-        print(results['message'])
+        self.error_check(results, 'Unauthorized error')
+        self.error_check(results, 'The requested resource could not be found')
+
+        return results
+
+    def error_check(self, results, err_msg):
         if 'message' in results:
-            if 'Unauthorized error' in results['message']:
-                msg = "'Unauthorized error' response from niceday server. "
+            if err_msg in results['message']:
+                msg = f"'{err_msg}' response from niceday server. "
                 if 'details' in results:
                     if 'body' in results['details']:
                         msg += 'Details provided: ' + str(results['details']['body'])
                 raise Exception(msg)
-
-        return results
 
     def _get_raw_user_data(self, user_id) -> dict:
         """
@@ -93,7 +96,7 @@ class NicedayClient:
                              'stored on the Senseserver changed?')
 
         return_profile = {}
-        for k in ['firstName', 'lastName', 'location', 'birthDate', 'gender']:
+        for k in USER_PROFILE_KEYS:
             if k not in user_data['userProfile']:
                 raise ValueError(f'"userProfile" dict returned from '
                                  f'niceday-api does not contain expected '

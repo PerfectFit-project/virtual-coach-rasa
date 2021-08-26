@@ -70,7 +70,9 @@ and make use of the Niceday daily planner to plan activities.
 
 ### Sensor Data Handler
 A service that pulls data from the Sensor Data Database when needed.
-* Validates and preprocesses data
+Details are deliberately left open, because we will futher co-design this with the Sensor Data Collector
+developers.
+* Validates and processes data
 * Writes data directly to the database using the ORM
 
 ### Rasa agent

@@ -1,6 +1,6 @@
-import os
-import io
 from setuptools import setup, find_packages
+import io
+import os
 
 
 here = os.path.abspath(os.path.dirname(__file__))

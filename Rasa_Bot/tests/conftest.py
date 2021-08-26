@@ -17,6 +17,7 @@ def dispatcher() -> CollectingDispatcher:
     """Create a clean dispatcher"""
     return CollectingDispatcher()
 
+
 @pytest.fixture
 def domain() -> DomainDict:
     """Load the domain and return it as a dictionary"""

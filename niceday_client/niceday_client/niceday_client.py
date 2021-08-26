@@ -2,6 +2,7 @@ import requests
 
 from .definitions import USER_PROFILE_KEYS
 
+
 class NicedayClient:
     """
     Client for interacting with the niceday-api component of the PerfectFit

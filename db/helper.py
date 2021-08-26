@@ -4,7 +4,7 @@ from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 
 DB_USER = 'root'
-DB_PASSWORD = 'root'
+DB_PASSWORD = 'root' # noqa
 DB_URL = 'localhost:5432/perfectfit'
 
 

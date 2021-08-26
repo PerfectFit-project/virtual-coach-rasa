@@ -1,6 +1,6 @@
 import requests
 
-from niceday_client.definitions import USER_PROFILE_KEYS
+from .definitions import USER_PROFILE_KEYS
 
 class NicedayClient:
     """

@@ -4,12 +4,8 @@ import sys
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 
-sys.path.insert(0, "../niceday_client/")
-from niceday_client import NicedayClient # noqa # isort:skip
-
-sys.path.insert(0, "../db/dbschema/")
-from models import Base, Users # noqa # isort:skip
-
+from niceday_client.niceday_client import NicedayClient
+from db.dbschema.models import Base, Users
 
 def onboard_user(userid):
     client = NicedayClient()

@@ -47,6 +47,16 @@ class NicedayClient:
         except ValueError as e:
             raise ValueError('The niceday-api did not return JSON.') from e
 
+        # Check for 'Unauthorized error'
+        print(results['message'])
+        if 'message' in results:
+            if 'Unauthorized error' in results['message']:
+                msg = "'Unauthorized error' response from niceday server. "
+                if 'details' in results:
+                    if 'body' in results['details']:
+                        msg += 'Details provided: ' + str(results['details']['body'])
+                raise Exception(msg)
+
         return results
 
     def _get_raw_user_data(self, user_id) -> dict:

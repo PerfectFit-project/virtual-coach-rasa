@@ -1,11 +1,10 @@
 import argparse
 import sys
 
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.orm import sessionmaker
-
 from niceday_client.niceday_client import NicedayClient
-from db.dbschema.models import Base, Users
+
+from db.dbschema.models import Users
+from db.helper import get_db_session
 
 def onboard_user(userid):
     client = NicedayClient()
@@ -14,18 +13,8 @@ def onboard_user(userid):
     profile = client.get_profile(userid)
     print('Profile:', profile)
 
-    engine = create_engine('postgresql://root:root@localhost:5432/perfectfit')
-    meta = MetaData()
-    meta.reflect(bind=engine)
-    session_maker = sessionmaker(bind=engine)
-    session = session_maker()
-
-    # Check that db actually has a Users table
-    # (have the alembic migrations been run to set it up appropriately?)
-    if 'users' not in meta.tables:
-        sys.exit('"users" table not found in db. Has the schema been '
-                 'set up correctly with the alembic migrations? See '
-                 'instructions in README in db/ directory.')
+    # Open session with db
+    session = get_db_session()
 
     # Check if this user already exists in the table
     # (assumes niceday user id is unique and immutable)

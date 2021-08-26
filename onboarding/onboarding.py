@@ -40,7 +40,7 @@ def onboard_user(userid):
     print(f'Added new user profile (niceday uid {userid}) to db')
 
 
-def main(args=None):
+def main():
     parser = argparse.ArgumentParser(description="Onboard the user with the given ID")
     parser.add_argument("userid", type=int, help="User ID on Sensehealth server")
     args = parser.parse_args()

@@ -77,7 +77,8 @@ stories:
   - action: utter_response_mood_negative
 
 # User indicates completion PA and was positive
-- story: user_indicate_pa_mood_positive
+- story: user_indicate_pa
   steps:
   - intent: completed_pa
-  - action: utter_ask_how_was
+  - action: likert_form
+  - active_loop: likert_form

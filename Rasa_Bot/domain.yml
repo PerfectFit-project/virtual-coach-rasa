@@ -1,16 +1,20 @@
 session_config:
   session_expiration_time: 5 # these are minutes
-  carry_over_slots_to_new_session: true
+  carry_over_slots_to_new_session: true  
+
 intents:
-- greeting
-- confirm
-- deny
-- positive_mood
-- negative_mood
-- who_are_you
-- how_are_you
-- request_plan_week
-- completed_pa
+  - greeting
+  - confirm
+  - deny
+  - positive_mood
+  - negative_mood
+  - who_are_you
+  - how_are_you
+  - request_plan_week
+  - completed_pa
+
+entities:
+  - number
 
 slots:
   ### General
@@ -36,6 +40,12 @@ slots:
     type: bool
     influence_conversation: true
   
+  # Likert scale
+  likert_scale:
+    type: float # Maybe integer could be used? Got this from example
+    influence_conversation: false
+    auto_fill: false
+    
 responses:
   # Fallback
   utter_default:
@@ -84,13 +94,20 @@ responses:
   - text: "Sorry, ik kan de planning nu niet invoeren."
   
   # Activity evaluation
-  utter_ask_how_was:
+  utter_ask_likert_form_likert_scale:
   - text: >
-      Wat goed! Hoe vond je dat het ging? Geef dit aan op een schaal 
-      van 1 tot 10, waarbij 1 zeer slecht en 10 zeer goed.
+      Hoe vond je dat het ging? Geef dit aan op een schaal
+      van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
 
   
 actions:
 - action_get_plan_week
 - action_get_name_from_database
 - action_save_plan_week_calendar
+
+forms:
+  likert_form:
+    required_slots:
+      likert_scale:
+        - type: from_entity
+          entity: number

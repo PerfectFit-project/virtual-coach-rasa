@@ -46,27 +46,3 @@ class SavePlanWeekCalendar(Action):
         success = True
 
         return [SlotSet("success_save_calendar_plan_week", success)]
-    
-# Store the likert data
-class StoreLikert(Action):
-
-    def name(self):
-        return 'action_store_likert' #This is used in the story
-
-    def run(self, dispatcher, tracker, domain):
-
-        dictData = next((e for e in tracker.latest_message.entities if
-                                   e['entity'] == 'ent_likert'), None)
-        rating = dictData['value']
-        
-        try:    
-            rating = int(rating)
-            if (rating < 1) or (rating > 10):
-                dispatcher.utter_message("Voer een nummer tussen 1 en 10 in.")
-                return [SlotSet("slot_likert", None)]
-            else:
-                return [SlotSet("slot_likert", rating)]
-
-        except:
-            dispatcher.utter_message("Voer een nummer tussen 1 en 10 in.")
-            return [SlotSet("slot_likert", None)]

@@ -2,9 +2,15 @@ session_config:
   session_expiration_time: 5 # these are minutes
   carry_over_slots_to_new_session: true
 intents:
+- greeting
 - confirm
 - deny
+- positive_mood
+- negative_mood
+- who_are_you
+- how_are_you
 - request_plan_week
+
 slots:
   ### General
   # The user's name
@@ -17,7 +23,7 @@ slots:
     type: text
     initial_value: 'Kris'
     influence_conversation: false
-    
+  
   ### Weekly planning
   # The plan for the week
   plan_week:

@@ -10,6 +10,9 @@ nlu:
     - "Kun je me de agenda voor de komende week vertellen?"
     - "Hey, kun je me de agenda voor de week vertellen?"
     - "Mag ik de planning?"
+    - "Mag ik de planning voor de week?"
+    - "Mag ik de agenda?"
+    - "Heb je de planning voor mij?"
     
 - intent: confirm
   examples: |
@@ -19,6 +22,7 @@ nlu:
     - Ja doe dat alsjeblieft
     - Ja
     - Dat zou fijn zijn
+    - Fijn
     - Ah ja
     - "Graag"
     
@@ -30,6 +34,7 @@ nlu:
     - "Deze keer niet, dank je."
     - "Dat hoeft niet."
     - "Nee, bedankt."
+    - "Nee"
 
 - intent: greeting
   examples: |
@@ -55,6 +60,8 @@ nlu:
 - intent: how_are_you
   examples: |
     - "Hoe gaat het met je?"
+    - "Hoe gaat het met jou?"
+    - "Hoe gaat het?"
 
 - intent: who_are_you
   examples: |
@@ -62,6 +69,8 @@ nlu:
     - "Wat kan je?"
     - "Wat is dit?"
     - "Wat kan je doen?"
+    - "Jij bent?"
+    - "Met wie praat ik?"
 
 - intent: positive_mood
   examples: |

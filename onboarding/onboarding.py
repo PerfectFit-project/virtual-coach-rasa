@@ -1,15 +1,14 @@
 import argparse
-
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy.orm import sessionmaker
-
 import sys
 
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.orm import sessionmaker
+
 sys.path.insert(0, "../niceday_client/")
-from niceday_client import NicedayClient # noqa
+from niceday_client import NicedayClient # noqa # isort:skip
 
 sys.path.insert(0, "../db/dbschema/")
-from models import Base, Users # noqa
+from models import Base, Users # noqa # isort:skip
 
 
 def onboard_user(userid):

@@ -55,13 +55,11 @@ class NicedayClient:
         return results
 
     def error_check(self, results, err_msg):
-        if 'message' in results:
-            if err_msg in results['message']:
+        if 'message' in results and err_msg in results['message']:
                 msg = f"'{err_msg}' response from niceday server. "
-                if 'details' in results:
-                    if 'body' in results['details']:
+                if 'details' in results and 'body' in results['details']:
                         msg += 'Details provided: ' + str(results['details']['body'])
-                raise Exception(msg)
+                raise RuntimeError(msg)
 
     def _get_raw_user_data(self, user_id) -> dict:
         """

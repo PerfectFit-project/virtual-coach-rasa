@@ -20,6 +20,13 @@ def onboard_user(userid):
     session_maker = sessionmaker(bind=engine)
     session = session_maker()
 
+    # Check that db actually has a Users table
+    # (have the alembic migrations been run to set it up appropriately?)
+    if 'users' not in meta.tables:
+        sys.exit('"users" table not found in db. Has the schema been '
+                 'set up correctly with the alembic migrations? See '
+                 'instructions in README in db/ directory.')
+
     # Check if this user already exists in the table
     # (assumes niceday user id is unique and immutable)
     existing_users = (session.query(Users).

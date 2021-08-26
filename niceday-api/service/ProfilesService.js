@@ -1,7 +1,7 @@
 const { SenseNetwork, SenseServer } = require('@sense-os/goalie-js');
-const userNetwork = new SenseNetwork(SenseServer.Alpha);
-
 require('isomorphic-fetch');
+
+const userNetwork = new SenseNetwork(SenseServer.Alpha);
 
 /**
  * Fetch the user profile corresponding to the given user ID.

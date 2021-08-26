@@ -5,13 +5,13 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 
 from actions import actions
-from tests.conftest import WEEKLY_PLAN_TRACKER
+from tests.conftest import EMPTY_TRACKER
 
 
 # NB: Update once the function tested here works correctly
 @pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar(dispatcher: CollectingDispatcher, domain: DomainDict):
-    tracker = WEEKLY_PLAN_TRACKER
+    tracker = EMPTY_TRACKER
     action = actions.SavePlanWeekCalendar()
     events = await action.run(dispatcher, tracker, domain)
     expected_events = [

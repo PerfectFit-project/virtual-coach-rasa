@@ -1,5 +1,5 @@
 {
-  "sender_id": "someone",
+  "sender_id": "unit_test_user",
   "slots": {
     "name": "Kees",
     "plan_week": "Please run 20km this week."

@@ -10,10 +10,9 @@ with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="rasa_bot",
-    classifiers = [
+    classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
-        # supported python versions
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.7",
     ],

@@ -6,6 +6,7 @@ from niceday_client.niceday_client import NicedayClient
 from db.dbschema.models import Users
 from db.helper import get_db_session
 
+
 def onboard_user(userid):
     client = NicedayClient()
 
@@ -38,6 +39,7 @@ def onboard_user(userid):
     session.commit()
 
     print(f'Added new user profile (niceday uid {userid}) to db')
+
 
 def main(args=None):
     parser = argparse.ArgumentParser(description="Onboard the user with the given ID")

@@ -33,7 +33,18 @@ open http://localhost:8080/docs
 
 From there you can easily test out the different endpoints
 
-This project leverages [oas3-tools](https://www.npmjs.com/package/oas3-tools) middleware which does most all the work.
+### Running with docker
+Run the following commands:
+```
+./script/bootstrap
+docker build -t niceday-api .
+docker run --env-file .env niceday-api
+```
+
+See [root README](../README.md) for instructions of running 
+the full application with docker-compose.
 
 ### What is my user id?
 Just run `node login.mjs emailaddress password` with a user's credentials to find out the user id.
+
+This project leverages [oas3-tools](https://www.npmjs.com/package/oas3-tools) middleware which does most all the work.

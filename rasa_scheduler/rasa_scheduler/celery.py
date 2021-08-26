@@ -8,8 +8,9 @@ app = Celery('rasa_scheduler')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+
 @app.task(bind=True)
-def trigger_rasa_reminder(self):
+def trigger_rasa_reminder(self):  # pylint: disable=unused-argument
     """Task to trigger RASA to set reminder for every user.
     """
     # TODO: get user IDs from database

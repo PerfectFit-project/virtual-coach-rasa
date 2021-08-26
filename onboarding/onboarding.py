@@ -46,6 +46,7 @@ def onboard_user(userid):
     session.add(new_user)
     session.commit()
 
+
 def main(args=None):
     parser = argparse.ArgumentParser(description="Onboard the user with the given ID")
     parser.add_argument("userid", type=int, help="User ID on Sensehealth server")

@@ -33,8 +33,7 @@ def test_get_profile(mock_niceday_api):
     assert 'id' not in profile
     assert 'userProfile' not in profile
 
-
-    keys = ['firstName','lastName', 'location',
+    keys = ['firstName', 'lastName', 'location',
             'birthDate', 'gender']
     for k in keys:
         assert k in profile

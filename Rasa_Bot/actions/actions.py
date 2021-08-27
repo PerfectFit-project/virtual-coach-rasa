@@ -70,7 +70,16 @@ class ValidateLikertForm(FormValidationAction):
             if (likert_scale < 1) or (likert_scale > 5):
                 dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
                 return {"likert_scale": None}
-            else:       
+            else:
+                
+                # Create custom responses based on likert input
+                if likert_scale >= 4:
+                    dispatcher.utter_message("Fijn om te horen!")
+                else:
+                    dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, " \
+                                             "dan gaat het de volgende keer vast beter!")
+                        
+                # Save the input slot.
                 return {"likert_scale": likert_scale}
         except:
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")

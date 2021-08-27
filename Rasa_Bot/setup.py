@@ -24,4 +24,4 @@ setup(
     author_email="xx@xxx.nl",
     license="Apache-2.0",
     url="https://github.com/PerfectFit-project/virtual-coach-server/tree/main/Rasa_Bot",
-    packages=find_packages(include=['actions', 'actions.*', 'tests', 'tests.*']))
+    packages=find_packages(include=['actions', 'actions.*', 'tests_rasa', 'tests_rasa.*']))

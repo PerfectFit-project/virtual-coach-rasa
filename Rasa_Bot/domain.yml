@@ -13,9 +13,6 @@ intents:
   - request_plan_week
   - completed_pa
 
-entities:
-  - number
-
 slots:
   ### General
   # The user's name
@@ -98,16 +95,20 @@ responses:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
+      
+  utter_give_likert:
+  - text: "Je gaf {likert_scale} op"
 
   
 actions:
 - action_get_plan_week
 - action_get_name_from_database
 - action_save_plan_week_calendar
+- action_validate_likert_form
 
 forms:
   likert_form:
     required_slots:
       likert_scale:
-        - type: from_entity
-          entity: number
+        - type: from_text
+          intent: None

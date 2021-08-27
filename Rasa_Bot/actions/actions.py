@@ -6,6 +6,10 @@
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
+from typing import Dict, Text, Any, List, Union
+from rasa_sdk import Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.forms import FormValidationAction
 
 AGE = 30  # We should get this value from a database.
 
@@ -46,3 +50,28 @@ class SavePlanWeekCalendar(Action):
         success = True
 
         return [SlotSet("success_save_calendar_plan_week", success)]
+    
+# Validate input of liker scale form
+class ActionValidateLikertForm(Action):
+    def name(self):
+            return 'action_validate_likert_form'
+
+    def validate_likert_scale(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        """Validate likert_scale input."""
+        
+        try:
+            likert_scale = int(value)
+            if (likert_scale < 1) or (likert_scale > 5):
+                dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
+                return {"likert_scale": None}
+            else:       
+                return {"likert_scale", value}
+        except:
+            dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
+            return {"likert_scale": None}

@@ -15,16 +15,19 @@ rasa run --enable-api
 
 Then you can start Celery as following:
 
-1. Create Django super user
+1. Set Django SECRET_KEY using environment variable
+`export SECRET_KEY="some_random_large_value"`
+
+2. Create Django super user
 `python manage.py createsuperuser`
 
-2. Start the Django admin
+3. Start the Django admin
 `python manage.py runserver`
 
-3. Go to Django admin interface (http://127.0.0.1:8000/admin/) and login
+4. Go to Django admin interface (http://127.0.0.1:8000/admin/) and login
  with the user and password created in step 1
 
-4. Manage periodic tasks in Django amdin, e.g. add, delete or edit tasks.
+5. Manage periodic tasks in Django amdin, e.g. add, delete or edit tasks.
 
 Add the task `rasa_scheduler.celery.trigger_rasa_reminder` as a periodoc task
 as shown in the image below:
@@ -33,7 +36,7 @@ as shown in the image below:
 
 Then you can logout.
 
-5. Start Celery
+6. Start Celery
 
 ```
 # start redis store

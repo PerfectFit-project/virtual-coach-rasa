@@ -91,6 +91,8 @@ responses:
   - text: "Sorry, ik kan de planning nu niet invoeren."
   
   # Activity evaluation
+  utter_pa_completed:
+  - text: "Goed bezig!"
   utter_ask_likert_form_likert_scale:
   - text: >
       Hoe ging het? Geef dit aan op een schaal

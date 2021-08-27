@@ -9,7 +9,7 @@ from paalgorithms import weekly_kilometers
 from rasa_sdk import Action
 from rasa_sdk.events import ReminderScheduled, SlotSet
 
-AGE = 30  # We should get this value from a database.
+AGE = 30  # TODO_db: We should get this value from a database.
 
 
 # Get the user's name from the database.
@@ -20,7 +20,7 @@ class GetNameFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        name = "Kees"
+        name = "Kees"  # TODO_db
 
         return [SlotSet("name", name)]
 
@@ -62,13 +62,13 @@ class ActionSetReminder(Action):
 
         date0 = datetime.datetime.now()
 
-        # used only for development
+        # used only for development (use the daily reminder below for production)
         t = 2
         dispatcher.utter_message(f"I will remind you in {t} seconds.")
         date = date0 + datetime.timedelta(seconds=t)
 
         # the daily reminder
-        # TODO: get user's time setting from database.
+        # TODO_db: get user's time setting from database.
         # Here using a fixed time 9:00AM.
         # dispatcher.utter_message("I will remind you 9:00AM every day.")
         # reminder_hour = 9

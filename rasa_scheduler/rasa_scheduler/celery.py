@@ -14,8 +14,8 @@ app.autodiscover_tasks()
 def trigger_rasa_reminder(self):  # pylint: disable=unused-argument
     """Task to trigger RASA to set reminder for every user.
     """
-    # TODO: get user IDs from database
-    # TODO: add Celery error handling
+    # TODO_db: get user IDs from database
+    # TODO: add Celery or http error handling
     user_ids = ['Kees', ]
     for user in user_ids:
         endpoint = f'http://localhost:5005/conversations/{user}/trigger_intent'

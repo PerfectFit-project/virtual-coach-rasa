@@ -9,7 +9,7 @@ from rasa_sdk.types import DomainDict
 
 here = Path(__file__).parent.resolve()
 
-with open(here / "./data/initial_tracker.json", "r", encoding=None) as f:
+with open(here / "./data/initial_tracker.json", "r", encoding='utf-8') as f:
     EMPTY_TRACKER = Tracker.from_dict(json.load(f))
 
 

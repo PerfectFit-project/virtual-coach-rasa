@@ -11,7 +11,7 @@ from tests.conftest import EMPTY_TRACKER
 # NB: Update once the function tested here works correctly
 @pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar(
-    dispatcher: CollectingDispatcher, domain: DomainDict):
+        dispatcher: CollectingDispatcher, domain: DomainDict):
     tracker = EMPTY_TRACKER
     action = actions.SavePlanWeekCalendar()
     events = await action.run(dispatcher, tracker, domain)

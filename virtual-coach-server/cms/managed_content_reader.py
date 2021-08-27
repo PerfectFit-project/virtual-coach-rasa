@@ -35,7 +35,7 @@ class ManagedContentReader:
             logging.error(
                 f'Response from {MANAGED_CONTENT_URL} does not look'
                 f'like an ODS file: KeyError {ke}.')
-            raise Exception from ke(
+            raise Exception(
                 'Could not initialise ManagedContentReader - Response was not an ODS file.')
 
     def get_random_content(self):

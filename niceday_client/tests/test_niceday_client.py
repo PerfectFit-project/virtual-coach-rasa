@@ -1,7 +1,6 @@
 from unittest import mock
 
 import pytest
-
 from niceday_client import NicedayClient
 from niceday_client.definitions import USER_PROFILE_KEYS
 

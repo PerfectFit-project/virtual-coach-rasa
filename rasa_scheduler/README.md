@@ -15,13 +15,18 @@ rasa run --enable-api
 
 Then you can start Celery as following:
 
-1. Set Django SECRET_KEY using environment variable
+1. Set environment variable `SECRET_KEY` for Django
+
 `export SECRET_KEY="some_random_large_value"`
 
+:exclamation:  Make sure you set this environment variable when opening a new terminal.
+
 2. Create Django super user
+
 `python manage.py createsuperuser`
 
 3. Start the Django admin
+
 `python manage.py runserver`
 
 4. Go to Django admin interface (http://127.0.0.1:8000/admin/) and login
@@ -39,6 +44,9 @@ Then you can logout.
 6. Start Celery
 
 ```
+# set the environment variable `SECRET_KEY` when opening a new terminal
+export SECRET_KEY="some_random_large_value"
+
 # start redis store
 docker run -d -p 6379:6379 redis
 

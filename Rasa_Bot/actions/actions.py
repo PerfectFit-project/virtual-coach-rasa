@@ -71,7 +71,7 @@ class ValidateLikertForm(FormValidationAction):
                 dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
                 return {"likert_scale": None}
             else:       
-                return {"likert_scale", likert_scale}
+                return {"likert_scale": likert_scale}
         except:
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"likert_scale": None}

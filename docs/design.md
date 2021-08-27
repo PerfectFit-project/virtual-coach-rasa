@@ -1,4 +1,4 @@
-# Design (v2.0) PerfectFit Virtual Coach system
+# Design (v2.1) PerfectFit Virtual Coach system
 The general goal of PerfectFit is to Develop an eCoach app that will provide personalised assistance on smoking cessation 
 and increasing physical activity based on personal (sensor) data 
 (read more [here](https://www.research-software.nl/projects/583)).
@@ -45,7 +45,8 @@ Its main features are:
 A separate app for collecting sensor data that is needed to estimate physical capacity. 
 * The Niceday app itself cannot gather this data.
 * At the start of an activity the sensor data collector is triggered to start recording sensor data.
-* After an activity or upon Wifi connection the data is pushed to the PerfectFit sensor data REST API.
+* After an activity or upon Wifi connection the data is pushed to the Sensor Data Database.
+* Data is exposed by a REST API
 * Will be based on an existing app and developed outside of scope of PerfectFit
 virtual coach system.
 --- 
@@ -57,7 +58,7 @@ virtual coach system.
   - user profile data, 
   - app-interaction data
   - messages
-* Handles authentication
+* Handles user authentication
 
 --- 
 ### PerfectFit virtual coach system components
@@ -67,9 +68,11 @@ NiceDay app. We will make use of Niceday trackers to gather data,
 and make use of the Niceday daily planner to plan activities.
 
 
-### Sensor data REST API
-A Sensor REST API that allows for the sensor data collection app to send data to PerfectFit system.
-* Validates and preprocesses data
+### Sensor Data Handler
+A service that pulls data from the Sensor Data Database when needed.
+Details are deliberately left open, because we will futher co-design this with the Sensor Data Collector
+developers.
+* Validates and processes data
 * Writes data directly to the database using the ORM
 
 ### Rasa agent

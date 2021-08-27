@@ -37,7 +37,7 @@ jobs:
     - name: Check style against standards using prospector
       run: prospector
     - name: Check import order
-      run: isort --recursive --check-only --skip-glob 'db/dbschema/migrations/*'
+      run: isort . --recursive --check-only --skip-glob 'db/dbschema/migrations/*'
     - name: Run unit tests with coverage
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD

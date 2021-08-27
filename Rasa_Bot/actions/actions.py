@@ -52,9 +52,9 @@ class SavePlanWeekCalendar(Action):
         return [SlotSet("success_save_calendar_plan_week", success)]
     
 # Validate input of liker scale form
-class ActionValidateLikertForm(Action):
-    def name(self):
-            return 'action_validate_likert_form'
+class ValidateLikertForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_likert_form'
 
     def validate_likert_scale(
         self,
@@ -64,14 +64,14 @@ class ActionValidateLikertForm(Action):
         domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate likert_scale input."""
-        
+
         try:
             likert_scale = int(value)
             if (likert_scale < 1) or (likert_scale > 5):
                 dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
                 return {"likert_scale": None}
             else:       
-                return {"likert_scale", value}
+                return {"likert_scale", likert_scale}
         except:
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"likert_scale": None}

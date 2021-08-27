@@ -8,7 +8,9 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 
 here = Path(__file__).parent.resolve()
-EMPTY_TRACKER = Tracker.from_dict(json.load(open(here / "./data/initial_tracker.json")))
+
+with open(here / "./data/initial_tracker.json", "r", encoding=None) as f:
+    EMPTY_TRACKER = Tracker.from_dict(json.load(f))
 
 
 @pytest.fixture

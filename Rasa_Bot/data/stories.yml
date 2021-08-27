@@ -83,4 +83,3 @@ stories:
   - action: utter_pa_completed
   - action: likert_form
   - active_loop: likert_form
-  - action: utter_give_likert # To check if the input is stored correctly.

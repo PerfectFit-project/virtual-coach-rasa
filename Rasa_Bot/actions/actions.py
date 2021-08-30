@@ -40,6 +40,7 @@ class GetPlanWeek(Action):
 
         return [SlotSet("plan_week", plan)]
 
+
 # Save weekly plan in calendar
 class SavePlanWeekCalendar(Action):
     def name(self):
@@ -50,7 +51,8 @@ class SavePlanWeekCalendar(Action):
         success = True
 
         return [SlotSet("success_save_calendar_plan_week", success)]
-    
+
+
 # Validate input of liker scale form
 class ValidateLikertForm(FormValidationAction):
     def name(self) -> Text:
@@ -71,16 +73,15 @@ class ValidateLikertForm(FormValidationAction):
                 dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
                 return {"likert_scale": None}
             else:
-                
+
                 # Create custom responses based on likert input
                 if likert_scale >= 4:
                     dispatcher.utter_message("Fijn om te horen!")
                 else:
-                    dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, " \
+                    dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
                                              "dan gaat het de volgende keer vast beter!")
-                        
                 # Save the input slot.
                 return {"likert_scale": likert_scale}
-        except:
+        except ValueError:
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"likert_scale": None}

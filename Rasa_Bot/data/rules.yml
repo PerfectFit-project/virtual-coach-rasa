@@ -8,10 +8,21 @@ rules:
   - action: utter_goodbye
 
 - rule: introduce and define purpose when user asks who the agent is
-  steps: 
+  steps:
   - intent: who_are_you
   - action: utter_agent_name
   - action: utter_agent_purpose
+
+- rule: set reminder
+  steps:
+  - intent: EXTERNAL_set_reminder
+  - action: action_set_reminder
+
+- rule: utter daily reminder
+  conversation_start: true
+  steps:
+    - intent: EXTERNAL_utter_reminder
+    - action: utter_reminder
   
 - rule:  when user says hi at start of conversation, say hi back and ask for mood
   conversation_start: true # only applies at a conversation start

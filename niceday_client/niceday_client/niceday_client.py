@@ -1,5 +1,7 @@
 import requests
 
+from .definitions import USER_PROFILE_KEYS
+
 
 class NicedayClient:
     """
@@ -47,9 +49,19 @@ class NicedayClient:
         except ValueError as e:
             raise ValueError('The niceday-api did not return JSON.') from e
 
+        self.error_check(results, 'Unauthorized error')
+        self.error_check(results, 'The requested resource could not be found')
+
         return results
 
-    def get_profile(self, user_id) -> dict:
+    def error_check(self, results, err_msg):
+        if 'message' in results and err_msg in results['message']:
+            msg = f"'{err_msg}' response from niceday server. "
+            if 'details' in results and 'body' in results['details']:
+                msg += 'Details provided: ' + str(results['details']['body'])
+            raise RuntimeError(msg)
+
+    def _get_raw_user_data(self, user_id) -> dict:
         """
         Returns the niceday user data corresponding to the given user id.
         This is in the form of a dict, containing the user's
@@ -57,10 +69,38 @@ class NicedayClient:
             'userProfile' (name, location, bio, birthdate etc)
             'user' info (username, email, date joined etc.)
         The exact contents of this returned data depends on what is stored
-        on the SenseServer.
+        on the SenseServer and generally could change (beyond our control).
         """
-
-        endpoint = 'profiles'
+        endpoint = 'userdata'
         query_params = {}
         path_param = str(user_id)
         return self._niceday_api(endpoint, query_params, path_param)
+
+    def get_profile(self, user_id) -> dict:
+        """
+        Returns the niceday user profile corresponding to the given user id.
+        This is in the form of dict, containing the following keys:
+            'networks' (memberId, role etc)
+            'userProfile' (name, location, bio, birthdate etc)
+            'user' info (username, email, date joined etc.)
+        The exact contents of this returned data depends on what is stored
+        on the SenseServer.
+        """
+
+        user_data = self._get_raw_user_data(user_id)
+        if 'userProfile' not in user_data:
+            raise ValueError('NicedayClient expected user data from '
+                             'niceday-api to contain the key "userProfile" '
+                             'but this is missing. Has the data structure '
+                             'stored on the Senseserver changed?')
+
+        return_profile = {}
+        for k in USER_PROFILE_KEYS:
+            if k not in user_data['userProfile']:
+                raise ValueError(f'"userProfile" dict returned from '
+                                 f'niceday-api does not contain expected '
+                                 f'key "{k}". Has the data structure '
+                                 f'stored on the Senseserver changed?')
+            return_profile[k] = user_data['userProfile'][k]
+
+        return return_profile

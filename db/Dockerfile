@@ -13,3 +13,5 @@ RUN python3 -m pip install -r requirements.txt
 
 RUN mkdir /dbschema
 WORKDIR /dbschema
+
+ENV PYTHONPATH "${PYTHONPATH}:/dbschema"

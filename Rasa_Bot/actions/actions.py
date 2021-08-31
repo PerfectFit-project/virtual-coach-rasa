@@ -62,8 +62,6 @@ class ValidateLikertForm(FormValidationAction):
         self,
         value: Text,
         dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate likert_scale input."""
 

@@ -2,4 +2,3 @@
 rasa==2.8.0 # NB! when updating, make sure to also update:
             # * rasa-sdk base image in Dockerfile
             # * format of stories, domain.yml etc. if necessary
-            # * requirements in root folder

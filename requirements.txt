@@ -2,7 +2,7 @@
 -r db/requirements.txt
 
 # for onboarding
--r onboarding/requirementx.txt
+-r onboarding/requirements.txt
 
 # for Rasa agent
 -r Rasa_Bot/requirements.txt

@@ -3,11 +3,11 @@
 #
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
+from typing import Any, Dict, Text
+
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
-from typing import Dict, Text, Any
-from rasa_sdk import Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 

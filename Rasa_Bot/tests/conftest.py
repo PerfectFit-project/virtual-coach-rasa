@@ -9,6 +9,8 @@ from rasa_sdk.types import DomainDict
 
 here = Path(__file__).parent.resolve()
 
+# We load an empty conversation tracker. We need a tracker to call
+# custom actions in the custom action unit tests.
 with open(here / "./data/initial_tracker.json", "r", encoding='utf-8') as f:
     EMPTY_TRACKER = Tracker.from_dict(json.load(f))
 

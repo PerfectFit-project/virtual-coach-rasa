@@ -36,10 +36,6 @@ jobs:
         python3 -m pip install -r requirements-dev.txt
     - name: Check style against standards using prospector
       run: prospector
-    #- name: Check import order
-    # run: |
-    #    isort --version
-    #   isort . --check-only --skip-glob 'db/dbschema/migrations/*'
     - name: Run unit tests with coverage
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD

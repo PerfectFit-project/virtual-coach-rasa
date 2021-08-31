@@ -5,7 +5,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from tests_rasa.conftest import EMPTY_TRACKER
 
-from actions import actions
+from Rasa_Bot.actions import actions
 
 
 # NB: Update once the function tested here works correctly

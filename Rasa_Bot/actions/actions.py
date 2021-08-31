@@ -65,21 +65,27 @@ class ValidateLikertForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         """Validate likert_scale input."""
 
-        try:
-            likert_scale = int(value)
-            if (likert_scale < 1) or (likert_scale > 5):
-                dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
-                return {"likert_scale": None}
-            else:
-
-                # Create custom responses based on likert input
-                if likert_scale >= 4:
-                    dispatcher.utter_message("Fijn om te horen!")
-                else:
-                    dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
-                                             "dan gaat het de volgende keer vast beter!")
-                # Save the input slot.
-                return {"likert_scale": likert_scale}
-        except ValueError:
+        if not self._is_valid_input(value):
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"likert_scale": None}
+        else:
+            likert_scale = int(value)
+            # Create custom responses based on likert input
+            if likert_scale >= 4:
+                dispatcher.utter_message("Fijn om te horen!")
+            else:
+                dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
+                                         "dan gaat het de volgende keer vast beter!")
+            # Save the input slot.
+            return {"likert_scale": likert_scale}
+
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 5):
+            return False
+        return True
+

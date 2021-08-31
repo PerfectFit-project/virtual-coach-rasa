@@ -48,7 +48,7 @@ jobs:
       run: sed -i "s+$PWD/++g" coverage.xml
     - name: Type Checking
       run: |
-        pip list
+        export PYTHONPATH=$PYTHONPATH:$PWD
         make types
 
     # Tests for node.js

@@ -3,8 +3,6 @@ session_config:
   carry_over_slots_to_new_session: true
 intents:
 - goodbye
-- greet
-- who_are_you
 - greeting
 - confirm
 - deny

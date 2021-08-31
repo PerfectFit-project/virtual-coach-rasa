@@ -9,7 +9,7 @@ from Rasa_Bot.actions import actions
 
 
 # NB: This is just an example test. The custom action tested here
-# is currently just a placeholder function. Update once the 
+# is currently just a placeholder function. Update once the
 # function tested here works correctly.
 @pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar(

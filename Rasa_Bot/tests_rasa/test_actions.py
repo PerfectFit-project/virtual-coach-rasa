@@ -3,7 +3,7 @@ import pytest
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from tests_rasa.conftest import EMPTY_TRACKER
+from Rasa_Bot.tests_rasa.conftest import EMPTY_TRACKER
 
 from Rasa_Bot.actions import actions
 

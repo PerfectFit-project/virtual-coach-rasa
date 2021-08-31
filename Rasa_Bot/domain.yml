@@ -3,15 +3,19 @@ session_config:
   carry_over_slots_to_new_session: true  
 
 intents:
-  - greeting
-  - confirm
-  - deny
-  - positive_mood
-  - negative_mood
-  - who_are_you
-  - how_are_you
-  - request_plan_week
-  - completed_pa
+- goodbye
+- greeting
+- confirm
+- deny
+- positive_mood
+- negative_mood
+- who_are_you
+- how_are_you
+- request_plan_week
+- EXTERNAL_set_reminder
+- EXTERNAL_utter_reminder
+- completed_pa
+
 
 slots:
   ### General
@@ -25,7 +29,7 @@ slots:
     type: text
     initial_value: 'Kris'
     influence_conversation: false
-  
+
   ### Weekly planning
   # The plan for the week
   plan_week:
@@ -36,13 +40,12 @@ slots:
   success_save_calendar_plan_week:
     type: bool
     influence_conversation: true
-  
   # Likert scale
   likert_scale:
     type: float # Maybe integer could be used? Got this from example
     influence_conversation: false
     auto_fill: false
-    
+
 responses:
   # Fallback
   utter_default:
@@ -89,6 +92,7 @@ responses:
   - text: "OK!"
   utter_error_save_plan_week_calendar:
   - text: "Sorry, ik kan de planning nu niet invoeren."
+
   
   # Activity evaluation
   utter_pa_completed:
@@ -101,11 +105,15 @@ responses:
   utter_give_likert:
   - text: "Je gaf {likert_scale} op"
 
-  
+  # Reminder
+  utter_reminder:
+  - text: "Voorziet u vandaag risicovolle situaties voor het roken?"
+
 actions:
 - action_get_plan_week
 - action_get_name_from_database
 - action_save_plan_week_calendar
+- action_set_reminder
 - validate_likert_form
 
 forms:
@@ -113,3 +121,4 @@ forms:
     required_slots:
       likert_scale:
         - type: from_text
+

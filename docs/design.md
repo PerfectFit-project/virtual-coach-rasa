@@ -1,21 +1,21 @@
-# Design (v2.0) PerfectFit Virtual Coach system
+# Design (v2.1) PerfectFit Virtual Coach system
 The general goal of PerfectFit is to Develop an eCoach app that will provide personalised assistance on smoking cessation 
 and increasing physical activity based on personal (sensor) data 
 (read more [here](https://www.research-software.nl/projects/583)).
 
 This document describes the intended architecture for the eCoach.
 
---- 
+---
 
 ## Non-functional requirements
 * **No need for scalability**. We expect max 500 participants for the research that will be conducted with the system,
-thus probably only max 50 users simultaneously using the app. 
+thus probably only max 50 users simultaneously using the app.
 Scalability is nice-to-have for generalisation of the system, but not critical.
-* **Privacy & Security**. Sensitive data such as sensor data and conversations will flow through the app. 
+* **Privacy & Security**. Sensitive data such as sensor data and conversations will flow through the app.
 Privacy and security are critical.
 * **No need for high performance**. Unless it results in an awful user experience
-* **Generalization**. We want the virtual coach system as well as individual components to be reusable outside of the 
-PerfectFit project. So individual components should be modular, and Niceday should be swappable with any other chat 
+* **Generalization**. We want the virtual coach system as well as individual components to be reusable outside of the
+PerfectFit project. So individual components should be modular, and Niceday should be swappable with any other chat
 framework.
 
 ## Functional requirements
@@ -40,43 +40,46 @@ Its main features are:
 * Trackers: simple panels that track amongst others: mood, number of cigarettes smoked, step count, thought records.
 * Daily planner: overview of planned actions
 * Messaging
- 
+
 #### Sensor data collection app (out of scope)
-A separate app for collecting sensor data that is needed to estimate physical capacity. 
+A separate app for collecting sensor data that is needed to estimate physical capacity.
 * The Niceday app itself cannot gather this data.
 * At the start of an activity the sensor data collector is triggered to start recording sensor data.
-* After an activity or upon Wifi connection the data is pushed to the PerfectFit sensor data REST API.
+* After an activity or upon Wifi connection the data is pushed to the Sensor Data Database.
+* Data is exposed by a REST API
 * Will be based on an existing app and developed outside of scope of PerfectFit
 virtual coach system.
---- 
+---
 
 ### Niceday components
 #### Niceday server (already developed)
 * Backend for the Niceday app.
-* Data storage: 
-  - user profile data, 
+* Data storage:
+  - user profile data,
   - app-interaction data
   - messages
-* Handles authentication
+* Handles user authentication
 
---- 
+---
 ### PerfectFit virtual coach system components
-We cannot change much in the NiceDay app, new PerfectFit features will be implemented 
-through the virtual coach that interacts with the user through the messaging function of the 
-NiceDay app. We will make use of Niceday trackers to gather data, 
+We cannot change much in the NiceDay app, new PerfectFit features will be implemented
+through the virtual coach that interacts with the user through the messaging function of the
+NiceDay app. We will make use of Niceday trackers to gather data,
 and make use of the Niceday daily planner to plan activities.
 
 
-### Sensor data REST API
-A Sensor REST API that allows for the sensor data collection app to send data to PerfectFit system.
-* Validates and preprocesses data
+### Sensor Data Handler
+A service that pulls data from the Sensor Data Database when needed.
+Details are deliberately left open, because we will futher co-design this with the Sensor Data Collector
+developers.
+* Validates and processes data
 * Writes data directly to the database using the ORM
 
 ### Rasa agent
 The conversational agent developed in the [Rasa](https://rasa.com/) framework.
 * Given an input message of the user, perform the appropriate action.
 * Actions can range from a simple text message response to something more complex, using any combination of:
-  - using an algorithm (through calling functions from imported libraries, often with data from db or niceday) 
+  - using an algorithm (through calling functions from imported libraries, often with data from db or niceday)
   - querying the perfectfit database using ORM
   - calling the niceday-api for information from niceday-server
 
@@ -91,14 +94,14 @@ A worker that sends back and forth messages from a niceday user between the Nice
 
 ### niceday-api
 Allows control over certain functionalities in the niceday app.
-It is a node.js REST API that wraps functions that we need from the javascript Niceday client 
+It is a node.js REST API that wraps functions that we need from the javascript Niceday client
 [goalie-js](https://github.com/senseobservationsystems/goalie-js).
 * Request data from the niceday server
 * Read from and manage Niceday (custom) trackers
 * Interact with Niceday daily planner
 
 ### PostgreSQL database
-Stores PerfectFit-specific data, 
+Stores PerfectFit-specific data,
 * Stores:
   - Data about the user (name, age, stage of patient journey, preferences)
   - Sensor data
@@ -106,27 +109,27 @@ Stores PerfectFit-specific data,
 * The interface to it will be an SqlAlchemy ORM (so no API abstraction)
 
 ### Content Management System (CMS)
-Interface for domain experts to control the content of the application 
+Interface for domain experts to control the content of the application
 (I.e. what the conversational agent responds with).
-Together with domain experts in the consortium we will decide on 
+Together with domain experts in the consortium we will decide on
 how much content/behavior we want to be managed vs to be hard-coded.
 
 Some options:
 1. A new tool that we develop ourselves, that allows for full control over the behavior and responses of the agent.
 Somewhat similar to [botpress](https://botpress.com/)
-2. [Rasa X](https://rasa.com/docs/rasa-x/), a (proprietary) tool for Conversation-Driven Development (CDD), 
+2. [Rasa X](https://rasa.com/docs/rasa-x/), a (proprietary) tool for Conversation-Driven Development (CDD),
 the process of listening to your users and using those insights to improve your AI assistent.
 This provides (amongst others) a UI for annotation of conversations, thereby steering the
 behavior of the agent.
-3. Rasa agent behavior and training data is fully controlled by developers, but some specific content comes from a CMS. 
-The CMS is basically a mapping from a response identifier (i.e. UTTER_WELCOME) to the actual 
+3. Rasa agent behavior and training data is fully controlled by developers, but some specific content comes from a CMS.
+The CMS is basically a mapping from a response identifier (i.e. UTTER_WELCOME) to the actual
 response (i.e. 'Welcome to this app')
 
 ### Algorithm components
 A number of algorithm components
-* For example: a Sensor Data Processor, that has as input sensor data for an activity, 
+* For example: a Sensor Data Processor, that has as input sensor data for an activity,
 and outputs some useful information about the activity (i.e. was the capacity threshold reached).
-* They are standalone Python libraries that are imported and used by Rasa agent, 
+* They are standalone Python libraries that are imported and used by Rasa agent,
 but can also be used outside of this project.
 * Should be setup in a modular and functional way. So no connections to the database or other components,
 the interface should be functions or methods that take as input all the required data used by the algorithm.
@@ -135,9 +138,12 @@ the interface should be functions or methods that take as input all the required
 Interface to inspect data, monitor the system, and perform actions in the system.
 * Design for this will emerge based on the need for certain control/insights while progressing in the project
 
+### Celery scheduler
+Interface to schedule periodic tasks by taking advantage of Django admin.
+
 ## Possible future components
 ### Data workers
-It could be that the algorithsm processing (or preprocessing before sending to algorithms) of 
+It could be that the algorithsm processing (or preprocessing before sending to algorithms) of
 sensor or user data will be too compute-heavy. To solve that we can have dedicated workers that process
 data. The system should then get some more queuing, i.e. the sensor data REST api just writes data to a queue.
 The workers are subscribed to this queue and process the data, then notify other components or write to the database.

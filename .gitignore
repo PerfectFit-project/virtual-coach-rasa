@@ -110,6 +110,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.secrets.login.sh
 
 # Spyder project settings
 .spyderproject

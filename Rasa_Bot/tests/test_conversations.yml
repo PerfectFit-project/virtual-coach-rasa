@@ -1,0 +1,14 @@
+version: "2.0"
+stories:
+- story: Get weekly planning, user initiated
+  steps: 
+  - user: | 
+      Mag ik de planning?
+    intent: request_plan_week
+  - action: action_get_plan_week
+  - action: utter_plan_week
+  - action: utter_ask_plan_calendar
+  - user: |
+      Nee
+    intent: deny
+  - action: utter_okay

@@ -1,27 +1,18 @@
-const goalieJs = require('@sense-os/goalie-js');
-
-const { Chat } = goalieJs;
-const { SenseServerEnvironment } = goalieJs;
-const { ConnectionStatus } = goalieJs;
-
-// Read in environment variables from .env file
-require('dotenv').config();
-
-const THERAPIST_USER_ID = parseInt(process.env.THERAPIST_USER_ID, 10);
-const TOKEN = process.env.NICEDAY_TOKEN;
+const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/goalie-js');
 
 /**
  * Send a text message
  *
- * body Message  (optional)
+ * @param req - The node.js express request object
+ * @param req - The node.js express body object
+ *
  * no response value expected for this operation
  * */
-exports.sendTextMessage = function (body) {
+exports.sendTextMessage = function (req, body) {
   return new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
     const chatSdk = new Chat();
     chatSdk.init(SenseServerEnvironment.Alpha);
-
-    chatSdk.connect(THERAPIST_USER_ID, TOKEN);
+    chatSdk.connect(req.app.get('therapistId'), req.app.get('token'));
 
     chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
       if (connectionStatus === ConnectionStatus.Connected) {

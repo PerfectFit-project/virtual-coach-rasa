@@ -1,9 +1,8 @@
 import logging
 
 import requests
-from pandas_ods_reader import read_ods
-
 from config import MANAGED_CONTENT_TEMP_ODS_LOCATION, MANAGED_CONTENT_URL
+from pandas_ods_reader import read_ods
 
 
 class ManagedContentReader:
@@ -18,7 +17,8 @@ class ManagedContentReader:
         r = requests.get(MANAGED_CONTENT_URL)
         if r.status_code != 200:
             logging.error(
-                f'Failed to fetch from URL: {MANAGED_CONTENT_URL} - received response {r.status_code}.')
+                f'Failed to fetch from URL: {MANAGED_CONTENT_URL} '
+                f'- received response {r.status_code}.')
             raise Exception(
                 'Could not initialise ManagedContentReader - Failed to fetch from CMS URL')
 
@@ -32,9 +32,10 @@ class ManagedContentReader:
                 MANAGED_CONTENT_TEMP_ODS_LOCATION, sheet=1)
         except KeyError as ke:
             logging.error(
-                f'Response from {MANAGED_CONTENT_URL} does not look like an ODS file: KeyError {ke}.')
+                f'Response from {MANAGED_CONTENT_URL} does not look'
+                f'like an ODS file: KeyError {ke}.')
             raise Exception(
-                'Could not initialise ManagedContentReader - Response was not an ODS file.')
+                'Could not initialise ManagedContentReader - Response was not an ODS file.') from ke
 
     def get_random_content(self):
         """

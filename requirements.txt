@@ -1,16 +1,7 @@
-# for database
 -r db/requirements.txt
-
-# for onboarding
 -r onboarding/requirements.txt
-
-# for Rasa agent
 -r Rasa_Bot/requirements.txt
-
-# for rasa-scheduler
--r requirements-scheduler.txt
-
-# for sensor API
+-r rasa_scheduler/requirements.txt
 -r sensor_api/requirements.txt
 
 requests==2.25.1

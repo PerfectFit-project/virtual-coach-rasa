@@ -56,11 +56,11 @@ class SavePlanWeekCalendar(Action):
 
 
 # Validate input of liker scale form
-class Validate_Pa_Evaluation_Form(FormValidationAction):
+class ValidatePaEvaluationForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_pa_evaluation_form'
 
-    def validate_likert_scale(
+    def validate_pa_evaluation_form(
         self,
         value: Text,
         dispatcher: CollectingDispatcher,

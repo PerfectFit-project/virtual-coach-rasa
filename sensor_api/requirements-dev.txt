@@ -1,6 +1,2 @@
--r requirements.txt
-
 # for tests
 coveralls==3.0.0
-pytest==6.2.2
-pytest-cov==2.11.1

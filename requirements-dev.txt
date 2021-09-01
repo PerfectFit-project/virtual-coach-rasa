@@ -1,3 +1,5 @@
+-r sensor_api/requirements-dev.txt
+
 prospector[with_pyroma]
 pytest
 pytest-cov

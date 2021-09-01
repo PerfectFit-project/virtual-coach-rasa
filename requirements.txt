@@ -1,9 +1,10 @@
+-r db/requirements.txt
+-r onboarding/requirements.txt
 -r Rasa_Bot/requirements.txt
-alembic
-connexion
+-r rasa_scheduler/requirements.txt
+-r sensor_api/requirements.txt
+
 requests==2.25.1
 pandas_ods_reader==0.0.7
 git+https://github.com/PerfectFit-project/pa-algorithms
 
-# for rasa-scheduler
--r requirements-scheduler.txt

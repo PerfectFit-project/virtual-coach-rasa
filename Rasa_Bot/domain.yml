@@ -101,9 +101,6 @@ responses:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
-      
-  utter_give_likert:
-  - text: "Je gaf {likert_scale} op"
 
   # Reminder
   utter_reminder:

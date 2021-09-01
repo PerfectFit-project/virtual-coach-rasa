@@ -7,7 +7,7 @@ import datetime
 from typing import Any, Dict, Text
 
 from paalgorithms import weekly_kilometers
-from rasa_sdk import Action
+from rasa_sdk import Action, Tracker
 from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
@@ -60,26 +60,28 @@ class ValidatePaEvaluationForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_pa_evaluation_form'
 
-    def validate_pa_evaluation_form(
+    def validate_pa_evaluation_response(
         self,
         value: Text,
         dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
-        """Validate pa_response_likert input."""
+        """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"pa_evaluation_response": None}
         else:
-            pa_response_likert = int(value)
+            pa_evaluation_response = int(value)
             # Create custom responses based on likert input
-            if pa_response_likert >= 4:
+            if pa_evaluation_response >= 4:
                 dispatcher.utter_message("Fijn om te horen!")
             else:
                 dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
                                          "dan gaat het de volgende keer vast beter!")
             # Save the input slot.
-            return {"pa_evaluation_response": pa_response_likert}
+            return {"pa_evaluation_response": pa_evaluation_response}
 
     @staticmethod
     def _is_valid_input(value):

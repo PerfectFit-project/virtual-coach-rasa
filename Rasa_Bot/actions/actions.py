@@ -65,21 +65,21 @@ class ValidatePaEvaluationForm(FormValidationAction):
         value: Text,
         dispatcher: CollectingDispatcher,
     ) -> Dict[Text, Any]:
-        """Validate likert_scale input."""
+        """Validate pa_response_likert input."""
 
         if not self._is_valid_input(value):
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"pa_evaluation_response": None}
         else:
-            likert_scale = int(value)
+            pa_response_likert = int(value)
             # Create custom responses based on likert input
-            if likert_scale >= 4:
+            if pa_response_likert >= 4:
                 dispatcher.utter_message("Fijn om te horen!")
             else:
                 dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
                                          "dan gaat het de volgende keer vast beter!")
             # Save the input slot.
-            return {"pa_evaluation_response": likert_scale}
+            return {"pa_evaluation_response": pa_response_likert}
 
     @staticmethod
     def _is_valid_input(value):

@@ -97,7 +97,7 @@ responses:
   # Activity evaluation
   utter_pa_completed:
   - text: "Goed bezig!"
-  utter_ask_likert_form_likert_scale:
+  utter_ask_pa_evaluation_form_pa_evaluation_response:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.

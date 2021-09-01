@@ -1,6 +1,7 @@
 session_config:
   session_expiration_time: 5 # these are minutes
-  carry_over_slots_to_new_session: true
+  carry_over_slots_to_new_session: true  
+
 intents:
 - goodbye
 - greeting
@@ -13,6 +14,8 @@ intents:
 - request_plan_week
 - EXTERNAL_set_reminder
 - EXTERNAL_utter_reminder
+- completed_pa
+
 
 slots:
   ### General
@@ -37,6 +40,11 @@ slots:
   success_save_calendar_plan_week:
     type: bool
     influence_conversation: true
+  # Evaluate completed PA
+  pa_evaluation_response:
+    type: float
+    influence_conversation: false
+    auto_fill: false
 
 responses:
   # Fallback
@@ -85,6 +93,15 @@ responses:
   utter_error_save_plan_week_calendar:
   - text: "Sorry, ik kan de planning nu niet invoeren."
 
+  
+  # Activity evaluation
+  utter_pa_completed:
+  - text: "Goed bezig!"
+  utter_ask_pa_evaluation_form_pa_evaluation_response:
+  - text: >
+      Hoe ging het? Geef dit aan op een schaal
+      van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
+
   # Reminder
   utter_reminder:
   - text: "Voorziet u vandaag risicovolle situaties voor het roken?"
@@ -94,3 +111,12 @@ actions:
 - action_get_name_from_database
 - action_save_plan_week_calendar
 - action_set_reminder
+- validate_pa_evaluation_form
+- action_pa_likert_form_filled
+
+forms:
+  pa_evaluation_form:
+    required_slots:
+      pa_evaluation_response:
+        - type: from_text
+

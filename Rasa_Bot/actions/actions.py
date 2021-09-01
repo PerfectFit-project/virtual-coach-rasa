@@ -4,10 +4,14 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
+from typing import Any, Dict, Text
 
 from paalgorithms import weekly_kilometers
-from rasa_sdk import Action
+from rasa_sdk import Action, Tracker
 from rasa_sdk.events import ReminderScheduled, SlotSet
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.forms import FormValidationAction
+
 
 AGE = 30  # TODO_db: We should get this value from a database.
 
@@ -50,6 +54,54 @@ class SavePlanWeekCalendar(Action):
 
         return [SlotSet("success_save_calendar_plan_week", success)]
 
+
+# Validate input of liker scale form
+class ValidatePaEvaluationForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_pa_evaluation_form'
+
+    def validate_pa_evaluation_response(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        """Validate pa_evaluation_response input."""
+
+        if not self._is_valid_input(value):
+            return {"pa_evaluation_response": None}
+        else:
+            pa_evaluation_response = int(value)
+            return {"pa_evaluation_response": pa_evaluation_response}
+
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 5):
+            return False
+        return True
+
+
+# Have a custom response based on the pa_evaluation response
+class ActionPaEvaluationFormFilled(Action):
+    """Custom response based on PA evaluation form"""
+
+    def name(self):
+        return "action_pa_likert_form_filled"
+
+    async def run(self, dispatcher, tracker, domain):
+        pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
+
+        if pa_evaluation_response >= 4:
+            dispatcher.utter_message("Fijn om te horen dat het goed ging!")
+        else:
+            dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
+                                     "dan gaat het de volgende keer vast beter!")
+        return []
 
 # Set reminder, triggered by external scheduler
 class ActionSetReminder(Action):

@@ -68,3 +68,11 @@ stories:
   - intent: negative_mood
   - action: utter_response_mood_negative
 
+# User indicates completion PA
+- story: user_indicate_pa
+  steps:
+  - intent: completed_pa
+  - action: utter_pa_completed
+  - action: pa_evaluation_form
+  - active_loop: pa_evaluation_form
+  - action: action_pa_likert_form_filled

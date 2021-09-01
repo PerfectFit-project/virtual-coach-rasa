@@ -40,9 +40,9 @@ slots:
   success_save_calendar_plan_week:
     type: bool
     influence_conversation: true
-  # Likert scale
-  likert_scale:
-    type: float # Maybe integer could be used? Got this from example
+  # Evaluate completed PA
+  pa_evaluation_response:
+    type: float
     influence_conversation: false
     auto_fill: false
 
@@ -114,11 +114,11 @@ actions:
 - action_get_name_from_database
 - action_save_plan_week_calendar
 - action_set_reminder
-- validate_likert_form
+- validate_pa_evaluation_form
 
 forms:
-  likert_form:
+  pa_evaluation_form:
     required_slots:
-      likert_scale:
+      pa_evaluation_response:
         - type: from_text
 

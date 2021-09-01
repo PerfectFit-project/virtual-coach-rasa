@@ -56,9 +56,9 @@ class SavePlanWeekCalendar(Action):
 
 
 # Validate input of liker scale form
-class ValidateLikertForm(FormValidationAction):
+class Validate_Pa_Evaluation_Form(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_likert_form'
+        return 'validate_pa_evaluation_form'
 
     def validate_likert_scale(
         self,
@@ -69,7 +69,7 @@ class ValidateLikertForm(FormValidationAction):
 
         if not self._is_valid_input(value):
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
-            return {"likert_scale": None}
+            return {"pa_evaluation_response": None}
         else:
             likert_scale = int(value)
             # Create custom responses based on likert input
@@ -79,7 +79,7 @@ class ValidateLikertForm(FormValidationAction):
                 dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
                                          "dan gaat het de volgende keer vast beter!")
             # Save the input slot.
-            return {"likert_scale": likert_scale}
+            return {"pa_evaluation_response": likert_scale}
 
     @staticmethod
     def _is_valid_input(value):

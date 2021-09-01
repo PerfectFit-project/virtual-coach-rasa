@@ -61,19 +61,15 @@ class ValidatePaEvaluationForm(FormValidationAction):
         return 'validate_pa_evaluation_form'
 
     def validate_pa_evaluation_response(
-        self,
-        value: Text,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> Dict[Text, Any]:
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
             return {"pa_evaluation_response": None}
-        else:
-            pa_evaluation_response = int(value)
-            return {"pa_evaluation_response": pa_evaluation_response}
+        pa_evaluation_response = int(value)
+        return {"pa_evaluation_response": pa_evaluation_response}
 
     @staticmethod
     def _is_valid_input(value):
@@ -102,6 +98,7 @@ class ActionPaEvaluationFormFilled(Action):
             dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
                                      "dan gaat het de volgende keer vast beter!")
         return []
+
 
 # Set reminder, triggered by external scheduler
 class ActionSetReminder(Action):

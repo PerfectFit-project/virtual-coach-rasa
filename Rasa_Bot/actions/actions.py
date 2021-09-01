@@ -92,7 +92,24 @@ class ValidatePaEvaluationForm(FormValidationAction):
         if (value < 1) or (value > 5):
             return False
         return True
+    
+    
+# Have a custom response based on the pa_evaluation response
+class ActionPaEvaluationFormFilled(Action):
+    """Custom response based on PA evaluation form"""
 
+    def name(self):
+        return "action_pa_likert_form_filled"
+
+    async def run(self, dispatcher, tracker, domain):
+        pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
+
+        if pa_evaluation_response >= 4:
+            dispatcher.utter_message("Fijn om te horen dat het goed ging!")
+        else:
+            dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
+                                     "dan gaat het de volgende keer vast beter!")
+        return []
 
 # Set reminder, triggered by external scheduler
 class ActionSetReminder(Action):

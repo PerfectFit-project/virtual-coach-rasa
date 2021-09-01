@@ -75,3 +75,4 @@ stories:
   - action: utter_pa_completed
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
+  - action: action_pa_likert_form_filled

@@ -70,17 +70,9 @@ class ValidatePaEvaluationForm(FormValidationAction):
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"pa_evaluation_response": None}
         else:
             pa_evaluation_response = int(value)
-            # Create custom responses based on likert input
-            if pa_evaluation_response >= 4:
-                dispatcher.utter_message("Fijn om te horen!")
-            else:
-                dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
-                                         "dan gaat het de volgende keer vast beter!")
-            # Save the input slot.
             return {"pa_evaluation_response": pa_evaluation_response}
 
     @staticmethod
@@ -92,8 +84,8 @@ class ValidatePaEvaluationForm(FormValidationAction):
         if (value < 1) or (value > 5):
             return False
         return True
-    
-    
+
+
 # Have a custom response based on the pa_evaluation response
 class ActionPaEvaluationFormFilled(Action):
     """Custom response based on PA evaluation form"""

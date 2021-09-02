@@ -31,7 +31,6 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
         };
       })
     }));
-
   });
 
   // Set up - start niceday-api REST server (and wait until it is ready)
@@ -44,9 +43,9 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
   });
 
   // Tear down - stop niceday-api REST server after each test
-  afterEach((done) => {
+  afterEach(() => {
    console.debug('Stopping server');
-   server.close(done);
+   server.close();
   });
 
 

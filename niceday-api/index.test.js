@@ -6,11 +6,10 @@ const NICEDAY_TEST_SERVERPORT = 8080;
 const NICEDAY_TEST_USER_ID = 38527;
 const MOCK_USER_DATA = { id: NICEDAY_TEST_USER_ID, userProfile: {'firstName': 'Mr Mock'}};
 
-
+// Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
 
   beforeAll(() => {
-
 
     // Mock the constructor of the SenseNetwork submodule of goaliejs to return
     // a mock with the getContact() method, which itself returns a promise containing
@@ -33,9 +32,9 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       })
     }));
 
-
   });
 
+  // Set up - start niceday-api REST server (and wait until it is ready)
   beforeEach((done) => {
     server = create_niceday_api_server();
     server.listen(NICEDAY_TEST_SERVERPORT, () => {
@@ -44,12 +43,18 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
     });
   });
 
+  // Tear down - stop niceday-api REST server after each test
   afterEach((done) => {
    console.debug('Stopping server');
    server.close(done);
   });
 
+
   it('Test fetching user data from userdata/ endpoint', () => {
+    /*
+      Sends a GET to the /userdata/ endpoint and checks that the expected
+      (mock) user data is returned.
+    */
 
     return fetch('http://localhost:' + NICEDAY_TEST_SERVERPORT + '/userdata/' + NICEDAY_TEST_USER_ID)
       .then(response => response.json())

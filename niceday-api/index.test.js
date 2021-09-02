@@ -29,7 +29,8 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
             });
           }
         };
-      })
+      }),
+      Authentication: jest.mock()
     }));
   });
 

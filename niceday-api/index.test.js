@@ -8,6 +8,7 @@ const NICEDAY_TEST_USER_ID = 38527;
 describe('Tests on niceday-api server using mocked goalie-js', () => {
   beforeAll(() => {
     jest.mock('@sense-os/goalie-js');
+    jest.setTimeout(30000);
   });
 
   beforeEach((done) => {

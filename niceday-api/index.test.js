@@ -1,6 +1,5 @@
 require('isomorphic-fetch');
 const http = require('http');
-const {create_niceday_api_server} = require('./index.js');
 
 const NICEDAY_TEST_SERVERPORT = 8080;
 const NICEDAY_TEST_USER_ID = 38527;
@@ -18,6 +17,7 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
     //
     // More comprehensive documentation can be found here:
     // https://en.wikipedia.org/wiki/Lovecraftian_horror
+
     jest.mock('@sense-os/goalie-js', () => ({
       SenseServer: () => ({
         Alpha: undefined
@@ -30,18 +30,29 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
           }
         };
       }),
-      Authentication: jest.mock()
+      Authentication: jest.fn().mockImplementation(() => {
+        return { login: (email, passwd) => {
+            return new Promise ((resolve, reject) => {
+              console.debug('Mocking successful authentication');
+              resolve();
+            });
+          }
+        };
+      })
     }));
   });
 
+
   // Set up - start niceday-api REST server (and wait until it is ready)
   beforeEach((done) => {
+    const {create_niceday_api_server} = require('./index.js');
     server = create_niceday_api_server();
     server.listen(NICEDAY_TEST_SERVERPORT, () => {
       console.debug('Test server up and listening on port %d', NICEDAY_TEST_SERVERPORT);
       done();
     });
   });
+
 
   // Tear down - stop niceday-api REST server after each test
   afterEach((done) => {
@@ -62,7 +73,7 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
         expect(response_body).toEqual(MOCK_USER_DATA);
       })
       .catch(error => {
-        fail('Error during fetch:', error);
+        throw new Error('Error during fetch:', error);
       });
   });
 });

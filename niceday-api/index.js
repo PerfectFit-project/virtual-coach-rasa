@@ -28,6 +28,9 @@ function create_niceday_api_server() {
   authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
     app.set('therapistId', response.user.id);
     app.set('token', response.token);
+  })
+  .catch(error => {
+    fail('Error during authentication:', error);
   });
 
   // Initialize the Swagger middleware

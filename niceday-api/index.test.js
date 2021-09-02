@@ -44,8 +44,8 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
 
   // Tear down - stop niceday-api REST server after each test
   afterEach((done) => {
-   console.debug('Stopping server');
-   server.close(done);
+    console.debug('Stopping server');
+    server.close(done);
   });
 
 

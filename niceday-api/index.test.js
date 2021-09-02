@@ -43,9 +43,9 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
   });
 
   // Tear down - stop niceday-api REST server after each test
-  afterEach(() => {
+  afterEach((done) => {
    console.debug('Stopping server');
-   server.close();
+   server.close(done);
   });
 
 
@@ -59,6 +59,9 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       .then(response => response.json())
       .then(response_body =>{
         expect(response_body).toEqual(MOCK_USER_DATA);
+      })
+      .catch(error => {
+        fail('Error during fetch:', error);
       });
   });
 });

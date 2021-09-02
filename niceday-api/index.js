@@ -4,31 +4,48 @@ const http = require('http');
 const oas3Tools = require('oas3-tools');
 require('isomorphic-fetch');
 
-// Read in environment variables from .env file
-require('dotenv').config();
-
-const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS } = process.env;
-
-const authSdk = new Authentication(SenseServer.Alpha);
 const serverPort = 8080;
 
-// swaggerRouter configuration
-const options = {
-  routing: {
-    controllers: path.join(__dirname, './controllers'),
-  },
+function create_niceday_api_server() {
+
+  // Read in environment variables from .env file
+  require('dotenv').config();
+
+  const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS } = process.env;
+
+  const authSdk = new Authentication(SenseServer.Alpha);
+
+  // swaggerRouter configuration
+  const options = {
+    routing: {
+      controllers: path.join(__dirname, './controllers'),
+    },
+  };
+
+  const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
+  const app = expressAppConfig.getApp();
+
+  authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
+    app.set('therapistId', response.user.id);
+    app.set('token', response.token);
+  });
+
+  // Initialize the Swagger middleware
+  var server = http.createServer(app);
+
+  return server;
 };
 
-const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
-const app = expressAppConfig.getApp();
+module.exports.create_niceday_api_server = create_niceday_api_server;
 
-authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
-  app.set('therapistId', response.user.id);
-  app.set('token', response.token);
-});
+if (require.main === module) {
 
-// Initialize the Swagger middleware
-http.createServer(app).listen(serverPort, () => {
-  console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
-  console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
-});
+  server = create_niceday_api_server();
+
+  server.listen(serverPort, () => {
+    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+  });
+}
+
+

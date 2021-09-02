@@ -5,7 +5,7 @@ const {create_niceday_api_server} = require('./index.js');
 const NICEDAY_TEST_SERVERPORT = 8080;
 const NICEDAY_TEST_USER_ID = 38527;
 
-describe('Test fetching of user data', () => {
+describe('Tests on niceday-api server using mocked goalie-js', () => {
   beforeAll(() => {
     jest.mock('@sense-os/goalie-js');
   });
@@ -24,8 +24,8 @@ describe('Test fetching of user data', () => {
    server.close(done);
   });
 
-  it('Mock Test Case', () => {
-    return fetch('http://localhost:8080/userdata/' + NICEDAY_TEST_USER_ID)
+  it('Test fetching user data from userdata/ endpoint', () => {
+    return fetch('http://localhost:' + NICEDAY_TEST_SERVERPORT + '/userdata/' + NICEDAY_TEST_USER_ID)
     .then(function(response) {
         console.log(response);
     });

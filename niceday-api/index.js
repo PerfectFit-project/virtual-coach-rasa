@@ -30,7 +30,7 @@ function create_niceday_api_server() {
     app.set('token', response.token);
   })
   .catch(error => {
-    fail('Error during authentication:', error);
+    console.debug('Error during authentication:', error);
   });
 
   // Initialize the Swagger middleware

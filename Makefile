@@ -1,2 +1,2 @@
 types:
-	pytype --keep-going .
+	pytype --exclude db/dbschema/migrations/ --keep-going .

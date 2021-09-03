@@ -11,6 +11,8 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
+from db.dbschema.models import Users
+from db.helper import get_db_session
 
 
 AGE = 30  # TODO_db: We should get this value from a database.
@@ -135,3 +137,18 @@ class ActionSetReminder(Action):
         )
 
         return [reminder]
+    
+    
+class ActionSavePaEvaluationToDB(Action):
+    # Creat session object to connect db
+    session = get_db_session()
+    
+    # Select right user (hard coded?)
+    ID = 1
+    selected = session.query(Users).filter_by(nicedayuid=ID).one()
+    
+    
+    session.update()
+    
+    # Commit/save the data to the db
+    session.commit()

@@ -1,5 +1,5 @@
 require('isomorphic-fetch');
-const http = require('http');
+//require('http');
 
 const NICEDAY_TEST_SERVERPORT = 8080;
 const NICEDAY_TEST_USER_ID = 38527;
@@ -34,7 +34,13 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
         return { login: (email, passwd) => {
             return new Promise ((resolve, reject) => {
               console.debug('Mocking successful authentication');
-              resolve();
+              mock_auth_response = {
+                token: 'mocktoken',
+                user: {
+                  id: 12345
+                }
+              };
+              resolve(mock_auth_response);
             });
           }
         };
@@ -45,8 +51,8 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
 
   // Set up - start niceday-api REST server (and wait until it is ready)
   beforeEach((done) => {
-    const {create_niceday_api_server} = require('./index.js');
-    server = create_niceday_api_server();
+    const {createNicedayApiServer} = require('./index.js');
+    server = createNicedayApiServer();
     server.listen(NICEDAY_TEST_SERVERPORT, () => {
       console.debug('Test server up and listening on port %d', NICEDAY_TEST_SERVERPORT);
       done();

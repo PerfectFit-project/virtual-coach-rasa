@@ -29,7 +29,7 @@ function createNicedayApiServer() {
       app.set('token', response.token);
     })
     .catch((error) => {
-      throw Error('Error during authentication:' + error);
+      throw Error(`Error during authentication: ${error}`);
     });
 
   // Initialize the Swagger middleware

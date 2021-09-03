@@ -26,28 +26,22 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
         Alpha: undefined,
       }),
       SenseNetwork: jest.fn().mockImplementation(() => ({
-        getContact: () => {
-          return new Promise((resolve) => {
-            resolve(MOCK_USER_DATA);
-          });
-        },
+        getContact: () => new Promise((resolve) => {
+          resolve(MOCK_USER_DATA);
+        }),
       })),
-      Authentication: jest.fn().mockImplementation(() => {
-        return {
-          login: () => {
-            return new Promise((resolve) => {
-              console.debug('Mocking successful authentication');
-              const mockAuthResponse = {
-                token: 'mocktoken',
-                user: {
-                  id: 12345,
-                },
-              };
-              resolve(mockAuthResponse);
-            });
-          },
-        };
-      }),
+      Authentication: jest.fn().mockImplementation(() => ({
+        login: () => new Promise((resolve) => {
+          console.debug('Mocking successful authentication');
+          const mockAuthResponse = {
+            token: 'mocktoken',
+            user: {
+              id: 12345,
+            },
+          };
+          resolve(mockAuthResponse);
+        }),
+      })),
     }));
   });
 
@@ -73,7 +67,8 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       (mock) user data is returned.
     */
 
-    return fetch(`http://localhost:${NICEDAY_TEST_SERVERPORT}/userdata/${NICEDAY_TEST_USER_ID}`)
+    const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/userdata/${NICEDAY_TEST_USER_ID}`;
+    return fetch(urlreq)
       .then((response) => response.json())
       .then((responseBody) => {
         expect(responseBody).toEqual(MOCK_USER_DATA);

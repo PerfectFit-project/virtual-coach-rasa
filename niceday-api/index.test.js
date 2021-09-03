@@ -11,6 +11,8 @@ const MOCK_USER_DATA = {
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
+  let server;
+
   beforeAll(() => {
     // Mock the constructor of the SenseNetwork submodule of goaliejs to return
     // a mock with the getContact() method, which itself returns a promise containing

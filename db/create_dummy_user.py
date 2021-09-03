@@ -13,11 +13,11 @@ session = get_db_session()
 # Add new user to the Users table
 new_user = Users(
     nicedayuid=1,
-    firstname= 'Kees',
-    lastname= 'Jansen',
-    location= 'Hengelo',
+    firstname='Kees',
+    lastname='Jansen',
+    location='Hengelo',
     gender='Male',
-    dob= '03-09-2020'
+    dob='03-09-2021'
 )
 
 session.add(new_user)

@@ -16,10 +16,10 @@ ignore-paths:
 pyroma:
     run: true
 
-#pep8:
-#    full: true
-#    options:
-#      max-line-length: 100
+pep8:
+    full: true
+    options:
+      max-line-length: 100
 
 pep257:
     disable: [

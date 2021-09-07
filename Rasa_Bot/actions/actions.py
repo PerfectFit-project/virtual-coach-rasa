@@ -11,8 +11,9 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from db.dbschema.models import Users
-from db.helper import get_db_session
+import importlib
+from ..virtual-coach-server.db.dbschema.models import Users
+from ..virtual-coach-server.db.helper import get_db_session
 
 
 AGE = 30  # TODO_db: We should get this value from a database.
@@ -170,7 +171,7 @@ class ActionAddDummyUserToDB(Action):
         return "action_add_dummy_user_to_db"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         session = get_db_session()  # Creat session object to connect db
 
         # Add new user to the Users table

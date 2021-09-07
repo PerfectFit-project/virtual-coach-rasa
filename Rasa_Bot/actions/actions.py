@@ -140,15 +140,21 @@ class ActionSetReminder(Action):
     
     
 class ActionSavePaEvaluationToDB(Action):
-    # Creat session object to connect db
-    session = get_db_session()
-    
-    # Select right user (hard coded?)
-    ID = 1
-    selected = session.query(Users).filter_by(nicedayuid=ID).one()
-    
-    
-    session.update()
-    
-    # Commit/save the data to the db
-    session.commit()
+    """"To save user input from PA evaluation form to database"""
+
+    def name(self):
+        return "action_save_pa_evaluation_to_db"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
+        
+        # Creat session object to connect db
+        session = get_db_session()
+        
+        # Select right user and write data (hard coded?)
+        ID = 1
+        selected = session.query(Users).filter_by(nicedayuid=ID).one()
+        selected.PA_evaluation = pa_evaluation_response
+        session.commit()  # Update database
+        return []

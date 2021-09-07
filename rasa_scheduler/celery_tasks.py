@@ -1,13 +1,16 @@
-import os
-
 import requests
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rasa_scheduler.settings')
+app = Celery('celery_tasks',
+             broker='redis://localhost:6379')
 
-app = Celery('rasa_scheduler')
-app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()
+app.conf.beat_schedule = {
+    'trigger-rasa-reminder': {
+        'task': 'celery_tasks.trigger_rasa_reminder',
+        'schedule': 2.0,
+        'args': (),
+    },
+}
 
 
 @app.task(bind=True)

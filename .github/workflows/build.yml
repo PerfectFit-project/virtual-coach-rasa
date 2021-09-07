@@ -45,7 +45,7 @@ jobs:
     - name: Type Checking
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD
-        make types
+        pytype --exclude db/dbschema/migrations/ --keep-going .
 
     # Tests for node.js
     - name: Use Node.js

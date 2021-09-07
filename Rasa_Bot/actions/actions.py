@@ -137,8 +137,8 @@ class ActionSetReminder(Action):
         )
 
         return [reminder]
-    
-    
+
+
 class ActionSavePaEvaluationToDB(Action):
     """"To save user input from PA evaluation form to database"""
 
@@ -146,15 +146,44 @@ class ActionSavePaEvaluationToDB(Action):
         return "action_save_pa_evaluation_to_db"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        
-        # Creat session object to connect db
-        session = get_db_session()
-        
+
+        session = get_db_session()  # Creat session object to connect db
+
         # Select right user and write data (hard coded?)
         ID = 1
         selected = session.query(Users).filter_by(nicedayuid=ID).one()
         selected.PA_evaluation = pa_evaluation_response
         session.commit()  # Update database
+        dispatcher.utter_message("Data saved to DB")  # Debug line to check
+        return []
+
+
+class ActionAddDummyUserToDB(Action):
+    """"
+    Create a dummy user in the database. This is need to add the PA
+    evaluation value to the database.
+    """
+
+    def name(self):
+        return "action_add_dummy_user_to_db"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        session = get_db_session()  # Creat session object to connect db
+
+        # Add new user to the Users table
+        new_user = Users(
+            nicedayuid=1,
+            firstname='Kees',
+            lastname='Jansen',
+            location='Hengelo',
+            gender='Male',
+            dob='03-09-2021'
+            )
+
+        session.add(new_user)
+        session.commit()
+        dispatcher.utter_message("Dummy user created")  # Debug line to check
         return []

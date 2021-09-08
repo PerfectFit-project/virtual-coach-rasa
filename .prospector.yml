@@ -13,6 +13,7 @@ ignore-paths:
   - docs
   - niceday_client/niceday_client/__init__.py
   - db/dbschema/migrations
+
 pyroma:
     run: true
 

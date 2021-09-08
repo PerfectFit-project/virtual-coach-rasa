@@ -28,8 +28,9 @@ Take a look at the design [here](docs/design.md).
 1. Create a file called `.env` in the root of this app.
 Save the therapist user id and password in your `.env` file as THERAPIST_USER_ID and THERAPIST_PASSWORD, respectively,
 see .env-example. Note that no token needs to be created and specificied, as we now get the token automatically in the niceday-api and niceday-broker based on the credentials.
-2. Run `./script/server`. This will install the right dependencies, build docker images, and
-run them.
+2. Make sure you have access to the goalie-js repository from SenseHealth.
+3. Run `./script/server`. This will install the right dependencies, build docker images, and
+run them. 
 
 ## Setting up an account in the NiceDay alpha app
 1. Download the NiceDay alpha version on your phone. 

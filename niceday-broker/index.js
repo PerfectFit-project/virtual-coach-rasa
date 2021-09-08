@@ -49,7 +49,6 @@ class MessageHandler {
   constructor(therapistId, token) {
     this.therapistId = therapistId;
     this.token = token;
-    this.onIncomingMessage = this.onIncomingMessage.bind(this);
   }
 
   /**

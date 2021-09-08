@@ -21,11 +21,13 @@ def test_get_profile_from_server():
 
 
 @mock.patch('niceday_client.NicedayClient._call_api')
-def test_get_profile(mock_niceday_api):
+def test_get_profile(mock_call_api):
     """
     Unit test for NanopubClient.get_profile() method with mocked server
     """
-    mock_niceday_api.return_value = MOCK_PROFILE_RESPONSE
+    mock_response = mock.MagicMock()
+    mock_response.json.return_value = MOCK_PROFILE_RESPONSE
+    mock_call_api.return_value = mock_response
     client = NicedayClient()
     profile = client.get_profile(12345)
     assert isinstance(profile, dict)

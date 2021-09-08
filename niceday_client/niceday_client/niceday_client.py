@@ -22,7 +22,7 @@ class NicedayClient:
                   method: str,
                   url: str,
                   query_params: dict = None,
-                  body: dict = None) -> dict:
+                  body: dict = None) -> requests.Response:
         """
         Handles http requests with the niceday-api.
 
@@ -35,28 +35,28 @@ class NicedayClient:
 
         headers = {"Accept": "application/json"}
         if query_params is None:
-            query_params = dict()
+            query_params = {}
 
         if method == 'GET':
             r = requests.get(url, params=query_params, headers=headers)
-            r.raise_for_status()
-            try:
-                results = r.json()
-            except ValueError as e:
-                raise ValueError('The niceday-api did not return JSON.') from e
-
-            self.error_check(results, 'Unauthorized error')
-            self.error_check(results, 'The requested resource could not be found')
-
-            return results
         elif method == 'POST':
             r = requests.post(url, params=query_params, headers=headers, json=body)
-            r.raise_for_status()
-            return r
         else:
             raise NotImplementedError('Other methods are not implemented yet')
+        r.raise_for_status()
+        return r
 
-    def error_check(self, results, err_msg):
+    def _extract_json(self, response: requests.Response) -> dict:
+        try:
+            results = response.json()
+        except ValueError as e:
+            raise ValueError('The niceday-api did not return JSON.') from e
+
+        self._error_check(results, 'Unauthorized error')
+        self._error_check(results, 'The requested resource could not be found')
+        return results
+
+    def _error_check(self, results, err_msg):
         if 'message' in results and err_msg in results['message']:
             msg = f"'{err_msg}' response from niceday server. "
             if 'details' in results and 'body' in results['details']:
@@ -74,7 +74,8 @@ class NicedayClient:
         on the SenseServer and generally could change (beyond our control).
         """
         url = self._niceday_api_uri + 'userdata/' + str(user_id)
-        return self._call_api('GET', url)
+        response = self._call_api('GET', url)
+        return self._extract_json(response)
 
     def get_profile(self, user_id) -> dict:
         """

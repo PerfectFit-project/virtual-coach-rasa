@@ -106,7 +106,6 @@ class NicedayClient:
         return return_profile
 
     def post_message(self, recipient_id: int, text: str):
-        print(text)
         url = self._niceday_api_uri + 'messages/'
         body = {
             "recipient_id": recipient_id,

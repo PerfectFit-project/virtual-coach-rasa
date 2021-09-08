@@ -25,7 +25,6 @@ class NicedayOutputChannel(OutputChannel):
         self, recipient_id: Text, text: Text, **kwargs: Any
     ) -> None:
         """Send a message through this channel."""
-        print(text)
         for message_part in text.strip().split("\n\n"):
             self.niceday_client.post_message(int(recipient_id), message_part)
 

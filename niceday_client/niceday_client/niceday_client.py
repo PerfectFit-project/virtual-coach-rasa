@@ -1,4 +1,5 @@
 import requests
+import typing
 
 from .definitions import USER_PROFILE_KEYS
 
@@ -21,8 +22,8 @@ class NicedayClient:
     def _call_api(self,
                   method: str,
                   url: str,
-                  query_params: dict = None,
-                  body: dict = None) -> requests.Response:
+                  query_params: typing.Optional[dict] = None,
+                  body: typing.Optional[dict] = None) -> requests.Response:
         """
         Handles http requests with the niceday-api.
 

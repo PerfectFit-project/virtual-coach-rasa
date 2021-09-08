@@ -12,8 +12,7 @@ member-warnings: false
 ignore-paths:
   - docs
   - niceday_client/niceday_client/__init__.py
-  - db/dbschema/migrations
-
+  - db_deprecated/dbschema/migrations
 pyroma:
     run: true
 

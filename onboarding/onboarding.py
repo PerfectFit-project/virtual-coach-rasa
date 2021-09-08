@@ -1,8 +1,8 @@
 import argparse
 import sys
 
-from db.dbschema.models import Users
-from db.helper import get_db_session
+from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.helper.helper import get_db_session
 from niceday_client.niceday_client import NicedayClient
 
 

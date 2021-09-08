@@ -26,11 +26,11 @@ class NicedayClient:
         """
         Handles http requests with the niceday-api.
 
-        url: str
-            Specifies the desired url e.g. 'profiles' or 'messages'
-
-        query_params: dict
-            Parameters that should go in the query string of the request URL
+        Args:
+            method: (str) Which HTTP method to use
+            url: (str) Specifies the desired url e.g. 'profiles' or 'messages'
+            query_params: (dict) Parameters that should go in the query string of the request URL
+            body: (dict) Body to send with request
         """
 
         headers = {"Accept": "application/json"}
@@ -106,6 +106,14 @@ class NicedayClient:
         return return_profile
 
     def post_message(self, recipient_id: int, text: str):
+        """
+        Post a message to the niceday server.
+
+        Args:
+            recipient_id: user id of the recipient
+            text: text message to send
+
+        """
         url = self._niceday_api_uri + 'messages/'
         body = {
             "recipient_id": recipient_id,

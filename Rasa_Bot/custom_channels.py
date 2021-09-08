@@ -1,12 +1,7 @@
 import inspect
 from typing import Text, Callable, Awaitable, Any
 
-from rasa.core.channels.channel import (
-    InputChannel,
-    CollectingOutputChannel,
-    OutputChannel,
-    UserMessage,
-)
+from rasa.core.channels.channel import InputChannel, OutputChannel, UserMessage
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
@@ -15,6 +10,9 @@ from niceday_client.niceday_client import NicedayClient
 
 
 class NicedayOutputChannel(OutputChannel):
+    """
+    Output channel that sends messages to Niceday server
+    """
     def __init__(self):
         self.niceday_client = NicedayClient()
 
@@ -30,6 +28,11 @@ class NicedayOutputChannel(OutputChannel):
 
 
 class NicedayInputChannel(InputChannel):
+    """
+    Custom input channel for communication with Niceday server. Instead of directly returning the
+    bot messages to the HTTP request that sends the message, it will use NicedayOutputChannel as
+    a callback as soon as the rasa response is ready.
+    """
     def __init__(self):
         self.output_channel = NicedayOutputChannel()
 
@@ -60,4 +63,8 @@ class NicedayInputChannel(InputChannel):
         return custom_webhook
 
     def get_output_channel(self) -> OutputChannel:
+        """
+        Register output channel. This is the output channel that is used when calling the
+        'trigger_intent' endpoint.
+        """
         return self.output_channel

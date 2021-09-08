@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: perfectfit
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+
+  manage:
+    build: .
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - ./dbschema:/dbschema

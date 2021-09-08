@@ -46,7 +46,7 @@ class NicedayInputChannel(InputChannel):
         )
 
         @custom_webhook.route("/", methods=["GET"])
-        async def health(request: Request) -> HTTPResponse:
+        async def health(request: Request) -> HTTPResponse:  # pylint: disable=unused-argument
             return response.json({"status": "ok"})
 
         @custom_webhook.route("/webhook", methods=["POST"])

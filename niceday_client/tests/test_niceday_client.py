@@ -44,5 +44,5 @@ def test_post_message():
     Test posting a message to the Niceday server
     """
     client = NicedayClient()
-    existing_user_id = 38527
+    existing_user_id = 38527  # Please change this to your own test user id if used frequently
     client.post_message(existing_user_id, 'Hello world')

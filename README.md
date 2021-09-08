@@ -30,11 +30,11 @@ Save the therapist user id and password in your `.env` file as THERAPIST_USER_ID
 see .env-example. Note that no token needs to be created and specificied, as we now get the token automatically in the niceday-api and niceday-broker based on the credentials.
 2. Make sure you have access to the goalie-js repository from SenseHealth.
 3. Run `./script/server`. This will install the right dependencies, build docker images, and
-run them. 
+run them. If you get an error with regards to Docker on Windows, run `docker-compose up --build --force-recreate` from script/server yourself.
 
 ## Setting up an account in the NiceDay alpha app
 1. Download the NiceDay alpha version on your phone. 
 2. Open the downloaded app and create a client account. This can be with the same credentials as for the normal NiceDay app.
-3. Login to the downloaded app on your phone.
+3. Login to the downloaded app on your phone with the account you just created.
 4. Send a connection request to the "PerfectFitTherapist Test"-therapist from the app.
 5. Login to the therapist account on https://alpha.niceday.app/ and accept the connection request from the client.

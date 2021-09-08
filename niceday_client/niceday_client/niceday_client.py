@@ -18,41 +18,43 @@ class NicedayClient:
 
         self._niceday_api_uri = niceday_api_uri
 
-    def _niceday_api(self,
-                     endpoint: str,
-                     query_params: dict,
-                     path_param: str) -> dict:
+    def _call_api(self,
+                  method: str,
+                  url: str,
+                  query_params: dict = None,
+                  body: dict = None) -> dict:
         """
         Handles http requests with the niceday-api.
 
-        endpoint: str
-            Specifies the desired endpoint e.g. 'profiles' or 'messages'
+        url: str
+            Specifies the desired url e.g. 'profiles' or 'messages'
 
         query_params: dict
             Parameters that should go in the query string of the request URL
-
-        path_param: str
-            The parameter that goes at the end of the path.
-            i.e. [nice-day-api-url]/endpoint/path_param
         """
 
-        if not endpoint.endswith('/'):
-            endpoint += '/'
-
         headers = {"Accept": "application/json"}
-        url = self._niceday_api_uri + endpoint + path_param
-        r = requests.get(url, params=query_params, headers=headers)
-        r.raise_for_status()
+        if query_params is None:
+            query_params = dict()
 
-        try:
-            results = r.json()
-        except ValueError as e:
-            raise ValueError('The niceday-api did not return JSON.') from e
+        if method == 'GET':
+            r = requests.get(url, params=query_params, headers=headers)
+            r.raise_for_status()
+            try:
+                results = r.json()
+            except ValueError as e:
+                raise ValueError('The niceday-api did not return JSON.') from e
 
-        self.error_check(results, 'Unauthorized error')
-        self.error_check(results, 'The requested resource could not be found')
+            self.error_check(results, 'Unauthorized error')
+            self.error_check(results, 'The requested resource could not be found')
 
-        return results
+            return results
+        elif method == 'POST':
+            r = requests.post(url, params=query_params, headers=headers, json=body)
+            r.raise_for_status()
+            return r
+        else:
+            raise NotImplementedError('Other methods are not implemented yet')
 
     def error_check(self, results, err_msg):
         if 'message' in results and err_msg in results['message']:
@@ -71,10 +73,8 @@ class NicedayClient:
         The exact contents of this returned data depends on what is stored
         on the SenseServer and generally could change (beyond our control).
         """
-        endpoint = 'userdata'
-        query_params = {}
-        path_param = str(user_id)
-        return self._niceday_api(endpoint, query_params, path_param)
+        url = self._niceday_api_uri + 'userdata/' + str(user_id)
+        return self._call_api('GET', url)
 
     def get_profile(self, user_id) -> dict:
         """
@@ -104,3 +104,12 @@ class NicedayClient:
             return_profile[k] = user_data['userProfile'][k]
 
         return return_profile
+
+    def post_message(self, recipient_id: int, text: str):
+        print(text)
+        url = self._niceday_api_uri + 'messages/'
+        body = {
+            "recipient_id": recipient_id,
+            "text": text
+        }
+        return self._call_api('POST', url, body=body)

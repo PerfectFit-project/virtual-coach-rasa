@@ -12,8 +12,8 @@ from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 import importlib
-from ..virtual-coach-server.db.dbschema.models import Users
-from ..virtual-coach-server.db.helper import get_db_session
+from virtual_coach_db.dbschema.models import Usersfrom virtual_coach_db.helper.helper
+from virtual_coach_db.helper.helper import get_db_session
 
 
 AGE = 30  # TODO_db: We should get this value from a database.

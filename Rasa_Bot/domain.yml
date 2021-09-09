@@ -19,15 +19,20 @@ intents:
 
 slots:
   ### General
+  # The name of the agent
+  agent_name:
+    type: text
+    initial_value: 'Kris'
+    influence_conversation: false
   # The user's name
   name:
     type: text
     initial_value: ''
     influence_conversation: false
-  # The name of the agent
-  agent_name:
+  # ID of the user in current conversation
+  sender_id:
     type: text
-    initial_value: 'Kris'
+    initial_value: ''
     influence_conversation: false
 
   ### Weekly planning
@@ -109,6 +114,7 @@ responses:
 actions:
 - action_get_plan_week
 - action_get_name_from_database
+- action_get_sender_id_from_tracker
 - action_save_plan_week_calendar
 - action_set_reminder
 - validate_pa_evaluation_form

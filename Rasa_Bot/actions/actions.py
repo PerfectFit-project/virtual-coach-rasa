@@ -11,9 +11,23 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-
+#from virtual_coach_db.dbschema.models import Users
+#from virtual_coach_db.helper.helper import get_db_session
 
 AGE = 30  # TODO_db: We should get this value from a database.
+
+
+# Get the sender_id for the current user, i.e. the user ID
+class GetSenderIDFromTracker(Action):
+    def name(self):
+        return "action_get_sender_id_from_tracker"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        sender_id = tracker.current_state()['sender_id']
+        dispatcher.utter_message("The ID is {sender_id}.")
+
+        return [SlotSet("sender_id", sender_id)]
 
 
 # Get the user's name from the database.

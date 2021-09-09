@@ -11,7 +11,7 @@ require('isomorphic-fetch');
 require('dotenv').config();
 
 const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS } = process.env;
-var { RASA_AGENT_URL } = process.env;
+let { RASA_AGENT_URL } = process.env;
 RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://localhost:5005/webhooks/rest/webhook' : RASA_AGENT_URL;
 
 const chatSdk = new Chat();
@@ -75,7 +75,7 @@ function setup(therapistId, token) {
   });
 
   const handler = new MessageHandler(therapistId, token);
-  console.log('Forwarding messages to:', RASA_AGENT_URL)
+  console.log('Forwarding messages to:', RASA_AGENT_URL);
   console.log('Listening to incoming message...');
   chatSdk.subscribeToIncomingMessage(handler.onIncomingMessage.bind(handler));
 }

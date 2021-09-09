@@ -1,2 +1,0 @@
-types:
-	pytype --keep-going .

@@ -2,3 +2,4 @@
 rasa==2.8.0 # NB! when updating, make sure to also update:
             # * rasa-sdk base image in Dockerfile
             # * format of stories, domain.yml etc. if necessary
+git+https://github.com/PerfectFit-project/virtual-coach-db

@@ -4,8 +4,8 @@ Created on Fri Sep  3 14:34:59 2021
 This script creates a dummy user, to b
 """
 
-from db.dbschema.models import Users
-from db.helper import get_db_session
+from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.helper.helper import get_db_session
 
 # Open session with db
 session = get_db_session()

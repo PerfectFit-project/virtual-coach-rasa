@@ -5,8 +5,8 @@ Created on Fri Sep  3 14:54:18 2021
 @author: bscheltinga
 """
 
-from db.dbschema.models import Users
-from db.helper import get_db_session
+from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.helper.helper import get_db_session
 
 # Creat session object to connect db
 session = get_db_session()

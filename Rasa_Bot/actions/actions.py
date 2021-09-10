@@ -151,10 +151,8 @@ class ActionSavePaEvaluationToDB(Action):
 
         session = get_db_session()  # Creat session object to connect db
 
-        # Select right user and write data (hard coded?)
-        ID = 1
+        ID = 1  #TODO_b take this value from database
         selected = session.query(Users).filter_by(nicedayuid=ID).one()
         selected.PA_evaluation = pa_evaluation_response
         session.commit()  # Update database
-        dispatcher.utter_message("Data saved to DB")  # Debug line to check
         return []

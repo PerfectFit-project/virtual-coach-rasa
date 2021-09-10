@@ -75,6 +75,5 @@ stories:
   - action: utter_pa_completed
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
-  - action: action_add_dummy_user_to_db
   - action: action_save_pa_evaluation_to_db
   - action: action_utter_pa_likert_form_filled

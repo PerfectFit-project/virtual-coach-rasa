@@ -159,32 +159,3 @@ class ActionSavePaEvaluationToDB(Action):
         session.commit()  # Update database
         dispatcher.utter_message("Data saved to DB")  # Debug line to check
         return []
-
-
-class ActionAddDummyUserToDB(Action):
-    """"
-    Create a dummy user in the database. This is need to add the PA
-    evaluation value to the database.
-    """
-
-    def name(self):
-        return "action_add_dummy_user_to_db"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        session = get_db_session()  # Creat session object to connect db
-
-        # Add new user to the Users table
-        new_user = Users(
-            nicedayuid=1,
-            firstname='Kees',
-            lastname='Jansen',
-            location='Hengelo',
-            gender='Male',
-            dob='03-09-2021'
-            )
-
-        session.add(new_user)
-        session.commit()
-        dispatcher.utter_message("Dummy user created")  # Debug line to check
-        return []

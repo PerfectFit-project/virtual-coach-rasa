@@ -114,7 +114,6 @@ actions:
 - validate_pa_evaluation_form
 - action_utter_pa_likert_form_filled
 - action_save_pa_evaluation_to_db
-- action_add_dummy_user_to_db
 
 forms:
   pa_evaluation_form:

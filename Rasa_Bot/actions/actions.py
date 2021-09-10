@@ -11,11 +11,38 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-#from virtual_coach_db.dbschema.models import Users
-#from virtual_coach_db.helper.helper import get_db_session
+from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.helper.helper import get_db_session
 
 AGE = 30  # TODO_db: We should get this value from a database.
 
+class ActionAddDummyUserToDB(Action):
+    """"
+    Create a dummy user in the database. This is need to add the PA
+    evaluation value to the database.
+    """
+
+    def name(self):
+        return "action_add_dummy_user_to_db"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        session = get_db_session()  # Creat session object to connect db
+
+        # Add new user to the Users table
+        new_user = Users(
+            nicedayuid=40121,
+            firstname='Marina',
+            lastname='Mander',
+            location='Delft',
+            gender='Female',
+            dob='03-09-2020'
+            )
+
+        session.add(new_user)
+        session.commit()
+        dispatcher.utter_message("Dummy user created")  # Debug line to check
+        return []
 
 # Get the sender_id for the current user, i.e. the user ID
 class GetSenderIDFromTracker(Action):
@@ -25,8 +52,8 @@ class GetSenderIDFromTracker(Action):
     async def run(self, dispatcher, tracker, domain):
 
         sender_id = tracker.current_state()['sender_id']
-        dispatcher.utter_message("The ID is {sender_id}.")
-
+        sender_id = 40121
+        
         return [SlotSet("sender_id", sender_id)]
 
 
@@ -38,7 +65,11 @@ class GetNameFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        name = "Kees"  # TODO_db
+        session = get_db_session()  # Creat session object to connect db
+
+        user_id = tracker.get_slot("sender_id")
+        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+        name = selected.name
 
         return [SlotSet("name", name)]
 

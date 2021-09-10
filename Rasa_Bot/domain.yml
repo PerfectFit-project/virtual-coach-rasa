@@ -119,6 +119,7 @@ actions:
 - action_set_reminder
 - validate_pa_evaluation_form
 - action_pa_likert_form_filled
+- action_add_dummy_user_to_db
 
 forms:
   pa_evaluation_form:

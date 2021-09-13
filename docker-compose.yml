@@ -1,7 +1,7 @@
 version: "3.0"  # orig 3.0
 services:
   rasa_server:
-    image: rasa/rasa:2.8.0-full
+    image: rasa/rasa:2.8.1-full
     ports:
       - 5005:5005
     volumes:

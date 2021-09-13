@@ -6,10 +6,11 @@ See here for the instructions from Rasa: https://rasa.com/docs/rasa/docker/deplo
 
 The steps are as follows:
 - Make sure that you have Docker and Docker Compose installed. You can check whether you do by typing `docker -v && docker-compose -v`.
+- Start the database via docker-compose, apply the existing migrations and load test data (see [here](https://github.com/PerfectFit-project/virtual-coach-db).
 - Navigate to the "Rasa_Bot"-folder on your laptop.
 - Type `docker-compose up`.
 - Now you can communicate with the bot via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Kan ik de agenda voor de week krijgen?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
-   - The output for the above command should be something like this: [{"recipient_id":"user","text":"Sure, you should ...
+   - The output for the above command should be something like this: [{"recipient_id":"user","text":"Sure, you should ..."}]
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
 
 Note that while the requirements-file lists Rasa 2.8.1 as a requirement, this is only needed to train a language model and handy when developing.

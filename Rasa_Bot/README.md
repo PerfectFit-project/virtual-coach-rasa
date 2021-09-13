@@ -14,6 +14,9 @@ The steps are as follows:
 
 Note that while the requirements-file lists Rasa 2.8.1 as a requirement, this is only needed to train a language model and handy when developing.
 
+NB: If you want to run rasa outside of docker, you might want to change the urls
+in `endpoints.yml`.
+
 ## Future Changes
 ### Language
 Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."

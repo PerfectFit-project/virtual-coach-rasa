@@ -30,6 +30,8 @@ slots:
   # The user's age
   age:
     type: float
+    min_value: 0.0
+    max_value: 123.0
     initial_value: 30
     influence_conversation: false
   # The user's name

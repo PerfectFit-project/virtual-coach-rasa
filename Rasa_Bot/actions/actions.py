@@ -4,6 +4,7 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
+from dateutil.relativedelta import relativedelta
 from typing import Any, Dict, Text
 
 from paalgorithms import weekly_kilometers
@@ -28,27 +29,27 @@ class GetSenderIDFromTracker(Action):
     
     
 # Get the user's age from the database.
-# Save the extracted name to a slot.
+# Save the extracted age to a slot.
 class GetAgeFromDatabase(Action):
     def name(self):
         return "action_get_age_from_database"
 
     async def run(self, dispatcher, tracker, domain):
 
-        session = get_db_session()  # Creat session object to connect db
+        session = get_db_session()  # Create session object to connect db
 
         user_id = tracker.get_slot("sender_id")
         
-        # nicedayuid is an integer in the database
         try:
-            user_id = int(user_id)
+            user_id = int(user_id) # nicedayuid is an integer in the database
             selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-            print(selected.dob)
-            dob = datetime.date(selected.dob)
-            print(dob)
+            dob = selected.dob
+            today = datetime.date.today()
             
-        
-        # ID from tracker is not in database.
+            # calculate age in years
+            age = relativedelta(today, dob).years
+            
+        # invalid ID for database
         except ValueError:
             age = 30
         
@@ -67,13 +68,12 @@ class GetNameFromDatabase(Action):
 
         user_id = tracker.get_slot("sender_id")
         
-        # nicedayuid is an integer in the database
         try:
-            user_id = int(user_id)
+            user_id = int(user_id) # nicedayuid is an integer in the database
             selected = session.query(Users).filter_by(nicedayuid=user_id).one()
             name = selected.firstname
         
-        # ID from tracker is not in database.
+        # invalid ID for database
         except ValueError:
             name = 'Perfect Fit user'
         

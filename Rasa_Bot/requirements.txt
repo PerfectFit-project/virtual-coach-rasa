@@ -1,4 +1,5 @@
 -r actions/requirements-actions.txt
 rasa==2.8.1 # NB! when updating, make sure to also update:
-            # * rasa-sdk base image in Dockerfile
+            # * rasa-sdk base image in Dockerfile, 
+            # * docker-compose files (both in Rasa_Bot and root),
             # * format of stories, domain.yml etc. if necessary

@@ -12,7 +12,7 @@ require('dotenv').config();
 
 const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS } = process.env;
 let { RASA_AGENT_URL } = process.env;
-RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://localhost:5005/webhooks/rest/webhook' : RASA_AGENT_URL;
+RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://rasa_server:5005/webhooks/rest/webhook' : RASA_AGENT_URL;
 
 const chatSdk = new Chat();
 const authSdk = new Authentication(SenseServer.Alpha);

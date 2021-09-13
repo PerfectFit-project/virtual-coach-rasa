@@ -26,7 +26,7 @@ class GetSenderIDFromTracker(Action):
         sender_id = tracker.current_state()['sender_id']
 
         return [SlotSet("sender_id", sender_id)]
-    
+
 
 # Get the user's age from the database.
 # Save the extracted age to a slot.
@@ -66,7 +66,7 @@ class GetNameFromDatabase(Action):
         session = get_db_session()  # Creat session object to connect db
 
         user_id = tracker.get_slot("sender_id")
-        
+
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
             selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -85,7 +85,7 @@ class GetPlanWeek(Action):
         return "action_get_plan_week"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         age = tracker.get_slot("age")
 
         # Calculates weekly kilometers based on age

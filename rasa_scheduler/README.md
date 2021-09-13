@@ -3,6 +3,12 @@
 ## How to run
 
 ### Before starting Celery, make sure you have started RASA:
+First, configure rasa so that it finds the actions server running on localhost, in `Rasa_Bot/endpoints.yml`:
+```
+action_endpoint:
+  url: "http://localhost:5055/webhook"
+``` 
+Please don't commit this as it will break the main application when running from docker-compose.
 ```
 # go to "Rasa_bot"
 

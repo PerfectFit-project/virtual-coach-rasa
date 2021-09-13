@@ -24,10 +24,10 @@ class GetSenderIDFromTracker(Action):
     async def run(self, dispatcher, tracker, domain):
 
         sender_id = tracker.current_state()['sender_id']
-        
+
         return [SlotSet("sender_id", sender_id)]
     
-    
+
 # Get the user's age from the database.
 # Save the extracted age to a slot.
 class GetAgeFromDatabase(Action):
@@ -37,22 +37,21 @@ class GetAgeFromDatabase(Action):
     async def run(self, dispatcher, tracker, domain):
 
         session = get_db_session()  # Create session object to connect db
-
         user_id = tracker.get_slot("sender_id")
-        
+
         try:
-            user_id = int(user_id) # nicedayuid is an integer in the database
+            user_id = int(user_id)  # nicedayuid is an integer in the database
             selected = session.query(Users).filter_by(nicedayuid=user_id).one()
             dob = selected.dob
             today = datetime.date.today()
-            
+
             # calculate age in years
             age = relativedelta(today, dob).years
-            
+
         # invalid ID for database
         except ValueError:
             age = 30
-        
+
         return [SlotSet("age", age)]
 
 
@@ -69,14 +68,14 @@ class GetNameFromDatabase(Action):
         user_id = tracker.get_slot("sender_id")
         
         try:
-            user_id = int(user_id) # nicedayuid is an integer in the database
+            user_id = int(user_id)  # nicedayuid is an integer in the database
             selected = session.query(Users).filter_by(nicedayuid=user_id).one()
             name = selected.firstname
-        
+
         # invalid ID for database
         except ValueError:
             name = 'Perfect Fit user'
-        
+
         return [SlotSet("name", name)]
 
 
@@ -88,7 +87,7 @@ class GetPlanWeek(Action):
     async def run(self, dispatcher, tracker, domain):
         
         age = tracker.get_slot("age")
-        
+
         # Calculates weekly kilometers based on age
         kilometers = weekly_kilometers(age)
         plan = "Sure, you should run %.1f kilometers this week. And please read through this " \

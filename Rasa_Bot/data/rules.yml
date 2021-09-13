@@ -29,7 +29,6 @@ rules:
   steps: 
   - intent: greeting
   - action: action_get_sender_id_from_tracker
-  - action: action_add_dummy_user_to_db
   - action: action_get_name_from_database
   - action: utter_greet
   - action: utter_ask_user_mood

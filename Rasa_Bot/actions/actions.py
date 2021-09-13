@@ -14,35 +14,6 @@ from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
 
-AGE = 30  # TODO_db: We should get this value from a database.
-
-class ActionAddDummyUserToDB(Action):
-    """"
-    Create a dummy user in the database. This is need to add the PA
-    evaluation value to the database.
-    """
-
-    def name(self):
-        return "action_add_dummy_user_to_db"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        session = get_db_session()  # Creat session object to connect db
-
-        # Add new user to the Users table
-        new_user = Users(
-            nicedayuid=40121,
-            firstname='Marina',
-            lastname='Mander',
-            location='Delft',
-            gender='Female',
-            dob='03-09-2020'
-            )
-
-        session.add(new_user)
-        session.commit()
-        dispatcher.utter_message("Dummy user created")  # Debug line to check
-        return []
 
 # Get the sender_id for the current user, i.e. the user ID
 class GetSenderIDFromTracker(Action):
@@ -52,9 +23,36 @@ class GetSenderIDFromTracker(Action):
     async def run(self, dispatcher, tracker, domain):
 
         sender_id = tracker.current_state()['sender_id']
-        sender_id = 40121
         
         return [SlotSet("sender_id", sender_id)]
+    
+    
+# Get the user's age from the database.
+# Save the extracted name to a slot.
+class GetAgeFromDatabase(Action):
+    def name(self):
+        return "action_get_age_from_database"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        session = get_db_session()  # Creat session object to connect db
+
+        user_id = tracker.get_slot("sender_id")
+        
+        # nicedayuid is an integer in the database
+        try:
+            user_id = int(user_id)
+            selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+            print(selected.dob)
+            dob = datetime.date(selected.dob)
+            print(dob)
+            
+        
+        # ID from tracker is not in database.
+        except ValueError:
+            age = 30
+        
+        return [SlotSet("age", age)]
 
 
 # Get the user's name from the database.
@@ -68,9 +66,17 @@ class GetNameFromDatabase(Action):
         session = get_db_session()  # Creat session object to connect db
 
         user_id = tracker.get_slot("sender_id")
-        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-        name = selected.name
-
+        
+        # nicedayuid is an integer in the database
+        try:
+            user_id = int(user_id)
+            selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+            name = selected.firstname
+        
+        # ID from tracker is not in database.
+        except ValueError:
+            name = 'Perfect Fit user'
+        
         return [SlotSet("name", name)]
 
 
@@ -80,8 +86,11 @@ class GetPlanWeek(Action):
         return "action_get_plan_week"
 
     async def run(self, dispatcher, tracker, domain):
+        
+        age = tracker.get_slot("age")
+        
         # Calculates weekly kilometers based on age
-        kilometers = weekly_kilometers(AGE)
+        kilometers = weekly_kilometers(age)
         plan = "Sure, you should run %.1f kilometers this week. And please read through this " \
                "psycho-education: www.link-to-psycho-education.nl." % kilometers
 

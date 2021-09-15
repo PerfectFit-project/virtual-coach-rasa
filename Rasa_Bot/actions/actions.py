@@ -5,6 +5,8 @@
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
 from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
+import os
 from typing import Any, Dict, Text
 
 from paalgorithms import weekly_kilometers
@@ -14,6 +16,11 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
+
+
+# load .env-file and get db_host variable
+load_dotenv()
+DB_HOST = os.getenv('DB_HOST')
 
 
 # Get the sender_id for the current user, i.e. the user ID
@@ -36,7 +43,7 @@ class GetAgeFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        session = get_db_session()  # Create session object to connect db
+        session = get_db_session(db_host = DB_HOST)  # Create session object to connect db
         user_id = tracker.get_slot("sender_id")
 
         try:
@@ -63,7 +70,7 @@ class GetNameFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        session = get_db_session()  # Creat session object to connect db
+        session = get_db_session(db_host = DB_HOST)  # Creat session object to connect db
 
         user_id = tracker.get_slot("sender_id")
 

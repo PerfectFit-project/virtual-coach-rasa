@@ -43,7 +43,7 @@ class GetAgeFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        session = get_db_session(db_host = DB_HOST)  # Create session object to connect db
+        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
         user_id = tracker.get_slot("sender_id")
 
         try:
@@ -70,7 +70,7 @@ class GetNameFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        session = get_db_session(db_host = DB_HOST)  # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)  # Creat session object to connect db
 
         user_id = tracker.get_slot("sender_id")
 

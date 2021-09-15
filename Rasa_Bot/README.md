@@ -7,7 +7,7 @@ See here for the instructions from Rasa: https://rasa.com/docs/rasa/docker/deplo
 The steps are as follows:
 - Make sure that you have Docker and Docker Compose installed. You can check whether you do by typing `docker -v && docker-compose -v`.
 - Start the database via docker-compose, apply the existing migrations and load test data (see [here](https://github.com/PerfectFit-project/virtual-coach-db).
-- Create a .env-file in the Rasa_Bot/actions-folder that contains the host address of the running database in the variable DB_HOST. If the database is running on localhost on Windows or Mac, set DB_Host to host.docker.internal (see .env-example).
+- Create a .env-file in the Rasa_Bot/actions-folder that contains the host address and port of the running database in the variable DB_HOST. If the database is running on localhost on Windows or Mac and you want to access it from inside a Docker container, set DB_Host to host.docker.internal:<port_number> (see .env-example).
 - Navigate to the "Rasa_Bot"-folder on your laptop.
 - Type `docker-compose up`.
 - Now you can communicate with the bot via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Kan ik de agenda voor de week krijgen?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.

@@ -61,12 +61,12 @@ class GetAgeFromDatabase(Action):
         # invalid ID for database
         except ValueError as e:
             age = 18
-            logging.error("ValueError: failed to get user age from database." \
-                          " User ID could not be converted to int: " + str(e))
+            logging.error("ValueError: failed to get user age from database. "
+                          "User ID could not be converted to int: " + str(e))
 
         except Exception as e:
             age = 18
-            logging.error("Failed to get user age from " \
+            logging.error("Failed to get user age from "
                           "database: " + str(e) + " - Defaulting to age 18.")
 
         finally:
@@ -82,7 +82,7 @@ class GetNameFromDatabase(Action):
         return "action_get_name_from_database"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         # Get sender ID from slot, this is a string
         user_id = tracker.get_slot("sender_id")
 
@@ -97,13 +97,13 @@ class GetNameFromDatabase(Action):
         # invalid ID for database
         except ValueError as e:
             name = 'Perfect Fit user'
-            logging.error("ValueError: failed to get user name from database." \
+            logging.error("ValueError: failed to get user name from database. "
                           "User ID could not be converted to int: " + str(e))
 
         except Exception as e:
             name = 'Perfect Fit user'
-            logging.error("Failed to get user name from" \
-                          "database: " + str(e) + " - Defaulting to" \
+            logging.error("Failed to get user name from "
+                          "database: " + str(e) + " - Defaulting to "
                           "Perfect Fit user.")
 
         finally:

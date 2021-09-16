@@ -61,11 +61,17 @@ class GetAgeFromDatabase(Action):
         # invalid ID for database
         except ValueError as e:
             age = 18
-            logging.info("ValueError: failed to get user age from database, defaulting to age 18: " + str(e))
-        
+            logging.error("ValueError: failed to get user age from database." \
+                          " User ID could not be converted to int: " + str(e))
+
+        except Exception as e:
+            age = 18
+            logging.error("Failed to get user age from " \
+                          "database: " + str(e) + " - Defaulting to age 18.")
+
         finally:
             session.close()
-            
+
         return [SlotSet("age", age)]
 
 
@@ -91,8 +97,15 @@ class GetNameFromDatabase(Action):
         # invalid ID for database
         except ValueError as e:
             name = 'Perfect Fit user'
-            logging.info("ValueError: failed to get user name from database, defaulting to Perfect Fit user: " + str(e))
-        
+            logging.error("ValueError: failed to get user name from database." \
+                          "User ID could not be converted to int: " + str(e))
+
+        except Exception as e:
+            name = 'Perfect Fit user'
+            logging.error("Failed to get user name from" \
+                          "database: " + str(e) + " - Defaulting to" \
+                          "Perfect Fit user.")
+
         finally:
             session.close()
 

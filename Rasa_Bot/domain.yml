@@ -130,7 +130,8 @@ actions:
 - action_save_plan_week_calendar
 - action_set_reminder
 - validate_pa_evaluation_form
-- action_pa_likert_form_filled
+- action_utter_pa_likert_form_filled
+- action_save_pa_evaluation_to_db
 
 forms:
   pa_evaluation_form:

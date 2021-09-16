@@ -169,11 +169,11 @@ class ValidatePaEvaluationForm(FormValidationAction):
 
 
 # Have a custom response based on the pa_evaluation response
-class ActionPaEvaluationFormFilled(Action):
+class ActionUtterPaEvaluationFormFilled(Action):
     """Custom response based on PA evaluation form"""
 
     def name(self):
-        return "action_pa_likert_form_filled"
+        return "action_utter_pa_evaluation_form_filled"
 
     async def run(self, dispatcher, tracker, domain):
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
@@ -221,3 +221,22 @@ class ActionSetReminder(Action):
         )
 
         return [reminder]
+
+
+class ActionStorePaEvaluation(Action):
+    """"To save user input from PA evaluation form to database"""
+
+    def name(self):
+        return "action_store_pa_evaluation"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
+
+        session = get_db_session()  # Creat session object to connect db
+
+        user_id = tracker.get_slot("sender_id")
+        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+        selected.paevaluation = pa_evaluation_response
+        session.commit()  # Update database
+        return []

@@ -6,6 +6,7 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 from dotenv import load_dotenv
+import logging
 import os
 from typing import Any, Dict, Text
 
@@ -43,8 +44,10 @@ class GetAgeFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
         user_id = tracker.get_slot("sender_id")
+
+        # Create session object to connect db
+        session = get_db_session(db_host=DB_HOST)
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
@@ -56,9 +59,13 @@ class GetAgeFromDatabase(Action):
             age = relativedelta(today, dob).years
 
         # invalid ID for database
-        except ValueError:
-            age = 30
-
+        except ValueError as e:
+            age = 18
+            logging.info("ValueError: failed to get user age from database, defaulting to age 18: " + str(e))
+        
+        finally:
+            session.close()
+            
         return [SlotSet("age", age)]
 
 
@@ -69,10 +76,12 @@ class GetNameFromDatabase(Action):
         return "action_get_name_from_database"
 
     async def run(self, dispatcher, tracker, domain):
-
-        session = get_db_session(db_host=DB_HOST)  # Creat session object to connect db
-
+        
+        # Get sender ID from slot, this is a string
         user_id = tracker.get_slot("sender_id")
+
+        # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
@@ -80,8 +89,12 @@ class GetNameFromDatabase(Action):
             name = selected.firstname
 
         # invalid ID for database
-        except ValueError:
+        except ValueError as e:
             name = 'Perfect Fit user'
+            logging.info("ValueError: failed to get user name from database, defaulting to Perfect Fit user: " + str(e))
+        
+        finally:
+            session.close()
 
         return [SlotSet("name", name)]
 

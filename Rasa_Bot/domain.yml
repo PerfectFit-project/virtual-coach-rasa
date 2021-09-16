@@ -32,12 +32,12 @@ slots:
     type: float
     min_value: 0.0
     max_value: 123.0
-    initial_value: 30
+    initial_value: 0
     influence_conversation: false
   # The user's name
   name:
     type: text
-    initial_value: ''
+    initial_value: 'NAMENOTSET'
     influence_conversation: false
   # ID of the user in current conversation
   sender_id:

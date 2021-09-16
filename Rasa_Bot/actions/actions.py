@@ -139,7 +139,7 @@ class ActionSetReminder(Action):
         return [reminder]
 
 
-class ActionSavePaEvaluationToDB(Action):
+class ActionStorePaEvaluation(Action):
     """"To save user input from PA evaluation form to database"""
 
     def name(self):

@@ -235,7 +235,7 @@ class ActionStorePaEvaluation(Action):
 
         session = get_db_session()  # Creat session object to connect db
 
-        user_id = 1  # TODO_b take this value from database
+        user_id = tracker.get_slot("sender_id")
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
         selected.paevaluation = pa_evaluation_response
         session.commit()  # Update database

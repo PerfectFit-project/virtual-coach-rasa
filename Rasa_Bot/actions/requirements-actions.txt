@@ -1,2 +1,4 @@
-git+https://github.com/PerfectFit-project/pa-algorithms
+python-dateutil==2.8.1
+python-dotenv
 git+https://github.com/PerfectFit-project/virtual-coach-db
+git+https://github.com/PerfectFit-project/pa-algorithms

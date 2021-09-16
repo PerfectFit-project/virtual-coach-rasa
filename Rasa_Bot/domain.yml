@@ -19,16 +19,32 @@ intents:
 
 slots:
   ### General
-  # The user's name
-  name:
-    type: text
-    initial_value: ''
-    influence_conversation: false
   # The name of the agent
   agent_name:
     type: text
     initial_value: 'Kris'
     influence_conversation: false
+  
+  
+  ### User data
+  # The user's age
+  age:
+    type: float
+    min_value: 0.0
+    max_value: 123.0
+    initial_value: 0
+    influence_conversation: false
+  # The user's name
+  name:
+    type: text
+    initial_value: 'NAMENOTSET'
+    influence_conversation: false
+  # ID of the user in current conversation
+  sender_id:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    
 
   ### Weekly planning
   # The plan for the week
@@ -108,7 +124,9 @@ responses:
 
 actions:
 - action_get_plan_week
+- action_get_age_from_database
 - action_get_name_from_database
+- action_get_sender_id_from_tracker
 - action_save_plan_week_calendar
 - action_set_reminder
 - validate_pa_evaluation_form

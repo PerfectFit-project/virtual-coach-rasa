@@ -1,4 +1,4 @@
-This is a simple conversational agent implemented in Rasa 2.8.0 with a Dutch language model.
+This is a simple conversational agent implemented in Rasa 2.8.1 with a Dutch language model.
 
 ## How to Run
 
@@ -6,20 +6,25 @@ See here for the instructions from Rasa: https://rasa.com/docs/rasa/docker/deplo
 
 The steps are as follows:
 - Make sure that you have Docker and Docker Compose installed. You can check whether you do by typing `docker -v && docker-compose -v`.
+- Start the database via docker-compose, apply the existing migrations and load test data (see [here](https://github.com/PerfectFit-project/virtual-coach-db).
+- Create a .env-file in the Rasa_Bot/actions-folder that contains the host address and port of the running database in the variable DB_HOST. If the database is running on localhost on Windows or Mac and you want to access it from inside a Docker container, set DB_Host to host.docker.internal:<port_number> (see .env-example).
 - Navigate to the "Rasa_Bot"-folder on your laptop.
 - Type `docker-compose up`.
 - Now you can communicate with the bot via its REST API. E.g. on Windows, type `curl http://localhost:5005/webhooks/rest/webhook -d "{\"message\": \"Kan ik de agenda voor de week krijgen?\", \"sender\":\"user\"}"`. Note that the escaping of the double-quotes is a fix that is needed on Windows.
-   - The output for the above command should be something like this: [{"recipient_id":"user","text":"Sure, you should ...
+   - The output for the above command should be something like this: [{"recipient_id":"user","text":"Sure, you should ..."}]
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
 
-Note that while the requirements-file lists Rasa 2.8.0 as a requirement, this is only needed to train a language model and handy when developing.
+Note that while the requirements-file lists Rasa 2.8.1 as a requirement, this is only needed to train a language model and handy when developing.
+
+NB: If you want to run rasa outside of docker, you might want to change the urls
+in `endpoints.yml`.
 
 ## Future Changes
 ### Language
 Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."
 
 ### Rasa Version
-Currently, the model is trained in Rasa 2.8.0. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one (2.8.2 at the time of this writing). See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. See [#55](https://github.com/PerfectFit-project/virtual-coach-server/issues/55).
+Currently, the model is trained in Rasa 2.8.1. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one (2.8.2 at the time of this writing). See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. See [#55](https://github.com/PerfectFit-project/virtual-coach-server/issues/55).
 
 ### Agent Name
 The agent name is set in the "domain.yml"-file in the slot "agent_name." Changing this name in said file requires retraining the model. 

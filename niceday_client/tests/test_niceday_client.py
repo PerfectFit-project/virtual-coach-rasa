@@ -16,16 +16,18 @@ def test_get_profile_from_server():
     existing_user_id = 38527
     profile = client.get_profile(existing_user_id)
     assert isinstance(profile, dict)
-    assert 'id' in profile
-    assert 'userProfile' in profile
+    assert 'birthDate' in profile
+    assert 'firstName' in profile
 
 
-@mock.patch('niceday_client.NicedayClient._niceday_api')
-def test_get_profile(mock_niceday_api):
+@mock.patch('niceday_client.NicedayClient._call_api')
+def test_get_profile(mock_call_api):
     """
     Unit test for NanopubClient.get_profile() method with mocked server
     """
-    mock_niceday_api.return_value = MOCK_PROFILE_RESPONSE
+    mock_response = mock.MagicMock()
+    mock_response.json.return_value = MOCK_PROFILE_RESPONSE
+    mock_call_api.return_value = mock_response
     client = NicedayClient()
     profile = client.get_profile(12345)
     assert isinstance(profile, dict)
@@ -36,3 +38,13 @@ def test_get_profile(mock_niceday_api):
     for k in USER_PROFILE_KEYS:
         assert k in profile
         assert isinstance(profile[k], str)
+
+
+@pytest.mark.integration
+def test_post_message():
+    """
+    Test posting a message to the Niceday server
+    """
+    client = NicedayClient()
+    existing_user_id = 38527  # Please change this to your own test user id if used frequently
+    client.post_message(existing_user_id, 'Hello world')

@@ -153,6 +153,6 @@ class ActionStorePaEvaluation(Action):
 
         user_id = 1  # TODO_b take this value from database
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-        selected.PA_evaluation = pa_evaluation_response
+        selected.paevaluation = pa_evaluation_response
         session.commit()  # Update database
         return []

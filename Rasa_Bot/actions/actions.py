@@ -62,12 +62,12 @@ class GetAgeFromDatabase(Action):
         except ValueError as e:
             age = 18
             logging.error("ValueError: failed to get user age from database. "
-                          "User ID could not be converted to int: " + str(e))
+                          "User ID could not be converted to int: %s", e)
 
         except Exception as e:
             age = 18
             logging.error("Failed to get user age from "
-                          "database: " + str(e) + " - Defaulting to age 18.")
+                          "database: %s - Defaulting to age 18.", e)
 
         finally:
             session.close()
@@ -98,13 +98,13 @@ class GetNameFromDatabase(Action):
         except ValueError as e:
             name = 'Perfect Fit user'
             logging.error("ValueError: failed to get user name from database. "
-                          "User ID could not be converted to int: " + str(e))
+                          "User ID could not be converted to int: %s.", e)
 
         except Exception as e:
             name = 'Perfect Fit user'
             logging.error("Failed to get user name from "
-                          "database: " + str(e) + " - Defaulting to "
-                          "Perfect Fit user.")
+                          "database: %s - Defaulting to "
+                          "Perfect Fit user.", e)
 
         finally:
             session.close()

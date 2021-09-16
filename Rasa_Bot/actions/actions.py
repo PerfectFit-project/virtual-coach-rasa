@@ -143,7 +143,7 @@ class ActionStorePaEvaluation(Action):
     """"To save user input from PA evaluation form to database"""
 
     def name(self):
-        return "action_save_pa_evaluation_to_db"
+        return "action_store_pa_evaluation"
 
     async def run(self, dispatcher, tracker, domain):
 

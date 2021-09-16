@@ -4,6 +4,10 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
+from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
+import logging
+import os
 from typing import Any, Dict, Text
 
 from paalgorithms import weekly_kilometers
@@ -11,9 +15,64 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
+from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.helper.helper import get_db_session
 
 
-AGE = 30  # TODO_db: We should get this value from a database.
+# load .env-file and get db_host variable
+load_dotenv()
+DB_HOST = os.getenv('DB_HOST')
+
+
+# Get the sender_id for the current user, i.e. the user ID
+class GetSenderIDFromTracker(Action):
+    def name(self):
+        return "action_get_sender_id_from_tracker"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        sender_id = tracker.current_state()['sender_id']
+
+        return [SlotSet("sender_id", sender_id)]
+
+
+# Get the user's age from the database.
+# Save the extracted age to a slot.
+class GetAgeFromDatabase(Action):
+    def name(self):
+        return "action_get_age_from_database"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        user_id = tracker.get_slot("sender_id")
+
+        # Create session object to connect db
+        session = get_db_session(db_host=DB_HOST)
+
+        try:
+            user_id = int(user_id)  # nicedayuid is an integer in the database
+            selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+            dob = selected.dob
+            today = datetime.date.today()
+
+            # calculate age in years
+            age = relativedelta(today, dob).years
+
+        # invalid ID for database
+        except ValueError as e:
+            age = 18
+            logging.error("ValueError: failed to get user age from database. "
+                          "User ID could not be converted to int: %s", e)
+
+        except Exception as e:
+            age = 18
+            logging.error("Failed to get user age from "
+                          "database: %s - Defaulting to age 18.", e)
+
+        finally:
+            session.close()
+
+        return [SlotSet("age", age)]
 
 
 # Get the user's name from the database.
@@ -24,7 +83,31 @@ class GetNameFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        name = "Kees"  # TODO_db
+        # Get sender ID from slot, this is a string
+        user_id = tracker.get_slot("sender_id")
+
+        # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)
+
+        try:
+            user_id = int(user_id)  # nicedayuid is an integer in the database
+            selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+            name = selected.firstname
+
+        # invalid ID for database
+        except ValueError as e:
+            name = 'Perfect Fit user'
+            logging.error("ValueError: failed to get user name from database. "
+                          "User ID could not be converted to int: %s.", e)
+
+        except Exception as e:
+            name = 'Perfect Fit user'
+            logging.error("Failed to get user name from "
+                          "database: %s - Defaulting to "
+                          "Perfect Fit user.", e)
+
+        finally:
+            session.close()
 
         return [SlotSet("name", name)]
 
@@ -35,8 +118,11 @@ class GetPlanWeek(Action):
         return "action_get_plan_week"
 
     async def run(self, dispatcher, tracker, domain):
+
+        age = tracker.get_slot("age")
+
         # Calculates weekly kilometers based on age
-        kilometers = weekly_kilometers(AGE)
+        kilometers = weekly_kilometers(age)
         plan = "Sure, you should run %.1f kilometers this week. And please read through this " \
                "psycho-education: www.link-to-psycho-education.nl." % kilometers
 

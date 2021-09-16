@@ -5,6 +5,8 @@ stories:
 - story: request_plan_week_calendarYes
   steps:
   - intent: request_plan_week
+  - action: action_get_sender_id_from_tracker
+  - action: action_get_age_from_database
   - action: action_get_plan_week
   - action: utter_plan_week
   - action: utter_ask_plan_calendar
@@ -18,6 +20,8 @@ stories:
 - story: request_plan_week_calendarYes_Error
   steps:
   - intent: request_plan_week
+  - action: action_get_sender_id_from_tracker
+  - action: action_get_age_from_database
   - action: action_get_plan_week
   - action: utter_plan_week
   - action: utter_ask_plan_calendar
@@ -31,6 +35,8 @@ stories:
 - story: request_plan_week_calendarNo
   steps:
   - intent: request_plan_week
+  - action: action_get_sender_id_from_tracker
+  - action: action_get_age_from_database
   - action: action_get_plan_week
   - action: utter_plan_week
   - action: utter_ask_plan_calendar
@@ -49,6 +55,7 @@ stories:
 - story: user_hello
   steps:
   - intent: greeting
+  - action: action_get_sender_id_from_tracker
   - action: action_get_name_from_database
   - action: utter_greet
   - action: utter_ask_user_mood

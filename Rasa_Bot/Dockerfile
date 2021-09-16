@@ -14,6 +14,13 @@ USER root
 
 RUN apt-get update && \
     apt-get install -y git
+RUN apt-get install -y python3
+RUN apt-get install -y python3-pip
+RUN apt-get install -y libpq-dev
+RUN apt-get install -y build-essential
+
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install wheel
 
 # Install extra requirements for actions code
 RUN pip install -r requirements-actions.txt

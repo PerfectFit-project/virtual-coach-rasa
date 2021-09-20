@@ -82,5 +82,6 @@ stories:
   - action: utter_pa_completed
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
-  - action: action_save_pa_evaluation_to_db
-  - action: action_utter_pa_likert_form_filled
+  - action: action_get_sender_id_from_tracker
+  - action: action_store_pa_evaluation
+  - action: action_utter_pa_evaluation_form_filled

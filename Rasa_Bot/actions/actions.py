@@ -126,7 +126,6 @@ class GetPlanWeek(Action):
         plan = f"Sure, you should run {kilometers:.1f} kilometers this week. " \
                "And please read through this " \
                "psycho-education: www.link-to-psycho-education.nl."
-
         return [SlotSet("plan_week", plan)]
 
 

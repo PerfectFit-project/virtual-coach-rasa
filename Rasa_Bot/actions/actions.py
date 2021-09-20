@@ -123,8 +123,8 @@ class GetPlanWeek(Action):
 
         # Calculates weekly kilometers based on age
         kilometers = weekly_kilometers(age)
-        plan = "Sure, you should run %.1f kilometers this week. And please read through this " \
-               "psycho-education: www.link-to-psycho-education.nl." % kilometers
+        plan = (f"Sure, you should run {kilometers:.1f} kilometers this week. And please read "
+                f"through this psycho-education: www.link-to-psycho-education.nl.")
 
         return [SlotSet("plan_week", plan)]
 

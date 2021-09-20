@@ -41,7 +41,7 @@ class NicedayInputChannel(InputChannel):
 
     def blueprint(self, on_new_message: Callable[[UserMessage], Awaitable[None]]) -> Blueprint:
         custom_webhook = Blueprint(
-            "custom_webhook_{}".format(type(self).__name__),
+            f"custom_webhook_{type(self).__name__}",
             inspect.getmodule(self).__name__,
         )
 

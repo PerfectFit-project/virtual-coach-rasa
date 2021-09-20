@@ -153,6 +153,7 @@ class ValidatePaEvaluationForm(FormValidationAction):
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
+            dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"pa_evaluation_response": None}
         pa_evaluation_response = int(value)
         return {"pa_evaluation_response": pa_evaluation_response}

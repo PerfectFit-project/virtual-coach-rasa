@@ -1,6 +1,11 @@
+const MOCK_ID_FROM = 1;
+const MOCK_ID_TO = 12345;
+const MOCK_TEST_MESSAGE = 'Test message';
+const MOCK_TOKEN = 'mocktoken';
+
 describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
 
-  beforeAll(() => {
+  it('Test message Niceday->Broker->Rasa', () => {
 
     // Mock the Authentication and Chat classes of goaliejs
     jest.mock('@sense-os/goalie-js', () => ({
@@ -14,9 +19,9 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
         login: () => new Promise((resolve) => {
           console.debug('Mocking successful authentication');
           const mockAuthResponse = {
-            token: 'mocktoken',
+            token: MOCK_TOKEN,
             user: {
-              id: 12345,
+              id: MOCK_ID_TO,
             },
           };
           resolve(mockAuthResponse);
@@ -29,10 +34,10 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
         sendInitialPresence: jest.fn(),
         subscribeToIncomingMessage: (handler) => {
           mockTestMessage = {
-            from: 1,
-            to: 12345,
+            from: MOCK_ID_FROM,
+            to: MOCK_ID_TO,
             content: {
-              TEXT: 'Test message',
+              TEXT: MOCK_TEST_MESSAGE,
             },
           };
 
@@ -43,17 +48,20 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
 
     // Mock the XMLHttpRequest class (normally used to speak to Rasa bot)
     jest.mock('xmlhttprequest', () => ({
-        XMLHttpRequest: jest.fn().mockImplementation(() => ({
-          open: jest.fn(),
-          setRequestHeader: jest.fn(),
-          send: jest.fn(),
-        })),
-      }));
+      XMLHttpRequest: jest.fn().mockImplementation(() => ({
+        open: jest.fn(),
+        setRequestHeader: jest.fn(),
+        send: jest.fn(),
+      })),
+    }));
 
-  });
 
-  it('Test all functions', () => {
+    // Set up the broker, with mocked message from the niceday server
+    // received by the broker and passed on to Rasa. Does not yet test
+    // onRasaResponse().
+
     const { setup } = require('./index'); // eslint-disable-line global-require
-    setup(12345, 'mocktoken');
+    setup(MOCK_ID_TO, MOCK_TOKEN);
+
   });
 });

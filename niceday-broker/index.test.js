@@ -51,7 +51,13 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
       XMLHttpRequest: jest.fn().mockImplementation(() => ({
         open: jest.fn(),
         setRequestHeader: jest.fn(),
-        send: jest.fn(),
+        send: (data) => {
+          // Test that the message being relayed to Rasa is that which
+          // was sent from niceday
+          const mssg = JSON.parse(data);
+          expect(mssg['sender']).toEqual(MOCK_ID_FROM);
+          expect(mssg['message']).toEqual(MOCK_TEST_MESSAGE);
+        },
       })),
     }));
 
@@ -59,7 +65,6 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
     // Set up the broker, with mocked message from the niceday server
     // received by the broker and passed on to Rasa. Does not yet test
     // onRasaResponse().
-
     const { setup } = require('./index'); // eslint-disable-line global-require
     setup(MOCK_ID_TO, MOCK_TOKEN);
 

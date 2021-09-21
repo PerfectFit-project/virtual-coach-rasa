@@ -4,9 +4,7 @@ const MOCK_TEST_MESSAGE = 'Test message';
 const MOCK_TOKEN = 'mocktoken';
 
 describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
-
   it('Test message Niceday->Broker->Rasa', () => {
-
     // Mock the Authentication and Chat classes of goaliejs
     jest.mock('@sense-os/goalie-js', () => ({
       SenseServer: () => ({
@@ -33,7 +31,7 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
         subscribeToConnectionStatusChanges: jest.fn(),
         sendInitialPresence: jest.fn(),
         subscribeToIncomingMessage: (handler) => {
-          mockTestMessage = {
+          const mockTestMessage = {
             from: MOCK_ID_FROM,
             to: MOCK_ID_TO,
             content: {
@@ -55,18 +53,16 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
           // Test that the message being relayed to Rasa is that which
           // was sent from niceday
           const mssg = JSON.parse(data);
-          expect(mssg['sender']).toEqual(MOCK_ID_FROM);
-          expect(mssg['message']).toEqual(MOCK_TEST_MESSAGE);
+          expect(mssg.sender).toEqual(MOCK_ID_FROM);
+          expect(mssg.message).toEqual(MOCK_TEST_MESSAGE);
         },
       })),
     }));
-
 
     // Set up the broker, with mocked message from the niceday server
     // received by the broker and passed on to Rasa. Does not yet test
     // onRasaResponse().
     const { setup } = require('./index'); // eslint-disable-line global-require
     setup(MOCK_ID_TO, MOCK_TOKEN);
-
   });
 });

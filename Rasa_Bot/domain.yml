@@ -118,9 +118,13 @@ responses:
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
 
-  # Reminder
-  utter_reminder:
-  - text: "Voorziet u vandaag risicovolle situaties voor het roken?"
+  # Foreseen HRSs smoking
+  utter_ask_foreseen_hrs:
+    - text: "Denk je dat je vandaag in een situatie komt waarin je trek krijgt in een sigaret?"
+  utter_watering_plants:
+    - text: "Als je hunkert naar een sigaret, kan het helpen om de plantjes water te geven"
+  utter_be_careful_for_hrs:
+    - text: "Wees voorzichtig, het kan zijn dat je onvoorzien alsnog in zo'n situatie komt. Ik ben hier om je te helpen"
 
 actions:
 - action_get_plan_week

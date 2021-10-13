@@ -7,7 +7,7 @@ FROM rasa/rasa-sdk:2.8.1
 WORKDIR /app
 
 # Copy actions requirements
-COPY actions/requirements-actions.txt ./
+COPY requirements-actions.txt ./
 
 # Change to root user to install dependencies
 USER root
@@ -26,7 +26,7 @@ RUN python3 -m pip install wheel
 RUN pip install -r requirements-actions.txt
 
 # Copy actions code to working directory
-COPY ./actions /app/actions
+COPY . /app/actions
 
 # Don't use root user to run code
 USER 1001

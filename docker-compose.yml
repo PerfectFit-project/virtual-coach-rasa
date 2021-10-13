@@ -9,7 +9,7 @@ services:
     command:
       - run
   rasa_actions:
-    build: Rasa_Bot/
+    build: Rasa_Bot/actions
     expose: ["5055"]
   niceday-broker:
     build: niceday-broker/

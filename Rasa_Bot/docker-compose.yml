@@ -1,13 +1,12 @@
 version: "3.0"  # orig 3.0
 services:
   rasa_server:
-    image: rasa/rasa:2.8.1-full
+    build: .
     ports:
       - 5005:5005
     volumes:
       - ./:/app
-    command:
-      - run
+    expose: ["5005"]
   rasa_actions:
     build: actions/
     expose: ["5055"]

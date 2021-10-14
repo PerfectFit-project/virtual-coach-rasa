@@ -1,4 +1,4 @@
-# Design (v2.1) PerfectFit Virtual Coach system
+# Design (v2.2) PerfectFit Virtual Coach system
 The general goal of PerfectFit is to Develop an eCoach app that will provide personalised assistance on smoking cessation 
 and increasing physical activity based on personal (sensor) data 
 (read more [here](https://www.research-software.nl/projects/583)).

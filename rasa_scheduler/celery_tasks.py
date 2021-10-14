@@ -4,8 +4,8 @@ from celery import Celery
 app = Celery('celery_tasks', broker='redis://redis:6379')
 
 app.conf.beat_schedule = {
-    'trigger-rasa-reminder': {
-        'task': 'celery_tasks.trigger_rasa_reminder',
+    'trigger_ask_foreseen_hrs': {
+        'task': 'celery_tasks.trigger_ask_foreseen_hrs',
         'schedule': 120.0,
         'args': (),
     },
@@ -13,7 +13,7 @@ app.conf.beat_schedule = {
 
 
 @app.task(bind=True)
-def trigger_rasa_reminder(self):  # pylint: disable=unused-argument
+def trigger_ask_foreseen_hrs(self):  # pylint: disable=unused-argument
     """Task to trigger RASA to set reminder for every user.
     """
     # TODO_db: get user IDs from database

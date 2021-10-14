@@ -1,13 +1,12 @@
 import requests
 from celery import Celery
 
-app = Celery('celery_tasks',
-             broker='redis://localhost:6379')
+app = Celery('celery_tasks', broker='redis://redis:6379')
 
 app.conf.beat_schedule = {
     'trigger-rasa-reminder': {
         'task': 'celery_tasks.trigger_rasa_reminder',
-        'schedule': 60.0,
+        'schedule': 120.0,
         'args': (),
     },
 }
@@ -21,8 +20,8 @@ def trigger_rasa_reminder(self):  # pylint: disable=unused-argument
     # TODO: add Celery or http error handling
     user_ids = ['38527']
     for user in user_ids:
-        endpoint = f'http://localhost:5005/conversations/{user}/trigger_intent'
+        endpoint = f'http://rasa_server:5005/conversations/{user}/trigger_intent'
         headers = {'Content-Type': 'application/json'}
         params = {'output_channel': 'niceday_input_channel'}
-        data = '{"name": "EXTERNAL_utter_reminder"}'
+        data = '{"name": "EXTERNAL_trigger_ask_foreseen_hrs"}'
         requests.post(endpoint, headers=headers, params=params, data=data)

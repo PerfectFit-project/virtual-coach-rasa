@@ -11,6 +11,8 @@ services:
     build: Rasa_Bot/actions
     expose: ["5055"]
   niceday_broker:
+    depends_on:
+      - rasa_server
     build: niceday-broker/
     env_file:
       - .env
@@ -19,4 +21,12 @@ services:
     env_file:
       - .env
     expose: ["8080"]
-
+  redis:
+    image: "redis:alpine"
+    ports:
+      - 6379:6379
+  rasa_scheduler:
+    depends_on:
+     - redis
+     - rasa_server
+    build: rasa_scheduler/

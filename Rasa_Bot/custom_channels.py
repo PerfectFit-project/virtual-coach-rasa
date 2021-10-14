@@ -8,13 +8,15 @@ from sanic.response import HTTPResponse
 
 from niceday_client import NicedayClient
 
+NICEDAY_API_URL = 'http://niceday_api:8080/'
+
 
 class NicedayOutputChannel(OutputChannel):
     """
     Output channel that sends messages to Niceday server
     """
     def __init__(self):
-        self.niceday_client = NicedayClient()
+        self.niceday_client = NicedayClient(niceday_api_uri=NICEDAY_API_URL)
 
     def name(self) -> Text:
         return "niceday_output_channel"

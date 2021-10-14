@@ -7,7 +7,7 @@ app = Celery('celery_tasks',
 app.conf.beat_schedule = {
     'trigger-rasa-reminder': {
         'task': 'celery_tasks.trigger_rasa_reminder',
-        'schedule': 2.0,
+        'schedule': 60.0,
         'args': (),
     },
 }
@@ -19,10 +19,10 @@ def trigger_rasa_reminder(self):  # pylint: disable=unused-argument
     """
     # TODO_db: get user IDs from database
     # TODO: add Celery or http error handling
-    user_ids = ['Kees', ]
+    user_ids = ['38527']
     for user in user_ids:
         endpoint = f'http://localhost:5005/conversations/{user}/trigger_intent'
         headers = {'Content-Type': 'application/json'}
-        params = {'output_channel': 'latest'}
-        data = '{"name": "EXTERNAL_set_reminder"}'
+        params = {'output_channel': 'niceday_input_channel'}
+        data = '{"name": "EXTERNAL_utter_reminder"}'
         requests.post(endpoint, headers=headers, params=params, data=data)

@@ -86,6 +86,11 @@ The conversational agent developed in the [Rasa](https://rasa.com/) framework.
 ### Rasa agent REST API
 Allows for other components to interact with the agent.
 
+### Rasa scheduler
+Celery app depending on Redis as message broker.
+It triggers Rasa to perform actions (mostly starting conversations) through the Rasa REST API
+at certain points in time when specific conditions are met.
+
 ### niceday-broker
 A worker that sends back and forth messages from a niceday user between the Niceday server and the rasa agent.
 * Depends on the javascript Niceday client [goalie-js](https://github.com/senseobservationsystems/goalie-js).

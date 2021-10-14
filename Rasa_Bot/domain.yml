@@ -12,8 +12,7 @@ intents:
 - who_are_you
 - how_are_you
 - request_plan_week
-- EXTERNAL_set_reminder
-- EXTERNAL_utter_reminder
+- EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
 
 

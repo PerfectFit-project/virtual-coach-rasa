@@ -14,3 +14,7 @@ stories:
       Nee
     intent: deny
   - action: utter_okay
+- story: Ask foreseen HRS
+  steps:
+  - intent: EXTERNAL_trigger_ask_foreseen_hrs
+  - action: utter_ask_foreseen_hrs

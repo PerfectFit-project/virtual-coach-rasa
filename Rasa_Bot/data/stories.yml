@@ -90,13 +90,15 @@ stories:
 # User foresees HRS
 - story: user_foresees_hrs
   steps:
+    - intent: EXTERNAL_trigger_ask_foreseen_hrs
     - action: utter_ask_foreseen_hrs
     - intent: confirm
     - action: utter_watering_plants
 
 # User does not foresee HRS
-- story: user_foresees_hrs
+- story: user_does_not_foresee_hrs
   steps:
+    - intent: EXTERNAL_trigger_ask_foreseen_hrs
     - action: utter_ask_foreseen_hrs
     - intent: deny
     - action: utter_be_careful_for_hrs

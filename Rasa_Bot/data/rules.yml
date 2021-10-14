@@ -26,3 +26,8 @@ rules:
   steps:
   - intent: nlu_fallback
   - action: utter_default
+
+- rule: Ask for foreseen smoking HRS whenever this is externally triggered (by scheduler)
+  steps:
+  - intent: EXTERNAL_trigger_ask_foreseen_hrs
+  - action: utter_ask_foreseen_hrs

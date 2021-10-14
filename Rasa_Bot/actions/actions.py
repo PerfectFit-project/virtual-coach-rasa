@@ -4,20 +4,19 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
-from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv
 import logging
 import os
 from typing import Any, Dict, Text
 
+from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import ReminderScheduled, SlotSet
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
-
 
 # load .env-file and get db_host variable
 load_dotenv()

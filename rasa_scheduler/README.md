@@ -1,42 +1,34 @@
 [Celery](https://docs.celeryproject.org/en/stable/) is used to schedule tasks.
 
 ## How to run
+Start the main application, run `script/server` in the root of this repo. It spins up redis and celery.
 
-### Start the main application
-Before starting Celery, make sure you have started the main application. 
-Run `script/server` in the root of this repo.
-
-
-### Then you can start Celery as following:
-
+In the Docker output for the Celery worker, you should see something like below:
 ```
-# start redis store
-docker run -d -p 6379:6379 redis
-
-# start Celery worker with Celery Beat running in the background (in production you should run multiple workers)
-celery --app=celery_tasks worker -B -l INFO
+rasa_scheduler_1  | [2021-10-14 11:34:16,227: INFO/Beat] Scheduler: Sending due task trigger-rasa-reminder (celery_tasks.trigger_rasa_reminder)
+rasa_scheduler_1  | [2021-10-14 11:34:16,232: INFO/MainProcess] Task celery_tasks.trigger_rasa_reminder[f4c08d73-b866-4640-94be-503483c8e87d] received
+niceday_api_1     | POST /messages/ 200 0.982 ms - -
+rasa_scheduler_1  | [2021-10-14 11:34:16,400: INFO/ForkPoolWorker-2] Task celery_tasks.trigger_rasa_reminder[f4c08d73-b866-4640-94be-503483c8e87d] succeeded in 0.16701790000661276s: None
 ```
-In the Celery worker terminal, you should see something like below:
-```
-[2021-09-07 15:01:33,526: INFO/MainProcess] Task celery_tasks.trigger_rasa_reminder[86a25632-3a01-4b2b-803b-9cc913866888] received
-[2021-09-07 15:01:33,587: INFO/ForkPoolWorker-9] Task celery_tasks.trigger_rasa_reminder[86a25632-3a01-4b2b-803b-9cc913866888] succeeded in 0.06005297499999962s: None
-```
-which means the Celery works successfully!
+which means Celery works successfully!
 
-So the Celery periodically sends a `EXTERNAL_utter_reminder` intent to RASA to trigger RASA to utter "Voorziet u vandaag risicovolle situaties voor het roken?" to user.
+So Celery periodically sends a `EXTERNAL_trigger_ask_foreseen_hrs` intent to RASA to trigger RASA to utter `ask_foreseen_hrs` to user.
 
 
-## How to check the reminder?
-
-Manually trigger RASA to utter reminder message:
+## How to manually trigger RASA?
+Manually trigger RASA to start foreseen HRS conversation
 ```
 curl --location --request POST 'http://localhost:5005/conversations/38527/trigger_intent?output_channel=niceday_input_channel' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "EXTERNAL_utter_reminder"
+    "name": "EXTERNAL_trigger_ask_foreseen_hrs"
 }'
 ```
-you should see a response like
+You should see a big json response with something like this in it:
 ```
-{"tracker":{"sender_id":"Kees" ... "messages":[{"recipient_id":"Kees","text":"Voorziet u vandaag risicovolle situaties voor het roken?"}]}
+{"tracker":{"sender_id":"Kees" ... 
+            "latest_message": {
+                "intent": {
+                    "name": "EXTERNAL_trigger_ask_foreseen_hrs"
+                },}]}
 ```

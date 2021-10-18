@@ -1,3 +1,4 @@
 celery
+git+https://github.com/PerfectFit-project/niceday_client
 redis
 requests

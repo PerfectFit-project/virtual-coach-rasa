@@ -1,6 +1,4 @@
--r sensor_api/requirements-dev.txt
-
-prospector[with_pyroma]==1.5.0.1
+prospector[with_pyroma]
 pytest
 pytest-cov
 pytest-asyncio

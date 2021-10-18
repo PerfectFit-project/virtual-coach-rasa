@@ -2,22 +2,10 @@
 
 ## How to run
 
-### Before starting Celery, make sure you have started RASA:
-First, configure rasa so that it finds the actions server running on localhost, in `Rasa_Bot/endpoints.yml`:
-```
-action_endpoint:
-  url: "http://localhost:5055/webhook"
-``` 
-Please don't commit this as it will break the main application when running from docker-compose.
-```
-# go to "Rasa_bot"
+### Start the main application
+Before starting Celery, make sure you have started the main application. 
+Run `script/server` in the root of this repo.
 
-# start RASA action service
-rasa run actions
-
-# start RASA server
-rasa run --enable-api
-```
 
 ### Then you can start Celery as following:
 
@@ -35,25 +23,18 @@ In the Celery worker terminal, you should see something like below:
 ```
 which means the Celery works successfully!
 
-So the Celery periodically sends a `EXTERNAL_set_reminder` intent to RASA to trigger RASA to set a reminder. This reminder will send a `EXTERNAL_utter_reminder` intent in 2 seconds (it's a setting just for development), and when RASA receives this intent, it will send the reminder message "Voorziet u vandaag risicovolle situaties voor het roken?" to user.
+So the Celery periodically sends a `EXTERNAL_utter_reminder` intent to RASA to trigger RASA to utter "Voorziet u vandaag risicovolle situaties voor het roken?" to user.
 
 
 ## How to check the reminder?
 
-To see what you can get from the two intents `EXTERNAL_set_reminder` and `EXTERNAL_utter_reminder`, you can send them manually:
-
-1. manually trigger RASA to set a reminder
+Manually trigger RASA to utter reminder message:
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"name": "EXTERNAL_set_reminder"}' "http://localhost:5005/conversations/Kees/trigger_intent?output_channel=latest"
-```
-you should see a response like
-```
-{"tracker":{"sender_id":"Kees" ... "messages":[{"recipient_id":"Kees","text":"I will remind you in 2 seconds."}]}
-```
-
-2. manually trigger RASA to utter reminder message:
-```
-curl -H "Content-Type: application/json" -X POST -d '{"name": "EXTERNAL_utter_reminder"}' "http://localhost:5005/conversations/Kees/trigger_intent?output_channel=latest"
+curl --location --request POST 'http://localhost:5005/conversations/38527/trigger_intent?output_channel=niceday_input_channel' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "EXTERNAL_utter_reminder"
+}'
 ```
 you should see a response like
 ```

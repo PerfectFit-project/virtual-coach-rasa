@@ -8,28 +8,21 @@ const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/go
  *
  * no response value expected for this operation
  * */
-var chatSdk = null
-
 exports.sendTextMessage = function (req, body) {
   return new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
-    if (chatSdk === null) {
-      chatSdk = new Chat();
-      chatSdk.init(SenseServerEnvironment.Alpha);
-      chatSdk.connect(req.app.get('therapistId'), req.app.get('token'));
-      chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
-        if (connectionStatus === ConnectionStatus.Connected) {
-          chatSdk.sendInitialPresence();
-          chatSdk.sendTextMessage(body.recipient_id, body.text).then((response) => {
-            console.log('Successfully sent the message', response);
-          });
-        }
-      });
-    }
-    else {
-      chatSdk.sendTextMessage(body.recipient_id, body.text).then((response) => {
-        console.log('Successfully sent the message', response);
-      });
-    };
+    const chatSdk = new Chat();
+    chatSdk.init(SenseServerEnvironment.Alpha);
+    chatSdk.connect(req.app.get('therapistId'), req.app.get('token'));
+
+    subscriptionId = chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
+      if (connectionStatus === ConnectionStatus.Connected) {
+        chatSdk.sendInitialPresence();
+        chatSdk.sendTextMessage(body.recipient_id, body.text).then((response) => {
+          console.log('Successfully sent the message', response);
+          chatSdk.unsubscribeFromConnectionStatusChanges(subscriptionId)
+        });
+      }
+    });
     resolve();
-  });
+   });
 };

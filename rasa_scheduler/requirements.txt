@@ -1,4 +1,5 @@
 celery
-git+https://github.com/PerfectFit-project/niceday_client
+python-dotenv
+git+https://github.com/PerfectFit-project/virtual-coach-db
 redis
 requests

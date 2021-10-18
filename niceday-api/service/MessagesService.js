@@ -24,5 +24,5 @@ exports.sendTextMessage = function (req, body) {
       }
     });
     resolve();
-   });
+  });
 };

@@ -19,7 +19,7 @@ exports.sendTextMessage = function (req, body) {
         chatSdk.sendInitialPresence();
         chatSdk.sendTextMessage(body.recipient_id, body.text).then((response) => {
           console.log('Successfully sent the message', response);
-          chatSdk.unsubscribeFromConnectionStatusChanges(subscriptionId)
+          chatSdk.unsubscribeFromConnectionStatusChanges(subscriptionId);
         });
       }
     });

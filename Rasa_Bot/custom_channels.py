@@ -6,7 +6,7 @@ from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
 
-from niceday_client.niceday_client import NicedayClient
+from niceday_client import NicedayClient
 
 
 class NicedayOutputChannel(OutputChannel):
@@ -41,7 +41,7 @@ class NicedayInputChannel(InputChannel):
 
     def blueprint(self, on_new_message: Callable[[UserMessage], Awaitable[None]]) -> Blueprint:
         custom_webhook = Blueprint(
-            "custom_webhook_{}".format(type(self).__name__),
+            f"custom_webhook_{type(self).__name__}",
             inspect.getmodule(self).__name__,
         )
 

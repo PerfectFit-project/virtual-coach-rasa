@@ -79,6 +79,7 @@ function setup(therapistId, token) {
   console.log('Listening to incoming message...');
   chatSdk.subscribeToIncomingMessage(handler.onIncomingMessage.bind(handler));
 }
+module.exports.setup = setup;
 
 authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
   setup(response.user.id, response.token);

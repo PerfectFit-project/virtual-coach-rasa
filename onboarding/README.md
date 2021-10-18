@@ -17,16 +17,3 @@ Go to `/niceday-api` and follow the README
 If there is already a user with this id then nothing will be added to the db.
 You will get a message e.g.
 `User 38527 already exists in the database.`
-
-
-## Troubleshooting
-If you are encountering module not found errors, e.g.
-```
-ModuleNotFoundError: No module named 'niceday_client'
-```
-Then make sure you have the root dir of the repo in your `PYTHONPATH`.
-
-You can add this with:
-```
-export PYTHONPATH="/path/to/virtual-coach-server/":$PYTHONPATH
-```

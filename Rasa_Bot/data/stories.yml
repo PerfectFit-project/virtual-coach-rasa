@@ -85,3 +85,20 @@ stories:
   - action: action_get_sender_id_from_tracker
   - action: action_store_pa_evaluation
   - action: action_utter_pa_evaluation_form_filled
+
+
+# User foresees HRS
+- story: user_foresees_hrs
+  steps:
+    - intent: EXTERNAL_trigger_ask_foreseen_hrs
+    - action: utter_ask_foreseen_hrs
+    - intent: confirm
+    - action: utter_watering_plants
+
+# User does not foresee HRS
+- story: user_does_not_foresee_hrs
+  steps:
+    - intent: EXTERNAL_trigger_ask_foreseen_hrs
+    - action: utter_ask_foreseen_hrs
+    - intent: deny
+    - action: utter_be_careful_for_hrs

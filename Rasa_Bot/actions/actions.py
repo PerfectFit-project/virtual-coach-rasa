@@ -4,20 +4,19 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
-from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv
 import logging
 import os
 from typing import Any, Dict, Text
 
+from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import ReminderScheduled, SlotSet
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
-
 
 # load .env-file and get db_host variable
 load_dotenv()
@@ -185,43 +184,6 @@ class ActionUtterPaEvaluationFormFilled(Action):
             dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
                                      "dan gaat het de volgende keer vast beter!")
         return []
-
-
-# Set reminder, triggered by external scheduler
-class ActionSetReminder(Action):
-    """To schedule a reminder"""
-
-    def name(self):
-        return "action_set_reminder"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        date0 = datetime.datetime.now()
-
-        # used only for development (use the daily reminder below for production)
-        t = 2
-        dispatcher.utter_message(f"I will remind you in {t} seconds.")
-        date = date0 + datetime.timedelta(seconds=t)
-
-        # the daily reminder
-        # TODO_db: get user's time setting from database.
-        # Here using a fixed time 9:00AM.
-        # dispatcher.utter_message("I will remind you 9:00AM every day.")
-        # reminder_hour = 9
-        # date = datetime.datetime(date0.year, date0.month, date0.day,
-        #                         reminder_hour, 0, 0, 0)
-        # if (date0.hour > reminder_hour):
-        #     date = date + datetime.timedelta(days=1)
-
-        reminder = ReminderScheduled(
-            "EXTERNAL_utter_reminder",
-            trigger_date_time=date,
-            entities="",
-            name="Daily Reminder",
-            kill_on_user_message=False,
-        )
-
-        return [reminder]
 
 
 class ActionStorePaEvaluation(Action):

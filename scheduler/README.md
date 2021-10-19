@@ -5,10 +5,10 @@ Start the main application, run `script/server` in the root of this repo. It spi
 
 In the Docker output for the Celery worker, you should see something like below:
 ```
-rasa_scheduler_1  | [2021-10-14 11:34:16,227: INFO/Beat] Scheduler: Sending due task trigger-rasa-reminder (celery_tasks.trigger_rasa_reminder)
-rasa_scheduler_1  | [2021-10-14 11:34:16,232: INFO/MainProcess] Task celery_tasks.trigger_rasa_reminder[f4c08d73-b866-4640-94be-503483c8e87d] received
+scheduler_1  | [2021-10-14 11:34:16,227: INFO/Beat] Scheduler: Sending due task trigger-rasa-reminder (celery_tasks.trigger_rasa_reminder)
+scheduler_1  | [2021-10-14 11:34:16,232: INFO/MainProcess] Task celery_tasks.trigger_rasa_reminder[f4c08d73-b866-4640-94be-503483c8e87d] received
 niceday_api_1     | POST /messages/ 200 0.982 ms - -
-rasa_scheduler_1  | [2021-10-14 11:34:16,400: INFO/ForkPoolWorker-2] Task celery_tasks.trigger_rasa_reminder[f4c08d73-b866-4640-94be-503483c8e87d] succeeded in 0.16701790000661276s: None
+scheduler_1  | [2021-10-14 11:34:16,400: INFO/ForkPoolWorker-2] Task celery_tasks.trigger_rasa_reminder[f4c08d73-b866-4640-94be-503483c8e87d] succeeded in 0.16701790000661276s: None
 ```
 which means Celery works successfully!
 

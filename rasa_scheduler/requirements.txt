@@ -1,3 +1,5 @@
 celery
+python-dotenv
+git+https://github.com/PerfectFit-project/virtual-coach-db
 redis
 requests

@@ -1,7 +1,7 @@
 -r onboarding/requirements.txt
 -r Rasa_Bot/requirements.txt
 -r Rasa_Bot/actions/requirements-actions.txt
--r rasa_scheduler/requirements.txt
+-r scheduler/requirements.txt
 -r sensor_api/requirements.txt
 
 requests==2.25.1

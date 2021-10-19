@@ -25,8 +25,8 @@ services:
     image: "redis:alpine"
     ports:
       - 6379:6379
-  rasa_scheduler:
+  scheduler:
     depends_on:
      - redis
      - rasa_server
-    build: rasa_scheduler/
+    build: scheduler/

@@ -22,6 +22,7 @@ pipeline:
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
+# NB: Make sure to adapt the max_history setting in the Rasa CI if the highest max_history value for any policy below changes.
 policies:
   - name: AugmentedMemoizationPolicy
     max_history: 5

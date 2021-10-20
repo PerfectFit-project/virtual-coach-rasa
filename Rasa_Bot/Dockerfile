@@ -5,6 +5,8 @@ FROM python:3.8
 # Use subdirectory as working directory
 WORKDIR /app
 
+COPY . /app
+
 # Change to root user to install dependencies
 USER root
 

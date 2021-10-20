@@ -2,11 +2,6 @@
 
 FROM python:3.8
 
-# Use subdirectory as working directory
-WORKDIR /app
-
-COPY . /app
-
 # Change to root user to install dependencies
 USER root
 
@@ -16,5 +11,10 @@ RUN pip install -r requirements.txt
 
 # Don't use root user to run code
 USER 1001
+
+# Use subdirectory as working directory
+WORKDIR /app
+
+COPY . /app
 
 ENTRYPOINT ["rasa", "run", "--enable-api"]

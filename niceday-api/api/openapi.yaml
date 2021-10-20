@@ -81,13 +81,11 @@ components:
           type: integer
           description: ID of the user we want to set tracker statuses for
           example: 38527
-        TrackerStatuses:
+        trackerStatuses:
           type: array
           description: List of tracker statuses
           items:
-            type: object
-            items:
-              $ref: '#/components/schemas/TrackerStatus'
+            $ref: '#/components/schemas/TrackerStatus'
     TrackerStatus:
       description: Status for a tracker
       required:
@@ -99,8 +97,9 @@ components:
           type: integer
           description: >
             ID of the the tracker (see https://github.com/senseobservationsystems/goalie-js/issues/840
-            on how to get tracker IDs, cigaratte counter has id=1)
+            on how to get tracker IDs, for example: cigarette counter has id=1)
           example: 1
         isEnabled:
           type: boolean
-          description: Wheter the tracker should be enabled
+          description: Whether the tracker should be enabled
+          example: true

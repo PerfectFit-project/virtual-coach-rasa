@@ -1,4 +1,4 @@
-# Design (v2.1) PerfectFit Virtual Coach system
+# Design (v2.2) PerfectFit Virtual Coach system
 The general goal of PerfectFit is to Develop an eCoach app that will provide personalised assistance on smoking cessation 
 and increasing physical activity based on personal (sensor) data 
 (read more [here](https://www.research-software.nl/projects/583)).
@@ -85,6 +85,13 @@ The conversational agent developed in the [Rasa](https://rasa.com/) framework.
 
 ### Rasa agent REST API
 Allows for other components to interact with the agent.
+
+### Scheduler
+Celery app depending on Redis as message broker.
+It triggers Rasa to perform actions (mostly starting conversations) through the Rasa REST API
+at certain points in time when specific conditions are met.
+In future, the scheduler will also run periodic task not related to Rasa 
+(i.e. running an algorithm, or data preprocessing)
 
 ### niceday-broker
 A worker that sends back and forth messages from a niceday user between the Niceday server and the rasa agent.

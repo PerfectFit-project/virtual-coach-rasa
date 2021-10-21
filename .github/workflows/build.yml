@@ -31,7 +31,7 @@ jobs:
         python3 --version
     - name: Upgrade pip and install dependencies
       run: |
-        python3 -m pip install --upgrade pip setuptools==57
+        python3 -m pip install --upgrade pip setuptools
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r requirements-dev.txt
     - name: Check style against standards using prospector

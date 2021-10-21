@@ -1,2 +1,0 @@
-# for tests
-coveralls==3.0.0

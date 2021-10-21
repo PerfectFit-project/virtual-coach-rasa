@@ -14,11 +14,12 @@ exports.sendTextMessage = function (req, body) {
     chatSdk.init(SenseServerEnvironment.Alpha);
     chatSdk.connect(req.app.get('therapistId'), req.app.get('token'));
 
-    chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
+    const subscriptionId = chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
       if (connectionStatus === ConnectionStatus.Connected) {
         chatSdk.sendInitialPresence();
         chatSdk.sendTextMessage(body.recipient_id, body.text).then((response) => {
           console.log('Successfully sent the message', response);
+          chatSdk.unsubscribeFromConnectionStatusChanges(subscriptionId);
         });
       }
     });

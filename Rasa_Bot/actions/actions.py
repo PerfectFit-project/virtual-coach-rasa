@@ -244,4 +244,4 @@ class ActionStorePaEvaluation(Action):
                                     datetime=datetime.datetime.now())
         selected.closed_user_answers.append(entry)
         session.commit()  # Update database
-        return []
+        return [SlotSet("pa_evaluation_response", None)]

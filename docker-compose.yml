@@ -10,6 +10,8 @@ services:
   rasa_actions:
     build: Rasa_Bot/actions
     expose: ["5055"]
+    env_file:
+      - .env
   niceday_broker:
     depends_on:
       - rasa_server

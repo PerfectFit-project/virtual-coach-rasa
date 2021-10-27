@@ -39,6 +39,19 @@ paths:
         "200":
           description: Success
       x-swagger-router-controller: UserData
+  /usertrackers/statuses:
+    post:
+      summary: Enable or disable trackers for a user
+      operationId: setUserTrackerStatuses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTrackerStatusesInput'
+      responses:
+        "200":
+          description: Success
+      x-swagger-router-controller: UserTrackers
 
 components:
   schemas:
@@ -57,3 +70,36 @@ components:
           description: Message to send
           example: Hello World
       description: A Message to Send.
+    UserTrackerStatusesInput:
+      description: Input for setting user tracker statuses
+      required:
+      - userId
+      - trackerStatuses
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: ID of the user we want to set tracker statuses for
+          example: 38527
+        trackerStatuses:
+          type: array
+          description: List of tracker statuses
+          items:
+            $ref: '#/components/schemas/TrackerStatus'
+    TrackerStatus:
+      description: Status for a tracker
+      required:
+        - trackerId
+        - isEnabled
+      type: object
+      properties:
+        trackerId:
+          type: integer
+          description: >
+            ID of the the tracker (see https://github.com/senseobservationsystems/goalie-js/issues/840
+            on how to get tracker IDs, for example: cigarette counter has id=1)
+          example: 1
+        isEnabled:
+          type: boolean
+          description: Whether the tracker should be enabled
+          example: true

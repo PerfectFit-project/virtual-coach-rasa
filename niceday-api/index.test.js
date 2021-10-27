@@ -8,6 +8,7 @@ const MOCK_USER_DATA = {
     firstName: 'Mr Mock',
   },
 };
+const MOCK_TRACKER_RESPONSE = { response: 'mock response' };
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
@@ -42,6 +43,11 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
           resolve(mockAuthResponse);
         }),
       })),
+      CustomTrackers: jest.fn().mockImplementation(() => ({
+        postUserTrackerStatus: () => new Promise((resolve) => {
+          resolve(MOCK_TRACKER_RESPONSE);
+        }),
+      })),
     }));
   });
 
@@ -72,6 +78,30 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       .then((response) => response.json())
       .then((responseBody) => {
         expect(responseBody).toEqual(MOCK_USER_DATA);
+      })
+      .catch((error) => {
+        throw new Error(`Error during fetch: ${error}`);
+      });
+  });
+
+  it('Test setting user tracker statuses with /usertrackers/statuses endpoint', () => {
+    /*
+      Sends a POST to the /usertrackers/statuses endpoint.
+    */
+
+    const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/usertrackers/statuses`;
+    const data = JSON.stringify({
+      userId: NICEDAY_TEST_USER_ID,
+      trackerStatuses: [{ trackerId: 1, isEnabled: true }],
+    });
+    return fetch(urlreq, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((responseBody) => {
+        expect(responseBody).toEqual(MOCK_TRACKER_RESPONSE);
       })
       .catch((error) => {
         throw new Error(`Error during fetch: ${error}`);

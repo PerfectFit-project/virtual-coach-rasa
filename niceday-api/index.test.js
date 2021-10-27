@@ -8,7 +8,7 @@ const MOCK_USER_DATA = {
     firstName: 'Mr Mock',
   },
 };
-const MOCK_RESPONSE = { response: 'mock response' };
+const MOCK_TRACKER_RESPONSE = { response: 'mock response' };
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
@@ -45,7 +45,7 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       })),
       CustomTrackers: jest.fn().mockImplementation(() => ({
         postUserTrackerStatus: () => new Promise((resolve) => {
-          resolve(MOCK_RESPONSE);
+          resolve(MOCK_TRACKER_RESPONSE);
         }),
       })),
     }));
@@ -101,7 +101,7 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
     })
       .then((response) => response.json())
       .then((responseBody) => {
-        expect(responseBody).toEqual(MOCK_RESPONSE);
+        expect(responseBody).toEqual(MOCK_TRACKER_RESPONSE);
       })
       .catch((error) => {
         throw new Error(`Error during fetch: ${error}`);

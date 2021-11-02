@@ -16,7 +16,7 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
-from virtual_coach_db.dbschema.models import Closed_user_answers
+from virtual_coach_db.dbschema.models import ClosedUserAnswers
 from virtual_coach_db.helper.helper import get_db_session
 
 # load .env-file and get db_host variable
@@ -201,7 +201,7 @@ class ActionStorePaEvaluation(Action):
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
-        entry = Closed_user_answers(value=pa_evaluation_response,
+        entry = ClosedUserAnswers(value=pa_evaluation_response,
                                     question='paevaluation',
                                     datetime=datetime.datetime.now())
         selected.closed_user_answers.append(entry)

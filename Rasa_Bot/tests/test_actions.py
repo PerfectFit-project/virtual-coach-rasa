@@ -41,16 +41,3 @@ async def test_run_action_store_pa_evaluation(
     assert events == expected_events
     assert mock_result.paevaluation == test_evaluation_response
     mock_session.commit.assert_called_once()
-
-
-@pytest.mark.integration_test
-@pytest.mark.asyncio
-async def test_run_action_store_pa_evaluation_integrated(
-        dispatcher: CollectingDispatcher, domain: DomainDict):
-
-    tracker = EMPTY_TRACKER
-    test_evaluation_response = 3
-    tracker.slots['pa_evaluation_response'] = test_evaluation_response
-    action = actions.ActionStorePaEvaluation()
-    events = await action.run(dispatcher, tracker, domain)
-    assert tracker.slots['pa_evaluation_response'] is None

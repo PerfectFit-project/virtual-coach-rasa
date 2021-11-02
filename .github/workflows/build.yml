@@ -1,4 +1,4 @@
-name: Python + Node.js CI
+name: Python CI
 
 on:
   # Trigger analysis when pushing in master or pull requests, and when creating
@@ -46,27 +46,6 @@ jobs:
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD
         pytype --keep-going .
-
-    # Tests for node.js
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 15.x
-    - run: git config --global url."https://${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
-
-    - run: npm ci --prefix niceday-api
-    - run: npm run build --if-present --prefix niceday-api
-    - name: Test niceday-api
-      run: npm test --prefix niceday-api
-    - name: Run ESLint for niceday-api
-      run: npx eslint niceday-api
-
-    - run: npm ci --prefix niceday-broker
-    - run: npm run build --if-present --prefix niceday-broker
-    - name: Test niceday-broker
-      run: npm test --prefix niceday-broker
-    - name: Run ESLint for niceday-broker
-      run: npx eslint niceday-broker
 
     # Perform sonarcloud scan
     - name: SonarCloud Scan

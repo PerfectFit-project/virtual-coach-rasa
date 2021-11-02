@@ -1,4 +1,0 @@
-#!/bin/bash
-if [[ ! -d "./build/goalie-js" ]]; then
-    git clone git@github.com:senseobservationsystems/goalie-js.git --single-branch --branch v0.39.2 ./build/goalie-js || exit 2
-fi

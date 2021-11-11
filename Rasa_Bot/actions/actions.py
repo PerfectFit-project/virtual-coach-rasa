@@ -202,8 +202,8 @@ class ActionStorePaEvaluation(Action):
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
         entry = ClosedUserAnswers(value=pa_evaluation_response,
-                                    question='paevaluation',
-                                    datetime=datetime.datetime.now())
+                                  question='paevaluation',
+                                  datetime=datetime.datetime.now())
         selected.closed_user_answers.append(entry)
         session.commit()  # Update database
         return [SlotSet("pa_evaluation_response", None)]

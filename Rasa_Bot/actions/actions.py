@@ -16,6 +16,7 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.dbschema.models import ClosedUserAnswers
 from virtual_coach_db.helper.helper import get_db_session
 
 # load .env-file and get db_host variable
@@ -195,11 +196,14 @@ class ActionStorePaEvaluation(Action):
     async def run(self, dispatcher, tracker, domain):
 
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-
         session = get_db_session()  # Creat session object to connect db
 
-        user_id = tracker.get_slot("sender_id")
+        user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-        selected.paevaluation = pa_evaluation_response
+
+        entry = ClosedUserAnswers(value=pa_evaluation_response,
+                                  question='paevaluation',
+                                  datetime=datetime.datetime.now())
+        selected.closed_user_answers.append(entry)
         session.commit()  # Update database
-        return []
+        return [SlotSet("pa_evaluation_response", None)]

@@ -37,7 +37,6 @@ async def test_run_action_store_pa_evaluation(
     tracker.slots['pa_evaluation_response'] = test_evaluation_response
     action = actions.ActionStorePaEvaluation()
     events = await action.run(dispatcher, tracker, domain)
-
-    assert events == []
-    assert mock_result.paevaluation == test_evaluation_response
+    expected_events = [SlotSet("pa_evaluation_response", None)]
+    assert events == expected_events
     mock_session.commit.assert_called_once()

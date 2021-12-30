@@ -1,6 +1,9 @@
 This is a simple conversational agent implemented in Rasa 2.8.1 with a Dutch language model.
 
 ## How to Run
+To run the full application, see [virtual-coach-main](https://github.com/PerfectFit-project/virtual-coach-main)
+
+These are instructions to run rasa bot in isolation.
 
 See here for the instructions from Rasa: https://rasa.com/docs/rasa/docker/deploying-in-docker-compose/.
 

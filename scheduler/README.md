@@ -1,7 +1,7 @@
 [Celery](https://docs.celeryproject.org/en/stable/) is used to schedule tasks.
 
 ## How to run
-Start the main application, run `script/server` in the root of this repo. It spins up redis and celery.
+Start the main application, see instructions in [virtual-coach-main](https://github.com/PerfectFit-project/virtual-coach-main).
 
 In the Docker output for the Celery worker, you should see something like below:
 ```

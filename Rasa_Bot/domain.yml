@@ -14,7 +14,7 @@ intents:
 - request_plan_week
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
-
+- request_future_self_dialog
 
 slots:
   ### General
@@ -60,6 +60,12 @@ slots:
     type: float
     influence_conversation: false
     auto_fill: false
+
+  ### Future-self dialog
+  picked_words:
+    type: text
+    initial_value: ''
+    influence_conversation: false
 
 responses:
   # Fallback
@@ -125,6 +131,41 @@ responses:
   utter_be_careful_for_hrs:
     - text: "Wees voorzichtig, het kan zijn dat je onvoorzien alsnog in zo'n situatie komt. Ik ben hier om je te helpen"
 
+  # Future-self dialog
+  utter_future_self_intro:
+    - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken
+             en genoeg te bewegen.
+
+             De oefening heet 'wie wil ik straks zijn"
+  utter_future_self_duration:
+    - text: "Het duurt ongeveer 15 minuten.
+             Het is belangrijk dat je de oefening in één keer afmaakt"
+  utter_future_self_explanation:
+    - text: "Deze oefening gaat je op weg helpen om te stoppen met roken en genoeg te bewegen.
+             We lopen samen door de volgende stappen:\n
+             Eerst denk je na over jezelf op dit moment.
+             Dan denk je na over jezelf over een paar maanden.
+             Daarna stel ik jou een aantal vragen hierover.\n
+             Geen stress, ik loop er stap voor stap met je doorheen.
+            "
+  utter_current_smoker:
+    - text: "Eerst kijken wij wat voor roker jij op dit moment bent.
+             Ik laat je zo een lijst met woorden zien.
+             Welke woorden passen bij jou als roker?
+             Kies 3 tot 5 woorden uit de lijst en typ ze in de chat.
+             Roken is...
+            "
+  utter_smoking_word_list:
+    - text: "Fijn - lekker - eng - past bij mij- plezierig - belonend - stressvol
+             - moet ik doen - helpt mij - bedreigend - helpt mij ontspannen - vermoeiend
+             - cool - iets wat ik wil blijven doen - onderdeel van mijn leven - vies
+             - prettig - gevaarlijk - verslavend - belangrijk - niet belangrijk
+             - hoort niet bij mij - stom - stoer - gezellig - duur - sexy
+             - ongezond - niet zo heel erg
+            "
+  utter_chosen_words:
+    - text: "Deze woorden passen bij jou als roker: {picked_words}"
+
 actions:
 - action_get_plan_week
 - action_get_age_from_database
@@ -141,4 +182,7 @@ forms:
     required_slots:
       pa_evaluation_response:
         - type: from_text
-
+  pick_words_form:
+    required_slots:
+      picked_words:
+        - type: from_text

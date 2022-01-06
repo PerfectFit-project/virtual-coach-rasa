@@ -102,3 +102,17 @@ stories:
     - action: utter_ask_foreseen_hrs
     - intent: deny
     - action: utter_be_careful_for_hrs
+
+# Future-self dialog
+- story: future_self_dialog
+  steps:
+    - intent: request_future_self_dialog # TODO: Replace with external trigger
+    - action: utter_greet
+    - action: utter_future_self_intro # TODO: Add repetition of activity yes/no
+    - action: utter_future_self_duration # TODO: Add rescheduling query
+    - action: utter_future_self_explanation
+    - action: utter_current_smoker
+    - action: utter_smoking_word_list # TODO: In case of repetition retrieve last chosen words
+    - action: pick_words_form
+    - active_loop: pick_words_form
+    - action: utter_chosen_words

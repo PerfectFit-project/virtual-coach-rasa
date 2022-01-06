@@ -91,3 +91,8 @@ nlu:
     - "Ik heb net gesport."
     - "Ik heb net gelopen."
     - "Ik heb net gewandeld."
+
+- intent: request_future_self_dialog
+  examples: |
+    - "Start future self dialog."
+    - "Ik wil future self dialog."

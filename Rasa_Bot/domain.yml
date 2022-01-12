@@ -64,7 +64,10 @@ slots:
   ### Future-self dialog
   picked_words:
     type: text
-    initial_value: ''
+    influence_conversation: false
+
+  why_picked_words:
+    type: text
     influence_conversation: false
 
 responses:
@@ -163,8 +166,14 @@ responses:
              - hoort niet bij mij - stom - stoer - gezellig - duur - sexy
              - ongezond - niet zo heel erg
             "
-  utter_chosen_words:
-    - text: "Deze woorden passen bij jou als roker: {picked_words}"
+  utter_ask_pick_words_form_picked_words:
+    - text: "Typ nu je antwoord:"
+  utter_picked_words:
+    - text: "Deze woorden passen bij jou als roker: {picked_words}, klopt dat?"
+  utter_ask_why_picked_words_form_why_picked_words:
+    - text: "Mooi. Waarom heb je deze woorden gekozen voor roken?"
+  utter_why_picked_words_response:
+    - text: "Goed dat je hier zo over na kunt denken."
 
 actions:
 - action_get_plan_week
@@ -185,4 +194,8 @@ forms:
   pick_words_form:
     required_slots:
       picked_words:
+        - type: from_text
+  why_picked_words_form:
+    required_slots:
+      why_picked_words:
         - type: from_text

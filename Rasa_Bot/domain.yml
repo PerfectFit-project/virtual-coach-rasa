@@ -155,8 +155,12 @@ responses:
     - text: "Eerst kijken wij wat voor roker jij op dit moment bent.
              Ik laat je zo een lijst met woorden zien.
              Welke woorden passen bij jou als roker?
-             Kies 3 tot 5 woorden uit de lijst en typ ze in de chat.
              Roken is...
+            "
+  utter_current_mover:
+    - text: "We gaan nu dezelfde oefening doen voor bewegen.
+             Welke woorden vind jij passen bij bewegen?
+             Bewegen is ...
             "
   utter_smoking_word_list:
     - text: "Fijn - lekker - eng - past bij mij- plezierig - belonend - stressvol
@@ -166,12 +170,27 @@ responses:
              - hoort niet bij mij - stom - stoer - gezellig - duur - sexy
              - ongezond - niet zo heel erg
             "
-  utter_ask_pick_words_form_picked_words:
-    - text: "Typ nu je antwoord:"
-  utter_picked_words:
+  utter_moving_word_list:
+    - text: "Fijn - lekker - past bij mij - plezierig - belonend - geen zin in
+             - helpt mij ontspannen - vermoeiend - cool
+             - onderdeel van mijn leven - prettig - belangrijk - niet belangrijk
+             - hoort niet bij mij - stom - goed - gezellig - kost tijd
+             - stressvol - helpt mij - iets wat ik meer wil doen
+             - vind ik niet leuk - vind ik leuk - doet pijn - gezond
+             - moet voor mijn gezondheid - makkelijk - doe ik veel - straf
+             - gaat niet - lastig - houdt mij jong - eng"
+  utter_ask_pick_smoker_words_form_picked_words:
+    - text: "Kies 3 tot 5 woorden uit de lijst en typ ze in de chat."
+  utter_ask_pick_mover_words_form_picked_words:
+    - text: "Kies 3 tot 5 woorden uit de lijst en typ ze in de chat:"
+  utter_picked_smoker_words:
     - text: "Deze woorden passen bij jou als roker: {picked_words}, klopt dat?"
-  utter_ask_why_picked_words_form_why_picked_words:
+  utter_picked_mover_words:
+    - text: "{picked_words} heb jij gekozen, klopt dat?"
+  utter_ask_why_picked_smoker_words_form_why_picked_words:
     - text: "Mooi. Waarom heb je deze woorden gekozen voor roken?"
+  utter_ask_why_picked_mover_words_form_why_picked_words:
+    - text: "Duidelijk. Waarom heb je deze woorden gekozen voor bewegen?"
   utter_why_picked_words_response:
     - text: "Goed dat je hier zo over na kunt denken."
 
@@ -186,17 +205,26 @@ actions:
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
 - action_reset_picked_words_slot
+- action_reset_why_picked_words_slot
 
 forms:
   pa_evaluation_form:
     required_slots:
       pa_evaluation_response:
         - type: from_text
-  pick_words_form:
+  pick_smoker_words_form:
     required_slots:
       picked_words:
         - type: from_text
-  why_picked_words_form:
+  pick_mover_words_form:
+    required_slots:
+      picked_words:
+        - type: from_text
+  why_picked_smoker_words_form:
+    required_slots:
+      why_picked_words:
+        - type: from_text
+  why_picked_mover_words_form:
     required_slots:
       why_picked_words:
         - type: from_text

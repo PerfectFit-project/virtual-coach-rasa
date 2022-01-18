@@ -217,3 +217,13 @@ class ActionResetPickedWordsSlot(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("picked_words", None)]
+
+
+class ActionResetWhyPickedWordsSlot(Action):
+    """Reset picked_words slot"""
+
+    def name(self):
+        return "action_reset_why_picked_words_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("why_picked_words", None)]

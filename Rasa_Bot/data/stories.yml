@@ -104,7 +104,7 @@ stories:
     - action: utter_be_careful_for_hrs
 
 # Future-self dialog
-- story: future_self_dialog
+- story: future-self dialog introduction
   steps:
     - intent: request_future_self_dialog # TODO: Replace with external trigger
     - action: utter_greet
@@ -112,32 +112,67 @@ stories:
     - action: utter_future_self_duration # TODO: Add rescheduling query
     - action: utter_future_self_explanation
     - checkpoint: ask_smoking_words_list
+
+- story: future-self ask smoking words list
+  steps:
+    - checkpoint: ask_smoking_words_list
     - action: utter_current_smoker
     - action: utter_smoking_word_list # TODO: In case of repetition retrieve last chosen words
-    - action: pick_words_form
-    - active_loop: pick_words_form
+    - action: pick_smoker_words_form
+    - active_loop: pick_smoker_words_form
     - active_loop: null # TODO: store slot in database
-    - action: utter_picked_words
-    - checkpoint: check_picked_words
+    - action: utter_picked_smoker_words
+    - checkpoint: check_picked_smoker_words
 
-- story: handle confirm picked words
+- story: handle confirm picked smoker words
   steps:
-    - checkpoint: check_picked_words
+    - checkpoint: check_picked_smoker_words
     - intent: confirm
-    - action: why_picked_words_form
-    - active_loop: why_picked_words_form
+    - action: why_picked_smoker_words_form
+    - active_loop: why_picked_smoker_words_form
     - active_loop: null  # TODO: store slot in database
     - action: utter_why_picked_words_response
-    - checkpoint: finished_check_flow
+    - action: action_reset_picked_words_slot
+    - action: action_reset_why_picked_words_slot
+    - checkpoint: finished_check_picked_smoker_words
 
-- story: handle deny picked words
+- story: handle deny picked smoker words
   steps:
-    - checkpoint: check_picked_words
+    - checkpoint: check_picked_smoker_words
     - intent: deny
     - action: action_reset_picked_words_slot
     - checkpoint: ask_smoking_words_list
 
+- story: future-self ask moving words list
+  steps:
+    - checkpoint: finished_check_picked_smoker_words
+    - action: utter_current_mover
+    - action: utter_moving_word_list # TODO: In case of repetition retrieve last chosen words
+    - action: pick_mover_words_form
+    - active_loop: pick_mover_words_form
+    - active_loop: null # TODO: store slot in database
+    - action: utter_picked_mover_words
+    - checkpoint: check_picked_mover_words
+
+- story: handle confirm picked mover words
+  steps:
+    - checkpoint: check_picked_mover_words
+    - intent: confirm
+    - action: why_picked_mover_words_form
+    - active_loop: why_picked_mover_words_form
+    - active_loop: null  # TODO: store slot in database
+    - action: utter_why_picked_words_response
+    - action: action_reset_picked_words_slot
+    - checkpoint: finished_check_picked_mover_words
+
+- story: handle deny picked mover words
+  steps:
+    - checkpoint: check_picked_mover_words
+    - intent: deny
+    - action: action_reset_picked_words_slot
+    - checkpoint: ask_moving_words_list
+
 - story: we're done
   steps:
-    - checkpoint: finished_check_flow
+    - checkpoint: finished_check_picked_mover_words
     - action: utter_goodbye

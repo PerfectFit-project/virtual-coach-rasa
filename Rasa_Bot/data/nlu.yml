@@ -25,6 +25,7 @@ nlu:
     - Fijn
     - Ah ja
     - "Graag"
+    - Ja, klopt
     
 - intent: deny
   examples: |
@@ -35,6 +36,7 @@ nlu:
     - "Dat hoeft niet."
     - "Nee, bedankt."
     - "Nee"
+    - Nee, klopt niet
 
 - intent: greeting
   examples: |

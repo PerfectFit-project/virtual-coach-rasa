@@ -207,3 +207,13 @@ class ActionStorePaEvaluation(Action):
         selected.closed_user_answers.append(entry)
         session.commit()  # Update database
         return [SlotSet("pa_evaluation_response", None)]
+
+
+class ActionResetPickedWordsSlot(Action):
+    """Reset picked_words slot"""
+
+    def name(self):
+        return "action_reset_picked_words_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("picked_words", None)]

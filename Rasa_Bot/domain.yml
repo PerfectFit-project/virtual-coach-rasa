@@ -185,6 +185,7 @@ actions:
 - validate_pa_evaluation_form
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
+- action_reset_picked_words_slot
 
 forms:
   pa_evaluation_form:

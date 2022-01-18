@@ -146,6 +146,7 @@ stories:
 - story: future-self ask moving words list
   steps:
     - checkpoint: finished_check_picked_smoker_words
+    - checkpoint: ask_moving_words_list
     - action: utter_current_mover
     - action: utter_moving_word_list # TODO: In case of repetition retrieve last chosen words
     - action: pick_mover_words_form
@@ -163,6 +164,7 @@ stories:
     - active_loop: null  # TODO: store slot in database
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
+    - action: action_reset_why_picked_words_slot
     - checkpoint: finished_check_picked_mover_words
 
 - story: handle deny picked mover words
@@ -172,7 +174,25 @@ stories:
     - action: action_reset_picked_words_slot
     - checkpoint: ask_moving_words_list
 
-- story: we're done
+- story: I see myself as
   steps:
     - checkpoint: finished_check_picked_mover_words
-    - action: utter_goodbye
+    - action: utter_self_view_intro
+    - action: utter_see_myself_as_smoker_options
+    - action: see_myself_as_smoker_form
+    - active_loop: see_myself_as_smoker_form
+    - active_loop: null  # TODO: store slot in db & reset
+    - action: utter_thank_user_for_response
+    - action: utter_see_myself_as_mover_options
+    - action: see_myself_as_mover_form
+    - active_loop: see_myself_as_mover_form
+    - active_loop: null  # TODO: store slot in db & reset
+    - action: why_see_myself_as_smoker_form
+    - active_loop: why_see_myself_as_smoker_form
+    - active_loop: null  # TODO: store slot in database
+    - action: action_reset_why_picked_words_slot
+    - action: why_see_myself_as_mover_form
+    - active_loop: why_see_myself_as_mover_form
+    - active_loop: null  # TODO: store slot in database
+    - action: action_reset_why_picked_words_slot
+    - action: utter_close_future_self_step_1

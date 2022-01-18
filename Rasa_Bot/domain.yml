@@ -70,6 +70,14 @@ slots:
     type: text
     influence_conversation: false
 
+  picked_words_smoker:
+    type: text
+    influence_conversation: false
+
+  picked_words_mover:
+    type: text
+    influence_conversation: false
+
 responses:
   # Fallback
   utter_default:
@@ -135,6 +143,10 @@ responses:
     - text: "Wees voorzichtig, het kan zijn dat je onvoorzien alsnog in zo'n situatie komt. Ik ben hier om je te helpen"
 
   # Future-self dialog
+  # Purpose: Define current self
+  # Context: Preparation phase, one or two days (to be decided)
+  # after deciding whether or not to use medication.
+  # This activity is being repeated several times throughout the intervention.
   utter_future_self_intro:
     - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken
              en genoeg te bewegen.
@@ -194,6 +206,30 @@ responses:
   utter_why_picked_words_response:
     - text: "Goed dat je hier zo over na kunt denken."
 
+  utter_self_view_intro:
+    - text: "Nu krijg je twee zinnen te zien.
+             Vul ze aan met wat het meest bij jou past."
+  utter_see_myself_as_smoker_options:
+    - text: "Ik zie mijzelf als...
+             een roker - een niet-roker - iemand die stopt met roken"
+  utter_see_myself_as_mover_options:
+    - text: "Ik zie mijzelf als...
+             lichamelijk actief  - een beetje lichamelijk actief - niet lichamelijk actief"
+  utter_ask_see_myself_as_smoker_form_picked_words_smoker:
+    - text: "Kies een of meerdere opties
+             uit de lijst en typ ze in de chat."
+  utter_ask_see_myself_as_mover_form_picked_words_mover:
+    - text: "Kies een of meerdere opties
+             uit de lijst en typ ze in de chat."
+  utter_thank_user_for_response:
+    - text: "Helder, bedankt."
+  utter_ask_why_see_myself_as_smoker_form_why_picked_words:
+    - text: "Leg uit, waarom zie jij jezelf als {picked_words_smoker}?" # TODO: use generic slot?
+  utter_ask_why_see_myself_as_mover_form_why_picked_words:
+    - text: "En waarom zie jij jezelf als {picked_words_mover}?" # TODO: which slot to use here?
+  utter_close_future_self_step_1:
+    - text: "Heldere antwoorden. Dankje voor het delen.
+             We gaan door met nieuwe oefeningen."
 actions:
 - action_get_plan_week
 - action_get_age_from_database
@@ -225,6 +261,22 @@ forms:
       why_picked_words:
         - type: from_text
   why_picked_mover_words_form:
+    required_slots:
+      why_picked_words:
+        - type: from_text
+  see_myself_as_smoker_form:
+    required_slots:
+      picked_words_smoker:
+        - type: from_text
+  see_myself_as_mover_form:
+    required_slots:
+      picked_words_mover:
+        - type: from_text
+  why_see_myself_as_smoker_form:
+    required_slots:
+      why_picked_words:
+        - type: from_text
+  why_see_myself_as_mover_form:
     required_slots:
       why_picked_words:
         - type: from_text

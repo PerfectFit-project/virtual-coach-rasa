@@ -44,7 +44,7 @@ class GetAgeFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        user_id = tracker.get_slot("sender_id")
+        user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
         session = get_db_session(db_host=DB_HOST)
@@ -84,7 +84,7 @@ class GetNameFromDatabase(Action):
     async def run(self, dispatcher, tracker, domain):
 
         # Get sender ID from slot, this is a string
-        user_id = tracker.get_slot("sender_id")
+        user_id = tracker.current_state()['sender_id']
 
         # Creat session object to connect db
         session = get_db_session(db_host=DB_HOST)

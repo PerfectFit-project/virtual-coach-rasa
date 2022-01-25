@@ -20,7 +20,8 @@ def enable_custom_trackers(userid: int):
     """
     print('Enabling custom trackers')
     client = NicedayClient()
-    client.set_user_tracker_statuses(userid, [TrackerStatus(trackerId=Tracker.SMOKING, isEnabled=True)])
+    client.set_user_tracker_statuses(userid,
+                                    [TrackerStatus(trackerId=Tracker.SMOKING, isEnabled=True)])
 
 
 def onboard_user(userid):

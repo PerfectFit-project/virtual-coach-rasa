@@ -4,12 +4,13 @@ import sys
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
 from niceday_client import NicedayClient, TrackerStatus
+from niceday_client.definitions import Tracker
 
 
 def enable_custom_trackers(userid: int):
     """
     Enable custom trackers for user. We enable:
-     - 'tracker_smoking', trackerId=1
+     - 'tracker_smoking', trackerId=Tracker.SMOKING
 
     See https://github.com/senseobservationsystems/goalie-js/issues/840 on how to get a
     trackerId for a certain custom tracker.
@@ -19,7 +20,7 @@ def enable_custom_trackers(userid: int):
     """
     print('Enabling custom trackers')
     client = NicedayClient()
-    client.set_user_tracker_statuses(userid, [TrackerStatus(trackerId=1, isEnabled=True)])
+    client.set_user_tracker_statuses(userid, [TrackerStatus(trackerId=Tracker.SMOKING, isEnabled=True)])
 
 
 def onboard_user(userid):

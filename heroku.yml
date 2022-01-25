@@ -1,4 +1,4 @@
 build:
   docker:
-    web: Rasa_Bot/Dockerfile
+    web: ./Rasa_Bot/Dockerfile
 

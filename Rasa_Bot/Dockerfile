@@ -17,4 +17,4 @@ WORKDIR /app
 
 COPY . /app
 
-ENTRYPOINT ["rasa", "run", "--enable-api"]
+CMD ["rasa", "run", "--enable-api"]

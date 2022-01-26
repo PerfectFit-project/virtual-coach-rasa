@@ -2,6 +2,10 @@
 
 FROM python:3.8
 
+# Heroku wants to provide a PORT env variable.
+# This default is here for runs outside heroku
+ENV PORT=5005
+
 # Change to root user to install dependencies
 USER root
 
@@ -17,4 +21,5 @@ WORKDIR /app
 
 COPY . /app
 
-CMD ["rasa", "run", "--enable-api"]
+# Using shell form to enable usage of port
+CMD rasa run --enable-api -p $PORT

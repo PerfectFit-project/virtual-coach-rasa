@@ -27,7 +27,7 @@ in `endpoints.yml`.
 Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."
 
 ### Rasa Version
-Currently, the model is trained in Rasa 3.0.5. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one. See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. See [#55](https://github.com/PerfectFit-project/virtual-coach-server/issues/55).
+Currently, the model is trained in Rasa 3.0.5. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one. See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. 
 
 ### Agent Name
 The agent name is set in the "domain.yml"-file in the slot "agent_name." Changing this name in said file requires retraining the model. 

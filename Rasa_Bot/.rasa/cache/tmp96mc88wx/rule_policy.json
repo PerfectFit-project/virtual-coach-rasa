@@ -1,0 +1,43 @@
+{
+  "lookup": {
+    "rules": {
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"EXTERNAL_trigger_ask_foreseen_hrs\"}}]": "utter_ask_foreseen_hrs",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"EXTERNAL_trigger_ask_foreseen_hrs\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_foreseen_hrs\"}, \"user\": {\"intent\": \"EXTERNAL_trigger_ask_foreseen_hrs\"}}]": "action_listen",
+      "[{}]": "action_listen",
+      "[{}, {\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"greeting\"}}]": "action_get_sender_id_from_tracker",
+      "[{}, {\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"action_get_sender_id_from_tracker\"}, \"user\": {\"intent\": \"greeting\"}}]": "action_get_name_from_database",
+      "[{}, {\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"action_get_sender_id_from_tracker\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"action_get_name_from_database\"}, \"user\": {\"intent\": \"greeting\"}}]": "utter_greet",
+      "[{}, {\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"action_get_sender_id_from_tracker\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"action_get_name_from_database\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"utter_greet\"}, \"user\": {\"intent\": \"greeting\"}}]": "utter_ask_user_mood",
+      "[{}, {\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"action_get_sender_id_from_tracker\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"action_get_name_from_database\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"utter_greet\"}, \"user\": {\"intent\": \"greeting\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_user_mood\"}, \"user\": {\"intent\": \"greeting\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"goodbye\"}}]": "utter_goodbye",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"goodbye\"}}, {\"prev_action\": {\"action_name\": \"utter_goodbye\"}, \"user\": {\"intent\": \"goodbye\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"nlu_fallback\"}}]": "utter_default",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"nlu_fallback\"}}, {\"prev_action\": {\"action_name\": \"utter_default\"}, \"user\": {\"intent\": \"nlu_fallback\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"who_are_you\"}}]": "utter_agent_name",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"who_are_you\"}}, {\"prev_action\": {\"action_name\": \"utter_agent_name\"}, \"user\": {\"intent\": \"who_are_you\"}}]": "utter_agent_purpose",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"who_are_you\"}}, {\"prev_action\": {\"action_name\": \"utter_agent_name\"}, \"user\": {\"intent\": \"who_are_you\"}}, {\"prev_action\": {\"action_name\": \"utter_agent_purpose\"}, \"user\": {\"intent\": \"who_are_you\"}}]": "action_listen"
+    },
+    "rule_only_slots": [],
+    "rule_only_loops": [],
+    "rules_for_loop_unhappy_path": {
+      "[{\"prev_action\": {\"action_name\": \"utter_pa_completed\"}}, {\"active_loop\": {\"name\": \"pa_evaluation_form\"}, \"prev_action\": {\"action_name\": \"pa_evaluation_form\"}, \"user\": {\"intent\": \"completed_pa\"}}]": "do_not_predict_loop_action",
+      "[{\"prev_action\": {\"action_name\": \"pa_evaluation_form\"}}, {\"active_loop\": {\"name\": \"pa_evaluation_form\"}, \"prev_action\": {\"action_name\": \"action_get_sender_id_from_tracker\"}, \"user\": {\"intent\": \"completed_pa\"}}]": "do_not_predict_loop_action",
+      "[{\"prev_action\": {\"action_name\": \"action_get_sender_id_from_tracker\"}}, {\"active_loop\": {\"name\": \"pa_evaluation_form\"}, \"prev_action\": {\"action_name\": \"action_store_pa_evaluation\"}, \"user\": {\"intent\": \"completed_pa\"}}]": "do_not_predict_loop_action",
+      "[{\"prev_action\": {\"action_name\": \"action_store_pa_evaluation\"}}, {\"active_loop\": {\"name\": \"pa_evaluation_form\"}, \"prev_action\": {\"action_name\": \"action_utter_pa_evaluation_form_filled\"}, \"user\": {\"intent\": \"completed_pa\"}}]": "do_not_predict_loop_action"
+    },
+    "rules_not_in_stories": [
+      "predicting default action with intent restart",
+      "handling active loops and forms - pa_evaluation_form - action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"goodbye\"}}]",
+      "predicting default action with intent back",
+      "handling active loops and forms - pa_evaluation_form",
+      "predicting default action with intent session_start",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"who_are_you\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"goodbye\"}}, {\"prev_action\": {\"action_name\": \"utter_goodbye\"}, \"user\": {\"intent\": \"goodbye\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"who_are_you\"}}, {\"prev_action\": {\"action_name\": \"utter_agent_name\"}, \"user\": {\"intent\": \"who_are_you\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"who_are_you\"}}, {\"prev_action\": {\"action_name\": \"utter_agent_name\"}, \"user\": {\"intent\": \"who_are_you\"}}, {\"prev_action\": {\"action_name\": \"utter_agent_purpose\"}, \"user\": {\"intent\": \"who_are_you\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"nlu_fallback\"}}, {\"prev_action\": {\"action_name\": \"utter_default\"}, \"user\": {\"intent\": \"nlu_fallback\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"nlu_fallback\"}}]"
+    ]
+  }
+}

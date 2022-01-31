@@ -227,3 +227,66 @@ class ActionResetWhyPickedWordsSlot(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("why_picked_words", None)]
+
+
+class ActionResetConfirmSmokerWordsResponseSlot(Action):
+    """Reset confirm_smoker_words_response slot"""
+
+    def name(self):
+        return "action_reset_confirm_smoker_words_response_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("confirm_smoker_words_response", None)]
+
+
+class ActionResetConfirmMoverWordsResponseSlot(Action):
+    """Reset confirm_mover_words_response slot"""
+
+    def name(self):
+        return "action_reset_confirm_mover_words_response_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("confirm_mover_words_response", None)]
+
+
+def validate_yes_no_response(value):
+    if value == 'ja':
+        return True
+    elif value == 'nee':
+        return False
+    else:
+        return None
+
+
+class ValidateConfirmSmokerWordsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_confirm_smoker_words_form'
+
+    def validate_confirm_smoker_words_response(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate yes_or_no_response input."""
+
+        yes_or_no_response = validate_yes_no_response(value)
+        if yes_or_no_response is None:
+            dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
+
+        return {"confirm_smoker_words_response": yes_or_no_response}
+
+
+class ValidateConfirmMoverWordsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_confirm_mover_words_form'
+
+    def validate_confirm_mover_words_response(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate confirm mover words response input."""
+
+        yes_or_no_response = validate_yes_no_response(value)
+        if yes_or_no_response is None:
+            dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
+
+        return {"confirm_mover_words_response": yes_or_no_response}

@@ -127,7 +127,12 @@ stories:
 - story: handle confirm picked smoker words
   steps:
     - checkpoint: check_picked_smoker_words
-    - intent: confirm
+    - action: action_reset_confirm_smoker_words_response_slot
+    - action: confirm_smoker_words_form
+    - active_loop: confirm_smoker_words_form
+    - slot_was_set:
+      - confirm_smoker_words_response: true
+    - active_loop: null
     - action: why_picked_smoker_words_form
     - active_loop: why_picked_smoker_words_form
     - active_loop: null  # TODO: store slot in database
@@ -139,7 +144,13 @@ stories:
 - story: handle deny picked smoker words
   steps:
     - checkpoint: check_picked_smoker_words
-    - intent: deny
+    - action: action_reset_confirm_smoker_words_response_slot
+    - action: confirm_smoker_words_form
+    - active_loop: confirm_smoker_words_form
+    - active_loop: yes_or_no_form
+    - slot_was_set:
+      - confirm_smoker_words_response: false
+    - active_loop: null
     - action: action_reset_picked_words_slot
     - checkpoint: ask_smoking_words_list
 
@@ -158,7 +169,12 @@ stories:
 - story: handle confirm picked mover words
   steps:
     - checkpoint: check_picked_mover_words
-    - intent: confirm
+    - action: action_reset_confirm_mover_words_response_slot
+    - action: confirm_mover_words_form
+    - active_loop: confirm_mover_words_form
+    - slot_was_set:
+      - confirm_mover_words_response: true
+    - active_loop: null
     - action: why_picked_mover_words_form
     - active_loop: why_picked_mover_words_form
     - active_loop: null  # TODO: store slot in database
@@ -170,7 +186,12 @@ stories:
 - story: handle deny picked mover words
   steps:
     - checkpoint: check_picked_mover_words
-    - intent: deny
+    - action: action_reset_confirm_mover_words_response_slot
+    - action: confirm_mover_words_form
+    - active_loop: confirm_mover_words_form
+    - slot_was_set:
+      - confirm_mover_words_response: false
+    - active_loop: null
     - action: action_reset_picked_words_slot
     - checkpoint: ask_moving_words_list
 

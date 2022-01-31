@@ -74,9 +74,19 @@ slots:
     type: text
     influence_conversation: false
 
+  confirm_smoker_words_response:
+    type: bool
+    influence_conversation: true
+    auto_fill: false
+
   picked_words_mover:
     type: text
     influence_conversation: false
+
+  confirm_mover_words_response:
+    type: bool
+    influence_conversation: true
+    auto_fill: false
 
 responses:
   # Fallback
@@ -240,6 +250,10 @@ actions:
 - validate_pa_evaluation_form
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
+- validate_confirm_mover_words_form
+- validate_confirm_smoker_words_form
+- action_reset_confirm_smoker_words_response_slot
+- action_reset_confirm_mover_words_response_slot
 - action_reset_picked_words_slot
 - action_reset_why_picked_words_slot
 
@@ -252,9 +266,17 @@ forms:
     required_slots:
       picked_words:
         - type: from_text
+  confirm_smoker_words_form:
+    required_slots:
+      confirm_smoker_words_response:
+        - type: from_text
   pick_mover_words_form:
     required_slots:
       picked_words:
+        - type: from_text
+  confirm_mover_words_form:
+    required_slots:
+      confirm_mover_words_response:
         - type: from_text
   why_picked_smoker_words_form:
     required_slots:

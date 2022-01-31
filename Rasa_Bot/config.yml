@@ -4,7 +4,11 @@ language: nl
 
 pipeline:
 # See https://rasa.com/docs/rasa/tuning-your-model for more information.
-  - name: WhitespaceTokenizer
+  - name: SpacyNLP
+    model: "nl_core_news_sm"
+    case_sensitive: False
+  - name: SpacyTokenizer
+  - name: SpacyFeaturizer
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer

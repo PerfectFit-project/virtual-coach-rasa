@@ -252,10 +252,9 @@ class ActionResetConfirmMoverWordsResponseSlot(Action):
 def validate_yes_no_response(value):
     if value == 'ja':
         return True
-    elif value == 'nee':
+    if value == 'nee':
         return False
-    else:
-        return None
+    return None
 
 
 class ValidateConfirmSmokerWordsForm(FormValidationAction):

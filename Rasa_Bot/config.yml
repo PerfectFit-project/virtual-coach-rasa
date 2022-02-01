@@ -33,7 +33,7 @@ policies:
     max_history: 5
   - name: TEDPolicy
     max_history: 10
-    epochs: 300
+    epochs: 50
     #augmentation: 50 # if 0, no augmentation of stories
   - name: RulePolicy
     core_fallback_threshold: 0.2 # NB: important to tune this carefully.

@@ -1,5 +1,7 @@
 git+https://github.com/PerfectFit-project/niceday_client
-rasa==2.8.1 # NB! when updating, make sure to also update:
+pip==20.2  # to be able to install Rasa3
+sanic==21.9.3  # to be able to install Rasa3
+rasa==3.0.5 # NB! when updating, make sure to also update:
             # * rasa base image in actions/Dockerfile,
             # * format of stories, domain.yml etc. if necessary
 spacy

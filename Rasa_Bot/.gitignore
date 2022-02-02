@@ -2,5 +2,6 @@
 .keras
 rasa.db
 events.db
+.rasa
 events.db-shm
 events.db-wal

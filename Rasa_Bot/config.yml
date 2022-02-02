@@ -1,6 +1,10 @@
 # Configuration for Rasa NLU.
 # https://rasa.com/docs/rasa/nlu/components/ 
+
+recipe: default.v1
+
 language: nl
+
 
 pipeline:
 # See https://rasa.com/docs/rasa/tuning-your-model for more information.
@@ -19,6 +23,7 @@ pipeline:
     epochs: 100
   - name: FallbackClassifier
     threshold: 0.7
+    ambiguity_threshold: 0.1
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
@@ -28,7 +33,7 @@ policies:
     max_history: 5
   - name: TEDPolicy
     max_history: 10
-    epochs: 300
+    epochs: 50
     #augmentation: 50 # if 0, no augmentation of stories
   - name: RulePolicy
     core_fallback_threshold: 0.2 # NB: important to tune this carefully.

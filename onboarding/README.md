@@ -13,7 +13,7 @@ Currently, to make the onboarding script work with the main application, you nee
     ports:
       - "8080:8080"
 ```
-_to the docker-compose.yml file in [virtual-coach-main](https://github.com/PerfectFit-project/virtual-coach-main)._
+to [the `niceday-api` container in docker-compose.yml](https://github.com/PerfectFit-project/virtual-coach-main/blob/f96498de95729c415d5d3e530e661249bfadfd26/docker-compose.yml#L60). This will expose the niceday-api to localhost
 Then, change [this line in onboarding.py](https://github.com/PerfectFit-project/virtual-coach-rasa/blob/4f7b65e644e8ede87d9b6379c6d81c978b532fce/onboarding/onboarding.py#L22) to `client = NicedayClient(niceday_api_uri="http://localhost:8080")`
 
 ## Run with the (niceday) id of the user you wish to onboard

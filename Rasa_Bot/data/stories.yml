@@ -127,7 +127,6 @@ stories:
 - story: handle confirm picked smoker words
   steps:
     - checkpoint: check_picked_smoker_words
-    - action: action_reset_confirm_smoker_words_response_slot
     - action: confirm_smoker_words_form
     - active_loop: confirm_smoker_words_form
     - slot_was_set:
@@ -144,7 +143,6 @@ stories:
 - story: handle deny picked smoker words
   steps:
     - checkpoint: check_picked_smoker_words
-    - action: action_reset_confirm_smoker_words_response_slot
     - action: confirm_smoker_words_form
     - active_loop: confirm_smoker_words_form
     - active_loop: yes_or_no_form
@@ -152,6 +150,7 @@ stories:
       - confirm_smoker_words_response: false
     - active_loop: null
     - action: action_reset_picked_words_slot
+    - action: action_reset_confirm_smoker_words_response_slot
     - checkpoint: ask_smoking_words_list
 
 - story: future-self ask moving words list
@@ -169,7 +168,6 @@ stories:
 - story: handle confirm picked mover words
   steps:
     - checkpoint: check_picked_mover_words
-    - action: action_reset_confirm_mover_words_response_slot
     - action: confirm_mover_words_form
     - active_loop: confirm_mover_words_form
     - slot_was_set:
@@ -186,13 +184,13 @@ stories:
 - story: handle deny picked mover words
   steps:
     - checkpoint: check_picked_mover_words
-    - action: action_reset_confirm_mover_words_response_slot
     - action: confirm_mover_words_form
     - active_loop: confirm_mover_words_form
     - slot_was_set:
       - confirm_mover_words_response: false
     - active_loop: null
     - action: action_reset_picked_words_slot
+    - action: action_reset_confirm_mover_words_response_slot
     - checkpoint: ask_moving_words_list
 
 - story: I see myself as

@@ -5,7 +5,6 @@ stories:
 - story: request_plan_week_calendarYes
   steps:
   - intent: request_plan_week
-  - action: action_get_sender_id_from_tracker
   - action: action_get_age_from_database
   - action: action_get_plan_week
   - action: utter_plan_week
@@ -20,7 +19,6 @@ stories:
 - story: request_plan_week_calendarYes_Error
   steps:
   - intent: request_plan_week
-  - action: action_get_sender_id_from_tracker
   - action: action_get_age_from_database
   - action: action_get_plan_week
   - action: utter_plan_week
@@ -35,7 +33,6 @@ stories:
 - story: request_plan_week_calendarNo
   steps:
   - intent: request_plan_week
-  - action: action_get_sender_id_from_tracker
   - action: action_get_age_from_database
   - action: action_get_plan_week
   - action: utter_plan_week
@@ -55,7 +52,6 @@ stories:
 - story: user_hello
   steps:
   - intent: greeting
-  - action: action_get_sender_id_from_tracker
   - action: action_get_name_from_database
   - action: utter_greet
   - action: utter_ask_user_mood
@@ -82,7 +78,6 @@ stories:
   - action: utter_pa_completed
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
-  - action: action_get_sender_id_from_tracker
   - action: action_store_pa_evaluation
   - action: action_utter_pa_evaluation_form_filled
 

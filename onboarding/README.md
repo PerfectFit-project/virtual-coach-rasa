@@ -24,5 +24,3 @@ If there is already a user with this id then nothing will be added to the db.
 You will get a message e.g.
 
 `User 38527 already exists in the database.`
-
-_Note for windows users: change line 22 into:_ `client = NicedayClient(niceday_api_uri="http://localhost:8080")`.

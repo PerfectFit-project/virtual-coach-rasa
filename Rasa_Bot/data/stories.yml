@@ -140,7 +140,6 @@ stories:
     - checkpoint: check_picked_smoker_words
     - action: confirm_smoker_words_form
     - active_loop: confirm_smoker_words_form
-    - active_loop: yes_or_no_form
     - slot_was_set:
       - confirm_smoker_words_response: false
     - active_loop: null

@@ -23,6 +23,8 @@ slots:
     type: text
     initial_value: 'Kris'
     influence_conversation: false
+    mappings:
+    - type: from_text
   
   
   ### User data
@@ -33,16 +35,22 @@ slots:
     max_value: 123.0
     initial_value: 0
     influence_conversation: false
+    mappings:
+    - type: from_text
   # The user's name
   name:
     type: text
     initial_value: 'NAMENOTSET'
     influence_conversation: false
+    mappings:
+    - type: from_text
   # ID of the user in current conversation
   sender_id:
     type: text
     initial_value: ''
     influence_conversation: false
+    mappings:
+    - type: from_text
     
 
   ### Weekly planning
@@ -51,15 +59,20 @@ slots:
     type: text
     initial_value: ''
     influence_conversation: false
+    mappings:
+    - type: from_text
   # Whether saving the weekly plan in the calendar succeeded
   success_save_calendar_plan_week:
     type: bool
     influence_conversation: true
+    mappings:
+    - type: from_text
   # Evaluate completed PA
   pa_evaluation_response:
     type: float
     influence_conversation: false
-    auto_fill: false
+    mappings:
+    - type: from_text
 
 responses:
   # Fallback
@@ -139,6 +152,5 @@ actions:
 forms:
   pa_evaluation_form:
     required_slots:
-      pa_evaluation_response:
-        - type: from_text
+    - pa_evaluation_response
 

@@ -9,4 +9,4 @@ This repository holds components related to the Rasa Bot. It includes:
 
 ## How to run
 To run the full application, see [virtual-coach-main](https://github.com/PerfectFit-project/virtual-coach-main)
-To run specific components, see the README files in the component you want to run.
+To run specific components, see the README files in the component you want to run. 

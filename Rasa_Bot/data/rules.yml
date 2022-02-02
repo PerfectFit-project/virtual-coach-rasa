@@ -17,7 +17,6 @@ rules:
   conversation_start: true # only applies at a conversation start
   steps: 
   - intent: greeting
-  - action: action_get_sender_id_from_tracker
   - action: action_get_name_from_database
   - action: utter_greet
   - action: utter_ask_user_mood

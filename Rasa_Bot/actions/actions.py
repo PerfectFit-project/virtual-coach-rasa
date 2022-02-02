@@ -24,18 +24,6 @@ load_dotenv()
 DB_HOST = os.getenv('DB_HOST')
 
 
-# Get the sender_id for the current user, i.e. the user ID
-class GetSenderIDFromTracker(Action):
-    def name(self):
-        return "action_get_sender_id_from_tracker"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        sender_id = tracker.current_state()['sender_id']
-
-        return [SlotSet("sender_id", sender_id)]
-
-
 # Get the user's age from the database.
 # Save the extracted age to a slot.
 class GetAgeFromDatabase(Action):
@@ -44,7 +32,7 @@ class GetAgeFromDatabase(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        user_id = tracker.get_slot("sender_id")
+        user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
         session = get_db_session(db_host=DB_HOST)
@@ -84,7 +72,7 @@ class GetNameFromDatabase(Action):
     async def run(self, dispatcher, tracker, domain):
 
         # Get sender ID from slot, this is a string
-        user_id = tracker.get_slot("sender_id")
+        user_id = tracker.current_state()['sender_id']
 
         # Creat session object to connect db
         session = get_db_session(db_host=DB_HOST)

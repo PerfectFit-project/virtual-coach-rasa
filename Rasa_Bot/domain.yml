@@ -24,7 +24,7 @@ slots:
     initial_value: 'Kris'
     influence_conversation: false
     mappings:
-    - type: from_text
+    - type: custom
 
   
   ### User data
@@ -36,21 +36,21 @@ slots:
     initial_value: 0
     influence_conversation: false
     mappings:
-    - type: from_text
+    - type: custom
   # The user's name
   name:
     type: text
     initial_value: 'NAMENOTSET'
     influence_conversation: false
     mappings:
-    - type: from_text
+    - type: custom
   # ID of the user in current conversation
   sender_id:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
-    - type: from_text
+    - type: custom
 
 
   ### Weekly planning
@@ -60,7 +60,7 @@ slots:
     initial_value: ''
     influence_conversation: false
     mappings:
-    - type: from_text
+    - type: custom
   # Whether saving the weekly plan in the calendar succeeded
   success_save_calendar_plan_week:
     type: bool
@@ -73,33 +73,61 @@ slots:
     influence_conversation: false
     mappings:
       - type: from_text
+        conditions:
+          - active_loop: pa_evaluation_form
 
   ### Future-self dialog
   picked_words:
     type: text
     influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: pick_smoker_words_form
+      - active_loop: pick_mover_words_form
 
   why_picked_words:
     type: text
     influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+        - active_loop: why_picked_smoker_words_form
+        - active_loop: why_picked_mover_words_form
+        - active_loop: why_see_myself_as_smoker_form
+        - active_loop: why_see_myself_as_mover_form
 
   picked_words_smoker:
     type: text
     influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+        - active_loop: see_myself_as_smoker_form
 
   confirm_smoker_words_response:
     type: bool
     influence_conversation: true
-    auto_fill: false
+    mappings:
+    - type: from_text
+      conditions:
+        - active_loop: confirm_smoker_words_form
 
   picked_words_mover:
     type: text
     influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+        - active_loop: see_myself_as_mover_form
 
   confirm_mover_words_response:
     type: bool
     influence_conversation: true
-    auto_fill: false
+    mappings:
+    - type: from_text
+      conditions:
+        - active_loop: confirm_mover_words_form
 
 responses:
   # Fallback
@@ -273,44 +301,34 @@ actions:
 forms:
   pa_evaluation_form:
     required_slots:
-    - pa_evaluation_response
+      - pa_evaluation_response
   pick_smoker_words_form:
     required_slots:
-      picked_words:
-        - type: from_text
+      - picked_words
   confirm_smoker_words_form:
     required_slots:
-      confirm_smoker_words_response:
-        - type: from_text
+      - confirm_smoker_words_response
   pick_mover_words_form:
     required_slots:
-      picked_words:
-        - type: from_text
+      - picked_words
   confirm_mover_words_form:
     required_slots:
-      confirm_mover_words_response:
-        - type: from_text
+      - confirm_mover_words_response
   why_picked_smoker_words_form:
     required_slots:
-      why_picked_words:
-        - type: from_text
+      - why_picked_words
   why_picked_mover_words_form:
     required_slots:
-      why_picked_words:
-        - type: from_text
+      - why_picked_words
   see_myself_as_smoker_form:
     required_slots:
-      picked_words_smoker:
-        - type: from_text
+      - picked_words_smoker
   see_myself_as_mover_form:
     required_slots:
-      picked_words_mover:
-        - type: from_text
+      - picked_words_mover
   why_see_myself_as_smoker_form:
     required_slots:
-      why_picked_words:
-        - type: from_text
+      - why_picked_words
   why_see_myself_as_mover_form:
     required_slots:
-      why_picked_words:
-        - type: from_text
+      - why_picked_words

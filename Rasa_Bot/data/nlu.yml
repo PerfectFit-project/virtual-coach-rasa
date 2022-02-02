@@ -25,6 +25,7 @@ nlu:
     - Fijn
     - Ah ja
     - "Graag"
+    - Ja, klopt
     
 - intent: deny
   examples: |
@@ -35,6 +36,7 @@ nlu:
     - "Dat hoeft niet."
     - "Nee, bedankt."
     - "Nee"
+    - Nee, klopt niet
 
 - intent: greeting
   examples: |
@@ -91,3 +93,8 @@ nlu:
     - "Ik heb net gesport."
     - "Ik heb net gelopen."
     - "Ik heb net gewandeld."
+
+- intent: request_future_self_dialog
+  examples: |
+    - "Start future self dialog."
+    - "Ik wil future self dialog."

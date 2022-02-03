@@ -1,7 +1,5 @@
 .spyproject
 .keras
 .rasa
-rasa
-events
 events.db-shm
 events.db-wal

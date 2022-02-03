@@ -8,7 +8,13 @@ language: nl
 
 pipeline:
 # See https://rasa.com/docs/rasa/tuning-your-model for more information.
-  - name: WhitespaceTokenizer
+  - name: SpacyNLP
+    model: "nl_core_news_sm"
+    case_sensitive: False
+  - name: SpacyTokenizer
+    # Flag to check whether to split intents
+    intent_tokenization_flag: False
+  - name: SpacyFeaturizer
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
@@ -18,7 +24,8 @@ pipeline:
     max_ngram: 4
   - name: DIETClassifier
     epochs: 100
-  - name: EntitySynonymMapper
+    entity_recognition: False  # We do not currently have entities
+  #- name: EntitySynonymMapper   # We do not currently have entities
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier

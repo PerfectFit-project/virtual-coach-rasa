@@ -24,7 +24,7 @@ in `endpoints.yml`.
 
 ## Future Changes
 ### Language
-Currently, the NLU-model does not use any pre-trained embeddings. If in the future we want to recognize named entities, it might be useful to add such pre-trained embeddings, e.g. via Spacy. More information is provided [here](https://rasa.com/docs/rasa/tuning-your-model). Note that using Spacy requires installing spacy as well as the specific embeddings, e.g. "nl_core_news_lg."
+We now use spacy language embeddings, and we removed entity recognition from the pipeline. Let's keep an eye on whether we want to keep doing this.
 
 ### Rasa Version
 Currently, the model is trained in Rasa 3.0.5. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one. See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. 
@@ -67,6 +67,9 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 
 ### Add dependencies for action server to requirements
 In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder.
+
+### Spacy language embeddings 
+We now use spacy language embeddings (specified in config.yml). To train the model, you now need to have spacy installed as well as the Dutch language model that we use. Have a look [here](https://spacy.io/usage) for how to install spacy.
 
 ### Retraining when making changes to Language Model
 Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.

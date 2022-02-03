@@ -1,7 +1,7 @@
 .spyproject
 .keras
+rasa.db
+events.db
 .rasa
-rasa
-events
 events.db-shm
 events.db-wal

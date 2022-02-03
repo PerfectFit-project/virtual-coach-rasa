@@ -9,6 +9,10 @@ USER root
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+# Spacy language model
+RUN python -m spacy download nl_core_news_sm
+RUN python -m spacy link nl_core_news_sm nl
+
 # Don't use root user to run code
 USER 1001
 

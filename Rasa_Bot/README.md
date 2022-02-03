@@ -69,7 +69,10 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder.
 
 ### Spacy language embeddings 
-We now use spacy language embeddings (specified in config.yml). To train the model, you now need to have spacy installed as well as the Dutch language model that we use. Have a look [here](https://spacy.io/usage) for how to install spacy.
+We now use spacy language embeddings (specified in config.yml). This means that for training a model, you now need to download the spacy language model that we use:
+
+`python -m spacy download nl_core_news_sm`
+`python -m spacy link nl_core_news_sm nl`
 
 ### Retraining when making changes to Language Model
 Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.

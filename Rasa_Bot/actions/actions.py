@@ -6,6 +6,7 @@
 import datetime
 import logging
 import os
+import string
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
@@ -116,6 +117,8 @@ class GetPlanWeek(Action):
                "psycho-education: www.link-to-psycho-education.nl."
         return [SlotSet("plan_week", plan)]
 
+# Get custom
+
 
 # Save weekly plan in calendar
 class SavePlanWeekCalendar(Action):
@@ -204,27 +207,52 @@ class ActionResetPickedWordsSlot(Action):
         return "action_reset_picked_words_slot"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting picked_words".format(type(self).__name__))
         return [SlotSet("picked_words", None)]
 
 
-class ActionResetWhyPickedWordsSlotSmoking(Action):
+class ActionResetHasEnoughWordsSlot(Action):
     """Reset picked_words slot"""
 
     def name(self):
-        return "action_reset_why_picked_words_slot_smoking"
+        return "action_reset_has_enough_words_slot"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("why_picked_words", None)]
+        logging.info("{} resetting has_enough_words".format(type(self).__name__))
+        return [SlotSet("has_enough_words", None)]
 
 
-class ActionResetWhyPickedWordsSlotPA(Action):
+class ActionResetWhyPickedWordsSlot(Action):
     """Reset picked_words slot"""
 
     def name(self):
-        return "action_reset_why_picked_words_slot_pa"
+        return "action_reset_why_picked_words_slot"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting why_picked_words".format(type(self).__name__))
         return [SlotSet("why_picked_words", None)]
+
+
+class ActionResetConfirmedWordsResonpseSlot(Action):
+    """Reset confirm_words_response slot"""
+
+    def name(self):
+        return "action_reset_confirm_words_response_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting confirm_words_response".format(type(self).__name__))
+        return [SlotSet("confirm_words_response", None)]
+
+
+class ActionResetConfirmedWordsSlot(Action):
+    """Reset confirmed_words slot"""
+
+    def name(self):
+        return "action_reset_confirmed_words_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting confirmed_words".format(type(self).__name__))
+        return [SlotSet("confirmed_words", None)]
 
 
 class ActionResetConfirmWordsResponseSlotSmoking(Action):
@@ -247,12 +275,57 @@ class ActionResetConfirmWordsResponseSlotPA(Action):
         return [SlotSet("confirm_words_response", None)]
 
 
+def simple_sanitize_input(value):
+    return value.translate({c: "" for c in string.punctuation})
+
+
 def validate_yes_no_response(value):
-    if value == 'ja':
-        return True
-    if value in ['nee', "nee."]:
-        return False
-    return None
+    if value in (True, False):
+        return value
+    return {"ja": True, "nee": False}.get(simple_sanitize_input(value).lower())
+
+
+def validate_long_enough_response(response):
+    if response in (True, False):
+        return response
+    return len(simple_sanitize_input(response).split()) > 5
+
+
+class ValidateHasEnoughWordsForm(FormValidationAction):
+
+    def name(self) -> Text:
+        return "Generic enough words validator, should not be used directly"
+
+    def validate_has_enough_words(
+            self,
+            value: Text,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate validate_long_enough_response input."""
+
+        long_enough_response = validate_long_enough_response(value)
+        if not long_enough_response:
+            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
+
+        logging.info(
+            "{} has_enough_words: {}".format(type(self).__name__, long_enough_response)
+        )
+        return {"has_enough_words": long_enough_response or None}
+
+
+class ValidateWhyPickedSmokerWordsForm(ValidateHasEnoughWordsForm):
+
+    def name(self) -> Text:
+        return 'validate_why_picked_smoker_words_form'
+
+
+class ValidateWhyPickedMoverWordsForm(ValidateHasEnoughWordsForm):
+
+    def name(self) -> Text:
+        return 'validate_why_picked_mover_words_form'
 
 
 class ValidateConfirmWordsForm(FormValidationAction):
@@ -269,6 +342,10 @@ class ValidateConfirmWordsForm(FormValidationAction):
         if yes_or_no_response is None:
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
 
+        logging.info("Tracker: {}".format(dir(tracker)))
+        logging.info(
+            "{} confirm_words_response: {}".format(type(self).__name__, yes_or_no_response)
+        )
         return {"confirm_words_response": yes_or_no_response}
 
 

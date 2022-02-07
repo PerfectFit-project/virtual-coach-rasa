@@ -14,7 +14,7 @@ stories:
   - slot_was_set:
     - success_save_calendar_plan_week: True
   - action: utter_plan_calendar_confirmation
-  
+
 # saving in calendar failed
 - story: request_plan_week_calendarYes_Error
   steps:
@@ -127,8 +127,11 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
+    - action: action_reset_picked_words_slot
     - action: why_picked_smoker_words_form
     - active_loop: why_picked_smoker_words_form
+    - slot_was_set:
+      - has_enough_words: true
     - active_loop: null  # TODO: store slot in database
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
@@ -141,6 +144,9 @@ stories:
     - slot_was_set:
       - why_picked_words: null
     - action: utter_intro_current_mover
+      # This is where the confidence first drops to about 0.5
+    - action: action_reset_confirm_words_response_slot
+    - action: action_reset_has_enough_words_slot
     - checkpoint: finished_check_picked_smoker_words
 
 - story: handle deny picked smoker words
@@ -163,7 +169,9 @@ stories:
   steps:
     - checkpoint: finished_check_picked_smoker_words
     - action: utter_current_mover
-    - action: utter_moving_word_list # TODO: In case of repetition retrieve last chosen words
+      # TODO: In case of repetition retrieve last chosen words
+      # After this it lost confidence entirely, and went back to saying "hi".
+    - action: utter_moving_word_list
     - action: pick_mover_words_form
     - active_loop: pick_mover_words_form
     - active_loop: null # TODO: store slot in database
@@ -178,9 +186,12 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
+    - action: action_reset_picked_words_slot
     - action: why_picked_mover_words_form
     - active_loop: why_picked_mover_words_form
-    - active_loop: null  # TODO: store slot in database
+    - slot_was_set:
+      - has_enough_words: true
+    - active_loop: null
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
     - slot_was_set:
@@ -192,6 +203,8 @@ stories:
     - slot_was_set:
       - why_picked_words: null
     - action: utter_self_view_intro
+    - action: action_reset_has_enough_words_slot
+    - action: action_reset_confirm_words_response_slot
     - checkpoint: finished_check_picked_mover_words
 
 - story: handle deny picked mover words
@@ -310,6 +323,7 @@ stories:
     - action: action_reset_why_picked_words_slot_smoking
     - slot_was_set:
       - why_picked_words: null
+    - action: action_reset_why_picked_words_slot
     - action: why_see_myself_as_mover_form
     - active_loop: why_see_myself_as_mover_form
     - active_loop: null  # TODO: store slot in database
@@ -317,3 +331,5 @@ stories:
     - slot_was_set:
       - why_picked_words: null
     - action: utter_close_future_self_step_1
+
+

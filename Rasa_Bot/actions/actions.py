@@ -217,39 +217,48 @@ class ActionResetWhyPickedWordsSlot(Action):
         return [SlotSet("why_picked_words", None)]
 
 
-class ActionResetConfirmSmokerWordsResponseSlot(Action):
-    """Reset confirm_smoker_words_response slot"""
+class ActionResetConfirmWordsResponseSlotSmoking(Action):
+    """Reset confirm_words_response slot"""
 
     def name(self):
-        return "action_reset_confirm_smoker_words_response_slot"
+        return "action_reset_confirm_words_response_slot_smoking"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("confirm_smoker_words_response", None)]
+        return [SlotSet("confirm_words_response", None)]
+    
 
-
-class ActionResetConfirmMoverWordsResponseSlot(Action):
-    """Reset confirm_mover_words_response slot"""
+class ActionResetConfirmWordsResponseSlotPA(Action):
+    """Reset confirm_words_response slot"""
 
     def name(self):
-        return "action_reset_confirm_mover_words_response_slot"
+        return "action_reset_confirm_words_response_slot_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("confirm_mover_words_response", None)]
+        return [SlotSet("confirm_words_response", None)]
 
+
+class ActionMoveToPA(Action):
+    
+    def name(self):
+        return "action_move_to_pa"
+    
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("physical_activity", True)]
+    
 
 def validate_yes_no_response(value):
     if value == 'ja':
         return True
-    if value == 'nee':
+    if value in ['nee', "nee."]:
         return False
     return None
 
 
-class ValidateConfirmSmokerWordsForm(FormValidationAction):
+class ValidateConfirmWordsForm(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_confirm_smoker_words_form'
+        return 'validate_confirm_words_form'
 
-    def validate_confirm_smoker_words_response(
+    def validate_confirm_words_response(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
@@ -259,21 +268,4 @@ class ValidateConfirmSmokerWordsForm(FormValidationAction):
         if yes_or_no_response is None:
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
 
-        return {"confirm_smoker_words_response": yes_or_no_response}
-
-
-class ValidateConfirmMoverWordsForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_confirm_mover_words_form'
-
-    def validate_confirm_mover_words_response(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate confirm mover words response input."""
-
-        yes_or_no_response = validate_yes_no_response(value)
-        if yes_or_no_response is None:
-            dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
-
-        return {"confirm_mover_words_response": yes_or_no_response}
+        return {"confirm_words_response": yes_or_no_response}

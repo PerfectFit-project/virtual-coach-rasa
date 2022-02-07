@@ -105,13 +105,19 @@ slots:
       conditions:
         - active_loop: see_myself_as_smoker_form
 
-  confirm_smoker_words_response:
+  confirm_words_response:
     type: bool
     influence_conversation: true
     mappings:
     - type: from_text
       conditions:
-        - active_loop: confirm_smoker_words_form
+        - active_loop: confirm_words_form
+
+  physical_activity:
+    type: bool
+    influence_conversation: false
+    mappings:
+    - type: from_text
 
   picked_words_mover:
     type: text
@@ -120,14 +126,6 @@ slots:
     - type: from_text
       conditions:
         - active_loop: see_myself_as_mover_form
-
-  confirm_mover_words_response:
-    type: bool
-    influence_conversation: true
-    mappings:
-    - type: from_text
-      conditions:
-        - active_loop: confirm_mover_words_form
 
 responses:
   # Fallback
@@ -291,12 +289,12 @@ actions:
 - validate_pa_evaluation_form
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
-- validate_confirm_mover_words_form
-- validate_confirm_smoker_words_form
-- action_reset_confirm_smoker_words_response_slot
-- action_reset_confirm_mover_words_response_slot
+- validate_confirm_words_form
+- action_reset_confirm_words_response_slot_smoking
+- action_reset_confirm_words_response_slot_pa
 - action_reset_picked_words_slot
 - action_reset_why_picked_words_slot
+- action_move_to_pa
 
 forms:
   pa_evaluation_form:
@@ -305,15 +303,12 @@ forms:
   pick_smoker_words_form:
     required_slots:
       - picked_words
-  confirm_smoker_words_form:
+  confirm_words_form:
     required_slots:
-      - confirm_smoker_words_response
+      - confirm_words_response
   pick_mover_words_form:
     required_slots:
       - picked_words
-  confirm_mover_words_form:
-    required_slots:
-      - confirm_mover_words_response
   why_picked_smoker_words_form:
     required_slots:
       - why_picked_words

@@ -132,8 +132,7 @@ stories:
     - active_loop: null  # TODO: store slot in database
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
-    - action: action_reset_why_picked_words_slot
-    - action: action_move_to_pa
+    - action: action_reset_why_picked_words_slot_smoking
     - checkpoint: finished_check_picked_smoker_words
 
 - story: handle deny picked smoker words
@@ -173,7 +172,7 @@ stories:
     - active_loop: null  # TODO: store slot in database
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
-    - action: action_reset_why_picked_words_slot
+    - action: action_reset_why_picked_words_slot_pa
     - checkpoint: finished_check_picked_mover_words
 
 - story: handle deny picked mover words
@@ -204,9 +203,9 @@ stories:
     - action: why_see_myself_as_smoker_form
     - active_loop: why_see_myself_as_smoker_form
     - active_loop: null  # TODO: store slot in database
-    - action: action_reset_why_picked_words_slot
+    - action: action_reset_why_picked_words_slot_smoking
     - action: why_see_myself_as_mover_form
     - active_loop: why_see_myself_as_mover_form
     - active_loop: null  # TODO: store slot in database
-    - action: action_reset_why_picked_words_slot
+    - action: action_reset_why_picked_words_slot_pa
     - action: utter_close_future_self_step_1

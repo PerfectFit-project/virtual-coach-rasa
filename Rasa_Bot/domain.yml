@@ -113,12 +113,6 @@ slots:
       conditions:
         - active_loop: confirm_words_form
 
-  physical_activity:
-    type: bool
-    influence_conversation: false
-    mappings:
-    - type: from_text
-
   picked_words_mover:
     type: text
     influence_conversation: false
@@ -293,8 +287,8 @@ actions:
 - action_reset_confirm_words_response_slot_smoking
 - action_reset_confirm_words_response_slot_pa
 - action_reset_picked_words_slot
-- action_reset_why_picked_words_slot
-- action_move_to_pa
+- action_reset_why_picked_words_slot_smoking
+- action_reset_why_picked_words_slot_pa
 
 forms:
   pa_evaluation_form:

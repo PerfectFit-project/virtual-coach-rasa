@@ -116,6 +116,20 @@ class GetPlanWeek(Action):
                "psycho-education: www.link-to-psycho-education.nl."
         return [SlotSet("plan_week", plan)]
 
+# Get weekly plan
+class GetMakeda(Action):
+    def name(self):
+        return "action_get_meee"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        input = tracker.get_slot("input")
+
+        # Calculates weekly kilometers based on age
+        len_input = len(input)
+
+        return [SlotSet(len_input)]
+
 
 # Save weekly plan in calendar
 class SavePlanWeekCalendar(Action):

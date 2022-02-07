@@ -289,6 +289,8 @@ actions:
 - action_reset_picked_words_slot
 - action_reset_why_picked_words_slot_smoking
 - action_reset_why_picked_words_slot_pa
+- action_reset_why_picked_words_slot
+- action_get_meee
 
 forms:
   pa_evaluation_form:

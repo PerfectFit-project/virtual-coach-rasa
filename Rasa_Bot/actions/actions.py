@@ -116,19 +116,7 @@ class GetPlanWeek(Action):
                "psycho-education: www.link-to-psycho-education.nl."
         return [SlotSet("plan_week", plan)]
 
-# Get custom Makeda plan
-class GetMakeda(Action):
-    def name(self):
-        return "action_get_meee"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        input = tracker.get_slot("input")
-
-        # Calculates weekly kilometers based on age
-        len_input = len(input)
-
-        return [SlotSet(len_input)]
+# Get custom
 
 
 # Save weekly plan in calendar
@@ -268,18 +256,26 @@ def validate_yes_no_response(value):
         return False
     return None
 
-def validate_long_enough_response(response_to_q):
-    value_len_response = 1 #len(response_to_q)
-    for i in range(len(response_to_q)):
-        if (response_to_q[i] == ' ' or response_to_q[i] == '\n' ):
-            value_len_response +=1
-    if value_len_response  > 5:
-        return True
-    else:
-        return False
-    return None
+
+def validate_long_enough_response(response_to_q: Text):
+    return len(response_to_q.split()) > 5
 
 
+class ValidateLenWordsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_len_words_form'
+
+    def validate_len_words_response(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate validate_long_enough_response input."""
+
+        long_enough_response = validate_long_enough_response(value)
+        if not long_enough_response:
+            dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
+
+        return {"len_words_response": long_enough_response}
 
 class ValidateConfirmWordsForm(FormValidationAction):
     def name(self) -> Text:

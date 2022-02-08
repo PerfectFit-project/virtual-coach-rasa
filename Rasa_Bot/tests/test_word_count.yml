@@ -1,0 +1,26 @@
+version: "3.0"
+stories:
+- story: Makeda home-made story
+  steps: 
+  - user: | 
+      Mag ik leg uit?
+    intent: say_important_stuff
+      # - slot_was_set:
+      #   - confirm_important_stuff: true
+  - action: utter_get_meee
+  # - action: utter_plan_week
+
+- story: home-cooked word legnth story
+  steps: 
+  - user: | 
+      Ik wil heeft meer werden
+    intent: say_short_stuff
+      # - slot_was_set:
+      #   - confirm_important_stuff: true
+  - action: utter_get_meee_more_words
+  # - action: utter_plan_week
+
+  # - user: |
+  #     Nee
+  #   intent: deny
+  # - action: utter_okay

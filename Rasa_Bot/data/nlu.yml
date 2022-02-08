@@ -13,7 +13,15 @@ nlu:
     - "Mag ik de planning voor de week?"
     - "Mag ik de agenda?"
     - "Heb je de planning voor mij?"
-    
+# Makeda additions
+- intent: say_important_stuff
+  examples: |
+    - "Mag ik leg uit?"
+
+- intent: say_short_stuff
+  examples: |
+    - "Ik wil heeft meer werden"
+# end Makeda additions
 - intent: confirm
   examples: |
     - Ja graag

@@ -14,7 +14,13 @@ stories:
   - slot_was_set:
     - success_save_calendar_plan_week: True
   - action: utter_plan_calendar_confirmation
-  
+
+# - story: makeda_home
+#   steps:
+#   - intent: say_important_stuff
+#   - action: utter_get_meee
+
+
 # saving in calendar failed
 - story: request_plan_week_calendarYes_Error
   steps:

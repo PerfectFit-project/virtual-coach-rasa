@@ -17,6 +17,8 @@ nlu:
 - intent: say_important_stuff
   examples: |
     - "Mag ik leg uit?"
+    - "Ik wil spreken meer"
+    - ""
 
 - intent: say_short_stuff
   examples: |

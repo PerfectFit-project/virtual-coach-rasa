@@ -1,23 +1,9 @@
 {
-  "completed_pa": {
+  "how_are_you": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
     "support": 3,
-    "confused_with": {}
-  },
-  "negative_mood": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 4,
-    "confused_with": {}
-  },
-  "deny": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 8,
     "confused_with": {}
   },
   "who_are_you": {
@@ -27,6 +13,20 @@
     "support": 6,
     "confused_with": {}
   },
+  "deny": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 8,
+    "confused_with": {}
+  },
+  "negative_mood": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 4,
+    "confused_with": {}
+  },
   "greeting": {
     "precision": 1.0,
     "recall": 1.0,
@@ -34,11 +34,18 @@
     "support": 10,
     "confused_with": {}
   },
-  "say_important_stuff": {
+  "positive_mood": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
-    "support": 1,
+    "support": 4,
+    "confused_with": {}
+  },
+  "request_future_self_dialog": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 2,
     "confused_with": {}
   },
   "say_short_stuff": {
@@ -48,7 +55,7 @@
     "support": 1,
     "confused_with": {}
   },
-  "request_plan_week": {
+  "confirm": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
@@ -62,28 +69,21 @@
     "support": 5,
     "confused_with": {}
   },
-  "request_future_self_dialog": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 2,
-    "confused_with": {}
-  },
-  "positive_mood": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 4,
-    "confused_with": {}
-  },
-  "how_are_you": {
+  "completed_pa": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
     "support": 3,
     "confused_with": {}
   },
-  "confirm": {
+  "say_important_stuff": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1,
+    "confused_with": {}
+  },
+  "request_plan_week": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,

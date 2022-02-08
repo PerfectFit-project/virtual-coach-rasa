@@ -116,7 +116,7 @@ class GetPlanWeek(Action):
                "psycho-education: www.link-to-psycho-education.nl."
         return [SlotSet("plan_week", plan)]
 
-# Get weekly plan
+# Get custom Makeda plan
 class GetMakeda(Action):
     def name(self):
         return "action_get_meee"
@@ -267,6 +267,18 @@ def validate_yes_no_response(value):
     if value in ['nee', "nee."]:
         return False
     return None
+
+def validate_long_enough_response(response_to_q):
+    value_len_response = 1 #len(response_to_q)
+    for i in range(len(response_to_q)):
+        if (response_to_q[i] == ' ' or response_to_q[i] == '\n' ):
+            value_len_response +=1
+    if value_len_response  > 5:
+        return True
+    else:
+        return False
+    return None
+
 
 
 class ValidateConfirmWordsForm(FormValidationAction):

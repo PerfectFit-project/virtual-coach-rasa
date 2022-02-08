@@ -215,7 +215,8 @@ class ActionResetWhyPickedWordsSlotSmoking(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("why_picked_words", None)]
-    
+
+
 class ActionResetWhyPickedWordsSlotPA(Action):
     """Reset picked_words slot"""
 
@@ -234,7 +235,7 @@ class ActionResetConfirmWordsResponseSlotSmoking(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("confirm_words_response", None)]
-    
+
 
 class ActionResetConfirmWordsResponseSlotPA(Action):
     """Reset confirm_words_response slot"""
@@ -244,7 +245,7 @@ class ActionResetConfirmWordsResponseSlotPA(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("confirm_words_response", None)]
-    
+
 
 def validate_yes_no_response(value):
     if value == 'ja':

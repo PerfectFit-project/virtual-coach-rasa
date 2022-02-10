@@ -282,6 +282,8 @@ responses:
     - text: "Helder, bedankt."
   utter_leuk:
     - text: "Leuk!"
+  utter_fijn:
+    - text: "Fijn!"
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
     - text: "Leg uit, waarom zie jij jezelf als {see_myself_as_picked_words_smoker_text}?" # TODO: use generic slot?
   utter_ask_why_see_myself_as_mover_form_why_picked_words:

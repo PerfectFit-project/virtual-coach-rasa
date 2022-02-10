@@ -274,7 +274,7 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
-    - action: utter_leuk
+    - action: utter_fijn
     - action: action_reset_see_myself_as_picked_words_mover
     - slot_was_set:
       - see_myself_as_picked_words_mover: null

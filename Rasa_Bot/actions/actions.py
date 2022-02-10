@@ -340,7 +340,8 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message("Hmm ik heb dat niet begrepen. Antwoord alsjeblieft met 1, 2, of 3.")
+            dispatcher.utter_message("Hmm ik heb dat niet begrepen.")
+            dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
             return {"see_myself_as_picked_words_mover": None}
 
         return {"see_myself_as_picked_words_mover": int(value)}

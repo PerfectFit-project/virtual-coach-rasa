@@ -270,7 +270,7 @@ class ValidateConfirmWordsForm(FormValidationAction):
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
 
         return {"confirm_words_response": yes_or_no_response}
-    
+
 
 class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
     def name(self) -> Text:
@@ -286,7 +286,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
             return {"see_myself_as_picked_words_smoker": None}
         
         return {"see_myself_as_picked_words_smoker": int(value)}
-    
+
     @staticmethod
     def _is_valid_input(value):
         try:
@@ -296,7 +296,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
         if (value < 1) or (value > 3):
             return False
         return True
-    
+
 
 class ActionMapSeeMyselfAsPickedWordsSmoker(Action):
     """Map see_myself_as_picked_words_smoker slot to text"""
@@ -316,7 +316,7 @@ class ActionMapSeeMyselfAsPickedWordsSmoker(Action):
             text = "iemand die stopt met roken"
         
         return [SlotSet("see_myself_as_picked_words_smoker_text", text)]
-    
+
 
 class ActionResetSeeMyselfAsPickedWordsSmoker(Action):
     """Reset see_myself_as_picked_words_smoker slot"""
@@ -326,7 +326,7 @@ class ActionResetSeeMyselfAsPickedWordsSmoker(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("see_myself_as_picked_words_smoker", None)]
-    
+
 
 class ValidateSeeMyselfAsMoverForm(FormValidationAction):
     def name(self) -> Text:
@@ -342,7 +342,7 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
             return {"see_myself_as_picked_words_mover": None}
         
         return {"see_myself_as_picked_words_mover": int(value)}
-    
+
     @staticmethod
     def _is_valid_input(value):
         try:
@@ -352,7 +352,7 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         if (value < 1) or (value > 3):
             return False
         return True
-    
+
 
 class ActionMapSeeMyselfAsPickedWordsMover(Action):
     """Map see_myself_as_picked_words_mover slot to text"""
@@ -361,7 +361,7 @@ class ActionMapSeeMyselfAsPickedWordsMover(Action):
         return "action_map_see_myself_as_picked_words_mover"
 
     async def run(self, dispatcher, tracker, domain):
-        
+    
         num = tracker.get_slot('see_myself_as_picked_words_mover')
         
         if num == 1:
@@ -382,4 +382,3 @@ class ActionResetSeeMyselfAsPickedWordsMover(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("see_myself_as_picked_words_mover", None)]
-    

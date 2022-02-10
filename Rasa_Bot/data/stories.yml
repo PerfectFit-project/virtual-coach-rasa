@@ -173,6 +173,7 @@ stories:
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
     - action: action_reset_why_picked_words_slot_pa
+    - action: utter_self_view_intro
     - checkpoint: finished_check_picked_mover_words
 
 - story: handle deny picked mover words
@@ -187,19 +188,71 @@ stories:
     - action: action_reset_confirm_words_response_slot_pa
     - checkpoint: ask_moving_words_list
 
-- story: I see myself as
+- story: I see myself as smoker words
   steps:
     - checkpoint: finished_check_picked_mover_words
-    - action: utter_self_view_intro
     - action: utter_see_myself_as_smoker_options
     - action: see_myself_as_smoker_form
     - active_loop: see_myself_as_smoker_form
-    - active_loop: null  # TODO: store slot in db & reset
+    #- active_loop: null  # TODO: store slot in db & reset
+    - action: utter_see_myself_as_picked_smoker_words
+    - checkpoint: check_I_see_myself_as_smoker_words
+    
+- story: Confirm check I see myself as smoker words
+  steps:
+    - checkpoint: check_I_see_myself_as_smoker_words
+    - action: confirm_words_form
+    - active_loop: confirm_words_form
+    - slot_was_set:
+      - confirm_words_response: true
+    - active_loop: null
     - action: utter_thank_user_for_response
+    - checkpoint: finished_I_see_myself_as_smoker_words
+
+- story: Deny check I see myself as smoker words
+  steps:
+    - checkpoint: check_I_see_myself_as_smoker_words
+    - action: confirm_words_form
+    - active_loop: confirm_words_form
+    - slot_was_set:
+      - confirm_words_response: false
+    - active_loop: null
+    - checkpoint: finished_check_picked_mover_words
+    
+- story: I see myself as mover words
+  steps:
+    - checkpoint: finished_I_see_myself_as_smoker_words
     - action: utter_see_myself_as_mover_options
     - action: see_myself_as_mover_form
     - active_loop: see_myself_as_mover_form
-    - active_loop: null  # TODO: store slot in db & reset
+    #- active_loop: null  # TODO: store slot in db & reset
+    - action: utter_see_myself_as_picked_mover_words
+    - checkpoint: check_I_see_myself_as_mover_words
+    
+- story: Confirm check I see myself as mover words
+  steps:
+    - checkpoint: check_I_see_myself_as_mover_words
+    - action: confirm_words_form
+    - active_loop: confirm_words_form
+    - slot_was_set:
+      - confirm_words_response: true
+    - active_loop: null
+    - action: utter_thank_user_for_response
+    - checkpoint: finished_I_see_myself_as_mover_words
+
+- story: Deny check I see myself as mover words
+  steps:
+    - checkpoint: check_I_see_myself_as_mover_words
+    - action: confirm_words_form
+    - active_loop: confirm_words_form
+    - slot_was_set:
+      - confirm_words_response: false
+    - active_loop: null
+    - checkpoint: finished_I_see_myself_as_smoker_words
+
+- story: I see myself as why
+  steps:
+    - checkpoint: finished_I_see_myself_as_mover_words
     - action: why_see_myself_as_smoker_form
     - active_loop: why_see_myself_as_smoker_form
     - active_loop: null  # TODO: store slot in database

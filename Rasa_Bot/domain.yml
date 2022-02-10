@@ -97,7 +97,7 @@ slots:
         - active_loop: why_see_myself_as_smoker_form
         - active_loop: why_see_myself_as_mover_form
 
-  picked_words_smoker:
+  see_myself_as_picked_words_smoker:
     type: text
     influence_conversation: false
     mappings:
@@ -113,7 +113,7 @@ slots:
       conditions:
         - active_loop: confirm_words_form
 
-  picked_words_mover:
+  see_myself_as_picked_words_mover:
     type: text
     influence_conversation: false
     mappings:
@@ -254,16 +254,18 @@ responses:
              Vul ze aan met wat het meest bij jou past."
   utter_see_myself_as_smoker_options:
     - text: "Ik zie mijzelf als...
-             een roker - een niet-roker - iemand die stopt met roken"
+             een roker (1) - een niet-roker (2) - iemand die stopt met roken (3)"
   utter_see_myself_as_mover_options:
     - text: "Ik zie mijzelf als...
-             lichamelijk actief  - een beetje lichamelijk actief - niet lichamelijk actief"
+             lichamelijk actief (1) - een beetje lichamelijk actief (2) - niet lichamelijk actief (3)"
   utter_ask_see_myself_as_smoker_form_picked_words_smoker:
-    - text: "Kies een of meerdere opties
-             uit de lijst en typ ze in de chat."
+    - text: "Kies de optie die het meeste bij je past en typ het nummer in de chat."
   utter_ask_see_myself_as_mover_form_picked_words_mover:
-    - text: "Kies een of meerdere opties
-             uit de lijst en typ ze in de chat."
+    - text: "Kies de optie die het meeste bij je past en typ het nummer in de chat."
+  utter_see_myself_as_picked_smoker_words:
+    - text: "{picked_smoker_words} heb jij gekozen, klopt dat?"
+  utter_see_myself_as_picked_mover_words:
+    - text: "{picked_mover_words} heb jij gekozen, klopt dat?"
   utter_thank_user_for_response:
     - text: "Helder, bedankt."
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
@@ -311,10 +313,10 @@ forms:
       - why_picked_words
   see_myself_as_smoker_form:
     required_slots:
-      - picked_words_smoker
+      - see_myself_as_picked_words_smoker
   see_myself_as_mover_form:
     required_slots:
-      - picked_words_mover
+      - see_myself_as_picked_words_mover
   why_see_myself_as_smoker_form:
     required_slots:
       - why_picked_words

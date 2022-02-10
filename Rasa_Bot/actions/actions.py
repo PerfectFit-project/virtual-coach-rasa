@@ -270,3 +270,51 @@ class ValidateConfirmWordsForm(FormValidationAction):
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
 
         return {"confirm_words_response": yes_or_no_response}
+
+
+def validate_see_myself_as_picked_words_smoker(value):
+    if value in ["1", "2", "3", "(1)", "(2)", "(3)", 
+                 "een roker", "roker", "een niet-roker", 
+                 "iemand die stopt met roken"]:
+        return True
+    return None
+    
+
+class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_see_myself_as_smoker_form'
+
+    def validate_see_myself_as_smoker_response(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        """Validate picked_words_smoker input."""
+
+        picked_words_smoker = validate_see_myself_as_picked_words_smoker(value)
+        if picked_words_smoker is None:
+            dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
+
+        return {"see_myself_as_picked_words_smoker": picked_words_smoker}
+
+
+def validate_see_myself_as_picked_words_mover(value):
+    if value in ["1", "2", "3", "(1)", "(2)", "(3)", 
+                 "lichamelijk actief", "een beetje lichamelijk actief",
+                 "niet lichamelijk actief"]:
+        return True
+    return None
+
+
+class ValidateSeeMyselfAsMoverForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_see_myself_as_mover_form'
+
+    def validate_see_myself_as_mover_response(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        """Validate picked_words_mover input."""
+
+        picked_words_mover = validate_see_myself_as_picked_words_mover(value)
+        if picked_words_mover is None:
+            dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
+
+        return {"see_myself_as_picked_words_mover": picked_words_mover}

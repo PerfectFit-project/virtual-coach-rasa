@@ -283,7 +283,8 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
 
         if not self._is_valid_input(value):
             dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
-
+            return {"see_myself_as_picked_words_smoker": None}
+        
         return {"see_myself_as_picked_words_smoker": int(value)}
     
     @staticmethod
@@ -331,14 +332,15 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_see_myself_as_mover_form'
 
-    def validate_see_myself_as_picked_wors_mover(
+    def validate_see_myself_as_picked_words_mover(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):
             dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
-
+            return {"see_myself_as_picked_words_mover": None}
+        
         return {"see_myself_as_picked_words_mover": int(value)}
     
     @staticmethod

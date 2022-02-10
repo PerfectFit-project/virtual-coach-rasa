@@ -29,7 +29,7 @@ pipeline:
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.4
+    threshold: 0.2
     ambiguity_threshold: 0.1
 
 # Configuration for Rasa Core.
@@ -37,10 +37,10 @@ pipeline:
 # NB: Make sure to adapt the max_history setting in the Rasa CI if the highest max_history value for any policy below changes.
 policies:
   - name: AugmentedMemoizationPolicy
-    max_history: 7
+    max_history: 8
   - name: TEDPolicy
     max_history: 14
-    epochs: 50
+    epochs: 100
     #augmentation: 50 # if 0, no augmentation of stories
   - name: RulePolicy
     core_fallback_threshold: 0.2 # NB: important to tune this carefully.

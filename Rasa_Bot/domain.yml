@@ -15,8 +15,7 @@ intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
 - request_future_self_dialog
-- say_important_stuff
-- say_short_stuff
+
 
 slots:
   ### General

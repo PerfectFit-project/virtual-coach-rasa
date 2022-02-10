@@ -132,8 +132,14 @@ stories:
     - active_loop: null  # TODO: store slot in database
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
+    - slot_was_set:
+      - picked_words:null
     - action: action_reset_confirm_words_response_slot_smoking
+    - slot_was_set:
+      - confirm_words_response: null
     - action: action_reset_why_picked_words_slot_smoking
+    - slot_was_set:
+      - why_picked_words: null
     - checkpoint: finished_check_picked_smoker_words
 
 - story: handle deny picked smoker words
@@ -145,7 +151,11 @@ stories:
       - confirm_words_response: false
     - active_loop: null
     - action: action_reset_picked_words_slot
+    - slot_was_set:
+      - picked_words:null
     - action: action_reset_confirm_words_response_slot_smoking
+    - slot_was_set:
+      - confirm_words_response: null
     - checkpoint: ask_smoking_words_list
 
 - story: future-self ask moving words list
@@ -172,8 +182,14 @@ stories:
     - active_loop: null  # TODO: store slot in database
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
+    - slot_was_set:
+      - picked_words:null
     - action: action_reset_confirm_words_response_slot_pa
+    - slot_was_set:
+      - confirm_words_response: null
     - action: action_reset_why_picked_words_slot_pa
+    - slot_was_set:
+      - why_picked_words: null
     - action: utter_self_view_intro
     - checkpoint: finished_check_picked_mover_words
 
@@ -187,7 +203,11 @@ stories:
     - active_loop: null
     - action: utter_try_again
     - action: action_reset_picked_words_slot
+    - slot_was_set:
+      - picked_words:null
     - action: action_reset_confirm_words_response_slot_pa
+    - slot_was_set:
+      - confirm_words_response: null
     - checkpoint: finished_check_picked_smoker_words
 
 - story: I see myself as smoker words
@@ -209,9 +229,13 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
-    - action: utter_thank_user_for_response
+    - action: utter_leuk
     - action: action_reset_see_myself_as_picked_words_smoker
+    - slot_was_set:
+      - see_myself_as_picked_words_smoker: null
     - action: action_reset_confirm_words_response_slot_smoking
+    - slot_was_set:
+      - confirm_words_response: null
     - checkpoint: finished_I_see_myself_as_smoker_words
 
 - story: Deny check I see myself as smoker words
@@ -224,7 +248,11 @@ stories:
     - active_loop: null
     - action: utter_try_again
     - action: action_reset_see_myself_as_picked_words_smoker
+    - slot_was_set:
+      - see_myself_as_picked_words_smoker: null
     - action: action_reset_confirm_words_response_slot_smoking
+    - slot_was_set:
+      - confirm_words_response: null
     - checkpoint: finished_check_picked_mover_words
     
 - story: I see myself as mover words
@@ -246,9 +274,13 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
-    - action: utter_thank_user_for_response
+    - action: utter_leuk
     - action: action_reset_see_myself_as_picked_words_mover
+    - slot_was_set:
+      - see_myself_as_picked_words_mover: null
     - action: action_reset_confirm_words_response_slot_pa
+    - slot_was_set:
+      - confirm_words_response: null
     - checkpoint: finished_I_see_myself_as_mover_words
 
 - story: Deny check I see myself as mover words
@@ -261,7 +293,11 @@ stories:
     - active_loop: null
     - action: utter_try_again
     - action: action_reset_see_myself_as_picked_words_mover
+    - slot_was_set:
+      - see_myself_as_picked_words_mover: null
     - action: action_reset_confirm_words_response_slot_pa
+    - slot_was_set:
+      - confirm_words_response: null
     - checkpoint: finished_I_see_myself_as_smoker_words
 
 - story: I see myself as why

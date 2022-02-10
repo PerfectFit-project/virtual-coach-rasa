@@ -280,6 +280,8 @@ responses:
     - text: "{see_myself_as_picked_words_mover} heb jij gekozen, klopt dat?"
   utter_thank_user_for_response:
     - text: "Helder, bedankt."
+  utter_leuk:
+    - text: "Leuk!"
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
     - text: "Leg uit, waarom zie jij jezelf als {see_myself_as_picked_words_smoker_text}?" # TODO: use generic slot?
   utter_ask_why_see_myself_as_mover_form_why_picked_words:
@@ -289,6 +291,7 @@ responses:
              We gaan door met nieuwe oefeningen."
   utter_try_again:
     - text: "Oke laten we het opnieuw proberen."
+    
 actions:
 - action_get_plan_week
 - action_get_age_from_database

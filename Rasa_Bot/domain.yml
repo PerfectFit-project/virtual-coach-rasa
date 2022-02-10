@@ -263,7 +263,7 @@ responses:
 
   utter_self_view_intro:
     - text: "Nu krijg je twee zinnen te zien.
-             Vul ze aan met wat het meest bij jou past."
+             Vul ze aan met wat het meest bij jou past en typ het nummer in de chat."
   utter_see_myself_as_smoker_options:
     - text: "Ik zie mijzelf als...
              een roker (1) - een niet-roker (2) - iemand die stopt met roken (3)"

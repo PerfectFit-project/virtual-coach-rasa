@@ -285,7 +285,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
         if not self._is_valid_input(value):
             dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
             return {"see_myself_as_picked_words_smoker": None}
-        
+
         return {"see_myself_as_picked_words_smoker": int(value)}
 
     @staticmethod
@@ -306,16 +306,16 @@ class ActionMapSeeMyselfAsPickedWordsSmoker(Action):
         return "action_map_see_myself_as_picked_words_smoker"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         num = tracker.get_slot('see_myself_as_picked_words_smoker')
-        
+
         if num == 1:
             text = "een roker"
         elif num == 2:
             text = "een niet-roker"
         else:
             text = "iemand die stopt met roken"
-        
+
         return [SlotSet("see_myself_as_picked_words_smoker_text", text)]
 
 
@@ -342,7 +342,7 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         if not self._is_valid_input(value):
             dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
             return {"see_myself_as_picked_words_mover": None}
-        
+
         return {"see_myself_as_picked_words_mover": int(value)}
 
     @staticmethod
@@ -363,16 +363,16 @@ class ActionMapSeeMyselfAsPickedWordsMover(Action):
         return "action_map_see_myself_as_picked_words_mover"
 
     async def run(self, dispatcher, tracker, domain):
-    
+
         num = tracker.get_slot('see_myself_as_picked_words_mover')
-        
+
         if num == 1:
             text = "lichamelijk actief"
         elif num == 2:
             text = "een beetje lichamelijk actief"
         else:
             text = "niet lichamelijk actief"
-        
+
         return [SlotSet("see_myself_as_picked_words_mover_text", text)]
 
 

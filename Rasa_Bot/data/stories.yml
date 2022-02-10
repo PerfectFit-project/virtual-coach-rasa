@@ -291,7 +291,7 @@ stories:
     - slot_was_set:
       - confirm_words_response: false
     - active_loop: null
-    - action: utter_try_again
+    - action: utter_try_again_see_myself_mover
     - action: action_reset_see_myself_as_picked_words_mover
     - slot_was_set:
       - see_myself_as_picked_words_mover: null
@@ -307,8 +307,12 @@ stories:
     - active_loop: why_see_myself_as_smoker_form
     - active_loop: null  # TODO: store slot in database
     - action: action_reset_why_picked_words_slot_smoking
+    - slot_was_set:
+      - why_picked_words: null
     - action: why_see_myself_as_mover_form
     - active_loop: why_see_myself_as_mover_form
     - active_loop: null  # TODO: store slot in database
     - action: action_reset_why_picked_words_slot_pa
+    - slot_was_set:
+      - why_picked_words: null
     - action: utter_close_future_self_step_1

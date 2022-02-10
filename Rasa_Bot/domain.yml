@@ -293,6 +293,8 @@ responses:
              We gaan door met nieuwe oefeningen."
   utter_try_again:
     - text: "Oke laten we het opnieuw proberen."
+  utter_try_again_see_myself_mover:
+    - text: "Oke laten we het nog een keer proberen."
     
 actions:
 - action_get_plan_week

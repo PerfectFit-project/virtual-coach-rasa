@@ -279,6 +279,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
     def validate_see_myself_as_picked_words_smoker(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
         """Validate see_myself_as_picked_words_smoker input."""
 
         if not self._is_valid_input(value):
@@ -335,6 +336,7 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
     def validate_see_myself_as_picked_words_mover(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):

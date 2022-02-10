@@ -133,7 +133,7 @@ stories:
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
     - slot_was_set:
-      - picked_words:null
+      - picked_words: null
     - action: action_reset_confirm_words_response_slot_smoking
     - slot_was_set:
       - confirm_words_response: null
@@ -152,7 +152,7 @@ stories:
     - active_loop: null
     - action: action_reset_picked_words_slot
     - slot_was_set:
-      - picked_words:null
+      - picked_words: null
     - action: action_reset_confirm_words_response_slot_smoking
     - slot_was_set:
       - confirm_words_response: null
@@ -183,7 +183,7 @@ stories:
     - action: utter_why_picked_words_response
     - action: action_reset_picked_words_slot
     - slot_was_set:
-      - picked_words:null
+      - picked_words: null
     - action: action_reset_confirm_words_response_slot_pa
     - slot_was_set:
       - confirm_words_response: null
@@ -204,7 +204,7 @@ stories:
     - action: utter_try_again
     - action: action_reset_picked_words_slot
     - slot_was_set:
-      - picked_words:null
+      - picked_words: null
     - action: action_reset_confirm_words_response_slot_pa
     - slot_was_set:
       - confirm_words_response: null

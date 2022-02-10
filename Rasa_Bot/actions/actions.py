@@ -270,51 +270,114 @@ class ValidateConfirmWordsForm(FormValidationAction):
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
 
         return {"confirm_words_response": yes_or_no_response}
-
-
-def validate_see_myself_as_picked_words_smoker(value):
-    if value in ["1", "2", "3", "(1)", "(2)", "(3)", 
-                 "een roker", "roker", "een niet-roker", 
-                 "iemand die stopt met roken"]:
-        return True
-    return None
     
 
 class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_see_myself_as_smoker_form'
 
-    def validate_see_myself_as_smoker_response(
+    def validate_see_myself_as_picked_words_smoker(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        """Validate picked_words_smoker input."""
+        """Validate see_myself_as_picked_words_smoker input."""
 
-        picked_words_smoker = validate_see_myself_as_picked_words_smoker(value)
-        if picked_words_smoker is None:
+        if not self._is_valid_input(value):
             dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
 
-        return {"see_myself_as_picked_words_smoker": picked_words_smoker}
-
-
-def validate_see_myself_as_picked_words_mover(value):
-    if value in ["1", "2", "3", "(1)", "(2)", "(3)", 
-                 "lichamelijk actief", "een beetje lichamelijk actief",
-                 "niet lichamelijk actief"]:
+        return {"see_myself_as_picked_words_smoker": int(value)}
+    
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 3):
+            return False
         return True
-    return None
+    
 
+class ActionMapSeeMyselfAsPickedWordsSmoker(Action):
+    """Map see_myself_as_picked_words_smoker slot to text"""
+
+    def name(self):
+        return "action_map_see_myself_as_picked_words_smoker"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        num = tracker.get_slot('see_myself_as_picked_words_smoker')
+        
+        if num == 1:
+            text = "een roker"
+        elif num == 2:
+            text = "een niet-roker"
+        else:
+            text = "iemand die stopt met roken"
+        
+        return [SlotSet("see_myself_as_picked_words_smoker_text", text)]
+    
+
+class ActionResetSeeMyselfAsPickedWordsSmoker(Action):
+    """Reset see_myself_as_picked_words_smoker slot"""
+
+    def name(self):
+        return "action_reset_see_myself_as_picked_words_smoker"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("see_myself_as_picked_words_smoker", None)]
+    
 
 class ValidateSeeMyselfAsMoverForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_see_myself_as_mover_form'
 
-    def validate_see_myself_as_mover_response(
+    def validate_see_myself_as_picked_wors_mover(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        """Validate picked_words_mover input."""
+        """Validate see_myself_as_picked_words_mover input."""
 
-        picked_words_mover = validate_see_myself_as_picked_words_mover(value)
-        if picked_words_mover is None:
+        if not self._is_valid_input(value):
             dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
 
-        return {"see_myself_as_picked_words_mover": picked_words_mover}
+        return {"see_myself_as_picked_words_mover": int(value)}
+    
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 3):
+            return False
+        return True
+    
+
+class ActionMapSeeMyselfAsPickedWordsMover(Action):
+    """Map see_myself_as_picked_words_mover slot to text"""
+
+    def name(self):
+        return "action_map_see_myself_as_picked_words_mover"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        num = tracker.get_slot('see_myself_as_picked_words_mover')
+        
+        if num == 1:
+            text = "lichamelijk actief"
+        elif num == 2:
+            text = "een beetje lichamelijk actief"
+        else:
+            text = "niet lichamelijk actief"
+        
+        return [SlotSet("see_myself_as_picked_words_mover_text", text)]
+
+
+class ActionResetSeeMyselfAsPickedWordsMover(Action):
+    """Reset see_myself_as_picked_words_mover slot"""
+
+    def name(self):
+        return "action_reset_see_myself_as_picked_words_mover"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("see_myself_as_picked_words_mover", None)]
+    

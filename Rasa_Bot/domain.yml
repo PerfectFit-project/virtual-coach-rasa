@@ -98,12 +98,18 @@ slots:
         - active_loop: why_see_myself_as_mover_form
 
   see_myself_as_picked_words_smoker:
-    type: text
+    type: float
     influence_conversation: false
     mappings:
     - type: from_text
       conditions:
         - active_loop: see_myself_as_smoker_form
+        
+  see_myself_as_picked_words_smoker_text:
+     type: text
+     influence_conversation: false
+     mappings:
+     - type: custom
 
   confirm_words_response:
     type: bool
@@ -114,12 +120,18 @@ slots:
         - active_loop: confirm_words_form
 
   see_myself_as_picked_words_mover:
-    type: text
+    type: float
     influence_conversation: false
     mappings:
     - type: from_text
       conditions:
         - active_loop: see_myself_as_mover_form
+        
+  see_myself_as_picked_words_mover_text:
+     type: text
+     influence_conversation: false
+     mappings:
+     - type: custom
 
 responses:
   # Fallback
@@ -263,15 +275,15 @@ responses:
   utter_ask_see_myself_as_mover_form_picked_words_mover:
     - text: "Kies de optie die het meeste bij je past en typ het nummer in de chat."
   utter_see_myself_as_picked_smoker_words:
-    - text: "{picked_smoker_words} heb jij gekozen, klopt dat?"
+    - text: "{see_myself_as_picked_words_smoker} heb jij gekozen, klopt dat?"
   utter_see_myself_as_picked_mover_words:
-    - text: "{picked_mover_words} heb jij gekozen, klopt dat?"
+    - text: "{see_myself_as_picked_words_mover} heb jij gekozen, klopt dat?"
   utter_thank_user_for_response:
     - text: "Helder, bedankt."
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
-    - text: "Leg uit, waarom zie jij jezelf als {picked_words_smoker}?" # TODO: use generic slot?
+    - text: "Leg uit, waarom zie jij jezelf als {see_myself_as_picked_words_smoker_text}?" # TODO: use generic slot?
   utter_ask_why_see_myself_as_mover_form_why_picked_words:
-    - text: "En waarom zie jij jezelf als {picked_words_mover}?" # TODO: which slot to use here?
+    - text: "En waarom zie jij jezelf als {see_myself_as_picked_words_mover_text?" # TODO: which slot to use here?
   utter_close_future_self_step_1:
     - text: "Heldere antwoorden. Dankje voor het delen.
              We gaan door met nieuwe oefeningen."
@@ -291,6 +303,12 @@ actions:
 - action_reset_picked_words_slot
 - action_reset_why_picked_words_slot_smoking
 - action_reset_why_picked_words_slot_pa
+- validate_see_myself_as_smoker_form
+- validate_see_myself_as_mover_form
+- action_reset_see_myself_as_picked_words_mover
+- action_reset_see_myself_as_picked_words_smoker
+- action_map_see_myself_as_picked_words_mover
+- action_map_see_myself_as_picked_words_smoker
 
 forms:
   pa_evaluation_form:

@@ -291,6 +291,7 @@ actions:
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
 - validate_confirm_words_form
+- validate_why_picked_smoker_words_form
 - action_reset_confirm_words_response_slot_smoking
 - action_reset_confirm_words_response_slot_pa
 - action_reset_picked_words_slot

@@ -140,6 +140,7 @@ stories:
     - action: action_reset_why_picked_words_slot_smoking
     - slot_was_set:
       - why_picked_words: null
+    - action: utter_intro_current_mover
     - checkpoint: finished_check_picked_smoker_words
 
 - story: handle deny picked smoker words

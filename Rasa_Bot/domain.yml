@@ -224,9 +224,10 @@ responses:
              Welke woorden passen bij jou als roker?
              Roken is...
             "
+  utter_intro_current_mover:
+    - text: "We gaan nu dezelfde oefening doen voor bewegen."
   utter_current_mover:
-    - text: "We gaan nu dezelfde oefening doen voor bewegen.
-             Welke woorden vind jij passen bij bewegen?
+    - text: "Welke woorden vind jij passen bij bewegen?
              Bewegen is ...
             "
   utter_smoking_word_list:
@@ -270,9 +271,7 @@ responses:
   utter_see_myself_as_mover_options:
     - text: "Ik zie mijzelf als...
              lichamelijk actief (1) - een beetje lichamelijk actief (2) - niet lichamelijk actief (3)"
-  utter_ask_see_myself_as_smoker_form_picked_words_smoker:
-    - text: "Kies de optie die het meeste bij je past en typ het nummer in de chat."
-  utter_ask_see_myself_as_mover_form_picked_words_mover:
+  utter_ask_see_myself_as_mover_form_see_myself_as_picked_words_mover:
     - text: "Kies de optie die het meeste bij je past en typ het nummer in de chat."
   utter_see_myself_as_picked_smoker_words:
     - text: "{see_myself_as_picked_words_smoker} heb jij gekozen, klopt dat?"

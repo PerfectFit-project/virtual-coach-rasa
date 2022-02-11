@@ -261,9 +261,9 @@ def validate_long_enough_response(response_to_q: Text):
     return len(response_to_q.split()) > 5
 
 
-class ValidateLenWordsForm(FormValidationAction):
+class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_len_words_form'
+        return 'validate_why_picked_smoker_words_form'
 
     def validate_len_words_response(
             self, value: Text, dispatcher: CollectingDispatcher,
@@ -273,9 +273,10 @@ class ValidateLenWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
+            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
 
-        return {"len_words_response": long_enough_response}
+        return {"why_picked_smoker_words_response": long_enough_response}
+
 
 class ValidateConfirmWordsForm(FormValidationAction):
     def name(self) -> Text:

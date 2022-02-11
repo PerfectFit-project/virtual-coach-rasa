@@ -40,3 +40,19 @@ async def test_run_action_store_pa_evaluation(
     expected_events = [SlotSet("pa_evaluation_response", None)]
     assert events == expected_events
     mock_session.commit.assert_called_once()
+
+
+
+@pytest.mark.asyncio
+async def test_run_action_validate_why_picked_smoker_words_form(
+        dispatcher: CollectingDispatcher, domain: DomainDict):
+    import pdb
+    pdb.set_trace()
+    tracker = EMPTY_TRACKER
+    original_latest_message = dict(tracker.latest_message)
+    tracker.latest_message['text'] = "example one"
+    action = actions.ValidateWhyPickedSmokerWordsForm()
+    events = await action.run(dispatcher, tracker, domain)
+    expected_events = [SlotSet("why_picked_smoker_words_response", False)]
+    tracker.latest_message = original_latest_message
+    assert events == expected_events

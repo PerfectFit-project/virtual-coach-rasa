@@ -1,83 +1,67 @@
+version: '3.0'
 session_config:
-  session_expiration_time: 5 # these are minutes
-  carry_over_slots_to_new_session: true  
-
+  session_expiration_time: 5
+  carry_over_slots_to_new_session: true
 intents:
+- confirm
+- request_plan_week
+- deny
 - goodbye
 - greeting
-- confirm
-- deny
 - positive_mood
 - negative_mood
 - who_are_you
 - how_are_you
-- request_plan_week
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
 - request_future_self_dialog
-
-
 slots:
-  ### General
-  # The name of the agent
   agent_name:
     type: text
-    initial_value: 'Kris'
+    initial_value: Kris
     influence_conversation: false
     mappings:
     - type: custom
-
-  
-  ### User data
-  # The user's age
   age:
     type: float
-    min_value: 0.0
-    max_value: 123.0
     initial_value: 0
     influence_conversation: false
     mappings:
     - type: custom
-  # The user's name
+    max_value: 123.0
+    min_value: 0.0
   name:
     type: text
-    initial_value: 'NAMENOTSET'
+    initial_value: NAMENOTSET
     influence_conversation: false
     mappings:
     - type: custom
-  # ID of the user in current conversation
   sender_id:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: custom
-
-
-  ### Weekly planning
-  # The plan for the week
   plan_week:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: custom
-  # Whether saving the weekly plan in the calendar succeeded
   success_save_calendar_plan_week:
     type: bool
     influence_conversation: true
     mappings:
     - type: from_text
-  # Evaluate completed PA
   pa_evaluation_response:
     type: float
     influence_conversation: false
     mappings:
-      - type: from_text
-        conditions:
-          - active_loop: pa_evaluation_form
-
-  ### Future-self dialog
+    - type: from_text
+      conditions:
+      - active_loop: pa_evaluation_form
+    max_value: 1.0
+    min_value: 0.0
   picked_words:
     type: text
     influence_conversation: false
@@ -86,248 +70,194 @@ slots:
       conditions:
       - active_loop: pick_smoker_words_form
       - active_loop: pick_mover_words_form
-
   why_picked_words:
     type: text
     influence_conversation: false
     mappings:
     - type: from_text
       conditions:
-        - active_loop: why_picked_smoker_words_form
-        - active_loop: why_picked_mover_words_form
-        - active_loop: why_see_myself_as_smoker_form
-        - active_loop: why_see_myself_as_mover_form
-
+      - active_loop: why_picked_smoker_words_form
+      - active_loop: why_picked_mover_words_form
+      - active_loop: why_see_myself_as_smoker_form
+      - active_loop: why_see_myself_as_mover_form
   picked_words_smoker:
     type: text
     influence_conversation: false
     mappings:
     - type: from_text
       conditions:
-        - active_loop: see_myself_as_smoker_form
-
+      - active_loop: see_myself_as_smoker_form
   confirm_words_response:
     type: bool
     influence_conversation: true
     mappings:
     - type: from_text
       conditions:
-        - active_loop: confirm_words_form
-
+      - active_loop: confirm_words_form
   picked_words_mover:
     type: text
     influence_conversation: false
     mappings:
     - type: from_text
       conditions:
-        - active_loop: see_myself_as_mover_form
-
+      - active_loop: see_myself_as_mover_form
 responses:
-  # Fallback
   utter_default:
-  - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
-
-  # General
+  - text: Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?
   utter_greet:
-  - text: "Hey {name}!"
-  - text: "Hi {name}!"
-  - text: "Hallo {name}!"
-  - text: "Hoi {name}!"
+  - text: Hey {name}!
+  - text: Hi {name}!
+  - text: Hallo {name}!
+  - text: Hoi {name}!
   utter_goodbye:
-  - text: "Doei!"
-  - text: "Tot straks!"
-  - text: "Tot ziens!"
+  - text: Doei!
+  - text: Tot straks!
+  - text: Tot ziens!
   utter_ask_back:
-  - text: "En jij?"
+  - text: En jij?
   utter_agent_name:
-  - text: "Ik ben {agent_name}. Ik ben je virtuele coach."
+  - text: Ik ben {agent_name}. Ik ben je virtuele coach.
   utter_agent_purpose:
-  - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
-  # Makeda specials
+  - text: Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden.
   utter_get_meee:
-  - text: "Ik ben werken"
+  - text: Ik ben werken
   utter_get_meee_more_words:
-  - text: "Can je leg uit dat, ik wil meer werden"
-
-
-  # Mood
+  - text: Can je leg uit dat, ik wil meer werden
   utter_agent_mood:
-  - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
+  - text: Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden.
   utter_ask_user_mood:
-  - text: "Hoe gaat het met je?"
+  - text: Hoe gaat het met je?
   utter_response_mood_positive:
-  - text: "Ik ben blij dat te horen!"
+  - text: Ik ben blij dat te horen!
   utter_response_mood_negative:
-  - text: "Aww, het spijt me. Ik hoop dat je je snel beter voelt."
-
-  # Weekly planning
+  - text: Aww, het spijt me. Ik hoop dat je je snel beter voelt.
   utter_plan_week:
-  - text: "{plan_week}"
+  - text: '{plan_week}'
   utter_ask_plan_calendar:
-  - text: "Zal ik de planning in je NiceDay agenda zetten?"
-  - text: "Wil je dat ik de planning in je NiceDay agenda zet?"
+  - text: Zal ik de planning in je NiceDay agenda zetten?
+  - text: Wil je dat ik de planning in je NiceDay agenda zet?
   utter_plan_calendar_confirmation:
-  - text: "Cool, ik heb de planning in je NiceDay agenda ingevoerd."
-  - text: "Okay, de planning staat nu in je NiceDay agenda."
+  - text: Cool, ik heb de planning in je NiceDay agenda ingevoerd.
+  - text: Okay, de planning staat nu in je NiceDay agenda.
   utter_okay:
-  - text: "Okay!"
-  - text: "OK!"
+  - text: Okay!
+  - text: OK!
   utter_error_save_plan_week_calendar:
-  - text: "Sorry, ik kan de planning nu niet invoeren."
-
-  
-  # Activity evaluation
+  - text: Sorry, ik kan de planning nu niet invoeren.
   utter_pa_completed:
-  - text: "Goed bezig!"
+  - text: Goed bezig!
   utter_ask_pa_evaluation_form_pa_evaluation_response:
-  - text: >
-      Hoe ging het? Geef dit aan op een schaal
-      van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
-
-  # Foreseen HRSs smoking
+  - text: |
+      Hoe ging het? Geef dit aan op een schaal van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
   utter_ask_foreseen_hrs:
-    - text: "Denk je dat je vandaag in een situatie komt waarin je trek krijgt in een sigaret?"
+  - text: Denk je dat je vandaag in een situatie komt waarin je trek krijgt in een sigaret?
   utter_watering_plants:
-    - text: "Als je hunkert naar een sigaret, kan het helpen om de plantjes water te geven"
+  - text: Als je hunkert naar een sigaret, kan het helpen om de plantjes water te geven
   utter_be_careful_for_hrs:
-    - text: "Wees voorzichtig, het kan zijn dat je onvoorzien alsnog in zo'n situatie komt. Ik ben hier om je te helpen"
-
-  # Future-self dialog
-  # Purpose: Define current self
-  # Context: Preparation phase, one or two days (to be decided)
-  # after deciding whether or not to use medication.
-  # This activity is being repeated several times throughout the intervention.
+  - text: Wees voorzichtig, het kan zijn dat je onvoorzien alsnog in zo'n situatie komt. Ik ben hier om je te helpen
   utter_future_self_intro:
-    - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken
-             en genoeg te bewegen.
-
-             De oefening heet 'wie wil ik straks zijn"
+  - text: |-
+      Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken en genoeg te bewegen.
+      De oefening heet 'wie wil ik straks zijn
   utter_future_self_duration:
-    - text: "Het duurt ongeveer 15 minuten.
-             Het is belangrijk dat je de oefening in één keer afmaakt"
+  - text: Het duurt ongeveer 15 minuten. Het is belangrijk dat je de oefening in één keer afmaakt
   utter_future_self_explanation:
-    - text: "Deze oefening gaat je op weg helpen om te stoppen met roken en genoeg te bewegen.
-             We lopen samen door de volgende stappen:\n
-             Eerst denk je na over jezelf op dit moment.
-             Dan denk je na over jezelf over een paar maanden.
-             Daarna stel ik jou een aantal vragen hierover.\n
-             Geen stress, ik loop er stap voor stap met je doorheen.
-            "
+  - text: |-
+      Deze oefening gaat je op weg helpen om te stoppen met roken en genoeg te bewegen. We lopen samen door de volgende stappen:
+       Eerst denk je na over jezelf op dit moment. Dan denk je na over jezelf over een paar maanden. Daarna stel ik jou een aantal vragen hierover.
+       Geen stress, ik loop er stap voor stap met je doorheen. 
   utter_current_smoker:
-    - text: "Eerst kijken wij wat voor roker jij op dit moment bent.
-             Ik laat je zo een lijst met woorden zien.
-             Welke woorden passen bij jou als roker?
-             Roken is...
-            "
+  - text: 'Eerst kijken wij wat voor roker jij op dit moment bent. Ik laat je zo een lijst met woorden zien. Welke woorden passen bij jou als roker? Roken is... '
   utter_current_mover:
-    - text: "We gaan nu dezelfde oefening doen voor bewegen.
-             Welke woorden vind jij passen bij bewegen?
-             Bewegen is ...
-            "
+  - text: 'We gaan nu dezelfde oefening doen voor bewegen. Welke woorden vind jij passen bij bewegen? Bewegen is ... '
   utter_smoking_word_list:
-    - text: "Fijn - lekker - eng - past bij mij- plezierig - belonend - stressvol
-             - moet ik doen - helpt mij - bedreigend - helpt mij ontspannen - vermoeiend
-             - cool - iets wat ik wil blijven doen - onderdeel van mijn leven - vies
-             - prettig - gevaarlijk - verslavend - belangrijk - niet belangrijk
-             - hoort niet bij mij - stom - stoer - gezellig - duur - sexy
-             - ongezond - niet zo heel erg
-            "
+  - text: 'Fijn - lekker - eng - past bij mij- plezierig - belonend - stressvol - moet ik doen - helpt mij - bedreigend - helpt mij ontspannen - vermoeiend - cool - iets wat ik wil blijven doen - onderdeel van mijn leven - vies - prettig - gevaarlijk - verslavend - belangrijk - niet belangrijk - hoort niet bij mij - stom - stoer - gezellig - duur - sexy - ongezond - niet zo heel erg '
   utter_moving_word_list:
-    - text: "Fijn - lekker - past bij mij - plezierig - belonend - geen zin in
-             - helpt mij ontspannen - vermoeiend - cool
-             - onderdeel van mijn leven - prettig - belangrijk - niet belangrijk
-             - hoort niet bij mij - stom - goed - gezellig - kost tijd
-             - stressvol - helpt mij - iets wat ik meer wil doen
-             - vind ik niet leuk - vind ik leuk - doet pijn - gezond
-             - moet voor mijn gezondheid - makkelijk - doe ik veel - straf
-             - gaat niet - lastig - houdt mij jong - eng"
+  - text: Fijn - lekker - past bij mij - plezierig - belonend - geen zin in - helpt mij ontspannen - vermoeiend - cool - onderdeel van mijn leven - prettig - belangrijk - niet belangrijk - hoort niet bij mij - stom - goed - gezellig - kost tijd - stressvol - helpt mij - iets wat ik meer wil doen - vind ik niet leuk - vind ik leuk - doet pijn - gezond - moet voor mijn gezondheid - makkelijk - doe ik veel - straf - gaat niet - lastig - houdt mij jong - eng
   utter_ask_pick_smoker_words_form_picked_words:
-    - text: "Kies 3 tot 5 woorden uit de lijst en typ ze in de chat."
+  - text: Kies 3 tot 5 woorden uit de lijst en typ ze in de chat.
   utter_ask_pick_mover_words_form_picked_words:
-    - text: "Kies 3 tot 5 woorden uit de lijst en typ ze in de chat:"
+  - text: 'Kies 3 tot 5 woorden uit de lijst en typ ze in de chat:'
   utter_picked_smoker_words:
-    - text: "Deze woorden passen bij jou als roker: {picked_words}, klopt dat?"
+  - text: 'Deze woorden passen bij jou als roker: {picked_words}, klopt dat?'
   utter_picked_mover_words:
-    - text: "{picked_words} heb jij gekozen, klopt dat?"
+  - text: '{picked_words} heb jij gekozen, klopt dat?'
   utter_ask_why_picked_smoker_words_form_why_picked_words:
-    - text: "Mooi. Waarom heb je deze woorden gekozen voor roken?"
+  - text: Mooi. Waarom heb je deze woorden gekozen voor roken?
   utter_ask_why_picked_mover_words_form_why_picked_words:
-    - text: "Duidelijk. Waarom heb je deze woorden gekozen voor bewegen?"
+  - text: Duidelijk. Waarom heb je deze woorden gekozen voor bewegen?
   utter_why_picked_words_response:
-    - text: "Goed dat je hier zo over na kunt denken."
-
+  - text: Goed dat je hier zo over na kunt denken.
   utter_self_view_intro:
-    - text: "Nu krijg je twee zinnen te zien.
-             Vul ze aan met wat het meest bij jou past."
+  - text: Nu krijg je twee zinnen te zien. Vul ze aan met wat het meest bij jou past.
   utter_see_myself_as_smoker_options:
-    - text: "Ik zie mijzelf als...
-             een roker - een niet-roker - iemand die stopt met roken"
+  - text: Ik zie mijzelf als... een roker - een niet-roker - iemand die stopt met roken
   utter_see_myself_as_mover_options:
-    - text: "Ik zie mijzelf als...
-             lichamelijk actief  - een beetje lichamelijk actief - niet lichamelijk actief"
+  - text: Ik zie mijzelf als... lichamelijk actief  - een beetje lichamelijk actief - niet lichamelijk actief
   utter_ask_see_myself_as_smoker_form_picked_words_smoker:
-    - text: "Kies een of meerdere opties
-             uit de lijst en typ ze in de chat."
+  - text: Kies een of meerdere opties uit de lijst en typ ze in de chat.
   utter_ask_see_myself_as_mover_form_picked_words_mover:
-    - text: "Kies een of meerdere opties
-             uit de lijst en typ ze in de chat."
+  - text: Kies een of meerdere opties uit de lijst en typ ze in de chat.
   utter_thank_user_for_response:
-    - text: "Helder, bedankt."
+  - text: Helder, bedankt.
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
-    - text: "Leg uit, waarom zie jij jezelf als {picked_words_smoker}?" # TODO: use generic slot?
+  - text: Leg uit, waarom zie jij jezelf als {picked_words_smoker}?
   utter_ask_why_see_myself_as_mover_form_why_picked_words:
-    - text: "En waarom zie jij jezelf als {picked_words_mover}?" # TODO: which slot to use here?
+  - text: En waarom zie jij jezelf als {picked_words_mover}?
   utter_close_future_self_step_1:
-    - text: "Heldere antwoorden. Dankje voor het delen.
-             We gaan door met nieuwe oefeningen."
+  - text: Heldere antwoorden. Dankje voor het delen. We gaan door met nieuwe oefeningen.
 actions:
-- action_get_plan_week
 - action_get_age_from_database
+- action_get_meee
 - action_get_name_from_database
+- action_get_plan_week
 - action_get_sender_id_from_tracker
+- action_reset_confirm_words_response_slot_pa
+- action_reset_confirm_words_response_slot_smoking
+- action_reset_picked_words_slot
+- action_reset_why_picked_words_slot
+- action_reset_why_picked_words_slot_pa
+- action_reset_why_picked_words_slot_smoking
 - action_save_plan_week_calendar
 - action_set_reminder
-- validate_pa_evaluation_form
-- action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
+- action_utter_pa_evaluation_form_filled
+- utter_current_smoker
+- utter_future_self_duration
+- utter_future_self_explanation
+- utter_picked_smoker_words
+- utter_smoking_word_list
 - validate_confirm_words_form
+- validate_pa_evaluation_form
 - validate_why_picked_smoker_words_form
-- action_reset_confirm_words_response_slot_smoking
-- action_reset_confirm_words_response_slot_pa
-- action_reset_picked_words_slot
-- action_reset_why_picked_words_slot_smoking
-- action_reset_why_picked_words_slot_pa
-- action_reset_why_picked_words_slot
-- action_get_meee
-
 forms:
   pa_evaluation_form:
     required_slots:
-      - pa_evaluation_response
+    - pa_evaluation_response
   pick_smoker_words_form:
     required_slots:
-      - picked_words
+    - picked_words
   confirm_words_form:
     required_slots:
-      - confirm_words_response
+    - confirm_words_response
   pick_mover_words_form:
     required_slots:
-      - picked_words
+    - picked_words
   why_picked_smoker_words_form:
     required_slots:
-      - why_picked_words
+    - why_picked_smoker_words
   why_picked_mover_words_form:
     required_slots:
-      - why_picked_words
+    - why_picked_words
   see_myself_as_smoker_form:
     required_slots:
-      - picked_words_smoker
+    - picked_words_smoker
   see_myself_as_mover_form:
     required_slots:
-      - picked_words_mover
+    - picked_words_mover
   why_see_myself_as_smoker_form:
     required_slots:
-      - why_picked_words
+    - why_picked_words
   why_see_myself_as_mover_form:
     required_slots:
-      - why_picked_words
+    - why_picked_words

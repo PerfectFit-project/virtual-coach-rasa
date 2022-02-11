@@ -239,6 +239,19 @@ class ActionResetConfirmWordsResponseSlotSmoking(Action):
         return [SlotSet("confirm_words_response", None)]
 
 
+class ActionCountingExplanationWordsSlot(Action):
+    """Check why_picked_smoker_words_response slot"""
+
+    def name(self):
+        return "action_ count_explanation_words_smoking"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet(
+            "why_picked_smoker_words_response", 
+            len(tracker.latest_message['text'].split(),
+        )]
+
+
 class ActionResetConfirmWordsResponseSlotPA(Action):
     """Reset confirm_words_response slot"""
 
@@ -270,7 +283,8 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate validate_long_enough_response input."""
-
+        import pdb
+        pdb.set_trace()
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
             dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
@@ -287,8 +301,8 @@ class ValidateConfirmWordsForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate yes_or_no_response input."""
-        import pdb
-        pdb.set_trace()
+        # import pdb
+        # pdb.set_trace()
         yes_or_no_response = validate_yes_no_response(value)
         if yes_or_no_response is None:
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")

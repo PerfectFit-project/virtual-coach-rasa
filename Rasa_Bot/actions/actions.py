@@ -287,9 +287,10 @@ class ValidateConfirmWordsForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate yes_or_no_response input."""
-
+        import pdb
+        pdb.set_trace()
         yes_or_no_response = validate_yes_no_response(value)
         if yes_or_no_response is None:
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
-
+        
         return {"confirm_words_response": yes_or_no_response}

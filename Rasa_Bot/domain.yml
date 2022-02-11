@@ -15,6 +15,7 @@ intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
 - request_future_self_dialog
+- request_test_count_words
 
 
 slots:
@@ -93,10 +94,17 @@ slots:
     mappings:
     - type: from_text
       conditions:
-        - active_loop: why_picked_smoker_words_form
         - active_loop: why_picked_mover_words_form
         - active_loop: why_see_myself_as_smoker_form
         - active_loop: why_see_myself_as_mover_form
+
+  has_enough_words:
+    type: bool
+    influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: why_picked_smoker_words_form
 
   picked_words_smoker:
     type: text
@@ -280,6 +288,9 @@ responses:
   utter_close_future_self_step_1:
     - text: "Heldere antwoorden. Dankje voor het delen.
              We gaan door met nieuwe oefeningen."
+  utter_ask_why_picked_smoker_words_form_has_enough_words:
+    - text: "Waarom heb je deze woorden gekozen voor roken?"
+
 actions:
 - action_get_plan_week
 - action_get_age_from_database
@@ -315,7 +326,7 @@ forms:
       - picked_words
   why_picked_smoker_words_form:
     required_slots:
-      - why_picked_words
+      - has_enough_words
   why_picked_mover_words_form:
     required_slots:
       - why_picked_words

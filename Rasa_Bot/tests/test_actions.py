@@ -46,8 +46,6 @@ async def test_run_action_store_pa_evaluation(
 @pytest.mark.asyncio
 async def test_run_action_validate_why_picked_smoker_words_form(
         dispatcher: CollectingDispatcher, domain: DomainDict):
-    import pdb
-    pdb.set_trace()
     tracker = EMPTY_TRACKER
     original_latest_message = dict(tracker.latest_message)
     tracker.latest_message['text'] = "example one"

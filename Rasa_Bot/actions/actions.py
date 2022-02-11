@@ -6,6 +6,7 @@
 import datetime
 import logging
 import os
+import string
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
@@ -206,6 +207,7 @@ class ActionResetPickedWordsSlot(Action):
         return "action_reset_picked_words_slot"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting picked_words".format(type(self).__name__))
         return [SlotSet("picked_words", None)]
 
 
@@ -216,6 +218,7 @@ class ActionResetWhyPickedWordsSlotSmoking(Action):
         return "action_reset_why_picked_words_slot_smoking"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting why_picked_words".format(type(self).__name__))
         return [SlotSet("why_picked_words", None)]
 
 
@@ -249,25 +252,28 @@ class ActionResetConfirmWordsResponseSlotPA(Action):
         return [SlotSet("confirm_words_response", None)]
 
 
+def simple_sanitize_input(value):
+    return value.translate({c: "" for c in string.punctuation})
+
+
 def validate_yes_no_response(value):
-    if value == 'ja':
-        return True
-    if value in ['nee', "nee."]:
-        return False
-    return None
+    return {"ja": True, "nee": False}.get(simple_sanitize_input(value).lower())
 
 
-def validate_long_enough_response(response_to_q: Text):
-    return len(response_to_q.split()) > 5
+def validate_long_enough_response(response: Text):
+    return len(simple_sanitize_input(response).split()) > 5
 
 
 class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_why_picked_smoker_words_form'
 
-    def validate_why_picked_smoker_words_response(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+    def validate_has_enough_words(
+            self, value: Text,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate validate_long_enough_response input."""
 
@@ -275,7 +281,10 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
         if not long_enough_response:
             dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
 
-        return {"why_picked_smoker_words_response": long_enough_response}
+        logging.info(
+            "{} has_enough_words: {}".format(type(self).__name__, long_enough_response)
+        )
+        return {"has_enough_words": long_enough_response or None}
 
 
 class ValidateConfirmWordsForm(FormValidationAction):

@@ -265,7 +265,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_why_picked_smoker_words_form'
 
-    def validate_len_words_response(
+    def validate_why_picked_smoker_words_response(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument

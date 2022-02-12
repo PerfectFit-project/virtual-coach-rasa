@@ -211,11 +211,22 @@ class ActionResetPickedWordsSlot(Action):
         return [SlotSet("picked_words", None)]
 
 
-class ActionResetWhyPickedWordsSlotSmoking(Action):
+class ActionResetHasEnoughWordsSlot(Action):
     """Reset picked_words slot"""
 
     def name(self):
-        return "action_reset_why_picked_words_slot_smoking"
+        return "action_reset_has_enough_words_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting has_enough_words".format(type(self).__name__))
+        return [SlotSet("has_enough_words", None)]
+
+
+class ActionResetWhyPickedWordsSlot(Action):
+    """Reset picked_words slot"""
+
+    def name(self):
+        return "action_reset_why_picked_words_slot"
 
     async def run(self, dispatcher, tracker, domain):
         logging.info("{} resetting why_picked_words".format(type(self).__name__))
@@ -242,16 +253,6 @@ class ActionResetConfirmedWordsSlot(Action):
     async def run(self, dispatcher, tracker, domain):
         logging.info("{} resetting confirmed_words".format(type(self).__name__))
         return [SlotSet("confirmed_words", None)]
-
-
-class ActionResetWhyPickedWordsSlotPA(Action):
-    """Reset picked_words slot"""
-
-    def name(self):
-        return "action_reset_why_picked_words_slot_pa"
-
-    async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("why_picked_words", None)]
 
 
 class ActionResetConfirmWordsResponseSlotSmoking(Action):
@@ -290,12 +291,14 @@ def validate_long_enough_response(response):
     return len(simple_sanitize_input(response).split()) > 5
 
 
-class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
+class ValidateHasEnoughWordsForm(FormValidationAction):
+
     def name(self) -> Text:
-        return 'validate_why_picked_smoker_words_form'
+        return "Generic enough words validator, should not be used directly"
 
     def validate_has_enough_words(
-            self, value: Text,
+            self,
+            value: Text,
             dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any],
@@ -313,27 +316,16 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
         return {"has_enough_words": long_enough_response or None}
 
 
-class ValidateWhyPickedMoverWordsForm(FormValidationAction):
+class ValidateWhyPickedSmokerWordsForm(ValidateHasEnoughWordsForm):
+
+    def name(self) -> Text:
+        return 'validate_why_picked_smoker_words_form'
+
+
+class ValidateWhyPickedMoverWordsForm(ValidateHasEnoughWordsForm):
+
     def name(self) -> Text:
         return 'validate_why_picked_mover_words_form'
-
-    def validate_has_enough_mover_words(
-            self, value: Text,
-            dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any],
-    ) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate validate_long_enough_response input."""
-
-        long_enough_response = validate_long_enough_response(value)
-        if not long_enough_response:
-            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
-
-        logging.info(
-            "{} has_enough_mover_words: {}".format(type(self).__name__, long_enough_response)
-        )
-        return {"has_enough_mover_words": long_enough_response or None}
 
 
 class ValidateConfirmWordsForm(FormValidationAction):
@@ -350,4 +342,8 @@ class ValidateConfirmWordsForm(FormValidationAction):
         if yes_or_no_response is None:
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
 
+        logging.info("Tracker: {}".format(dir(tracker)))
+        logging.info(
+            "{} confirm_words_response: {}".format(type(self).__name__, yes_or_no_response)
+        )
         return {"confirm_words_response": yes_or_no_response}

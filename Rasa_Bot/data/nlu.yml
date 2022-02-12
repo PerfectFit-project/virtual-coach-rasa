@@ -98,3 +98,8 @@ nlu:
   examples: |
     - "Start future self dialog."
     - "Ik wil future self dialog."
+
+- intent: request_test_count_words
+  examples: |
+    - "Start test count words."
+    - "Ik wil test count words."

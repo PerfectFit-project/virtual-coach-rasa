@@ -267,9 +267,12 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_why_picked_smoker_words_form'
 
-    def validate_why_picked_words(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+    def validate_has_enough_words(
+            self, value: Text,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate validate_long_enough_response input."""
 
@@ -278,9 +281,24 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
             dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
 
         logging.info(
-            "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)
+            "{} has_enough_words: {}".format(type(self).__name__, long_enough_response)
         )
-        return {"why_picked_words": long_enough_response or None}
+        return {"has_enough_words": long_enough_response or None}
+
+    # def validate_why_picked_words(
+    #         self, value: Text, dispatcher: CollectingDispatcher,
+    #         tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+    #     # pylint: disable=unused-argument
+    #     """Validate validate_long_enough_response input."""
+
+    #     long_enough_response = validate_long_enough_response(value)
+    #     if not long_enough_response:
+    #         dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
+
+    #     logging.info(
+    #         "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)
+    #     )
+    #     return {"why_picked_words": long_enough_response or None}
 
 
 class ValidateConfirmWordsForm(FormValidationAction):

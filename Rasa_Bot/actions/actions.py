@@ -6,9 +6,12 @@
 import datetime
 import logging
 import os
-from typing import Any, Dict, Text
+import re
+import string
 
+from typing import Any, Dict, Text
 from dateutil.relativedelta import relativedelta
+
 from dotenv import load_dotenv
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
@@ -18,6 +21,8 @@ from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.dbschema.models import ClosedUserAnswers
 from virtual_coach_db.helper.helper import get_db_session
+
+from .why_picked_smoker_words import *
 
 # load .env-file and get db_host variable
 load_dotenv()
@@ -31,6 +36,7 @@ class GetAgeFromDatabase(Action):
         return "action_get_age_from_database"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
 
         user_id = tracker.current_state()['sender_id']
 
@@ -70,6 +76,7 @@ class GetNameFromDatabase(Action):
         return "action_get_name_from_database"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
 
         # Get sender ID from slot, this is a string
         user_id = tracker.current_state()['sender_id']
@@ -106,6 +113,7 @@ class GetPlanWeek(Action):
         return "action_get_plan_week"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
 
         age = tracker.get_slot("age")
 
@@ -116,8 +124,6 @@ class GetPlanWeek(Action):
                "psycho-education: www.link-to-psycho-education.nl."
         return [SlotSet("plan_week", plan)]
 
-# Get custom
-
 
 # Save weekly plan in calendar
 class SavePlanWeekCalendar(Action):
@@ -125,7 +131,7 @@ class SavePlanWeekCalendar(Action):
         return "action_save_plan_week_calendar"
 
     async def run(self, dispatcher, tracker, domain):
-
+        logging.warning("running {}".format(type(self)))
         success = True
 
         return [SlotSet("success_save_calendar_plan_week", success)]
@@ -142,6 +148,7 @@ class ValidatePaEvaluationForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate pa_evaluation_response input."""
 
+        logging.warning("running {}".format(type(self)))
         if not self._is_valid_input(value):
             dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
             return {"pa_evaluation_response": None}
@@ -167,6 +174,7 @@ class ActionUtterPaEvaluationFormFilled(Action):
         return "action_utter_pa_evaluation_form_filled"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
 
         if pa_evaluation_response >= 4:
@@ -185,6 +193,7 @@ class ActionStorePaEvaluation(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
+        logging.warning("running {}".format(type(self)))
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
         session = get_db_session()  # Creat session object to connect db
 
@@ -206,6 +215,7 @@ class ActionResetPickedWordsSlot(Action):
         return "action_reset_picked_words_slot"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
         return [SlotSet("picked_words", None)]
 
 
@@ -216,6 +226,7 @@ class ActionResetWhyPickedWordsSlotSmoking(Action):
         return "action_reset_why_picked_words_slot_smoking"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
         return [SlotSet("why_picked_words", None)]
 
 
@@ -226,6 +237,7 @@ class ActionResetWhyPickedWordsSlotPA(Action):
         return "action_reset_why_picked_words_slot_pa"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
         return [SlotSet("why_picked_words", None)]
 
 
@@ -236,20 +248,11 @@ class ActionResetConfirmWordsResponseSlotSmoking(Action):
         return "action_reset_confirm_words_response_slot_smoking"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("confirm_words_response", None)]
-
-
-class ActionCountingExplanationWordsSlot(Action):
-    """Check why_picked_smoker_words_response slot"""
-
-    def name(self):
-        return "action_ count_explanation_words_smoking"
-
-    async def run(self, dispatcher, tracker, domain):
-        return [SlotSet(
-            "why_picked_smoker_words_response", 
-            len(tracker.latest_message['text'].split(),
-        )]
+        logging.warning("running {}".format(type(self)))
+        return [
+            SlotSet("confirm_words_response", None),
+            SlotSet("has_enough_words", None),
+        ]
 
 
 class ActionResetConfirmWordsResponseSlotPA(Action):
@@ -259,37 +262,20 @@ class ActionResetConfirmWordsResponseSlotPA(Action):
         return "action_reset_confirm_words_response_slot_pa"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.warning("running {}".format(type(self)))
         return [SlotSet("confirm_words_response", None)]
 
 
+def strip_punctuation(value):
+    return value.translate({ord(x): "" for x in string.punctuation}).lower()
+
+
 def validate_yes_no_response(value):
-    if value == 'ja':
-        return True
-    if value in ['nee', "nee."]:
-        return False
-    return None
-
-
-def validate_long_enough_response(response_to_q: Text):
-    return len(response_to_q.split()) > 5
-
-
-class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_why_picked_smoker_words_form'
-
-    def validate_why_picked_smoker_words_response(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate validate_long_enough_response input."""
-        import pdb
-        pdb.set_trace()
-        long_enough_response = validate_long_enough_response(value)
-        if not long_enough_response:
-            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
-
-        return {"why_picked_smoker_words_response": long_enough_response}
+    if value in (True, False):
+        # This happens if we try to re-enter this form, after seeing
+        # it for the first time.
+        return value
+    return {"ja": True, "nee": False}.get(strip_punctuation(value).lower())
 
 
 class ValidateConfirmWordsForm(FormValidationAction):
@@ -301,10 +287,28 @@ class ValidateConfirmWordsForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate yes_or_no_response input."""
-        # import pdb
-        # pdb.set_trace()
+
+        trigger_message = tracker.active_loop.get("trigger_message", {})
+        last_words = strip_punctuation(trigger_message.get("text", ""))
+
+        logging.warning("{} las_words: {} ".format(type(self), last_words))
         yes_or_no_response = validate_yes_no_response(value)
+        has_enough_words = len(last_words.split()) > 2
+
+        # These things start to break if the user tries to enter the
+        # dialog twice, but I'm not sure if that's a legitimate use case.
         if yes_or_no_response is None:
             dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
-        
-        return {"confirm_words_response": yes_or_no_response}
+        elif yes_or_no_response:
+            if not has_enough_words:
+                dispatcher.utter_message("Type more words!")
+
+        logging.warning("{} response: {} / {}".format(
+            type(self),
+            yes_or_no_response,
+            has_enough_words,
+        ))
+        return {
+            "confirm_words_response": yes_or_no_response,
+            "has_enough_words": True if has_enough_words else None,
+        }

@@ -1,11 +1,23 @@
 {
-  "action_get_age_from_database": {
+  "utter_be_careful_for_hrs": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
     "support": 1
   },
-  "action_get_plan_week": {
+  "utter_ask_plan_calendar": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "why_picked_smoker_words_form": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "request_future_self_dialog": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
@@ -17,67 +29,7 @@
     "f1-score": 1.0,
     "support": 2
   },
-  "EXTERNAL_trigger_ask_foreseen_hrs": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 1
-  },
-  "utter_get_meee_more_words": {
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1-score": 0.0,
-    "support": 1
-  },
-  "utter_okay": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 1
-  },
-  "utter_get_meee": {
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1-score": 0.0,
-    "support": 1
-  },
-  "utter_plan_week": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 1
-  },
-  "utter_be_careful_for_hrs": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 1
-  },
-  "say_important_stuff": {
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1-score": 0.0,
-    "support": 1
-  },
-  "say_short_stuff": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 1
-  },
-  "utter_ask_foreseen_hrs": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 1
-  },
-  "action_listen": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 6
-  },
-  "utter_ask_plan_calendar": {
+  "action_get_age_from_database": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
@@ -89,28 +41,136 @@
     "f1-score": 1.0,
     "support": 1
   },
+  "utter_greet": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_ask_foreseen_hrs": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_picked_smoker_words": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "action_reset_why_picked_words_slot_smoking": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 1
+  },
+  "utter_smoking_word_list": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "action_reset_picked_words_slot": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 1
+  },
+  "action_listen": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 4
+  },
+  "utter_why_picked_words_response": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 1
+  },
+  "pick_smoker_words_form": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "action_get_plan_week": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_okay": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_plan_week": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_future_self_intro": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "EXTERNAL_trigger_ask_foreseen_hrs": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_current_smoker": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_future_self_duration": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "utter_future_self_explanation": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
+  "confirm_words_form": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1
+  },
   "micro avg": {
     "precision": 1.0,
-    "recall": 0.8571428571428571,
-    "f1-score": 0.923076923076923,
-    "support": 21
+    "recall": 0.896551724137931,
+    "f1-score": 0.9454545454545454,
+    "support": 29
   },
   "macro avg": {
-    "precision": 0.8,
-    "recall": 0.8,
-    "f1-score": 0.8,
-    "support": 21
+    "precision": 0.88,
+    "recall": 0.88,
+    "f1-score": 0.88,
+    "support": 29
   },
   "weighted avg": {
-    "precision": 0.8571428571428571,
-    "recall": 0.8571428571428571,
-    "f1-score": 0.8571428571428571,
-    "support": 21
+    "precision": 0.896551724137931,
+    "recall": 0.896551724137931,
+    "f1-score": 0.896551724137931,
+    "support": 29
   },
   "conversation_accuracy": {
-    "accuracy": 0.5,
+    "accuracy": 0.6666666666666666,
     "correct": 2,
     "with_warnings": 0,
-    "total": 4
+    "total": 3
   }
 }

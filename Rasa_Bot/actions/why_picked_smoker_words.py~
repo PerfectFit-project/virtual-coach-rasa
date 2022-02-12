@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+
+from rasa_sdk.events import SlotSet
+from rasa_sdk.forms import FormValidationAction
+from rasa_sdk import Action
+
+
+class ActionResetPickedWordsSlot(Action):
+    """Reset picked_words slot"""
+
+    def name(self):
+        return "action_reset_picked_words_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("picked_words", None)]
+
+
+class ActionResetHasEnoughWords(Action):
+    """Reset picked_words slot"""
+
+    def name(self):
+        return "action_reset_has_enough_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("has_enough_words", None)]
+
+
+class ActionResetWhyPickedWordsSlotPA(Action):
+    """Reset picked_words slot"""
+
+    def name(self):
+        return "action_reset_why_picked_words_slot_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("why_picked_words", None)]
+
+
+class ActionResetConfirmWordsResponseSlotSmoking(Action):
+    """Reset confirm_words_response slot"""
+
+    def name(self):
+        return "action_reset_confirm_words_response_slot_smoking"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("confirm_words_response", None)]
+
+
+class ActionCountingExplanationWordsSlot(Action):
+    """Check has_enough_words_response slot"""
+
+    def name(self):
+        return "action_count_explanation_words_smoking"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet(
+            "has_enough_words", 
+            len(tracker.latest_message['text'].split()),
+        )]

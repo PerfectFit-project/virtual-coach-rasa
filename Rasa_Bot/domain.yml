@@ -70,6 +70,15 @@ slots:
       conditions:
       - active_loop: pick_smoker_words_form
       - active_loop: pick_mover_words_form
+
+  has_enough_words:
+    type: bool
+    influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: confirm_words_form
+
   why_picked_words:
     type: text
     influence_conversation: false
@@ -206,6 +215,9 @@ responses:
   - text: En waarom zie jij jezelf als {picked_words_mover}?
   utter_close_future_self_step_1:
   - text: Heldere antwoorden. Dankje voor het delen. We gaan door met nieuwe oefeningen.
+  utter_pick_more_smoker_words:
+  - text: Select more words!
+
 actions:
 - action_get_age_from_database
 - action_get_meee
@@ -230,6 +242,8 @@ actions:
 - validate_confirm_words_form
 - validate_pa_evaluation_form
 - validate_why_picked_smoker_words_form
+- utter_pick_more_smoker_words
+
 forms:
   pa_evaluation_form:
     required_slots:
@@ -237,15 +251,19 @@ forms:
   pick_smoker_words_form:
     required_slots:
     - picked_words
+  
   confirm_words_form:
     required_slots:
     - confirm_words_response
+
   pick_mover_words_form:
     required_slots:
     - picked_words
+
   why_picked_smoker_words_form:
     required_slots:
-    - why_picked_smoker_words
+    - has_enough_words
+
   why_picked_mover_words_form:
     required_slots:
     - why_picked_words

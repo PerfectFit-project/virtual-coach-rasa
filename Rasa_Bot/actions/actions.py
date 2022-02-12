@@ -206,6 +206,7 @@ class ActionResetPickedWordsSlot(Action):
         return "action_reset_picked_words_slot"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting picked_words".format(type(self).__name__))
         return [SlotSet("picked_words", None)]
 
 
@@ -216,6 +217,7 @@ class ActionResetWhyPickedWordsSlotSmoking(Action):
         return "action_reset_why_picked_words_slot_smoking"
 
     async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting why_picked_words".format(type(self).__name__))
         return [SlotSet("why_picked_words", None)]
 
 
@@ -265,7 +267,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_why_picked_smoker_words_form'
 
-    def validate_why_picked_smoker_words_response(
+    def validate_why_picked_words(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
@@ -275,7 +277,10 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
         if not long_enough_response:
             dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
 
-        return {"why_picked_smoker_words_response": long_enough_response}
+        logging.info(
+            "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)
+        )
+        return {"why_picked_words": long_enough_response or None}
 
 
 class ValidateConfirmWordsForm(FormValidationAction):

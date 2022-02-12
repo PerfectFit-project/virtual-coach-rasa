@@ -106,6 +106,14 @@ slots:
       conditions:
       - active_loop: why_picked_smoker_words_form
 
+  has_enough_mover_words:
+    type: bool
+    influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: why_picked_mover_words_form
+
   picked_words_smoker:
     type: text
     influence_conversation: false
@@ -256,7 +264,7 @@ responses:
   utter_picked_smoker_words:
     - text: "Deze woorden passen bij jou als roker: {picked_words}, klopt dat?"
   utter_picked_mover_words:
-    - text: "{picked_words} heb jij gekozen, klopt dat?"
+    - text: "{picked_words} heb jj igekozen, klopt dat?"
   utter_ask_why_picked_smoker_words_form_why_picked_words:
     - text: "Mooi. Waarom heb je deze woorden gekozen voor roken?"
   utter_ask_why_picked_mover_words_form_why_picked_words:
@@ -303,13 +311,17 @@ actions:
 - action_store_pa_evaluation
 - validate_confirm_words_form
 - validate_why_picked_smoker_words_form
-- action_reset_confirm_words_response_slot_smoking
+- validate_why_picked_mover_words_form
+- action_reset_confirm_words_slot
+- action_reset_confirm_words_response_slot_smoking # found
 - action_reset_confirm_words_response_slot_pa
-- action_reset_picked_words_slot
-- action_reset_why_picked_words_slot_smoking
-- action_reset_why_picked_words_slot_pa
+- action_reset_confirm_words_response_slot # found
+- action_reset_confirmed_words_slot          # found
+- action_reset_picked_words_slot # found
+- action_reset_why_picked_words_slot_smoking # found
+- action_reset_why_picked_words_slot_pa      # found
 - action_reset_why_picked_words_slot
-- action_get_meee
+
 
 forms:
   pa_evaluation_form:
@@ -329,7 +341,7 @@ forms:
       - has_enough_words
   why_picked_mover_words_form:
     required_slots:
-      - why_picked_words
+      - has_enough_mover_words
   see_myself_as_smoker_form:
     required_slots:
       - picked_words_smoker

@@ -222,6 +222,28 @@ class ActionResetWhyPickedWordsSlotSmoking(Action):
         return [SlotSet("why_picked_words", None)]
 
 
+class ActionResetConfirmedWordsResonpseSlot(Action):
+    """Reset confirm_words_response slot"""
+
+    def name(self):
+        return "action_reset_confirm_words_response_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting confirm_words_response".format(type(self).__name__))
+        return [SlotSet("confirm_words_response", None)]
+
+
+class ActionResetConfirmedWordsSlot(Action):
+    """Reset confirmed_words slot"""
+
+    def name(self):
+        return "action_reset_confirmed_words_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        logging.info("{} resetting confirmed_words".format(type(self).__name__))
+        return [SlotSet("confirmed_words", None)]
+
+
 class ActionResetWhyPickedWordsSlotPA(Action):
     """Reset picked_words slot"""
 
@@ -257,10 +279,14 @@ def simple_sanitize_input(value):
 
 
 def validate_yes_no_response(value):
+    if value in (True, False):
+        return value
     return {"ja": True, "nee": False}.get(simple_sanitize_input(value).lower())
 
 
-def validate_long_enough_response(response: Text):
+def validate_long_enough_response(response):
+    if response in (True, False):
+        return response
     return len(simple_sanitize_input(response).split()) > 5
 
 
@@ -285,6 +311,29 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
             "{} has_enough_words: {}".format(type(self).__name__, long_enough_response)
         )
         return {"has_enough_words": long_enough_response or None}
+
+
+class ValidateWhyPickedMoverWordsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_why_picked_mover_words_form'
+
+    def validate_has_enough_mover_words(
+            self, value: Text,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate validate_long_enough_response input."""
+
+        long_enough_response = validate_long_enough_response(value)
+        if not long_enough_response:
+            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
+
+        logging.info(
+            "{} has_enough_mover_words: {}".format(type(self).__name__, long_enough_response)
+        )
+        return {"has_enough_mover_words": long_enough_response or None}
 
 
 class ValidateConfirmWordsForm(FormValidationAction):

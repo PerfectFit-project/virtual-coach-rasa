@@ -218,3 +218,5 @@ stories:
     - active_loop: null  # TODO: store slot in database
     - action: action_reset_why_picked_words_slot
     - action: utter_close_future_self_step_1
+
+

@@ -22,3 +22,50 @@ stories:
       Nee
     intent: deny
   - action: utter_be_careful_for_hrs
+
+- story: Test handle confirm picked smoker words
+  steps:
+    - action: confirm_words_form
+    - user: |
+        ja
+      intent: confirm
+    - active_loop: confirm_words_form
+    - slot_was_set:
+      - confirm_words_response: true
+    - active_loop: null
+    - action: why_picked_smoker_words_form
+    - user: |
+        Ik heb gezoken deze woorden omdat ze zijn wat ik denk!
+    - active_loop: why_picked_smoker_words_form
+    - slot_was_set:
+      - has_enough_words: true
+    - active_loop: null
+    - action: utter_why_picked_words_response
+    - user: |
+        Alstublieft!
+    - action: action_reset_confirm_words_response_slot
+    - action: action_reset_has_enough_words_slot
+
+- story: Test handle confirm picked mover words
+  steps:
+  - action: confirm_words_form
+  - user: |
+      ja
+    intent: confirm
+  - active_loop: confirm_words_form
+  - slot_was_set:
+    - confirm_words_response: true
+  - active_loop: null
+  - action: action_reset_picked_words_slot
+  - action: why_picked_mover_words_form
+  - user: |
+      Ik heb gezoken deze woorden omdat ze zijn wat ik denk!
+  - active_loop: why_picked_mover_words_form
+  - slot_was_set:
+    - has_enough_words: true
+  - active_loop: null
+  - action: utter_why_picked_words_response
+  - user: |
+      AUB!
+  - action: action_reset_has_enough_words_slot
+  - action: action_reset_confirm_words_response_slot

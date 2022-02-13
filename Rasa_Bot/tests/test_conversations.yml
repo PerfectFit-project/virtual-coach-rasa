@@ -28,8 +28,8 @@ stories:
   steps:
   - checkpoint: check_picked_smoker_words
   - action: confirm_words_form
-   - user: |
-       ja
+  - user: |
+      ja
     intent: confirm
   - active_loop: confirm_words_form
   - slot_was_set:

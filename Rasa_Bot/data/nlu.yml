@@ -1,5 +1,4 @@
 version: "3.0"
-
 nlu:
 - intent: request_plan_week
   examples: |
@@ -13,7 +12,6 @@ nlu:
     - "Mag ik de planning voor de week?"
     - "Mag ik de agenda?"
     - "Heb je de planning voor mij?"
-
 - intent: confirm
   examples: |
     - Ja graag
@@ -26,7 +24,6 @@ nlu:
     - Ah ja
     - "Graag"
     - Ja, klopt
-    
 - intent: deny
   examples: |
     - "Nee, dank je wel."
@@ -37,7 +34,6 @@ nlu:
     - "Nee, bedankt."
     - "Nee"
     - Nee, klopt niet
-
 - intent: greeting
   examples: |
     - Hi
@@ -50,7 +46,7 @@ nlu:
     - Goedenavond
     - "Hallo coach"
     - "Hi Kris"
-
+    - hoi
 - intent: goodbye
   examples: |
     - Doei
@@ -58,13 +54,11 @@ nlu:
     - Tot straks
     - "Fijne dag"
     - "Fijne dag verder!"
-
 - intent: how_are_you
   examples: |
     - "Hoe gaat het met je?"
     - "Hoe gaat het met jou?"
     - "Hoe gaat het?"
-
 - intent: who_are_you
   examples: |
     - "Wie ben je?"
@@ -73,28 +67,31 @@ nlu:
     - "Wat kan je doen?"
     - "Jij bent?"
     - "Met wie praat ik?"
-
 - intent: positive_mood
   examples: |
     - "Ik voel me ook goed."
     - "Ik ben in orde."
     - "Super goed!"
     - "Heel goed!"
-
 - intent: negative_mood
   examples: |
     - "Ik voel me niet zo goed."
     - "Ik voel me niet lekker."
     - "Niet goed."
     - "Slecht."
-  
+    - slecht
 - intent: completed_pa
   examples: |
     - "Ik heb net gesport."
     - "Ik heb net gelopen."
     - "Ik heb net gewandeld."
-
 - intent: request_future_self_dialog
   examples: |
     - "Start future self dialog."
     - "Ik wil future self dialog."
+    - ik wil future self dialog
+- intent: future_self_dialog_three_picked_words
+  examples: |
+    - "duur, stom, cool"
+    - "duur, cool, stom"
+    - stom, stoer, duur

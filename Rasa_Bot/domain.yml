@@ -284,9 +284,9 @@ responses:
   utter_fijn:
     - text: "Fijn!"
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
-    - text: "Leg uit, waarom zie jij jezelf als {see_myself_as_picked_words_smoker_text}?" # TODO: use generic slot?
+    - text: "Leg uit, waarom zie jij jezelf als {see_myself_as_picked_words_smoker_text}?"
   utter_ask_why_see_myself_as_mover_form_why_picked_words:
-    - text: "En waarom zie jij jezelf als {see_myself_as_picked_words_mover_text}?" # TODO: which slot to use here?
+    - text: "En waarom zie jij jezelf als {see_myself_as_picked_words_mover_text}?"
   utter_close_future_self_step_1:
     - text: "Heldere antwoorden. Dankje voor het delen.
              We gaan door met nieuwe oefeningen."

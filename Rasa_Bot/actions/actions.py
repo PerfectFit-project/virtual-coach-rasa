@@ -416,7 +416,7 @@ class ValidateWhyPickedMoverWordsForm(FormValidationAction):
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
             dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
-            return{"why_picked_words": None}
+            return {"why_picked_words": None}
 
         logging.info(
             "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)

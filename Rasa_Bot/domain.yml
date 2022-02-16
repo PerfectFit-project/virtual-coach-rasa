@@ -256,9 +256,12 @@ responses:
   utter_picked_mover_words:
     - text: "{picked_words} heb jij gekozen, klopt dat?"
   utter_ask_why_picked_smoker_words_form_why_picked_words:
-    - text: "Mooi. Waarom heb je deze woorden gekozen voor roken?"
+    - text: "Waarom heb je deze woorden gekozen voor roken?"
+  utter_back_channel_good:
+    - text: "Mooi."
+    - text: "Duidelijk."
   utter_ask_why_picked_mover_words_form_why_picked_words:
-    - text: "Duidelijk. Waarom heb je deze woorden gekozen voor bewegen?"
+    - text: "Waarom heb je deze woorden gekozen voor bewegen?"
   utter_why_picked_words_response:
     - text: "Goed dat je hier zo over na kunt denken."
 
@@ -317,6 +320,8 @@ actions:
 - action_reset_see_myself_as_picked_words_smoker
 - action_map_see_myself_as_picked_words_mover
 - action_map_see_myself_as_picked_words_smoker
+- validate_why_picked_mover_words_form
+- validate_why_picked_smoker_words_form
 
 forms:
   pa_evaluation_form:

@@ -6,6 +6,7 @@
 import datetime
 import logging
 import os
+import string
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
@@ -385,3 +386,65 @@ class ActionResetSeeMyselfAsPickedWordsMover(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("see_myself_as_picked_words_mover", None)]
+
+
+def validate_long_enough_response(response):
+    if response in (True, False):
+        return response
+    return len(simple_sanitize_input(response).split()) > 5
+
+
+def simple_sanitize_input(value):
+    return value.translate({c: "" for c in string.punctuation})
+
+
+class ValidateWhyPickedMoverWordsForm(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_why_picked_mover_words_form"
+
+    def validate_why_picked_words(
+            self,
+            value: Text,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate validate_why_picked_words input."""
+
+        long_enough_response = validate_long_enough_response(value)
+        if not long_enough_response:
+            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
+            return{"why_picked_words": None}
+
+        logging.info(
+            "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)
+        )
+        return {"why_picked_words": value}
+
+
+class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_why_picked_smoker_words_form"
+
+    def validate_why_picked_words(
+            self,
+            value: Text,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate validate_why_picked_words input."""
+
+        long_enough_response = validate_long_enough_response(value)
+        if not long_enough_response:
+            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
+            return{"why_picked_words": None}
+
+        logging.info(
+            "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)
+        )
+        return {"why_picked_words": value}

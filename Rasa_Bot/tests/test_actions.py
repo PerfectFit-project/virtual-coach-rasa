@@ -68,7 +68,7 @@ has_enough_words_examples = (
     has_enough_words_examples,
     ids=("negative", "positive"),
 )
-async def test_run_action_validate_has_enough_words_form(
+async def test_run_action_validate_why_picked_mover_words_form(
         dispatcher: CollectingDispatcher,
         domain: DomainDict,
         response: Text,

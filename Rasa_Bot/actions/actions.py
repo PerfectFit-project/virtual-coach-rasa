@@ -389,8 +389,8 @@ class ActionResetSeeMyselfAsPickedWordsMover(Action):
 
 
 def validate_long_enough_response(response):
-    if response in (True, False):
-        return response
+    if response is None:
+        return False
     return len(simple_sanitize_input(response).split()) > 5
 
 
@@ -419,7 +419,7 @@ class ValidateWhyPickedMoverWordsForm(FormValidationAction):
             return {"why_picked_words": None}
 
         logging.info(
-            "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)
+            "%s why_picked_words: %s", type(self).__name__, long_enough_response
         )
         return {"why_picked_words": value}
 
@@ -445,6 +445,6 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
             return{"why_picked_words": None}
 
         logging.info(
-            "{} why_picked_words: {}".format(type(self).__name__, long_enough_response)
+            "%s why_picked_words: %s ", type(self).__name__, long_enough_response
         )
         return {"why_picked_words": value}

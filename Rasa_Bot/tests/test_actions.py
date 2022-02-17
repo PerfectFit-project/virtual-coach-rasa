@@ -62,6 +62,7 @@ has_enough_words_examples = (
     ),
 )
 
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "response,expected",

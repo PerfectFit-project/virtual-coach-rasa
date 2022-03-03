@@ -14,12 +14,10 @@ ignore-paths:
 pyroma:
     run: true
 
-pep8:
+pydocstyle:
     full: true
     options:
       max-line-length: 100
-
-pep257:
     disable: [
         # Disable because not part of PEP257 official convention:
         # see http://pep257.readthedocs.io/en/latest/error_codes.html

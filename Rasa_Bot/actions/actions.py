@@ -298,7 +298,7 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
             dispatcher.utter_message(template="utter_please_answer_now_or_later")
 
         return {"rescheduling_now": now_or_later}
-    
+
     @staticmethod
     def _validate_now_or_later_response(value):
         if value in ['nu', 'nou', 'nu is goed']:
@@ -306,8 +306,8 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         if value in ['later', 'later.', 'niet nu']:
             return False
         return None
-    
-    
+
+
 class ActionResetReschedulingOptionSlot(Action):
     """Reset rescheduling_option slot"""
 
@@ -333,7 +333,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
             return {"rescheduling_option": None}
 
         return {"rescheduling_option": int(value)}
-    
+
     @staticmethod
     def _is_valid_input(value):
         try:

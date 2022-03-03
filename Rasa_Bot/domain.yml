@@ -75,6 +75,25 @@ slots:
       - type: from_text
         conditions:
           - active_loop: pa_evaluation_form
+          
+
+  ### Rescheduling query dialog
+  # Whether the user wants to continue the dialog now
+  rescheduling_now:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: rescheduling_now_or_later_form
+  # Chosen rescheduling option in case user does not want to continue dialog now
+  rescheduling_option:
+    type: float
+    influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: rescheduling_options_form
 
   ### Future-self dialog
   picked_words:
@@ -181,7 +200,7 @@ responses:
   - text: "Sorry, ik kan de planning nu niet invoeren."
 
   
-  # Activity evaluation
+  ### Activity evaluation
   utter_pa_completed:
   - text: "Goed bezig!"
   utter_ask_pa_evaluation_form_pa_evaluation_response:
@@ -189,7 +208,7 @@ responses:
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
 
-  # Foreseen HRSs smoking
+  ### Foreseen HRSs smoking
   utter_ask_foreseen_hrs:
     - text: "Denk je dat je vandaag in een situatie komt waarin je trek krijgt in een sigaret?"
   utter_watering_plants:
@@ -197,7 +216,37 @@ responses:
   utter_be_careful_for_hrs:
     - text: "Wees voorzichtig, het kan zijn dat je onvoorzien alsnog in zo'n situatie komt. Ik ben hier om je te helpen"
 
-  # Future-self dialog
+
+  ### Re-prompts in forms
+  utter_please_answer_1_2_3:
+     - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
+  utter_please_answer_1_to_5:
+     - text: "Kun je een geheel getal tussen 1 en 5 opgeven?"
+  utter_please_answer_yes_no:
+     - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
+  utter_did_not_understand:
+     - text: "Hmm ik heb dat niet begrepen."
+
+
+  ### General rescheduling query dialog
+  utter_ask_rescheduling_now_or_later_form_rescheduling_now:
+     - text: "Wil jij deze oefening nu doen of later?"
+  utter_user_chose_later:
+     - text: "OK, het is wel goed als je deze oefening snel doet. Dit gaat je helpen je doelen te behalen."
+     - text: "Prima, dit is wel een belangrijke oefening die je snel moet doen."
+     - text: "Goed, laten we deze oefening later doen."
+  utter_ask_rescheduling_options_form_rescheduling_option:
+     - text: "Wanneer komt het beter uit? (1) Vanmiddag, om 17:00. (2) Vanavond, om 20:00. (3) Morgenochtend, om 8:00. Geef antwoord met 1, 2, of 3."
+  utter_rescheduling_option_chosen:
+     - text: "Prima, ik kom dan bij je terug."
+  utter_user_chose_now:
+     - text: "Super dat je er gelijk mee aan de slag gaat!"
+     - text: "Leuk, laten we beginnen."
+     - text: "Mooi, we gaan aan de slag!"
+     - text: "Goed bezig, deze activiteit gaat je helpen met je doelen."
+
+
+  ### Future-self dialog
   # Purpose: Define current self
   # Context: Preparation phase, one or two days (to be decided)
   # after deciding whether or not to use medication.
@@ -207,15 +256,15 @@ responses:
     - text: "We gaan nu aan de slag met een oefening om jou te helpen met stoppen met roken en genoeg laten bewegen."
     - text: "Om jou te helpen om genoeg te bewegen en te laten stoppen met roken, gaan we nu een oefening doen."
   utter_future_self_intro_exercise_name:
-    - text: "De oefening heet 'wie wil ik straks zijn."
-    - text: "Deze oefening noemen we 'wie wil ik straks zijn'."
-    - text: "De naam van de oefening is 'wie wil ik straks zijn'."
+    - text: "De oefening heet 'wie wil ik straks zijn.'"
+    - text: "Deze oefening noemen we 'wie wil ik straks zijn.'"
+    - text: "De naam van de oefening is 'wie wil ik straks zijn.'"
   utter_future_self_duration:
     - text: "Het duurt ongeveer 15 minuten."
     - text: "Het zal ongeveer 15 minuten duren."
     - text: "Je gaat ongeveer 15 minuten bezig zijn."
   utter_future_self_duration_do_at_once:
-    - text: "Het is belangrijk dat je de oefening in één keer afmaakt."
+    - text: "Het is belangrijk dat je de oefening in een keer afmaakt."
     - text: "Het is belangrijk om de oefening in één keer af te maken."
   utter_future_self_explanation:
     - text: "Deze oefening gaat je op weg helpen om te stoppen met roken en genoeg te bewegen.
@@ -329,6 +378,12 @@ actions:
 - action_map_see_myself_as_picked_words_smoker
 - validate_why_picked_mover_words_form
 - validate_why_picked_smoker_words_form
+### Rescheduling query dialog
+- validate_rescheduling_now_or_later_form
+- action_reset_rescheduling_now_slot
+- validate_rescheduling_options_form
+- action_reset_rescheduling_option_slot
+
 
 forms:
   pa_evaluation_form:
@@ -361,3 +416,11 @@ forms:
   why_see_myself_as_mover_form:
     required_slots:
       - why_picked_words
+  ### Rescheduling query dialog
+  rescheduling_now_or_later_form:
+    required_slots:
+      - rescheduling_now
+  rescheduling_options_form:
+    required_slots:
+      - rescheduling_option
+  

@@ -142,7 +142,7 @@ class ValidatePaEvaluationForm(FormValidationAction):
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message("Kun je een geheel getal tussen 1 en 5 opgeven?")
+            dispatcher.utter_message(template="utter_please_answer_1_to_5")
             return {"pa_evaluation_response": None}
         pa_evaluation_response = int(value)
         return {"pa_evaluation_response": pa_evaluation_response}
@@ -268,9 +268,81 @@ class ValidateConfirmWordsForm(FormValidationAction):
 
         yes_or_no_response = validate_yes_no_response(value)
         if yes_or_no_response is None:
-            dispatcher.utter_message("Geef alsjeblieft antwoord met 'ja' of 'nee'?")
+            dispatcher.utter_message(template="utter_please_answer_yes_no")
 
         return {"confirm_words_response": yes_or_no_response}
+
+
+class ActionResetReschedulingNowSlot(Action):
+    """Reset rescheduling_now slot"""
+
+    def name(self):
+        return "action_reset_rescheduling_now_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("rescheduling_now", None)]
+    
+
+def validate_now_or_later_response(value):
+    if value in ['nu', 'nou', 'nu is goed']:
+        return True
+    if value in ['later', 'later.', 'niet nu']:
+        return False
+    return None
+
+
+class ValidateReschedulingNowOrLaterForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_rescheduling_now_or_later_form'
+
+    def validate_rescheduling_now(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate rescheduling_now input."""
+
+        now_or_later = validate_now_or_later_response(value)
+        if now_or_later is None:
+            dispatcher.utter_message("Geef alsjeblieft antwoord met 'nu' of 'later.'")
+
+        return {"rescheduling_now": now_or_later}
+    
+    
+class ActionResetReschedulingOptionSlot(Action):
+    """Reset rescheduling_option slot"""
+
+    def name(self):
+        return "action_reset_rescheduling_option_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("rescheduling_option", None)]
+
+
+class ValidateReschedulingOptionsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_rescheduling_options_form'
+
+    def validate_rescheduling_option(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate rescheduling_option input."""
+
+        if not self._is_valid_input(value):
+            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            return {"rescheduling_option": None}
+
+        return {"rescheduling_option": int(value)}
+    
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 3):
+            return False
+        return True
 
 
 class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
@@ -284,7 +356,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
         """Validate see_myself_as_picked_words_smoker input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
+            dispatcher.utter_message(template="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_smoker": None}
 
         return {"see_myself_as_picked_words_smoker": int(value)}
@@ -341,8 +413,8 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message("Hmm ik heb dat niet begrepen.")
-            dispatcher.utter_message("Antwoord alsjeblieft met 1, 2, of 3.")
+            dispatcher.utter_message(template="utter_did_not_understand")
+            dispatcher.utter_message(template="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_mover": None}
 
         return {"see_myself_as_picked_words_mover": int(value)}

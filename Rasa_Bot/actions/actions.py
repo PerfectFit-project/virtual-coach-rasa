@@ -272,7 +272,7 @@ class ValidateConfirmWordsForm(FormValidationAction):
 
         return {"confirm_words_response": yes_or_no_response}
 
-
+    
 class ActionResetReschedulingNowSlot(Action):
     """Reset rescheduling_now slot"""
 

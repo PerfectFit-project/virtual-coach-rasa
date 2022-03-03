@@ -104,7 +104,9 @@ stories:
     - intent: request_future_self_dialog # TODO: Replace with external trigger
     - action: utter_greet
     - action: utter_future_self_intro # TODO: Add repetition of activity yes/no
-    - action: utter_future_self_duration # TODO: Add rescheduling query
+    - action: utter_future_self_intro_exercise_name
+    - action: utter_future_self_duration 
+    - action: utter_future_self_duration_do_at_once # TODO: Add rescheduling query
     - action: utter_future_self_explanation
     - checkpoint: ask_smoking_words_list
 

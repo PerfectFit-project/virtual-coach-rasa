@@ -203,13 +203,20 @@ responses:
   # after deciding whether or not to use medication.
   # This activity is being repeated several times throughout the intervention.
   utter_future_self_intro:
-    - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken
-             en genoeg te bewegen.
-
-             De oefening heet 'wie wil ik straks zijn"
+    - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken en genoeg te bewegen."
+    - text: "We gaan nu aan de slag met een oefening om jou te helpen met stoppen met roken en genoeg laten bewegen."
+    - text: "Om jou te helpen om genoeg te bewegen en te laten stoppen met roken, gaan we nu een oefening doen."
+  utter_future_self_intro_exercise_name:
+    - text: "De oefening heet 'wie wil ik straks zijn."
+    - text: "Deze oefening noemen we 'wie wil ik straks zijn'."
+    - text: "De naam van de oefening is 'wie wil ik straks zijn'."
   utter_future_self_duration:
-    - text: "Het duurt ongeveer 15 minuten.
-             Het is belangrijk dat je de oefening in één keer afmaakt"
+    - text: "Het duurt ongeveer 15 minuten."
+    - text: "Het zal ongeveer 15 minuten duren."
+    - text: "Je gaat ongeveer 15 minuten bezig zijn."
+  utter_future_self_duration_do_at_once:
+    - text: "Het is belangrijk dat je de oefening in één keer afmaakt."
+    - text: "Het is belangrijk om de oefening in één keer af te maken."
   utter_future_self_explanation:
     - text: "Deze oefening gaat je op weg helpen om te stoppen met roken en genoeg te bewegen.
              We lopen samen door de volgende stappen:\n

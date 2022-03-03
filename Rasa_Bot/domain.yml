@@ -224,6 +224,10 @@ responses:
      - text: "Kun je een geheel getal tussen 1 en 5 opgeven?"
   utter_please_answer_yes_no:
      - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
+  utter_please_answer_now_or_later:
+     - text: "Geef alsjeblieft antwoord met 'nu' of 'later.'"
+  utter_please_answer_more_words:
+     - text: "Zou je dat in meer woorden kunnen omschrijven?"
   utter_did_not_understand:
      - text: "Hmm ik heb dat niet begrepen."
 

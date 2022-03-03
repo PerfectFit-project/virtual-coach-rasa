@@ -281,14 +281,6 @@ class ActionResetReschedulingNowSlot(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("rescheduling_now", None)]
-    
-
-def validate_now_or_later_response(value):
-    if value in ['nu', 'nou', 'nu is goed']:
-        return True
-    if value in ['later', 'later.', 'niet nu']:
-        return False
-    return None
 
 
 class ValidateReschedulingNowOrLaterForm(FormValidationAction):
@@ -301,11 +293,19 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate rescheduling_now input."""
 
-        now_or_later = validate_now_or_later_response(value)
+        now_or_later = self._validate_now_or_later_response(value)
         if now_or_later is None:
-            dispatcher.utter_message("Geef alsjeblieft antwoord met 'nu' of 'later.'")
+            dispatcher.utter_message(template="utter_please_answer_now_or_later")
 
         return {"rescheduling_now": now_or_later}
+    
+    @staticmethod
+    def _validate_now_or_later_response(value):
+        if value in ['nu', 'nou', 'nu is goed']:
+            return True
+        if value in ['later', 'later.', 'niet nu']:
+            return False
+        return None
     
     
 class ActionResetReschedulingOptionSlot(Action):
@@ -487,7 +487,7 @@ class ValidateWhyPickedMoverWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
+            dispatcher.utter_message(template="utter_please_answer_more_words")
             return {"why_picked_words": None}
 
         logging.info(
@@ -513,7 +513,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message("Zou je dat in meer woorden kunnen omschrijven?")
+            dispatcher.utter_message(template="utter_please_answer_more_words")
             return{"why_picked_words": None}
 
         logging.info(

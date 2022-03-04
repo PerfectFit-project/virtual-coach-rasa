@@ -198,6 +198,25 @@ class ActionStorePaEvaluation(Action):
         return [SlotSet("pa_evaluation_response", None)]
 
 
+class ActionStoreSmokerWords(Action):
+    """"To save user input on smoker words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_smoker_words"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        smoker_words = tracker.get_slot("picked_words")
+        session = get_db_session()  # Creat session object to connect db
+
+        user_id = tracker.current_state()['sender_id']
+        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+        selected.FutureSelfDialogAnswers.smoker_words = smoker_words
+        session.commit()  # Update database
+        return
+
+
 class ActionResetPickedWordsSlot(Action):
     """Reset picked_words slot"""
 

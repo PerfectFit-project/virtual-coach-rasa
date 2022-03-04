@@ -163,7 +163,7 @@ stories:
     - action: utter_smoking_word_list # TODO: In case of repetition retrieve last chosen words
     - action: pick_smoker_words_form
     - active_loop: pick_smoker_words_form
-    - active_loop: null # TODO: store slot in database
+    - action: action_store_smoker_words  # TODO: store slot in database
     - action: utter_picked_smoker_words
     - checkpoint: check_picked_smoker_words
 

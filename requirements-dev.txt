@@ -4,3 +4,4 @@ pytest-cov
 pytest-asyncio
 pytype
 rasa==3.0.5
+spacy

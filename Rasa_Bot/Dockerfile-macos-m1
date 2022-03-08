@@ -6,12 +6,10 @@ FROM svenvanderburg/rasa-apple-silicon:3.0.5
 # Change to root user to install dependencies
 USER root
 
-RUN python -m pip install --upgrade pip==20.2
-
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git gcc python3-dev python3-pip libxml2-dev libxslt1-dev zlib1g-dev g++
+    apt-get install -y git gcc python3-dev libxml2-dev libxslt1-dev zlib1g-dev g++
 
 # Install requirements, do not install rasa
 COPY requirements.txt .
@@ -20,6 +18,11 @@ RUN pip install $(grep -ivE "^rasa|^#|^\s*$" requirements.txt | sed s/#.*//g)
 # Necessary because of
 # https://stackoverflow.com/questions/66060487/valueerror-numpy-ndarray-size-changed-may-indicate-binary-incompatibility-exp
 RUN python -m pip install --upgrade numpy
+
+# Necessary because of error on sanic
+# self.error_handler.add(exception, handler.handler, route_names)
+# TypeError: add() takes 3 positional arguments but 4 were given
+RUN pip install sanic==21.6.2
 
 # Spacy language model
 RUN python -m spacy download nl_core_news_sm

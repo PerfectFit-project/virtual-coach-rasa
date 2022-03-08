@@ -1,25 +1,15 @@
 # Dockerfile for rasa server
 
-# Apple M1 chip compatible Dockerfile with rasa 3.0.5 based on https://github.com/khalo-sa/rasa-apple-silicon
-FROM svenvanderburg/rasa-apple-silicon:3.0.5
+FROM python:3.8
 
 # Change to root user to install dependencies
 USER root
 
 RUN python -m pip install --upgrade pip==20.2
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y git gcc python3-dev python3-pip libxml2-dev libxslt1-dev zlib1g-dev g++
-
 # Install requirements
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-# Necessary because of
-# https://stackoverflow.com/questions/66060487/valueerror-numpy-ndarray-size-changed-may-indicate-binary-incompatibility-exp
-RUN python -m pip install --upgrade numpy
 
 # Spacy language model
 RUN python -m spacy download nl_core_news_sm

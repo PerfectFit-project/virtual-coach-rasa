@@ -27,7 +27,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip==20.2
         pip install -r Rasa_Bot/requirements.txt
-        pip install -r requirements-dev.txt
         python -m spacy download nl_core_news_sm
         python -m spacy link nl_core_news_sm nl
     # The number for max-history needs to be adapted based on config.yml
@@ -51,7 +50,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip==20.2
         pip install -r Rasa_Bot/requirements.txt
-        pip install -r requirements-dev.txt
         python -m spacy download nl_core_news_sm
         python -m spacy link nl_core_news_sm nl
         rasa --version

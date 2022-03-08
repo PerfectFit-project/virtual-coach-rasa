@@ -14,7 +14,7 @@ app = Celery('celery_tasks', broker='redis://redis:6379')
 app.conf.beat_schedule = {
     'trigger_ask_foreseen_hrs': {
         'task': 'celery_tasks.trigger_ask_foreseen_hrs',
-        'schedule': 120.0,
+        'schedule': 3600.0, # every hour
         'args': (),
     },
 }

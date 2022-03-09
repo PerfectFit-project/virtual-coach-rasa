@@ -6,7 +6,6 @@ FROM python:3.8
 USER root
 
 RUN python -m pip install --upgrade pip==20.2
-RUN python -m pip install --upgrade sanic==21.9.3
 
 # Install requirements
 COPY requirements.txt .

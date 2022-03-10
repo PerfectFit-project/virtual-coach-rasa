@@ -567,6 +567,7 @@ class ActionStoreFutureSelfDialogState(Action):
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
         
-        dispatcher.utter_message(str(selected))
+        dispatcher.utter_message(str(selected.user_intervention_state.futureselfdialogdatetime))
+        dispatcher.utter_message(str(selected.user_intervention_state.futureselfdialogstep))
         
         return []

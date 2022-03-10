@@ -30,3 +30,9 @@ rules:
   steps:
   - intent: EXTERNAL_trigger_ask_foreseen_hrs
   - action: utter_ask_foreseen_hrs
+
+- rule:  Return the number of smoked cigarettes when the user asks for it
+  steps:
+  - intent: request_tracked_cigarettes
+  - action: action_save_number_cigarettes
+  - action: action_get_number_cigarettes

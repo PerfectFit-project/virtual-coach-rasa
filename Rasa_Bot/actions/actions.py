@@ -4,6 +4,7 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
+import json
 import logging
 import os
 import string
@@ -11,6 +12,7 @@ from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
 from dotenv import load_dotenv
+from niceday_client import NicedayClient
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
@@ -20,9 +22,10 @@ from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.dbschema.models import ClosedUserAnswers
 from virtual_coach_db.helper.helper import get_db_session
 
-# load .env-file and get db_host variable
+# load .env-file and get db_host and niceday_api_endopint variables
 load_dotenv()
 DB_HOST = os.getenv('DB_HOST')
+NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
 
 # Get the user's age from the database.
@@ -116,6 +119,53 @@ class GetPlanWeek(Action):
                "And please read through this " \
                "psycho-education: www.link-to-psycho-education.nl."
         return [SlotSet("plan_week", plan)]
+
+
+# Get number of cigarettes from custom tracker and save in slot
+class SaveNumberCigarettes(Action):
+    def name(self):
+        return "action_save_number_cigarettes"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        client = NicedayClient()
+        client.__init__(NICEDAY_API_ENDPOINT)
+
+        # get the user_id
+        user_id = int(tracker.current_state()['sender_id'])
+
+        # get the time of the request (final time point)
+        current_time = datetime.datetime.now()
+
+        # set the initial time point as the beginning of current day
+        today = datetime.date.today()
+        start_time = datetime.datetime(today.year, today.month, today.day, 0, 0, 0)
+
+        # query the niceday_client api to get the number of tracked cigarettes
+        number_of_cigarettes_response = client.get_smoking_tracker(user_id, start_time, current_time)
+
+        # parse the json response
+        response_json = json.loads(number_of_cigarettes_response.content)
+
+        # iterate through the response to get the total number of tracked cigarettes
+        number_of_cigarettes = 0
+        for item in response_json:
+            number_of_cigarettes += item['value']['quantity']
+
+        return [SlotSet("number_of_cigarettes", number_of_cigarettes)]
+
+
+# Get number of cigarettes from slot
+class GetNumberCigarettes(Action):
+    def name(self):
+        return "action_get_number_cigarettes"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        number_of_cigarettes = tracker.get_slot("number_of_cigarettes")
+        dispatcher.utter_message(template="utter_tracked_cigarettes",
+                                 number_of_cigarettes=number_of_cigarettes)
+        return
 
 
 # Save weekly plan in calendar

@@ -7,6 +7,7 @@ import datetime
 import logging
 import os
 import string
+from enum import Enum
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
@@ -23,6 +24,25 @@ from virtual_coach_db.helper.helper import get_db_session
 # load .env-file and get db_host variable
 load_dotenv()
 DB_HOST = os.getenv('DB_HOST')
+
+
+class DialogQuestions(Enum):
+    FUTURE_SELF_SMOKER_WORDS = 1
+    FUTURE_SELF_SMOKER_WHY = 2
+    FUTURE_SELF_MOVER_WORDS = 3
+    FUTURE_SELF_MOVER_WHY = 4
+
+
+def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
+    session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    entry = DialogAnswers(answer=answer,
+                          question_id=question.value,
+                          datetime=datetime.datetime.now())
+
+    selected.DialogAnswers.append(entry)
+    session.commit()  # Update database
 
 
 # Get the user's age from the database.
@@ -185,7 +205,7 @@ class ActionStorePaEvaluation(Action):
     async def run(self, dispatcher, tracker, domain):
 
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        session = get_db_session()  # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
 
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -205,15 +225,9 @@ class ActionStoreSmokerWords(Action):
         return "action_store_smoker_words"
 
     async def run(self, dispatcher, tracker, domain):
-
-        smoker_words = tracker.get_slot("picked_words")
-        session = get_db_session()  # Creat session object to connect db
-
+        answer = tracker.get_slot("picked_words")
         user_id = tracker.current_state()['sender_id']
-        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-        selected.FutureSelfDialogAnswers.smoker_words = smoker_words
-        session.commit()  # Update database
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WORDS)
         return
 
 

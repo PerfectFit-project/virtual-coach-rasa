@@ -128,8 +128,7 @@ class SaveNumberCigarettes(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        client = NicedayClient()
-        client.__init__(NICEDAY_API_ENDPOINT)
+        client = NicedayClient(NICEDAY_API_ENDPOINT)
 
         # get the user_id
         user_id = int(tracker.current_state()['sender_id'])

@@ -79,6 +79,8 @@ stories:
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
   - action: action_store_pa_evaluation
+  - slot_was_set: 
+    - pa_evaluation_response: null
   - action: action_utter_pa_evaluation_form_filled
 
 
@@ -366,4 +368,6 @@ stories:
     - action: action_reset_why_picked_words_slot_pa
     - slot_was_set:
       - why_picked_words: null
+    - action: action_set_future_self_dialog_state_step_1
+    - action: action_store_future_self_dialog_state
     - action: utter_close_future_self_step_1

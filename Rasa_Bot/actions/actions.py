@@ -16,8 +16,9 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.dbschema.models import ClosedUserAnswers
+from virtual_coach_db.dbschema.models import UserInterventionState
+from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
 
 # load .env-file and get db_host variable
@@ -520,3 +521,46 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
             "%s why_picked_words: %s ", type(self).__name__, long_enough_response
         )
         return {"why_picked_words": value}
+    
+
+class ActionSetFutureSelfDialogStateStep1(Action):
+    """"To set state from future self dialog to step 1"""
+
+    def name(self):
+        return "action_set_future_self_dialog_state_step_1"
+
+    async def run(self, dispatcher, tracker, domain, step):
+        
+        return [SlotSet("future_self_dialog_state", "step_1")]
+
+
+
+class ActionStoreFutureSelfDialogState(Action):
+    """"To save state from future self dialog"""
+
+    def name(self):
+        return "action_store_future_self_dialog_state"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        # Get current state of future self dialog
+        step = tracker.get_slot("future_self_dialog_state")
+
+        session = get_db_session()  # Creat session object to connect db
+
+        user_id = tracker.current_state()['sender_id']
+        selected = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
+        
+        if selected is not None:
+            selected.user_intervention_state.futureselfdialogdatetime = datetime.datetime.now()
+            selected.user_intervention_state.futureselfdialogstep = step
+         
+        # No entry exists yet for the user
+        else:
+            entry = UserInterventionState(futureselfdialogdatetime=datetime.datetime.now(),
+                                          futureselfdialogstep = step)
+            selected.user_intervention_state.append(entry)
+            
+        session.commit()  # Update database
+        
+        return []

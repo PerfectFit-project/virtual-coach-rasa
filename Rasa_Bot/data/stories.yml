@@ -145,6 +145,7 @@ stories:
 - story: future-self dialog introduction
   steps:
     - intent: request_future_self_dialog # TODO: Replace with external trigger
+    - action: action_get_name_from_database
     - action: utter_greet
     - action: utter_future_self_intro # TODO: Add repetition of activity yes/no
     - action: utter_future_self_intro_exercise_name

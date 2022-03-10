@@ -143,7 +143,7 @@ class ValidatePaEvaluationForm(FormValidationAction):
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_to_5")
+            dispatcher.utter_message(response="utter_please_answer_1_to_5")
             return {"pa_evaluation_response": None}
         pa_evaluation_response = int(value)
         return {"pa_evaluation_response": pa_evaluation_response}
@@ -269,7 +269,7 @@ class ValidateConfirmWordsForm(FormValidationAction):
 
         yes_or_no_response = validate_yes_no_response(value)
         if yes_or_no_response is None:
-            dispatcher.utter_message(template="utter_please_answer_yes_no")
+            dispatcher.utter_message(response="utter_please_answer_yes_no")
 
         return {"confirm_words_response": yes_or_no_response}
 
@@ -296,15 +296,15 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
 
         now_or_later = self._validate_now_or_later_response(value)
         if now_or_later is None:
-            dispatcher.utter_message(template="utter_please_answer_now_or_later")
+            dispatcher.utter_message(response="utter_please_answer_now_or_later")
 
         return {"rescheduling_now": now_or_later}
 
     @staticmethod
     def _validate_now_or_later_response(value):
-        if value in ['nu', 'nou', 'nu is goed']:
+        if value.lower() in ['nu', 'nou', 'nu is goed']:
             return True
-        if value in ['later', 'later.', 'niet nu']:
+        if value.lower() in ['later', 'later.', 'niet nu']:
             return False
         return None
 
@@ -330,7 +330,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
         """Validate rescheduling_option input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"rescheduling_option": None}
 
         return {"rescheduling_option": int(value)}
@@ -357,7 +357,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
         """Validate see_myself_as_picked_words_smoker input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_smoker": None}
 
         return {"see_myself_as_picked_words_smoker": int(value)}
@@ -414,8 +414,8 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_did_not_understand")
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_mover": None}
 
         return {"see_myself_as_picked_words_mover": int(value)}
@@ -488,7 +488,7 @@ class ValidateWhyPickedMoverWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(template="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_please_answer_more_words")
             return {"why_picked_words": None}
 
         logging.info(
@@ -514,7 +514,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(template="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_please_answer_more_words")
             return{"why_picked_words": None}
 
         logging.info(
@@ -532,7 +532,6 @@ class ActionSetFutureSelfDialogStateStep1(Action):
     async def run(self, dispatcher, tracker, domain):
         
         return [SlotSet("future_self_dialog_state", "step_1")]
-
 
 
 class ActionStoreFutureSelfDialogState(Action):

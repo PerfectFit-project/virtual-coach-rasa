@@ -250,9 +250,9 @@ class ActionResetConfirmWordsResponseSlotPA(Action):
 
 
 def validate_yes_no_response(value):
-    if value == 'ja':
+    if value.lower() == 'ja':
         return True
-    if value in ['nee', "nee."]:
+    if value.lower() in ['nee', "nee."]:
         return False
     return None
 

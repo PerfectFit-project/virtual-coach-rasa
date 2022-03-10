@@ -529,7 +529,7 @@ class ActionSetFutureSelfDialogStateStep1(Action):
     def name(self):
         return "action_set_future_self_dialog_state_step_1"
 
-    async def run(self, dispatcher, tracker, domain, step):
+    async def run(self, dispatcher, tracker, domain):
         
         return [SlotSet("future_self_dialog_state", "step_1")]
 

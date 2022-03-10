@@ -562,4 +562,11 @@ class ActionStoreFutureSelfDialogState(Action):
             
         session.commit()  # Update database
         
+        session = get_db_session()  # Creat session object to connect db
+
+        user_id = tracker.current_state()['sender_id']
+        selected = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
+        
+        dispatcher.utter_message(str(selected))
+        
         return []

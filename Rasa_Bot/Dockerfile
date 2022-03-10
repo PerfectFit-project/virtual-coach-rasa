@@ -18,12 +18,12 @@ RUN python -m spacy link nl_core_news_sm nl
 # Don't use root user to run code
 # USER 1001
 
-RUN chmod -R 777 /app
-
 # Use subdirectory as working directory
 WORKDIR /app
 
 COPY . /app
+
+RUN chmod -R 777 /app
 
 USER 1001
 

@@ -21,6 +21,8 @@ from virtual_coach_db.dbschema.models import UserInterventionState
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
 
+from sqlalchemy import select
+
 # load .env-file and get db_host variable
 load_dotenv()
 DB_HOST = os.getenv('DB_HOST')
@@ -186,7 +188,7 @@ class ActionStorePaEvaluation(Action):
     async def run(self, dispatcher, tracker, domain):
 
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        session = get_db_session()  # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)  # Creat session object to connect db
 
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -545,29 +547,30 @@ class ActionStoreFutureSelfDialogState(Action):
         # Get current state of future self dialog
         step = tracker.get_slot("future_self_dialog_state")
 
-        session = get_db_session()  # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
 
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
         
         if selected is not None:
-            selected.user_intervention_state.futureselfdialogdatetime = datetime.datetime.now()
-            selected.user_intervention_state.futureselfdialogstep = step
-         
-        # No entry exists yet for the user
-        else:
-            entry = UserInterventionState(futureselfdialogdatetime=datetime.datetime.now(),
-                                          futureselfdialogstep = step)
+             
+            entry = UserInterventionState(intervention_component="future_self_dialog",
+                                          last_time=datetime.datetime.now(), 
+                                          last_part=step)
             selected.user_intervention_state.append(entry)
+         
+        # No entry exists yet for the user in the Users table
+        else:
+            
+            logging.error("Error: User not in Users table")
             
         session.commit()  # Update database
-        
-        session = get_db_session()  # Creat session object to connect db
-
-        user_id = tracker.current_state()['sender_id']
-        selected = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
-        
-        dispatcher.utter_message(str(selected.user_intervention_state.futureselfdialogdatetime))
-        dispatcher.utter_message(str(selected.user_intervention_state.futureselfdialogstep))
-        
+       
         return []
+
+def result_dict(r):
+    return dict(zip(r.keys(), r))
+
+def result_dicts(rs): 
+    return list(map(result_dict, rs))
+

@@ -160,7 +160,7 @@ class GetNumberCigarettes(Action):
         number_of_cigarettes = tracker.get_slot("number_of_cigarettes")
         dispatcher.utter_message(template="utter_tracked_cigarettes",
                                  number_of_cigarettes=number_of_cigarettes)
-        return
+        return[]
 
 
 # Save weekly plan in calendar

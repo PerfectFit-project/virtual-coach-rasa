@@ -536,7 +536,7 @@ class ActionSetFutureSelfDialogStateStep1(Action):
 
 
 class ActionStoreFutureSelfDialogState(Action):
-    """"To save state from future self dialog"""
+    """"To save state of future self dialog"""
 
     def name(self):
         return "action_store_future_self_dialog_state"
@@ -566,10 +566,3 @@ class ActionStoreFutureSelfDialogState(Action):
         session.commit()  # Update database
        
         return []
-
-def result_dict(r):
-    return dict(zip(r.keys(), r))
-
-def result_dicts(rs): 
-    return list(map(result_dict, rs))
-

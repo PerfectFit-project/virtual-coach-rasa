@@ -21,7 +21,6 @@ from virtual_coach_db.dbschema.models import UserInterventionState
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
 
-from sqlalchemy import select
 
 # load .env-file and get db_host variable
 load_dotenv()
@@ -526,7 +525,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
     
 
 class ActionSetFutureSelfDialogStateStep1(Action):
-    """"To set state from future self dialog to step 1"""
+    """"To set state of future self dialog to step 1"""
 
     def name(self):
         return "action_set_future_self_dialog_state_step_1"

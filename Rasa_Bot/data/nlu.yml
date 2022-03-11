@@ -98,3 +98,7 @@ nlu:
   examples: |
     - "Start future self dialog."
     - "Ik wil future self dialog."
+
+- intent: request_tracked_cigarettes
+  examples: |
+    - "Hoeveel sigaretten heb ik vandaag gerookt?"

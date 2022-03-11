@@ -15,6 +15,7 @@ intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
 - request_future_self_dialog
+- request_tracked_cigarettes
 
 slots:
   ### General
@@ -152,6 +153,14 @@ slots:
      mappings:
      - type: custom
 
+ ### Data from custom tracker
+  number_of_cigarettes:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+    - type: custom
+
 responses:
   # Fallback
   utter_default:
@@ -207,6 +216,10 @@ responses:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
+
+  ## Ask data from tracker
+  utter_tracked_cigarettes:
+    - text: "Je hebt vandaag {number_of_cigarettes} sigaretten gerookt."
 
   ### Foreseen HRSs smoking
   utter_ask_foreseen_hrs:
@@ -387,6 +400,9 @@ actions:
 - action_reset_rescheduling_now_slot
 - validate_rescheduling_options_form
 - action_reset_rescheduling_option_slot
+### Data from custom tracker
+- action_save_number_cigarettes
+- action_get_number_cigarettes
 
 
 forms:

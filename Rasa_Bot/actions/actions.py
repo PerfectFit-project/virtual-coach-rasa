@@ -4,7 +4,6 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 import datetime
-import json
 import logging
 import os
 import string
@@ -143,12 +142,9 @@ class SaveNumberCigarettes(Action):
         # query the niceday_client api to get the number of tracked cigarettes
         number_of_cigarettes_response = client.get_smoking_tracker(user_id, start_time, current_time)
 
-        # parse the json response
-        response_json = json.loads(number_of_cigarettes_response.content)
-
         # iterate through the response to get the total number of tracked cigarettes
         number_of_cigarettes = 0
-        for item in response_json:
+        for item in number_of_cigarettes_response:
             number_of_cigarettes += item['value']['quantity']
 
         return [SlotSet("number_of_cigarettes", number_of_cigarettes)]

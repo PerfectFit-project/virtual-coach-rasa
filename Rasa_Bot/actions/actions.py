@@ -140,11 +140,11 @@ class SaveNumberCigarettes(Action):
         start_time = datetime.datetime(today.year, today.month, today.day, 0, 0, 0)
 
         # query the niceday_client api to get the number of tracked cigarettes
-        number_of_cigarettes_response = client.get_smoking_tracker(user_id, start_time, current_time)
+        number_cigarettes_response = client.get_smoking_tracker(user_id, start_time, current_time)
 
         # iterate through the response to get the total number of tracked cigarettes
         number_of_cigarettes = 0
-        for item in number_of_cigarettes_response:
+        for item in number_cigarettes_response:
             number_of_cigarettes += item['value']['quantity']
 
         return [SlotSet("number_of_cigarettes", number_of_cigarettes)]

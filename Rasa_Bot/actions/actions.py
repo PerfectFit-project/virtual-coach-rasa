@@ -17,8 +17,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from virtual_coach_db.dbschema.models import Users
-from virtual_coach_db.dbschema.models import ClosedUserAnswers
+from virtual_coach_db.dbschema.models import Users, ClosedUserAnswers, DialogAnswers
 from virtual_coach_db.helper.helper import get_db_session
 
 # load .env-file and get db_host variable

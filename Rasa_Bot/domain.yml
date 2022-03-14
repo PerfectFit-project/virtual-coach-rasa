@@ -257,10 +257,10 @@ responses:
   utter_rescheduling_option_chosen:
      - text: "Prima, ik kom dan bij je terug."
   utter_user_chose_now:
-     - text: "Super dat je er gelijk mee aan de slag gaat!"
-     - text: "Leuk, laten we beginnen."
-     - text: "Mooi, we gaan aan de slag!"
-     - text: "Goed bezig, deze activiteit gaat je helpen met je doelen."
+     - text: "Super dat je er gelijk mee aan de slag gaat! ..."
+     - text: "Leuk, laten we beginnen. ..."
+     - text: "Mooi, we gaan aan de slag! ..."
+     - text: "Goed bezig, deze activiteit gaat je helpen met je doelen. ..."
 
 
   ### Future-self dialog
@@ -331,8 +331,8 @@ responses:
   utter_ask_why_picked_smoker_words_form_why_picked_words:
     - text: "Waarom heb je deze woorden gekozen voor roken?"
   utter_back_channel_good:
-    - text: "Mooi."
-    - text: "Duidelijk."
+    - text: "Mooi. ..."
+    - text: "Duidelijk. ..."
   utter_ask_why_picked_mover_words_form_why_picked_words:
     - text: "Waarom heb je deze woorden gekozen voor bewegen?"
   utter_why_picked_words_response:

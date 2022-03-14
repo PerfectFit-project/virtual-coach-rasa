@@ -356,7 +356,7 @@ responses:
   utter_thank_user_for_response:
     - text: "Helder, bedankt."
   utter_leuk:
-    - text: "Leuk!"
+    - text: "Leuk! ..."
   utter_fijn:
     - text: "Fijn!"
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:

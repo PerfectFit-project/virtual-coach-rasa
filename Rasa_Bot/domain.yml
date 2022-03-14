@@ -298,7 +298,7 @@ responses:
              Roken is...
             "
   utter_intro_current_mover:
-    - text: "We gaan nu dezelfde oefening doen voor bewegen."
+    - text: "We gaan nu dezelfde oefening doen voor bewegen. ..."
   utter_current_mover:
     - text: "Welke woorden vind jij passen bij bewegen?
              Bewegen is ...
@@ -367,9 +367,9 @@ responses:
     - text: "Heldere antwoorden. Dankje voor het delen.
              We gaan door met nieuwe oefeningen."
   utter_try_again:
-    - text: "Oke laten we het opnieuw proberen."
+    - text: "Oke laten we het opnieuw proberen. ..."
   utter_try_again_see_myself_mover:
-    - text: "Oke laten we het nog een keer proberen."
+    - text: "Oke laten we het nog een keer proberen. ..."
     
 actions:
 - action_get_plan_week

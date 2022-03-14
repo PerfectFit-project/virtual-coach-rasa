@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dockerfile for rasa server
 
 FROM python:3.8
@@ -25,4 +26,35 @@ RUN chmod -R 777 /app
 # Don't use root user to run code
 USER 1001
 
+=======
+# Dockerfile for rasa server
+
+FROM python:3.8
+
+# Change to root user to install dependencies
+USER root
+
+RUN python -m pip install --upgrade pip==20.2
+
+# Install requirements
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Spacy language model
+RUN python -m spacy download nl_core_news_sm
+RUN python -m spacy link nl_core_news_sm nl
+
+# Don't use root user to run code
+# USER 1001
+
+# Use subdirectory as working directory
+WORKDIR /app
+
+COPY . /app
+
+RUN chmod -R 777 /app
+
+USER 1001
+
+>>>>>>> 80ede7670c4f1be382133d3daa5094f2212d76de
 ENTRYPOINT ["rasa", "run", "--enable-api"]

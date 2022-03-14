@@ -155,7 +155,7 @@ slots:
      
   # Indicates parts of future self dialog finished by user: "step_1", ...
   future_self_dialog_state:
-     type: text
+     type: float
      influence_conversation: false
      mappings:
      - type: custom

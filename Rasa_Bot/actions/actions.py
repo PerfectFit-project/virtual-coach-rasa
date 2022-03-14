@@ -532,7 +532,7 @@ class ActionSetFutureSelfDialogStateStep1(Action):
 
     async def run(self, dispatcher, tracker, domain):
         
-        return [SlotSet("future_self_dialog_state", "step_1")]
+        return [SlotSet("future_self_dialog_state", 1)]
 
 
 class ActionStoreFutureSelfDialogState(Action):
@@ -549,19 +549,34 @@ class ActionStoreFutureSelfDialogState(Action):
         session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
 
         user_id = tracker.current_state()['sender_id']
-        selected = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
         
+        selected = session.query(UserInterventionState).filter(UserInterventionState.users_nicedayuid == user_id, UserInterventionState.intervention_component=="future_self_dialog").one_or_none()
+        
+        # If already an entry for the user for the future self dialog exists
+        # in the intervention state table
         if selected is not None:
-             
-            entry = UserInterventionState(intervention_component="future_self_dialog",
-                                          last_time=datetime.datetime.now(), 
-                                          last_part=step)
-            selected.user_intervention_state.append(entry)
+            
+            # Update time and part of future self dialog
+            selected.last_time=datetime.datetime.now()
+            selected.last_part=step
          
-        # No entry exists yet for the user in the Users table
+        # No entry exists yet for user for the future self dialog in 
+        # the intervention state table
         else:
             
-            logging.error("Error: User not in Users table")
+            selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
+            
+            # User exists in Users table
+            if selected_user is not None:
+                entry = UserInterventionState(intervention_component="future_self_dialog",
+                                              last_time=datetime.datetime.now(), 
+                                              last_part=step)
+                selected_user.user_intervention_state.append(entry)
+            
+            # User does not exist in Users table
+            else:
+            
+                logging.error("Error: User not in Users table")
             
         session.commit()  # Update database
        

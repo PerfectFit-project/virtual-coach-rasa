@@ -195,7 +195,7 @@ responses:
 
   # Weekly planning
   utter_plan_week:
-  - text: "{plan_week}"
+  - text: "{plan_week} ..."
   utter_ask_plan_calendar:
   - text: "Zal ik de planning in je NiceDay agenda zetten?"
   - text: "Wil je dat ik de planning in je NiceDay agenda zet?"
@@ -211,7 +211,7 @@ responses:
   
   ### Activity evaluation
   utter_pa_completed:
-  - text: "Goed bezig!"
+  - text: "Goed bezig! ..."
   utter_ask_pa_evaluation_form_pa_evaluation_response:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
@@ -234,7 +234,7 @@ responses:
   utter_please_answer_1_2_3:
      - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
   utter_please_answer_1_to_5:
-     - text: "Kun je een geheel getal tussen 1 en 5 opgeven?"
+     - text: "Kun je een geheel getal tussen 1 en 5 opgeven? ..."
   utter_please_answer_yes_no:
      - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
   utter_please_answer_now_or_later:
@@ -358,7 +358,7 @@ responses:
   utter_leuk:
     - text: "Leuk! ..."
   utter_fijn:
-    - text: "Fijn!"
+    - text: "Fijn! ..."
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
     - text: "Leg uit, waarom zie jij jezelf als {see_myself_as_picked_words_smoker_text}?"
   utter_ask_why_see_myself_as_mover_form_why_picked_words:

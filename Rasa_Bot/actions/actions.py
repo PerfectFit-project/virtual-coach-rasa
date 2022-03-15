@@ -11,6 +11,7 @@ from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
 from dotenv import load_dotenv
+from niceday_client import NicedayClient
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
@@ -21,10 +22,10 @@ from virtual_coach_db.dbschema.models import UserInterventionState
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
 
-
-# load .env-file and get db_host variable
+# load .env-file and get db_host and niceday_api_endopint variables
 load_dotenv()
 DB_HOST = os.getenv('DB_HOST')
+NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
 
 # Get the user's age from the database.
@@ -120,6 +121,49 @@ class GetPlanWeek(Action):
         return [SlotSet("plan_week", plan)]
 
 
+# Get number of cigarettes from custom tracker and save in slot
+class SaveNumberCigarettes(Action):
+    def name(self):
+        return "action_save_number_cigarettes"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        client = NicedayClient(NICEDAY_API_ENDPOINT)
+
+        # get the user_id
+        user_id = int(tracker.current_state()['sender_id'])
+
+        # get the time of the request (final time point)
+        current_time = datetime.datetime.now()
+
+        # set the initial time point as the beginning of current day
+        today = datetime.date.today()
+        start_time = datetime.datetime(today.year, today.month, today.day, 0, 0, 0)
+
+        # query the niceday_client api to get the number of tracked cigarettes
+        number_cigarettes_response = client.get_smoking_tracker(user_id, start_time, current_time)
+
+        # iterate through the response to get the total number of tracked cigarettes
+        number_of_cigarettes = 0
+        for item in number_cigarettes_response:
+            number_of_cigarettes += item['value']['quantity']
+
+        return [SlotSet("number_of_cigarettes", number_of_cigarettes)]
+
+
+# Get number of cigarettes from slot
+class GetNumberCigarettes(Action):
+    def name(self):
+        return "action_get_number_cigarettes"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        number_of_cigarettes = tracker.get_slot("number_of_cigarettes")
+        dispatcher.utter_message(template="utter_tracked_cigarettes",
+                                 number_of_cigarettes=number_of_cigarettes)
+        return[]
+
+
 # Save weekly plan in calendar
 class SavePlanWeekCalendar(Action):
     def name(self):
@@ -144,7 +188,7 @@ class ValidatePaEvaluationForm(FormValidationAction):
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_please_answer_1_to_5")
+            dispatcher.utter_message(template="utter_please_answer_1_to_5")
             return {"pa_evaluation_response": None}
         pa_evaluation_response = int(value)
         return {"pa_evaluation_response": pa_evaluation_response}
@@ -187,7 +231,7 @@ class ActionStorePaEvaluation(Action):
     async def run(self, dispatcher, tracker, domain):
 
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        session = get_db_session(db_host=DB_HOST)  # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
 
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -270,7 +314,7 @@ class ValidateConfirmWordsForm(FormValidationAction):
 
         yes_or_no_response = validate_yes_no_response(value)
         if yes_or_no_response is None:
-            dispatcher.utter_message(response="utter_please_answer_yes_no")
+            dispatcher.utter_message(template="utter_please_answer_yes_no")
 
         return {"confirm_words_response": yes_or_no_response}
 
@@ -297,7 +341,7 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
 
         now_or_later = self._validate_now_or_later_response(value)
         if now_or_later is None:
-            dispatcher.utter_message(response="utter_please_answer_now_or_later")
+            dispatcher.utter_message(template="utter_please_answer_now_or_later")
 
         return {"rescheduling_now": now_or_later}
 
@@ -331,7 +375,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
         """Validate rescheduling_option input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(template="utter_please_answer_1_2_3")
             return {"rescheduling_option": None}
 
         return {"rescheduling_option": int(value)}
@@ -358,7 +402,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
         """Validate see_myself_as_picked_words_smoker input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(template="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_smoker": None}
 
         return {"see_myself_as_picked_words_smoker": int(value)}
@@ -415,8 +459,8 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(template="utter_did_not_understand")
+            dispatcher.utter_message(template="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_mover": None}
 
         return {"see_myself_as_picked_words_mover": int(value)}
@@ -489,7 +533,7 @@ class ValidateWhyPickedMoverWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(response="utter_please_answer_more_words")
+            dispatcher.utter_message(template="utter_please_answer_more_words")
             return {"why_picked_words": None}
 
         logging.info(
@@ -515,14 +559,14 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(response="utter_please_answer_more_words")
+            dispatcher.utter_message(template="utter_please_answer_more_words")
             return{"why_picked_words": None}
 
         logging.info(
             "%s why_picked_words: %s ", type(self).__name__, long_enough_response
         )
         return {"why_picked_words": value}
-    
+
 
 class ActionSetFutureSelfDialogStateStep1(Action):
     """"To set state of future self dialog to step 1"""

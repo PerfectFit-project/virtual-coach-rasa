@@ -159,7 +159,7 @@ class GetNumberCigarettes(Action):
     async def run(self, dispatcher, tracker, domain):
 
         number_of_cigarettes = tracker.get_slot("number_of_cigarettes")
-        dispatcher.utter_message(template="utter_tracked_cigarettes",
+        dispatcher.utter_message(response="utter_tracked_cigarettes",
                                  number_of_cigarettes=number_of_cigarettes)
         return[]
 
@@ -188,7 +188,7 @@ class ValidatePaEvaluationForm(FormValidationAction):
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_to_5")
+            dispatcher.utter_message(response="utter_please_answer_1_to_5")
             return {"pa_evaluation_response": None}
         pa_evaluation_response = int(value)
         return {"pa_evaluation_response": pa_evaluation_response}
@@ -215,10 +215,9 @@ class ActionUtterPaEvaluationFormFilled(Action):
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
 
         if pa_evaluation_response >= 4:
-            dispatcher.utter_message("Fijn om te horen dat het goed ging!")
+            dispatcher.utter_message(response="utter_feedback_pa_evaluation_high")
         else:
-            dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
-                                     "dan gaat het de volgende keer vast beter!")
+            dispatcher.utter_message(response="utter_feedback_pa_evaluation_low")
         return []
 
 
@@ -314,7 +313,7 @@ class ValidateConfirmWordsForm(FormValidationAction):
 
         yes_or_no_response = validate_yes_no_response(value)
         if yes_or_no_response is None:
-            dispatcher.utter_message(template="utter_please_answer_yes_no")
+            dispatcher.utter_message(response="utter_please_answer_yes_no")
 
         return {"confirm_words_response": yes_or_no_response}
 
@@ -341,7 +340,7 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
 
         now_or_later = self._validate_now_or_later_response(value)
         if now_or_later is None:
-            dispatcher.utter_message(template="utter_please_answer_now_or_later")
+            dispatcher.utter_message(response="utter_please_answer_now_or_later")
 
         return {"rescheduling_now": now_or_later}
 
@@ -375,7 +374,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
         """Validate rescheduling_option input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"rescheduling_option": None}
 
         return {"rescheduling_option": int(value)}
@@ -402,7 +401,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
         """Validate see_myself_as_picked_words_smoker input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_smoker": None}
 
         return {"see_myself_as_picked_words_smoker": int(value)}
@@ -459,8 +458,8 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_did_not_understand")
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_mover": None}
 
         return {"see_myself_as_picked_words_mover": int(value)}
@@ -533,7 +532,7 @@ class ValidateWhyPickedMoverWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(template="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_please_answer_more_words")
             return {"why_picked_words": None}
 
         logging.info(
@@ -559,7 +558,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(template="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_please_answer_more_words")
             return{"why_picked_words": None}
 
         logging.info(

@@ -223,6 +223,10 @@ responses:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
+  utter_feedback_pa_evaluation_high:
+  - text: "Fijn om te horen dat het goed ging!"
+  utter_feedback_pa_evaluation_low:
+  - text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
 
   ## Ask data from tracker
   utter_tracked_cigarettes:

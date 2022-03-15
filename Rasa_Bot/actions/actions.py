@@ -574,7 +574,6 @@ class ActionSetFutureSelfDialogStateStep1(Action):
         return "action_set_future_self_dialog_state_step_1"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [SlotSet("future_self_dialog_state", 1)]
 
 
@@ -586,11 +585,19 @@ class ActionStoreFutureSelfDialogState(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        step = tracker.get_slot("future_self_dialog_state")  # Get current state of future self dialog
-        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
+        step = tracker.get_slot("future_self_dialog_state")
+        session = get_db_session(db_host=DB_HOST)
         user_id = tracker.current_state()['sender_id']
-        selected = session.query(UserInterventionState).filter(UserInterventionState.users_nicedayuid==user_id, 
-                                                               UserInterventionState.intervention_component=="future_self_dialog").one_or_none()
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid==user_id, 
+                UserInterventionState.intervention_component=="future_self_dialog"
+            )
+            .one_or_none()
+        )
 
         # If already an entry for the user for the future self dialog exists
         # in the intervention state table

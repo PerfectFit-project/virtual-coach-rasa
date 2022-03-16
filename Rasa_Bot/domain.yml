@@ -152,6 +152,13 @@ slots:
      influence_conversation: false
      mappings:
      - type: custom
+     
+  # Indicates parts of future self dialog finished by user: 1, ...
+  future_self_dialog_state:
+     type: float
+     influence_conversation: false
+     mappings:
+     - type: custom
 
  ### Data from custom tracker
   number_of_cigarettes:
@@ -216,6 +223,10 @@ responses:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
+  utter_feedback_pa_evaluation_high:
+  - text: "Fijn om te horen dat het goed ging!"
+  utter_feedback_pa_evaluation_low:
+  - text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
 
   ## Ask data from tracker
   utter_tracked_cigarettes:
@@ -375,12 +386,12 @@ actions:
 - action_get_plan_week
 - action_get_age_from_database
 - action_get_name_from_database
-- action_get_sender_id_from_tracker
 - action_save_plan_week_calendar
 - action_set_reminder
 - validate_pa_evaluation_form
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
+### Future self dialog
 - validate_confirm_words_form
 - action_reset_confirm_words_response_slot_smoking
 - action_reset_confirm_words_response_slot_pa
@@ -395,6 +406,8 @@ actions:
 - action_map_see_myself_as_picked_words_smoker
 - validate_why_picked_mover_words_form
 - validate_why_picked_smoker_words_form
+- action_store_future_self_dialog_state
+- action_set_future_self_dialog_state_step_1
 ### Rescheduling query dialog
 - validate_rescheduling_now_or_later_form
 - action_reset_rescheduling_now_slot

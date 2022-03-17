@@ -15,6 +15,7 @@ intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
 - request_future_self_dialog
+- request_tracked_cigarettes
 
 slots:
   ### General
@@ -151,6 +152,21 @@ slots:
      influence_conversation: false
      mappings:
      - type: custom
+     
+  # Indicates parts of future self dialog finished by user: 1, ...
+  future_self_dialog_state:
+     type: float
+     influence_conversation: false
+     mappings:
+     - type: custom
+
+ ### Data from custom tracker
+  number_of_cigarettes:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+    - type: custom
 
 responses:
   # Fallback
@@ -186,7 +202,7 @@ responses:
 
   # Weekly planning
   utter_plan_week:
-  - text: "{plan_week}"
+  - text: "{plan_week} ..."
   utter_ask_plan_calendar:
   - text: "Zal ik de planning in je NiceDay agenda zetten?"
   - text: "Wil je dat ik de planning in je NiceDay agenda zet?"
@@ -202,11 +218,19 @@ responses:
   
   ### Activity evaluation
   utter_pa_completed:
-  - text: "Goed bezig!"
+  - text: "Goed bezig! ..."
   utter_ask_pa_evaluation_form_pa_evaluation_response:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
+  utter_feedback_pa_evaluation_high:
+  - text: "Fijn om te horen dat het goed ging!"
+  utter_feedback_pa_evaluation_low:
+  - text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
+
+  ## Ask data from tracker
+  utter_tracked_cigarettes:
+    - text: "Je hebt vandaag {number_of_cigarettes} sigaretten gerookt."
 
   ### Foreseen HRSs smoking
   utter_ask_foreseen_hrs:
@@ -221,7 +245,7 @@ responses:
   utter_please_answer_1_2_3:
      - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
   utter_please_answer_1_to_5:
-     - text: "Kun je een geheel getal tussen 1 en 5 opgeven?"
+     - text: "Kun je een geheel getal tussen 1 en 5 opgeven? ..."
   utter_please_answer_yes_no:
      - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
   utter_please_answer_now_or_later:
@@ -236,18 +260,18 @@ responses:
   utter_ask_rescheduling_now_or_later_form_rescheduling_now:
      - text: "Wil jij deze oefening nu doen of later?"
   utter_user_chose_later:
-     - text: "OK, het is wel goed als je deze oefening snel doet. Dit gaat je helpen je doelen te behalen."
-     - text: "Prima, dit is wel een belangrijke oefening die je snel moet doen."
-     - text: "Goed, laten we deze oefening later doen."
+     - text: "OK, het is wel goed als je deze oefening snel doet. Dit gaat je helpen je doelen te behalen. ..."
+     - text: "Prima, dit is wel een belangrijke oefening die je snel moet doen. ..."
+     - text: "Goed, laten we deze oefening later doen. ..."
   utter_ask_rescheduling_options_form_rescheduling_option:
      - text: "Wanneer komt het beter uit? (1) Vanmiddag, om 17:00. (2) Vanavond, om 20:00. (3) Morgenochtend, om 8:00. Geef antwoord met 1, 2, of 3."
   utter_rescheduling_option_chosen:
      - text: "Prima, ik kom dan bij je terug."
   utter_user_chose_now:
-     - text: "Super dat je er gelijk mee aan de slag gaat!"
-     - text: "Leuk, laten we beginnen."
-     - text: "Mooi, we gaan aan de slag!"
-     - text: "Goed bezig, deze activiteit gaat je helpen met je doelen."
+     - text: "Super dat je er gelijk mee aan de slag gaat! ..."
+     - text: "Leuk, laten we beginnen. ..."
+     - text: "Mooi, we gaan aan de slag! ..."
+     - text: "Goed bezig, deze activiteit gaat je helpen met je doelen. ..."
 
 
   ### Future-self dialog
@@ -256,27 +280,27 @@ responses:
   # after deciding whether or not to use medication.
   # This activity is being repeated several times throughout the intervention.
   utter_future_self_intro:
-    - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken en genoeg te bewegen."
-    - text: "We gaan nu aan de slag met een oefening om jou te helpen met stoppen met roken en genoeg laten bewegen."
-    - text: "Om jou te helpen om genoeg te bewegen en te laten stoppen met roken, gaan we nu een oefening doen."
+    - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken en genoeg te bewegen. ..."
+    - text: "We gaan nu aan de slag met een oefening om jou te helpen met stoppen met roken en genoeg laten bewegen. ..."
+    - text: "Om jou te helpen om genoeg te bewegen en te laten stoppen met roken, gaan we nu een oefening doen. ..."
   utter_future_self_intro_exercise_name:
-    - text: "De oefening heet 'wie wil ik straks zijn.'"
-    - text: "Deze oefening noemen we 'wie wil ik straks zijn.'"
-    - text: "De naam van de oefening is 'wie wil ik straks zijn.'"
+    - text: "De oefening heet 'wie wil ik straks zijn.' ..."
+    - text: "Deze oefening noemen we 'wie wil ik straks zijn.' ..."
+    - text: "De naam van de oefening is 'wie wil ik straks zijn.' ..."
   utter_future_self_duration:
-    - text: "Het duurt ongeveer 15 minuten."
-    - text: "Het zal ongeveer 15 minuten duren."
-    - text: "Je gaat ongeveer 15 minuten bezig zijn."
+    - text: "Het duurt ongeveer 15 minuten. ..."
+    - text: "Het zal ongeveer 15 minuten duren. ..."
+    - text: "Je gaat ongeveer 15 minuten bezig zijn. ..."
   utter_future_self_duration_do_at_once:
-    - text: "Het is belangrijk dat je de oefening in een keer afmaakt."
-    - text: "Het is belangrijk om de oefening in één keer af te maken."
+    - text: "Het is belangrijk dat je de oefening in een keer afmaakt. ..."
+    - text: "Het is belangrijk om de oefening in één keer af te maken. ..."
   utter_future_self_explanation:
     - text: "Deze oefening gaat je op weg helpen om te stoppen met roken en genoeg te bewegen.
              We lopen samen door de volgende stappen:\n
              Eerst denk je na over jezelf op dit moment.
              Dan denk je na over jezelf over een paar maanden.
              Daarna stel ik jou een aantal vragen hierover.\n
-             Geen stress, ik loop er stap voor stap met je doorheen.
+             Geen stress, ik loop er stap voor stap met je doorheen. ...
             "
   utter_current_smoker:
     - text: "Eerst kijken wij wat voor roker jij op dit moment bent.
@@ -285,7 +309,7 @@ responses:
              Roken is...
             "
   utter_intro_current_mover:
-    - text: "We gaan nu dezelfde oefening doen voor bewegen."
+    - text: "We gaan nu dezelfde oefening doen voor bewegen. ..."
   utter_current_mover:
     - text: "Welke woorden vind jij passen bij bewegen?
              Bewegen is ...
@@ -296,7 +320,7 @@ responses:
              - cool - iets wat ik wil blijven doen - onderdeel van mijn leven - vies
              - prettig - gevaarlijk - verslavend - belangrijk - niet belangrijk
              - hoort niet bij mij - stom - stoer - gezellig - duur - sexy
-             - ongezond - niet zo heel erg
+             - ongezond - niet zo heel erg ...
             "
   utter_moving_word_list:
     - text: "Fijn - lekker - past bij mij - plezierig - belonend - geen zin in
@@ -306,11 +330,11 @@ responses:
              - stressvol - helpt mij - iets wat ik meer wil doen
              - vind ik niet leuk - vind ik leuk - doet pijn - gezond
              - moet voor mijn gezondheid - makkelijk - doe ik veel - straf
-             - gaat niet - lastig - houdt mij jong - eng"
+             - gaat niet - lastig - houdt mij jong - eng ..."
   utter_ask_pick_smoker_words_form_picked_words:
     - text: "Kies 3 tot 5 woorden uit de lijst en typ ze in de chat."
   utter_ask_pick_mover_words_form_picked_words:
-    - text: "Kies 3 tot 5 woorden uit de lijst en typ ze in de chat:"
+    - text: "Kies 3 tot 5 woorden uit de lijst en typ ze in de chat."
   utter_picked_smoker_words:
     - text: "Deze woorden passen bij jou als roker: {picked_words}, klopt dat?"
   utter_picked_mover_words:
@@ -318,22 +342,22 @@ responses:
   utter_ask_why_picked_smoker_words_form_why_picked_words:
     - text: "Waarom heb je deze woorden gekozen voor roken?"
   utter_back_channel_good:
-    - text: "Mooi."
-    - text: "Duidelijk."
+    - text: "Mooi. ..."
+    - text: "Duidelijk. ..."
   utter_ask_why_picked_mover_words_form_why_picked_words:
     - text: "Waarom heb je deze woorden gekozen voor bewegen?"
   utter_why_picked_words_response:
-    - text: "Goed dat je hier zo over na kunt denken."
+    - text: "Goed dat je hier zo over na kunt denken. ..."
 
   utter_self_view_intro:
     - text: "Nu krijg je twee zinnen te zien.
-             Vul ze aan met wat het meest bij jou past en typ het nummer in de chat."
+             Vul ze aan met wat het meest bij jou past en typ het nummer in de chat. ..."
   utter_see_myself_as_smoker_options:
     - text: "Ik zie mijzelf als...
-             een roker (1) - een niet-roker (2) - iemand die stopt met roken (3)"
+             een roker (1) - een niet-roker (2) - iemand die stopt met roken (3)."
   utter_see_myself_as_mover_options:
     - text: "Ik zie mijzelf als...
-             lichamelijk actief (1) - een beetje lichamelijk actief (2) - niet lichamelijk actief (3)"
+             lichamelijk actief (1) - een beetje lichamelijk actief (2) - niet lichamelijk actief (3). ..."
   utter_ask_see_myself_as_mover_form_see_myself_as_picked_words_mover:
     - text: "Kies de optie die het meeste bij je past en typ het nummer in de chat."
   utter_see_myself_as_picked_smoker_words:
@@ -343,9 +367,9 @@ responses:
   utter_thank_user_for_response:
     - text: "Helder, bedankt."
   utter_leuk:
-    - text: "Leuk!"
+    - text: "Leuk! ..."
   utter_fijn:
-    - text: "Fijn!"
+    - text: "Fijn! ..."
   utter_ask_why_see_myself_as_smoker_form_why_picked_words:
     - text: "Leg uit, waarom zie jij jezelf als {see_myself_as_picked_words_smoker_text}?"
   utter_ask_why_see_myself_as_mover_form_why_picked_words:
@@ -354,15 +378,14 @@ responses:
     - text: "Heldere antwoorden. Dankje voor het delen.
              We gaan door met nieuwe oefeningen."
   utter_try_again:
-    - text: "Oke laten we het opnieuw proberen."
+    - text: "Oke laten we het opnieuw proberen. ..."
   utter_try_again_see_myself_mover:
-    - text: "Oke laten we het nog een keer proberen."
+    - text: "Oke laten we het nog een keer proberen. ..."
     
 actions:
 - action_get_plan_week
 - action_get_age_from_database
 - action_get_name_from_database
-- action_get_sender_id_from_tracker
 - action_save_plan_week_calendar
 - action_set_reminder
 - validate_pa_evaluation_form
@@ -383,11 +406,16 @@ actions:
 - action_map_see_myself_as_picked_words_smoker
 - validate_why_picked_mover_words_form
 - validate_why_picked_smoker_words_form
+- action_store_future_self_dialog_state
+- action_set_future_self_dialog_state_step_1
 ### Rescheduling query dialog
 - validate_rescheduling_now_or_later_form
 - action_reset_rescheduling_now_slot
 - validate_rescheduling_options_form
 - action_reset_rescheduling_option_slot
+### Data from custom tracker
+- action_save_number_cigarettes
+- action_get_number_cigarettes
 
 
 forms:

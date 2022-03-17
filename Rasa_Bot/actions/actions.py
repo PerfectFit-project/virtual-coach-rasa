@@ -40,7 +40,7 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
                           question_id=question.value,
                           datetime=datetime.datetime.now())
 
-    selected.DialogAnswers.append(entry)
+    selected.dialog_answers.append(entry)
     session.commit()  # Update database
 
 

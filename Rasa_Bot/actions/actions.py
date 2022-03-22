@@ -29,10 +29,10 @@ NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
 
 class DialogQuestions(Enum):
-    FUTURE_SELF_SMOKER_WORDS = 1
-    FUTURE_SELF_SMOKER_WHY = 2
-    FUTURE_SELF_MOVER_WORDS = 3
-    FUTURE_SELF_MOVER_WHY = 4
+    FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
+    FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?
+    FUTURE_SELF_MOVER_WORDS = 3  # Which three words suits you as exerciser?
+    FUTURE_SELF_MOVER_WHY = 4  # Why did you pick these words for exercising?
 
 
 def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):

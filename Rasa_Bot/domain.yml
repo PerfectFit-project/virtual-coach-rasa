@@ -393,6 +393,9 @@ actions:
 - action_store_pa_evaluation
 ### Future self dialog
 - action_store_smoker_words
+- action_store_mover_words
+- action_store_why_smoker_words
+- action_store_why_mover_words
 - validate_confirm_words_form
 - action_reset_confirm_words_response_slot_smoking
 - action_reset_confirm_words_response_slot_pa

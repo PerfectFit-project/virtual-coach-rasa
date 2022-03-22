@@ -1,6 +1,6 @@
 session_config:
   session_expiration_time: 5 # these are minutes
-  carry_over_slots_to_new_session: true  
+  carry_over_slots_to_new_session: true
 
 intents:
 - goodbye
@@ -392,6 +392,10 @@ actions:
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
 ### Future self dialog
+- action_store_smoker_words
+- action_store_mover_words
+- action_store_why_smoker_words
+- action_store_why_mover_words
 - validate_confirm_words_form
 - action_reset_confirm_words_response_slot_smoking
 - action_reset_confirm_words_response_slot_pa

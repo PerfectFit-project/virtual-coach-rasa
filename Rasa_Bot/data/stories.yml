@@ -166,7 +166,7 @@ stories:
     - action: utter_smoking_word_list # TODO: In case of repetition retrieve last chosen words
     - action: pick_smoker_words_form
     - active_loop: pick_smoker_words_form
-    - active_loop: null # TODO: store slot in database
+    - active_loop: null
     - action: utter_picked_smoker_words
     - checkpoint: check_picked_smoker_words
 
@@ -178,17 +178,19 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
+    - action: action_store_smoker_words
+    - action: action_reset_picked_words_slot
+    - slot_was_set:
+        - picked_words: null
     - action: utter_back_channel_good
     - action: why_picked_smoker_words_form
     - active_loop: why_picked_smoker_words_form
-    - active_loop: null  # TODO: store slot in database
+    - active_loop: null
     - action: utter_why_picked_words_response
-    - action: action_reset_picked_words_slot
-    - slot_was_set:
-      - picked_words: null
     - action: action_reset_confirm_words_response_slot_smoking
     - slot_was_set:
       - confirm_words_response: null
+    - action: action_store_why_smoker_words
     - action: action_reset_why_picked_words_slot_smoking
     - slot_was_set:
       - why_picked_words: null
@@ -218,7 +220,7 @@ stories:
     - action: utter_moving_word_list # TODO: In case of repetition retrieve last chosen words
     - action: pick_mover_words_form
     - active_loop: pick_mover_words_form
-    - active_loop: null # TODO: store slot in database
+    - active_loop: null
     - action: utter_picked_mover_words
     - checkpoint: check_picked_mover_words
 
@@ -230,17 +232,19 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
-    - action: utter_back_channel_good
-    - action: why_picked_mover_words_form
-    - active_loop: why_picked_mover_words_form
-    - active_loop: null  # TODO: store slot in database
-    - action: utter_why_picked_words_response
+    - action: action_store_mover_words
     - action: action_reset_picked_words_slot
     - slot_was_set:
       - picked_words: null
+    - action: utter_back_channel_good
+    - action: why_picked_mover_words_form
+    - active_loop: why_picked_mover_words_form
+    - active_loop: null
+    - action: utter_why_picked_words_response
     - action: action_reset_confirm_words_response_slot_pa
     - slot_was_set:
       - confirm_words_response: null
+    - action: action_store_why_mover_words
     - action: action_reset_why_picked_words_slot_pa
     - slot_was_set:
       - why_picked_words: null

@@ -275,6 +275,45 @@ class ActionStoreSmokerWords(Action):
         return
 
 
+class ActionStoreMoverWords(Action):
+    """"To save user input on mover words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_mover_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("picked_words")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_MOVER_WORDS)
+        return
+
+
+class ActionStoreWhyMoverWords(Action):
+    """"To save user input on why he/she chose mover words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_why_mover_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("why_picked_words")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_MOVER_WHY)
+        return
+
+
+class ActionStoreWhySmokerWords(Action):
+    """"To save user input on why he/she chose smoker words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_why_smoker_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("why_picked_words")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WHY)
+        return
+
+
 class ActionResetPickedWordsSlot(Action):
     """Reset picked_words slot"""
 

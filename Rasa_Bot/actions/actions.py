@@ -7,6 +7,7 @@ import datetime
 import logging
 import os
 import string
+from enum import Enum
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
@@ -17,14 +18,33 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from virtual_coach_db.dbschema.models import Users
-from virtual_coach_db.dbschema.models import ClosedUserAnswers
+from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
+                                              UserInterventionState)
 from virtual_coach_db.helper.helper import get_db_session
 
 # load .env-file and get db_host and niceday_api_endopint variables
 load_dotenv()
 DB_HOST = os.getenv('DB_HOST')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
+
+
+class DialogQuestions(Enum):
+    FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
+    FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?
+    FUTURE_SELF_MOVER_WORDS = 3  # Which three words suits you as exerciser?
+    FUTURE_SELF_MOVER_WHY = 4  # Why did you pick these words for exercising?
+
+
+def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
+    session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    entry = DialogAnswers(answer=answer,
+                          question_id=question.value,
+                          datetime=datetime.datetime.now())
+
+    selected.dialog_answers.append(entry)
+    session.commit()  # Update database
 
 
 # Get the user's age from the database.
@@ -158,7 +178,7 @@ class GetNumberCigarettes(Action):
     async def run(self, dispatcher, tracker, domain):
 
         number_of_cigarettes = tracker.get_slot("number_of_cigarettes")
-        dispatcher.utter_message(template="utter_tracked_cigarettes",
+        dispatcher.utter_message(response="utter_tracked_cigarettes",
                                  number_of_cigarettes=number_of_cigarettes)
         return[]
 
@@ -187,7 +207,7 @@ class ValidatePaEvaluationForm(FormValidationAction):
         """Validate pa_evaluation_response input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_to_5")
+            dispatcher.utter_message(response="utter_please_answer_1_to_5")
             return {"pa_evaluation_response": None}
         pa_evaluation_response = int(value)
         return {"pa_evaluation_response": pa_evaluation_response}
@@ -214,10 +234,9 @@ class ActionUtterPaEvaluationFormFilled(Action):
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
 
         if pa_evaluation_response >= 4:
-            dispatcher.utter_message("Fijn om te horen dat het goed ging!")
+            dispatcher.utter_message(response="utter_feedback_pa_evaluation_high")
         else:
-            dispatcher.utter_message("Jammer, probeer nu goed uit te rusten, "
-                                     "dan gaat het de volgende keer vast beter!")
+            dispatcher.utter_message(response="utter_feedback_pa_evaluation_low")
         return []
 
 
@@ -230,7 +249,7 @@ class ActionStorePaEvaluation(Action):
     async def run(self, dispatcher, tracker, domain):
 
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        session = get_db_session()  # Creat session object to connect db
+        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
 
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -241,6 +260,58 @@ class ActionStorePaEvaluation(Action):
         selected.closed_user_answers.append(entry)
         session.commit()  # Update database
         return [SlotSet("pa_evaluation_response", None)]
+
+
+class ActionStoreSmokerWords(Action):
+    """"To save user input on smoker words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_smoker_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("picked_words")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WORDS)
+        return
+
+
+class ActionStoreMoverWords(Action):
+    """"To save user input on mover words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_mover_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("picked_words")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_MOVER_WORDS)
+        return
+
+
+class ActionStoreWhyMoverWords(Action):
+    """"To save user input on why he/she chose mover words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_why_mover_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("why_picked_words")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_MOVER_WHY)
+        return
+
+
+class ActionStoreWhySmokerWords(Action):
+    """"To save user input on why he/she chose smoker words from future self dialog to database"""
+
+    def name(self):
+        return "action_store_why_smoker_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("why_picked_words")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WHY)
+        return
 
 
 class ActionResetPickedWordsSlot(Action):
@@ -294,9 +365,9 @@ class ActionResetConfirmWordsResponseSlotPA(Action):
 
 
 def validate_yes_no_response(value):
-    if value == 'ja':
+    if value.lower() == 'ja':
         return True
-    if value in ['nee', "nee."]:
+    if value.lower() in ['nee', "nee."]:
         return False
     return None
 
@@ -313,7 +384,7 @@ class ValidateConfirmWordsForm(FormValidationAction):
 
         yes_or_no_response = validate_yes_no_response(value)
         if yes_or_no_response is None:
-            dispatcher.utter_message(template="utter_please_answer_yes_no")
+            dispatcher.utter_message(response="utter_please_answer_yes_no")
 
         return {"confirm_words_response": yes_or_no_response}
 
@@ -340,15 +411,15 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
 
         now_or_later = self._validate_now_or_later_response(value)
         if now_or_later is None:
-            dispatcher.utter_message(template="utter_please_answer_now_or_later")
+            dispatcher.utter_message(response="utter_please_answer_now_or_later")
 
         return {"rescheduling_now": now_or_later}
 
     @staticmethod
     def _validate_now_or_later_response(value):
-        if value in ['nu', 'nou', 'nu is goed']:
+        if value.lower() in ['nu', 'nou', 'nu is goed']:
             return True
-        if value in ['later', 'later.', 'niet nu']:
+        if value.lower() in ['later', 'later.', 'niet nu']:
             return False
         return None
 
@@ -374,7 +445,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
         """Validate rescheduling_option input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"rescheduling_option": None}
 
         return {"rescheduling_option": int(value)}
@@ -401,7 +472,7 @@ class ValidateSeeMyselfAsSmokerForm(FormValidationAction):
         """Validate see_myself_as_picked_words_smoker input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_smoker": None}
 
         return {"see_myself_as_picked_words_smoker": int(value)}
@@ -458,8 +529,8 @@ class ValidateSeeMyselfAsMoverForm(FormValidationAction):
         """Validate see_myself_as_picked_words_mover input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(template="utter_did_not_understand")
-            dispatcher.utter_message(template="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"see_myself_as_picked_words_mover": None}
 
         return {"see_myself_as_picked_words_mover": int(value)}
@@ -532,7 +603,7 @@ class ValidateWhyPickedMoverWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(template="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_please_answer_more_words")
             return {"why_picked_words": None}
 
         logging.info(
@@ -558,10 +629,70 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
 
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
-            dispatcher.utter_message(template="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_please_answer_more_words")
             return{"why_picked_words": None}
 
         logging.info(
             "%s why_picked_words: %s ", type(self).__name__, long_enough_response
         )
         return {"why_picked_words": value}
+
+
+class ActionSetFutureSelfDialogStateStep1(Action):
+    """"To set state of future self dialog to step 1"""
+
+    def name(self):
+        return "action_set_future_self_dialog_state_step_1"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("future_self_dialog_state", 1)]
+
+
+class ActionStoreFutureSelfDialogState(Action):
+    """"To save state of future self dialog"""
+
+    def name(self):
+        return "action_store_future_self_dialog_state"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        step = tracker.get_slot("future_self_dialog_state")
+        session = get_db_session(db_host=DB_HOST)
+        user_id = tracker.current_state()['sender_id']
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid==user_id, 
+                UserInterventionState.intervention_component=="future_self_dialog"
+            )
+            .one_or_none()
+        )
+
+        # If already an entry for the user for the future self dialog exists
+        # in the intervention state table
+        if selected is not None:
+            # Update time and part of future self dialog
+            selected.last_time=datetime.datetime.now()
+            selected.last_part=step
+
+        # No entry exists yet for user for the future self dialog in 
+        # the intervention state table
+        else:
+            selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
+
+            # User exists in Users table
+            if selected_user is not None:
+                entry = UserInterventionState(intervention_component="future_self_dialog",
+                                              last_time=datetime.datetime.now(), 
+                                              last_part=step)
+                selected_user.user_intervention_state.append(entry)
+
+            # User does not exist in Users table
+            else:
+                logging.error("Error: User not in Users table")
+
+        session.commit()  # Update database
+
+        return []

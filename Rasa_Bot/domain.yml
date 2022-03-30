@@ -67,7 +67,8 @@ slots:
     type: bool
     influence_conversation: true
     mappings:
-    - type: from_text
+    - type: custom
+
   # Evaluate completed PA
   pa_evaluation_response:
     type: float

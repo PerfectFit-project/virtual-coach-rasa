@@ -18,7 +18,8 @@ class NicedayOutputChannel(OutputChannel):
     def __init__(self):
         self.niceday_client = NicedayClient(niceday_api_uri=NICEDAY_API_URL)
 
-    def name(self) -> Text:
+    @classmethod
+    def name(cls) -> Text:
         return "niceday_output_channel"
 
     async def send_text_message(
@@ -38,7 +39,8 @@ class NicedayInputChannel(InputChannel):
     def __init__(self):
         self.output_channel = NicedayOutputChannel()
 
-    def name(self) -> Text:
+    @classmethod
+    def name(cls) -> Text:
         return "niceday_input_channel"
 
     def blueprint(self, on_new_message: Callable[[UserMessage], Awaitable[None]]) -> Blueprint:

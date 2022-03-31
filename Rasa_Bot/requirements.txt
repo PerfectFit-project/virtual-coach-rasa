@@ -1,6 +1,5 @@
 git+https://github.com/PerfectFit-project/niceday_client
-rasa==3.0.5 # NB! when updating, make sure to also update:
+rasa==3.1.0 # NB! when updating, make sure to also update:
             # * rasa base image in actions/Dockerfile,
             # * format of stories, domain.yml etc. if necessary
-sanic==21.9.3
 spacy

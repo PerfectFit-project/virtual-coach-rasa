@@ -443,17 +443,17 @@ class ActionGetReschedulingOptionsList(Action):
         current_hour = datetime.datetime.now(pytz.timezone('Europe/Amsterdam')).hour
         
         # In the morning
-        if (current_hour >= morning[0]) and (current_hour < morning[1]):
+        if morning[0] <= current_hour < morning[1]:
             options +=  ["Vanmiddag, om 16:00",
                          "Vanavond, om 21:00",
                          "Morgenochtend om deze tijd"]
         # In the afternoon
-        elif (current_hour >= afternoon[0]) and (current_hour < afternoon[1]):
+        elif afternoon[0] <= current_hour < afternoon[1]:
             options += ["Vanavond, om 21:00",
                         "Morgenochtend, om 8:00",
                         "Morgenmiddag om deze tijd"]
         # In the evening
-        elif (current_hour >= evening[0]) and (current_hour < evening[1]):
+        elif evening[0] <= current_hour < evening[1]:
             options += ["Morgenochtend, om 8:00",
                         "Morgenmiddag, om 16:00",
                         "Morgenavond om deze tijd"]

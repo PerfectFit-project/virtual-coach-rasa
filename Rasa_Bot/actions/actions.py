@@ -8,6 +8,7 @@ import logging
 import os
 import string
 from enum import Enum
+import pytz
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
@@ -422,6 +423,56 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         if value.lower() in ['later', 'later.', 'niet nu']:
             return False
         return None
+    
+
+class ActionGetReschedulingOptionsList(Action):
+    """Get the possible rescheduling options."""
+    
+    def name(self):
+        return "action_get_rescheduling_options_list"
+    
+    async def run(self, dispatcher, tracker, domain):
+        
+        # define morning, afternoon, evening
+        morning = [6, 12]
+        afternoon = [12, 18]
+        evening = [18, 24]
+        
+        options = ["In een uur"]
+        
+        current_hour = datetime.datetime.now(pytz.timezone('Europe/Amsterdam')).hour
+        
+        # In the morning
+        if current_hour >= morning[0] and current_hour < morning[1]:
+            options +=  ["Vanmiddag, om 16:00",
+                         "Vanavond, om 21:00",
+                         "Morgenochtend om deze tijd"]
+        # In the afternoon
+        elif current_hour >= afternoon[0] and current_hour < afternoon[1]:
+            options += ["Vanavond, om 21:00",
+                        "Morgenochtend, om 8:00",
+                        "Morgenmiddag om deze tijd"]
+        # In the evening
+        elif current_hour >= evening[0] and current_hour < evening[1]:
+            options += ["Morgenochtend, om 8:00",
+                        "Morgenmiddag, om 16:00",
+                        "Morgenavond om deze tijd"]
+        # In the night
+        else:
+            options +=  ["Vanmiddag, om 16:00",
+                         "Vanavond, om 21:00",
+                         "Morgen om deze tijd"]
+        
+        # Create string of options to utter them
+        rescheduling_options_string = ""
+        for o in range(len(options)):
+            rescheduling_options_string += "(" + str(o + 1) + ") " + options[o] + "."
+            if not o == len(options) - 1:
+                rescheduling_options_string += " "
+        
+        return [SlotSet("rescheduling_options_list", options),
+                SlotSet("rescheduling_options_string", 
+                        rescheduling_options_string)]
 
 
 class ActionResetReschedulingOptionSlot(Action):
@@ -445,7 +496,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
         """Validate rescheduling_option input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
             return {"rescheduling_option": None}
 
         return {"rescheduling_option": int(value)}
@@ -456,7 +507,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
             value = int(value)
         except ValueError:
             return False
-        if (value < 1) or (value > 3):
+        if (value < 1) or (value > 4):
             return False
         return True
 

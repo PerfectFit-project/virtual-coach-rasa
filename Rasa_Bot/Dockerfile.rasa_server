@@ -25,4 +25,4 @@ RUN chmod -R 777 /app
 # Don't use root user to run code
 USER 1001
 
-ENTRYPOINT ["rasa", "run", "--enable-api"]
+CMD ["rasa", "run", "--enable-api"]

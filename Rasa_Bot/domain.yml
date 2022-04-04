@@ -88,6 +88,18 @@ slots:
     - type: from_text
       conditions:
       - active_loop: rescheduling_now_or_later_form
+  # List of rescheduling options
+  rescheduling_options_list:
+    type: list
+    influence_conversation: false
+    mappings:
+    - type: custom
+  # String with rescheduling options for uttering the options
+  rescheduling_options_string:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
   # Chosen rescheduling option in case user does not want to continue dialog now
   rescheduling_option:
     type: float
@@ -245,6 +257,8 @@ responses:
   ### Re-prompts in forms
   utter_please_answer_1_2_3:
      - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
+  utter_please_answer_1_2_3_4:
+     - text: "Antwoord alsjeblieft met '1,' '2,' '3,' of '4.'"
   utter_please_answer_1_to_5:
      - text: "Kun je een geheel getal tussen 1 en 5 opgeven? ..."
   utter_please_answer_yes_no:
@@ -265,7 +279,7 @@ responses:
      - text: "Prima, dit is wel een belangrijke oefening die je snel moet doen. ..."
      - text: "Goed, laten we deze oefening later doen. ..."
   utter_ask_rescheduling_options_form_rescheduling_option:
-     - text: "Wanneer komt het beter uit? (1) Vanmiddag, om 17:00. (2) Vanavond, om 20:00. (3) Morgenochtend, om 8:00. Geef antwoord met 1, 2, of 3."
+     - text: "Wanneer komt het beter uit? {rescheduling_options_string} Geef antwoord met 1, 2, 3, of 4."
   utter_rescheduling_option_chosen:
      - text: "Prima, ik kom dan bij je terug."
   utter_user_chose_now:
@@ -416,6 +430,7 @@ actions:
 ### Rescheduling query dialog
 - validate_rescheduling_now_or_later_form
 - action_reset_rescheduling_now_slot
+- action_get_rescheduling_options_list
 - validate_rescheduling_options_form
 - action_reset_rescheduling_option_slot
 ### Data from custom tracker

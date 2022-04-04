@@ -434,26 +434,26 @@ class ActionGetReschedulingOptionsList(Action):
     async def run(self, dispatcher, tracker, domain):
         
         # define morning, afternoon, evening
-        morning = [6, 12]
-        afternoon = [12, 18]
-        evening = [18, 24]
+        MORNING = (6, 12)
+        AFTERNOON = (12, 18)
+        EVENING = (18, 24)
         
         options = ["In een uur"]
         
         current_hour = datetime.datetime.now(pytz.timezone('Europe/Amsterdam')).hour
         
         # In the morning
-        if morning[0] <= current_hour < morning[1]:
+        if MORNING[0] <= current_hour < MORNING[1]:
             options +=  ["Vanmiddag, om 16:00",
                          "Vanavond, om 21:00",
                          "Morgenochtend om deze tijd"]
         # In the afternoon
-        elif afternoon[0] <= current_hour < afternoon[1]:
+        elif AFTERNOON[0] <= current_hour < AFTERNOON[1]:
             options += ["Vanavond, om 21:00",
                         "Morgenochtend, om 8:00",
                         "Morgenmiddag om deze tijd"]
         # In the evening
-        elif evening[0] <= current_hour < evening[1]:
+        elif EVENING[0] <= current_hour < EVENING[1]:
             options += ["Morgenochtend, om 8:00",
                         "Morgenmiddag, om 16:00",
                         "Morgenavond om deze tijd"]

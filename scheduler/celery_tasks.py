@@ -2,12 +2,8 @@ import os
 
 import requests
 from celery import Celery
-from dotenv import load_dotenv
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
-
-load_dotenv()
-DB_HOST = os.getenv('DB_HOST')
 
 app = Celery('celery_tasks', broker='redis://redis:6379')
 
@@ -39,6 +35,6 @@ def get_user_ids():
     Get user ids of all existing users in the database
     TODO: Add filters, i.e. active users or in a specific phase of intervention.
     """
-    session = get_db_session(db_host=DB_HOST)
+    session = get_db_session(db_url=os.environ['DATABASE_URL'])
     users = session.query(Users).all()
     return [user.nicedayuid for user in users]

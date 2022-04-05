@@ -23,7 +23,7 @@ from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAn
 from virtual_coach_db.helper.helper import get_db_session
 
 # load database url and niceday_api_endopint variables
-DATABASE_URL = os.environ('DATABASE_URL')
+DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
 

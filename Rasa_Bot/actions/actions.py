@@ -12,7 +12,6 @@ import pytz
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv
 from niceday_client import NicedayClient
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
@@ -23,9 +22,8 @@ from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAn
                                               UserInterventionState)
 from virtual_coach_db.helper.helper import get_db_session
 
-# load .env-file and get db_host and niceday_api_endopint variables
-load_dotenv()
-DB_HOST = os.getenv('DB_HOST')
+# load database url and niceday_api_endopint variables
+DATABASE_URL = os.environ('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
 
@@ -37,7 +35,7 @@ class DialogQuestions(Enum):
 
 
 def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
-    session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
     entry = DialogAnswers(answer=answer,
@@ -59,7 +57,7 @@ class GetAgeFromDatabase(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
-        session = get_db_session(db_host=DB_HOST)
+        session = get_db_session(db_url=DATABASE_URL)
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
@@ -99,7 +97,7 @@ class GetNameFromDatabase(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Creat session object to connect db
-        session = get_db_session(db_host=DB_HOST)
+        session = get_db_session(db_url=DATABASE_URL)
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
@@ -250,7 +248,7 @@ class ActionStorePaEvaluation(Action):
     async def run(self, dispatcher, tracker, domain):
 
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
+        session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
 
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -709,7 +707,7 @@ class ActionStoreFutureSelfDialogState(Action):
     async def run(self, dispatcher, tracker, domain):
 
         step = tracker.get_slot("future_self_dialog_state")
-        session = get_db_session(db_host=DB_HOST)
+        session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
         selected = (
             session.query(

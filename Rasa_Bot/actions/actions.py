@@ -34,6 +34,8 @@ class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?
     FUTURE_SELF_MOVER_WORDS = 3  # Which three words suits you as exerciser?
     FUTURE_SELF_MOVER_WHY = 4  # Why did you pick these words for exercising?
+    FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER = 5  # I see myself as smoker, non-smoker or quitter
+    FUTURE_SELF_I_SEE_MYSELF_AS_MOVER = 6  # I see myself as active, bit active or not active
 
 
 def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
@@ -312,6 +314,34 @@ class ActionStoreWhySmokerWords(Action):
         answer = tracker.get_slot("why_picked_words")
         user_id = tracker.current_state()['sender_id']
         store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WHY)
+        return
+
+
+class ActionStoreSeeMyselfAsPickedSmokerWords(Action):
+    """"To save user input on how they see themselves as smoker in future self dialog to database"""
+
+    def name(self):
+        return "action_store_see_myself_as_picked_smoker_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("see_myself_as_picked_words_smoker")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer,
+                                  DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER)
+        return
+
+
+class ActionStoreSeeMyselfAsPickedMoverWords(Action):
+    """"To save user input on how they see themselves as mover in future self dialog to database"""
+
+    def name(self):
+        return "action_store_see_myself_as_picked_mover_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("see_myself_as_picked_words_mover")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer,
+                                  DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER)
         return
 
 

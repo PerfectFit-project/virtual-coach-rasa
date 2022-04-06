@@ -288,6 +288,7 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
+    - action: action_store_see_myself_as_picked_smoker_words
     - action: utter_leuk
     - action: action_reset_see_myself_as_picked_words_smoker
     - slot_was_set:
@@ -333,6 +334,7 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
+    - action: action_store_see_myself_as_picked_mover_words
     - action: utter_fijn
     - action: action_reset_see_myself_as_picked_words_mover
     - slot_was_set:

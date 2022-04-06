@@ -3,7 +3,7 @@ name: Push Containers to Heroku
 on: 
   push:
     branches:
-      - main
+      - test_heroku_container_push
 
 jobs:
   build:

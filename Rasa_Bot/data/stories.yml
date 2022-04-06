@@ -130,7 +130,8 @@ stories:
     - action: action_reset_rescheduling_now_slot
     - slot_was_set:
       - rescheduling_now: null
-    - action: rescheduling_options_form  # TODO: determine suitable rescheduling options.
+    - action: action_get_rescheduling_options_list
+    - action: rescheduling_options_form
     - active_loop: rescheduling_options_form  # TODO: use rescheduling_option slot to reschedule
     - active_loop: null
     - action: utter_rescheduling_option_chosen
@@ -287,6 +288,7 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
+    - action: action_store_see_myself_as_picked_smoker_words
     - action: utter_leuk
     - action: action_reset_see_myself_as_picked_words_smoker
     - slot_was_set:
@@ -332,6 +334,7 @@ stories:
     - slot_was_set:
       - confirm_words_response: true
     - active_loop: null
+    - action: action_store_see_myself_as_picked_mover_words
     - action: utter_fijn
     - action: action_reset_see_myself_as_picked_words_mover
     - slot_was_set:

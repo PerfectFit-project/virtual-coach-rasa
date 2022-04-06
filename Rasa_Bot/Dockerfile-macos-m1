@@ -1,6 +1,7 @@
 # Dockerfile for rasa server, compatible with macos M1 chip
 
 # Apple M1 chip compatible Dockerfile with rasa 3.0.5 based on https://github.com/khalo-sa/rasa-apple-silicon
+# This doesn't match the version 3.1.0 that we use in the rest of the project, but it is compatible
 FROM svenvanderburg/rasa-apple-silicon:3.0.5
 
 # Change to root user to install dependencies

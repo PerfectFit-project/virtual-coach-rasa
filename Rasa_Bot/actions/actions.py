@@ -8,10 +8,10 @@ import logging
 import os
 import string
 from enum import Enum
+import pytz
 from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv
 from niceday_client import NicedayClient
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
@@ -22,9 +22,8 @@ from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAn
                                               UserInterventionState)
 from virtual_coach_db.helper.helper import get_db_session
 
-# load .env-file and get db_host and niceday_api_endopint variables
-load_dotenv()
-DB_HOST = os.getenv('DB_HOST')
+# load database url and niceday_api_endopint variables
+DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
 
@@ -33,10 +32,12 @@ class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?
     FUTURE_SELF_MOVER_WORDS = 3  # Which three words suits you as exerciser?
     FUTURE_SELF_MOVER_WHY = 4  # Why did you pick these words for exercising?
+    FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER = 5  # I see myself as smoker, non-smoker or quitter
+    FUTURE_SELF_I_SEE_MYSELF_AS_MOVER = 6  # I see myself as active, bit active or not active
 
 
 def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
-    session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
     entry = DialogAnswers(answer=answer,
@@ -58,7 +59,7 @@ class GetAgeFromDatabase(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
-        session = get_db_session(db_host=DB_HOST)
+        session = get_db_session(db_url=DATABASE_URL)
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
@@ -98,7 +99,7 @@ class GetNameFromDatabase(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Creat session object to connect db
-        session = get_db_session(db_host=DB_HOST)
+        session = get_db_session(db_url=DATABASE_URL)
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
@@ -249,7 +250,7 @@ class ActionStorePaEvaluation(Action):
     async def run(self, dispatcher, tracker, domain):
 
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        session = get_db_session(db_host=DB_HOST)  # Create session object to connect db
+        session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
 
         user_id = tracker.current_state()['sender_id']
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -311,6 +312,34 @@ class ActionStoreWhySmokerWords(Action):
         answer = tracker.get_slot("why_picked_words")
         user_id = tracker.current_state()['sender_id']
         store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WHY)
+        return
+
+
+class ActionStoreSeeMyselfAsPickedSmokerWords(Action):
+    """"To save user input on how they see themselves as smoker in future self dialog to database"""
+
+    def name(self):
+        return "action_store_see_myself_as_picked_smoker_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("see_myself_as_picked_words_smoker")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer,
+                                  DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER)
+        return
+
+
+class ActionStoreSeeMyselfAsPickedMoverWords(Action):
+    """"To save user input on how they see themselves as mover in future self dialog to database"""
+
+    def name(self):
+        return "action_store_see_myself_as_picked_mover_words"
+
+    async def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot("see_myself_as_picked_words_mover")
+        user_id = tracker.current_state()['sender_id']
+        store_dialog_answer_to_db(user_id, answer,
+                                  DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER)
         return
 
 
@@ -422,6 +451,57 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         if value.lower() in ['later', 'later.', 'niet nu']:
             return False
         return None
+    
+
+class ActionGetReschedulingOptionsList(Action):
+    """Get the possible rescheduling options."""
+    
+    def name(self):
+        return "action_get_rescheduling_options_list"
+    
+    async def run(self, dispatcher, tracker, domain):
+        
+        # define morning, afternoon, evening
+        MORNING = (6, 12)
+        AFTERNOON = (12, 18)
+        EVENING = (18, 24)
+        
+        options = ["In een uur"]
+        
+        current_hour = datetime.datetime.now(pytz.timezone('Europe/Amsterdam')).hour
+        
+        # In the morning
+        if MORNING[0] <= current_hour < MORNING[1]:
+            options +=  ["Vanmiddag, om 16:00",
+                         "Vanavond, om 21:00",
+                         "Morgenochtend om deze tijd"]
+        # In the afternoon
+        elif AFTERNOON[0] <= current_hour < AFTERNOON[1]:
+            options += ["Vanavond, om 21:00",
+                        "Morgenochtend, om 8:00",
+                        "Morgenmiddag om deze tijd"]
+        # In the evening
+        elif EVENING[0] <= current_hour < EVENING[1]:
+            options += ["Morgenochtend, om 8:00",
+                        "Morgenmiddag, om 16:00",
+                        "Morgenavond om deze tijd"]
+        # In the night
+        else:
+            options +=  ["Vanmiddag, om 16:00",
+                         "Vanavond, om 21:00",
+                         "Morgen om deze tijd"]
+        
+        # Create string of options to utter them
+        num_options = len(options)
+        rescheduling_options_string = ""
+        for o in range(num_options):
+            rescheduling_options_string += "(" + str(o + 1) + ") " + options[o] + "."
+            if not o == len(options) - 1:
+                rescheduling_options_string += " "
+        
+        return [SlotSet("rescheduling_options_list", options),
+                SlotSet("rescheduling_options_string", 
+                        rescheduling_options_string)]
 
 
 class ActionResetReschedulingOptionSlot(Action):
@@ -445,7 +525,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
         """Validate rescheduling_option input."""
 
         if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
             return {"rescheduling_option": None}
 
         return {"rescheduling_option": int(value)}
@@ -456,7 +536,7 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
             value = int(value)
         except ValueError:
             return False
-        if (value < 1) or (value > 3):
+        if (value < 1) or (value > 4):
             return False
         return True
 
@@ -657,7 +737,7 @@ class ActionStoreFutureSelfDialogState(Action):
     async def run(self, dispatcher, tracker, domain):
 
         step = tracker.get_slot("future_self_dialog_state")
-        session = get_db_session(db_host=DB_HOST)
+        session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
         selected = (
             session.query(

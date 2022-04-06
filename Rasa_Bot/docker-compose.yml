@@ -7,6 +7,10 @@ services:
     volumes:
       - ./:/app
     expose: ["5005"]
+    env_file:
+      - .env
   rasa_actions:
     build: actions/
     expose: ["5055"]
+    env_file:
+      - .env

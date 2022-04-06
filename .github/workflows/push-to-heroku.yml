@@ -1,9 +1,9 @@
-name: Push Container to Heroku
+name: Push Containers to Heroku
 
 on: 
   push:
     branches:
-      - test_heroku_container_push
+      - main
 
 jobs:
   build:

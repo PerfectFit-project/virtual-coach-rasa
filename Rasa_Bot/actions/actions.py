@@ -474,8 +474,6 @@ class ActionGetReschedulingOptionsList(Action):
         
         current_hour = datetime.datetime.now().astimezone(TIMEZONE).hour
         
-        logging.info("Current hour actions: " + str(current_hour))
-        
         
         # In the morning
         if MORNING[0] <= current_hour < MORNING[1]:

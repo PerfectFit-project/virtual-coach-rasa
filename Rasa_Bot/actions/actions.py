@@ -754,12 +754,15 @@ class ActionStoreFutureSelfDialogState(Action):
             )
             .one_or_none()
         )
+        
+        # Current time to be saved in database
+        last_time = datetime.datetime.now().astimezone(TIMEZONE)
 
         # If already an entry for the user for the future self dialog exists
         # in the intervention state table
         if selected is not None:
             # Update time and part of future self dialog
-            selected.last_time=datetime.datetime.now().astimezone(TIMEZONE)
+            selected.last_time=last_time
             selected.last_part=step
 
         # No entry exists yet for user for the future self dialog in 
@@ -769,7 +772,6 @@ class ActionStoreFutureSelfDialogState(Action):
 
             # User exists in Users table
             if selected_user is not None:
-                last_time = datetime.datetime.now().astimezone(TIMEZONE)
                 entry = UserInterventionState(intervention_component="future_self_dialog",
                                               last_time=last_time, 
                                               last_part=step)

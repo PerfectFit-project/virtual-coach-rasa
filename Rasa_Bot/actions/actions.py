@@ -472,7 +472,7 @@ class ActionGetReschedulingOptionsList(Action):
         
         options = ["In een uur"]
         
-        current_hour = datetime.datetime.now.astimezone(TIMEZONE).hour
+        current_hour = datetime.datetime.now().astimezone(TIMEZONE).hour
         
         logging.info("Current hour actions: " + str(current_hour))
         

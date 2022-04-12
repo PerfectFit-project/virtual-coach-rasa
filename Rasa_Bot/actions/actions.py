@@ -8,9 +8,9 @@ import logging
 import os
 import string
 from enum import Enum
-import pytz
 from typing import Any, Dict, Text
 
+from dateutil import tz
 from dateutil.relativedelta import relativedelta
 from niceday_client import NicedayClient
 from paalgorithms import weekly_kilometers
@@ -25,6 +25,9 @@ from virtual_coach_db.helper.helper import get_db_session
 # load database url and niceday_api_endopint variables
 DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
+
+# Timezone for saving data to database
+TIMEZONE = tz.gettz("Europe/Amsterdam")
 
 
 class DialogQuestions(Enum):
@@ -42,7 +45,7 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
 
     entry = DialogAnswers(answer=answer,
                           question_id=question.value,
-                          datetime=datetime.datetime.now())
+                          datetime=datetime.datetime.now().astimezone(TIMEZONE))
 
     selected.dialog_answers.append(entry)
     session.commit()  # Update database
@@ -257,9 +260,10 @@ class ActionStorePaEvaluation(Action):
 
         entry = ClosedUserAnswers(value=pa_evaluation_response,
                                   question='paevaluation',
-                                  datetime=datetime.datetime.now())
+                                  datetime=datetime.datetime.now().astimezone(TIMEZONE))
         selected.closed_user_answers.append(entry)
         session.commit()  # Update database
+        
         return [SlotSet("pa_evaluation_response", None)]
 
 
@@ -468,7 +472,8 @@ class ActionGetReschedulingOptionsList(Action):
         
         options = ["In een uur"]
         
-        current_hour = datetime.datetime.now(pytz.timezone('Europe/Amsterdam')).hour
+        current_hour = datetime.datetime.now().astimezone(TIMEZONE).hour
+        
         
         # In the morning
         if MORNING[0] <= current_hour < MORNING[1]:
@@ -749,12 +754,15 @@ class ActionStoreFutureSelfDialogState(Action):
             )
             .one_or_none()
         )
+        
+        # Current time to be saved in database
+        last_time = datetime.datetime.now().astimezone(TIMEZONE)
 
         # If already an entry for the user for the future self dialog exists
         # in the intervention state table
         if selected is not None:
             # Update time and part of future self dialog
-            selected.last_time=datetime.datetime.now()
+            selected.last_time=last_time
             selected.last_part=step
 
         # No entry exists yet for user for the future self dialog in 
@@ -765,7 +773,7 @@ class ActionStoreFutureSelfDialogState(Action):
             # User exists in Users table
             if selected_user is not None:
                 entry = UserInterventionState(intervention_component="future_self_dialog",
-                                              last_time=datetime.datetime.now(), 
+                                              last_time=last_time, 
                                               last_part=step)
                 selected_user.user_intervention_state.append(entry)
 

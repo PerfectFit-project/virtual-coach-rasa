@@ -769,8 +769,9 @@ class ActionStoreFutureSelfDialogState(Action):
 
             # User exists in Users table
             if selected_user is not None:
+                last_time = datetime.datetime.now().astimezone(TIMEZONE)
                 entry = UserInterventionState(intervention_component="future_self_dialog",
-                                              last_time=datetime.datetime.now().astimezone(TIMEZONE), 
+                                              last_time=last_time, 
                                               last_part=step)
                 selected_user.user_intervention_state.append(entry)
 

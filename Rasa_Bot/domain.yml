@@ -392,8 +392,8 @@ responses:
             "
     - condition: 
         - type: slot
-        - name: future_self_dialog_step_1_repetition
-        - value: true
+          name: future_self_dialog_step_1_repetition
+          value: true
       text: "Eerst kijken wij wat voor roker jij op dit moment bent.\n
              De vorige keer zei je dit over roken: {future_self_dialog_smoker_words_prev}.
              Hoe kijk je er nu tegenaan?\n
@@ -401,8 +401,8 @@ responses:
             "
     - condition: 
         - type: slot
-        - name: future_self_dialog_step_1_repetition
-        - value: true
+          name: future_self_dialog_step_1_repetition
+          value: true
       text: "We gaan nu eerst kijken naar wat voor roker jij op dit moment bent.\n
              De vorige keer zei je dit over roken: {future_self_dialog_smoker_words_prev}.
              Hoe kijk je er nu tegenaan?\n
@@ -410,8 +410,8 @@ responses:
             "
     - condition: 
         - type: slot
-        - name: future_self_dialog_step_1_repetition
-        - value: true
+          name: future_self_dialog_step_1_repetition
+          value: true
       text: "We beginnen met wat voor roker jij op dit moment bent.\n
              De vorige keer zei je dit over roken: {future_self_dialog_smoker_words_prev}.
              Hoe kijk je er nu tegenaan?\n
@@ -427,8 +427,8 @@ responses:
             "
     - condition: 
         - type: slot
-        - name: future_self_dialog_step_1_repetition
-        - value: true
+          name: future_self_dialog_step_1_repetition
+          value: true
       text: "Welke woorden vind jij passen bij bewegen?\n
              De vorige keer zei je dit over bewegen: {future_self_dialog_mover_words_prev}.
              Hoe kijk je er nu tegenaan?\n

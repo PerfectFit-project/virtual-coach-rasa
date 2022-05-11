@@ -148,7 +148,8 @@ stories:
     - intent: request_future_self_dialog # TODO: Replace with external trigger
     - action: action_get_name_from_database
     - action: utter_greet
-    - action: utter_future_self_intro # TODO: Add repetition of activity yes/no
+    - action: utter_future_self_intro
+    - action: action_get_future_self_repetition_from_database
     - action: utter_future_self_intro_exercise_name
     - action: utter_future_self_duration 
     - action: utter_future_self_duration_do_at_once
@@ -164,7 +165,7 @@ stories:
   steps:
     - checkpoint: ask_smoking_words_list
     - action: utter_current_smoker
-    - action: utter_smoking_word_list # TODO: In case of repetition retrieve last chosen words
+    - action: utter_smoking_word_list
     - action: pick_smoker_words_form
     - active_loop: pick_smoker_words_form
     - active_loop: null
@@ -218,7 +219,7 @@ stories:
   steps:
     - checkpoint: finished_check_picked_smoker_words
     - action: utter_current_mover
-    - action: utter_moving_word_list # TODO: In case of repetition retrieve last chosen words
+    - action: utter_moving_word_list
     - action: pick_mover_words_form
     - active_loop: pick_mover_words_form
     - active_loop: null

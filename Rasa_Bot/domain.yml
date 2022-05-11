@@ -110,6 +110,28 @@ slots:
       - active_loop: rescheduling_options_form
 
   ### Future-self dialog
+  
+  # Whether the user has done the first step before
+  future_self_dialog_step_1_repetition:
+    type: bool
+    influence_conversation: false
+    mappings:
+    - type: custom
+    
+  # Chosen smoker words from previous time the dialog was done
+  future_self_dialog_smoker_words_prev:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+    
+  # Chosen mover words from previous time the dialog was done by the user
+  future_self_dialog_mover_words_prev:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  
   picked_words:
     type: text
     influence_conversation: false
@@ -166,7 +188,8 @@ slots:
      mappings:
      - type: custom
      
-  # Indicates parts of future self dialog finished by user: 1, ...
+  # Indicates parts of future self dialog finished by user in 
+  # current conversation: 1, ...
   future_self_dialog_state:
      type: float
      influence_conversation: false
@@ -298,10 +321,54 @@ responses:
     - text: "Vandaag gaan wij een leuke oefening doen die je gaat helpen te stoppen met roken en genoeg te bewegen. ..."
     - text: "We gaan nu aan de slag met een oefening om jou te helpen met stoppen met roken en genoeg laten bewegen. ..."
     - text: "Om jou te helpen om genoeg te bewegen en te laten stoppen met roken, gaan we nu een oefening doen. ..."
+  # If this is not the first time the user does the first part of the dialog, we need to add some sentences.
   utter_future_self_intro_exercise_name:
     - text: "De oefening heet 'wie wil ik straks zijn.' ..."
-    - text: "Deze oefening noemen we 'wie wil ik straks zijn.' ..."
-    - text: "De naam van de oefening is 'wie wil ik straks zijn.' ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "De oefening heet 'wie wil ik straks zijn.' Je hebt deze oefening al eens eerder gedaan. Juist door herhaling gaat deze oefening je helpen. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "De oefening heet 'wie wil ik straks zijn.' Door deze oefening te herhalen wordt het makkelijker je doelen te behalen. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "De oefening heet 'wie wil ik straks zijn.' Je hebt de oefening al een keer gedaan. Het wordt makkelijker je doelen te halen als je hem nog een keer doet. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "Deze oefening noemen we 'wie wil ik straks zijn.' Je hebt deze oefening al eens eerder gedaan. Juist door herhaling gaat deze oefening je helpen. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "Deze oefening noemen we 'wie wil ik straks zijn.' Door deze oefening te herhalen wordt het makkelijker je doelen te behalen. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "Deze oefening noemen we 'wie wil ik straks zijn.' Je hebt de oefening al een keer gedaan. Het wordt makkelijker je doelen te halen als je hem nog een keer doet. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "De naam van de oefening is 'wie wil ik straks zijn.' Je hebt deze oefening al eens eerder gedaan. Juist door herhaling gaat deze oefening je helpen. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "De naam van de oefening is 'wie wil ik straks zijn.' Door deze oefening te herhalen wordt het makkelijker je doelen te behalen. ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: true 
+      text: "De naam van de oefening is 'wie wil ik straks zijn.' Je hebt de oefening al een keer gedaan. Het wordt makkelijker je doelen te halen als je hem nog een keer doet. ..."
   utter_future_self_duration:
     - text: "Het duurt ongeveer 15 minuten. ..."
     - text: "Het zal ongeveer 15 minuten duren. ..."
@@ -319,14 +386,52 @@ responses:
             "
   utter_current_smoker:
     - text: "Eerst kijken wij wat voor roker jij op dit moment bent.
-             Ik laat je zo een lijst met woorden zien.
-             Welke woorden passen bij jou als roker?
+             Ik laat je zo een lijst met woorden zien.\n
+             Welke woorden passen bij jou als roker?\n
              Roken is...
+            "
+    - condition: 
+        - type: slot
+        - name: future_self_dialog_step_1_repetition
+        - value: true
+      text: "Eerst kijken wij wat voor roker jij op dit moment bent.\n
+             De vorige keer zei je dit over roken: {future_self_dialog_smoker_words_prev}.
+             Hoe kijk je er nu tegenaan?\n
+             Roken is ...
+            "
+    - condition: 
+        - type: slot
+        - name: future_self_dialog_step_1_repetition
+        - value: true
+      text: "We gaan nu eerst kijken naar wat voor roker jij op dit moment bent.\n
+             De vorige keer zei je dit over roken: {future_self_dialog_smoker_words_prev}.
+             Hoe kijk je er nu tegenaan?\n
+             Roken is ...
+            "
+    - condition: 
+        - type: slot
+        - name: future_self_dialog_step_1_repetition
+        - value: true
+      text: "We beginnen met wat voor roker jij op dit moment bent.\n
+             De vorige keer zei je dit over roken: {future_self_dialog_smoker_words_prev}.
+             Hoe kijk je er nu tegenaan?\n
+             Roken is ...
             "
   utter_intro_current_mover:
     - text: "We gaan nu dezelfde oefening doen voor bewegen. ..."
+    - text: "Voor bewegen gaan we nu dezelfde oefening doen. ..."
+    - text: "We herhalen deze oefening voor bewegen. ..."
   utter_current_mover:
-    - text: "Welke woorden vind jij passen bij bewegen?
+    - text: "Welke woorden vind jij passen bij bewegen?\n
+             Bewegen is ...
+            "
+    - condition: 
+        - type: slot
+        - name: future_self_dialog_step_1_repetition
+        - value: true
+      text: "Welke woorden vind jij passen bij bewegen?\n
+             De vorige keer zei je dit over bewegen: {future_self_dialog_mover_words_prev}.
+             Hoe kijk je er nu tegenaan?\n
              Bewegen is ...
             "
   utter_smoking_word_list:
@@ -407,6 +512,7 @@ actions:
 - action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
 ### Future self dialog
+- action_get_future_self_repetition_from_database
 - action_store_smoker_words
 - action_store_mover_words
 - action_store_why_smoker_words

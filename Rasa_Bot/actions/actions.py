@@ -18,6 +18,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
+from sqlalchemy import func
 from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
                                               UserInterventionState)
 from virtual_coach_db.helper.helper import get_db_session
@@ -731,8 +732,95 @@ class ActionSetFutureSelfDialogStateStep1(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("future_self_dialog_state", 1)]
+    
+    
+class ActionGetFutureSelfRepetitionFromDatabase(Action):
+    """"To get from database whether this is a repetition of the
+        future self dialog and if yes, the relevant saved
+        responses from the previous time."""
 
+    def name(self):
+        return "action_get_future_self_repetition_from_database"
 
+    async def run(self, dispatcher, tracker, domain):
+        
+        session = get_db_session(db_url=DATABASE_URL)
+        user_id = tracker.current_state()['sender_id']
+        
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid==user_id, 
+                UserInterventionState.intervention_component=="future_self_dialog"
+            )
+            .one_or_none()
+        )
+        
+        # If already an entry for the user for the future self dialog exists
+        # in the intervention state table
+        if selected is not None:
+            
+            # Get most recent saved chosen smoker words
+            subquery_smoker =  (
+                session.query(
+                   func.max(DialogAnswers.datetime)
+                )
+                .filter(
+                    DialogAnswers.users_nicedayuid==user_id,
+                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
+                )
+            )
+            
+            query =  (
+                session.query(
+                   DialogAnswers
+                )
+                .filter(
+                    DialogAnswers.users_nicedayuid==user_id,
+                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value,
+                    DialogAnswers.datetime == subquery_smoker
+                )
+            )
+
+            smoker_words = query.answer
+            
+            # Get most recent saved chosen smoker words
+            subquery_mover =  (
+                session.query(
+                   func.max(DialogAnswers.datetime)
+                )
+                .filter(
+                    DialogAnswers.users_nicedayuid==user_id,
+                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
+                )
+            )
+            
+            query =  (
+                session.query(
+                   DialogAnswers
+                )
+                .filter(
+                    DialogAnswers.users_nicedayuid==user_id,
+                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_MOVER_WORDS.value,
+                    DialogAnswers.datetime == subquery_mover
+                )
+            )
+
+            mover_words = query.answer
+            
+            return [SlotSet("future_self_dialog_step_1_repetition", 1),
+                    SlotSet("future_self_dialog_smoker_words_prev", smoker_words),
+                    SlotSet("future_self_dialog_mover_words_prev", mover_words)]
+          
+        # No entry exists yet for user for the future self dialog in 
+        # the intervention state table
+        else:
+            return [SlotSet("future_self_dialog_step_1_repetition", 0)]
+            
+            
+    
 class ActionStoreFutureSelfDialogState(Action):
     """"To save state of future self dialog"""
 

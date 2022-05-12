@@ -786,7 +786,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
 
             smoker_words = query.answer
             
-            # Get most recent saved chosen smoker words
+            # Get most recent saved chosen mover words
             subquery_mover =  (
                 session.query(
                    func.max(DialogAnswers.datetime)

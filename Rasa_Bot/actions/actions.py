@@ -810,14 +810,14 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
 
             mover_words = query.answer
             
-            return [SlotSet("future_self_dialog_step_1_repetition", 1),
+            return [SlotSet("future_self_dialog_step_1_repetition", True),
                     SlotSet("future_self_dialog_smoker_words_prev", smoker_words),
                     SlotSet("future_self_dialog_mover_words_prev", mover_words)]
           
         # No entry exists yet for user for the future self dialog in 
         # the intervention state table
         else:
-            return [SlotSet("future_self_dialog_step_1_repetition", 0)]
+            return [SlotSet("future_self_dialog_step_1_repetition", False)]
             
             
     

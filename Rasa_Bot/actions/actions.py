@@ -773,7 +773,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                 )
             )
             
-            query =  (
+            query_smoker =  (
                 session.query(
                    DialogAnswers
                 )
@@ -782,9 +782,10 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                     DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value,
                     DialogAnswers.datetime == subquery_smoker
                 )
+                .first()
             )
 
-            smoker_words = query.answer
+            smoker_words = query_smoker.answer
             
             # Get most recent saved chosen mover words
             subquery_mover =  (
@@ -797,7 +798,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                 )
             )
             
-            query =  (
+            query_mover =  (
                 session.query(
                    DialogAnswers
                 )
@@ -806,9 +807,10 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                     DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_MOVER_WORDS.value,
                     DialogAnswers.datetime == subquery_mover
                 )
+                .first()
             )
 
-            mover_words = query.answer
+            mover_words = query_mover.answer
             
             return [SlotSet("future_self_dialog_step_1_repetition", True),
                     SlotSet("future_self_dialog_smoker_words_prev", smoker_words),

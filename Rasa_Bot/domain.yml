@@ -323,7 +323,11 @@ responses:
     - text: "Om jou te helpen om genoeg te bewegen en te laten stoppen met roken, gaan we nu een oefening doen. ..."
   # If this is not the first time the user does the first part of the dialog, we need to add some sentences.
   utter_future_self_intro_exercise_name:
-    - text: "De oefening heet 'wie wil ik straks zijn.' ..."
+    - condition:
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: false 
+      text: "De oefening heet 'wie wil ik straks zijn.' ..."
     - condition:
         - type: slot
           name: future_self_dialog_step_1_repetition
@@ -385,7 +389,11 @@ responses:
              Geen stress, ik loop er stap voor stap met je doorheen. ...
             "
   utter_current_smoker:
-    - text: "Eerst kijken wij wat voor roker jij op dit moment bent.
+    - condition: 
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: false
+      text: "Eerst kijken wij wat voor roker jij op dit moment bent.
              Ik laat je zo een lijst met woorden zien.\n
              Welke woorden passen bij jou als roker?\n
              Roken is ...
@@ -422,7 +430,11 @@ responses:
     - text: "Voor bewegen gaan we nu dezelfde oefening doen. ..."
     - text: "We herhalen deze oefening voor bewegen. ..."
   utter_current_mover:
-    - text: "Welke woorden vind jij passen bij bewegen?\n
+    - condition: 
+        - type: slot
+          name: future_self_dialog_step_1_repetition
+          value: false
+      text: "Welke woorden vind jij passen bij bewegen?\n
              Bewegen is ...
             "
     - condition: 

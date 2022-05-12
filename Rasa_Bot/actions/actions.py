@@ -732,8 +732,8 @@ class ActionSetFutureSelfDialogStateStep1(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("future_self_dialog_state", 1)]
-    
-    
+
+
 class ActionGetFutureSelfRepetitionFromDatabase(Action):
     """"To get from database whether this is a repetition of the
         future self dialog and if yes, the relevant saved
@@ -743,10 +743,10 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         return "action_get_future_self_repetition_from_database"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
-        
+
         selected = (
             session.query(
                 UserInterventionState
@@ -757,11 +757,11 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             )
             .one_or_none()
         )
-        
+
         # If already an entry for the user for the future self dialog exists
         # in the intervention state table
         if selected is not None:
-            
+
             # Get most recent saved chosen smoker words
             subquery_smoker =  (
                 session.query(
@@ -772,7 +772,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                     DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
                 )
             )
-            
+
             query_smoker =  (
                 session.query(
                    DialogAnswers
@@ -786,7 +786,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             )
 
             smoker_words = query_smoker.answer
-            
+
             # Get most recent saved chosen mover words
             subquery_mover =  (
                 session.query(
@@ -797,7 +797,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                     DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
                 )
             )
-            
+
             query_mover =  (
                 session.query(
                    DialogAnswers
@@ -811,18 +811,16 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             )
 
             mover_words = query_mover.answer
-            
+
             return [SlotSet("future_self_dialog_step_1_repetition", True),
                     SlotSet("future_self_dialog_smoker_words_prev", smoker_words),
                     SlotSet("future_self_dialog_mover_words_prev", mover_words)]
-          
+
         # No entry exists yet for user for the future self dialog in 
         # the intervention state table
-        else:
-            return [SlotSet("future_self_dialog_step_1_repetition", False)]
-            
-            
-    
+        return [SlotSet("future_self_dialog_step_1_repetition", False)]
+     
+
 class ActionStoreFutureSelfDialogState(Action):
     """"To save state of future self dialog"""
 

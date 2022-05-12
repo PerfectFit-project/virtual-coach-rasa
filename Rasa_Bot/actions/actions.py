@@ -12,7 +12,7 @@ from typing import Any, Dict, Text
 
 from dateutil import tz
 from dateutil.relativedelta import relativedelta
-from dateutil.rrule import *
+from dateutil.rrule import rrule, DAILY
 from niceday_client import NicedayClient, definitions
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
@@ -797,5 +797,8 @@ class SetCigarettesTrackerReminder(Action):
         user_id = int(tracker.current_state()['sender_id'])
 
         recursive_rule = rrule(DAILY, dtstart=datetime.datetime.now().astimezone(TIMEZONE))
-        result = client.set_tracker_reminder(user_id, definitions.TrackerName.SMOKING.value, "This is a tracker", recursive_rule)
+        client.set_tracker_reminder(user_id,
+                                    definitions.TrackerName.SMOKING.value,
+                                    "This is a tracker",
+                                    recursive_rule)
         return[]

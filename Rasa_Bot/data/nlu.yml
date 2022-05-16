@@ -105,4 +105,4 @@ nlu:
 
 - intent: request_tracker_reminder
   examples: |
-    - "Kun je een herinnering instellen om de gerookte sigaretten te volgen?"
+    - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"

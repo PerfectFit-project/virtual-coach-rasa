@@ -794,14 +794,16 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         if selected is not None:
 
             # Get most recent saved chosen smoker words
+            question_id = DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
             smoker_words = get_most_recent_question_answer_from_database(session, 
                                                                          user_id, 
-                                                                         DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value)
+                                                                         question_id)
 
             # Same for mover
+            question_id = DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
             mover_words = get_most_recent_question_answer_from_database(session, 
                                                                         user_id, 
-                                                                        DialogQuestions.FUTURE_SELF_MOVER_WORDS.value)
+                                                                        question_id)
 
             return [SlotSet("future_self_dialog_step_1_repetition", True),
                     SlotSet("future_self_dialog_smoker_words_prev", smoker_words),

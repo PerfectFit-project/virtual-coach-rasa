@@ -732,12 +732,12 @@ class ActionSetFutureSelfDialogStateStep1(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("future_self_dialog_state", 1)]
-    
-    
+
+
 def get_most_recent_question_answer_from_database(session, user_id, 
                                                   question_id):
     """To get chosen words from last run of future self dialog from database"""
-    
+
     subquery =  (
         session.query(
            func.max(DialogAnswers.datetime)
@@ -755,13 +755,13 @@ def get_most_recent_question_answer_from_database(session, user_id,
         .filter(
             DialogAnswers.users_nicedayuid==user_id,
             DialogAnswers.question_id==question_id,
-            DialogAnswers.datetime == subquery
+            DialogAnswers.datetime==subquery
         )
         .first()
     )
 
     words = query.answer
-    
+
     return words
 
 

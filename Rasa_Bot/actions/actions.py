@@ -725,17 +725,48 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
 
 
 class ActionSetFutureSelfDialogStateStep1(Action):
-    """"To set state of future self dialog to step 1"""
+    """To set state of future self dialog to step 1"""
 
     def name(self):
         return "action_set_future_self_dialog_state_step_1"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("future_self_dialog_state", 1)]
+    
+    
+def get_most_recent_question_answer_from_database(session, user_id, 
+                                                  question_id):
+    """To get chosen words from last run of future self dialog from database"""
+    
+    subquery =  (
+        session.query(
+           func.max(DialogAnswers.datetime)
+        )
+        .filter(
+            DialogAnswers.users_nicedayuid==user_id,
+            DialogAnswers.question_id==question_id
+        )
+    )
+
+    query =  (
+        session.query(
+           DialogAnswers
+        )
+        .filter(
+            DialogAnswers.users_nicedayuid==user_id,
+            DialogAnswers.question_id==question_id,
+            DialogAnswers.datetime == subquery
+        )
+        .first()
+    )
+
+    words = query.answer
+    
+    return words
 
 
 class ActionGetFutureSelfRepetitionFromDatabase(Action):
-    """"To get from database whether this is a repetition of the
+    """To get from database whether this is a repetition of the
         future self dialog and if yes, the relevant saved
         responses from the previous time."""
 
@@ -763,54 +794,14 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         if selected is not None:
 
             # Get most recent saved chosen smoker words
-            subquery_smoker =  (
-                session.query(
-                   func.max(DialogAnswers.datetime)
-                )
-                .filter(
-                    DialogAnswers.users_nicedayuid==user_id,
-                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
-                )
-            )
+            smoker_words = get_most_recent_question_answer_from_database(session, 
+                                                                         user_id, 
+                                                                         DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value)
 
-            query_smoker =  (
-                session.query(
-                   DialogAnswers
-                )
-                .filter(
-                    DialogAnswers.users_nicedayuid==user_id,
-                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value,
-                    DialogAnswers.datetime == subquery_smoker
-                )
-                .first()
-            )
-
-            smoker_words = query_smoker.answer
-
-            # Get most recent saved chosen mover words
-            subquery_mover =  (
-                session.query(
-                   func.max(DialogAnswers.datetime)
-                )
-                .filter(
-                    DialogAnswers.users_nicedayuid==user_id,
-                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
-                )
-            )
-
-            query_mover =  (
-                session.query(
-                   DialogAnswers
-                )
-                .filter(
-                    DialogAnswers.users_nicedayuid==user_id,
-                    DialogAnswers.question_id==DialogQuestions.FUTURE_SELF_MOVER_WORDS.value,
-                    DialogAnswers.datetime == subquery_mover
-                )
-                .first()
-            )
-
-            mover_words = query_mover.answer
+            # Same for mover
+            mover_words = get_most_recent_question_answer_from_database(session, 
+                                                                        user_id, 
+                                                                        DialogQuestions.FUTURE_SELF_MOVER_WORDS.value)
 
             return [SlotSet("future_self_dialog_step_1_repetition", True),
                     SlotSet("future_self_dialog_smoker_words_prev", smoker_words),

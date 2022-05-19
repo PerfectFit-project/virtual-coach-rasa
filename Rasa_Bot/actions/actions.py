@@ -18,6 +18,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
+from sqlalchemy import func
 from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
                                               UserInterventionState)
 from virtual_coach_db.helper.helper import get_db_session
@@ -724,7 +725,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
 
 
 class ActionSetFutureSelfDialogStateStep1(Action):
-    """"To set state of future self dialog to step 1"""
+    """To set state of future self dialog to step 1"""
 
     def name(self):
         return "action_set_future_self_dialog_state_step_1"
@@ -732,6 +733,86 @@ class ActionSetFutureSelfDialogStateStep1(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("future_self_dialog_state", 1)]
 
+
+def get_most_recent_question_answer_from_database(session, user_id, 
+                                                  question_id):
+    """To get chosen words from last run of future self dialog from database"""
+
+    subquery =  (
+        session.query(
+           func.max(DialogAnswers.datetime)
+        )
+        .filter(
+            DialogAnswers.users_nicedayuid==user_id,
+            DialogAnswers.question_id==question_id
+        )
+    )
+
+    query =  (
+        session.query(
+           DialogAnswers
+        )
+        .filter(
+            DialogAnswers.users_nicedayuid==user_id,
+            DialogAnswers.question_id==question_id,
+            DialogAnswers.datetime==subquery
+        )
+        .first()
+    )
+
+    words = query.answer
+
+    return words
+
+
+class ActionGetFutureSelfRepetitionFromDatabase(Action):
+    """To get from database whether this is a repetition of the
+        future self dialog and if yes, the relevant saved
+        responses from the previous time."""
+
+    def name(self):
+        return "action_get_future_self_repetition_from_database"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        session = get_db_session(db_url=DATABASE_URL)
+        user_id = tracker.current_state()['sender_id']
+
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid==user_id, 
+                UserInterventionState.intervention_component=="future_self_dialog"
+            )
+            .one_or_none()
+        )
+
+        # If already an entry for the user for the future self dialog exists
+        # in the intervention state table
+        if selected is not None:
+
+            # Get most recent saved chosen smoker words
+            question_id = DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
+            smoker_words = get_most_recent_question_answer_from_database(session, 
+                                                                         user_id, 
+                                                                         question_id)
+
+            # Same for mover
+            question_id = DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
+            mover_words = get_most_recent_question_answer_from_database(session, 
+                                                                        user_id, 
+                                                                        question_id)
+
+            return [SlotSet("future_self_dialog_step_1_repetition", True),
+                    SlotSet("future_self_dialog_smoker_words_prev", smoker_words),
+                    SlotSet("future_self_dialog_mover_words_prev", mover_words)]
+
+        # No entry exists yet for user for the future self dialog in 
+        # the intervention state table
+        return [SlotSet("future_self_dialog_step_1_repetition", False)]
+     
 
 class ActionStoreFutureSelfDialogState(Action):
     """"To save state of future self dialog"""

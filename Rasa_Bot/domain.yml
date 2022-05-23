@@ -16,6 +16,7 @@ intents:
 - completed_pa
 - request_future_self_dialog
 - request_tracked_cigarettes
+- request_tracker_reminder
 
 slots:
   ### General
@@ -513,6 +514,8 @@ responses:
     - text: "Oke laten we het opnieuw proberen. ..."
   utter_try_again_see_myself_mover:
     - text: "Oke laten we het nog een keer proberen. ..."
+  utter_reminder_is_set:
+    - text: "The reminder is set. ..."
     
 actions:
 - action_get_plan_week
@@ -556,6 +559,7 @@ actions:
 ### Data from custom tracker
 - action_save_number_cigarettes
 - action_get_number_cigarettes
+- action_set_cigarettes_tracker_reminder
 
 
 forms:

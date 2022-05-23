@@ -102,3 +102,7 @@ nlu:
 - intent: request_tracked_cigarettes
   examples: |
     - "Hoeveel sigaretten heb ik vandaag gerookt?"
+
+- intent: request_tracker_reminder
+  examples: |
+    - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"

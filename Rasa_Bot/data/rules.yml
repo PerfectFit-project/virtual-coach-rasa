@@ -36,3 +36,9 @@ rules:
   - intent: request_tracked_cigarettes
   - action: action_save_number_cigarettes
   - action: action_get_number_cigarettes
+
+- rule:  Set a tracker reminder when asked
+  steps:
+  - intent: request_tracker_reminder
+  - action: action_set_cigarettes_tracker_reminder
+  - action: utter_reminder_is_set

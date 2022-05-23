@@ -12,7 +12,8 @@ from typing import Any, Dict, Text
 
 from dateutil import tz
 from dateutil.relativedelta import relativedelta
-from niceday_client import NicedayClient
+from dateutil.rrule import rrule, DAILY
+from niceday_client import NicedayClient, definitions
 from paalgorithms import weekly_kilometers
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
@@ -865,3 +866,20 @@ class ActionStoreFutureSelfDialogState(Action):
         session.commit()  # Update database
 
         return []
+
+
+# Set smoked cigarettes tracker reminder
+class SetCigarettesTrackerReminder(Action):
+    def name(self):
+        return "action_set_cigarettes_tracker_reminder"
+
+    async def run(self, dispatcher, tracker, domain):
+        client = NicedayClient(NICEDAY_API_ENDPOINT)
+        user_id = int(tracker.current_state()['sender_id'])
+
+        recursive_rule = rrule(DAILY, dtstart=datetime.datetime.now().astimezone(TIMEZONE))
+        client.set_tracker_reminder(user_id,
+                                    definitions.TrackerName.SMOKING.value,
+                                    "This is a tracker",
+                                    recursive_rule)
+        return[]

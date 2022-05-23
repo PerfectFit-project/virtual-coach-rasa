@@ -13,7 +13,6 @@ intents:
 - how_are_you
 - request_plan_week
 - EXTERNAL_trigger_ask_foreseen_hrs
-- completed_pa
 - request_future_self_dialog
 - request_tracked_cigarettes
 
@@ -69,15 +68,6 @@ slots:
     mappings:
     - type: custom
 
-  # Evaluate completed PA
-  pa_evaluation_response:
-    type: float
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: pa_evaluation_form
-          
 
   ### Rescheduling query dialog
   # Whether the user wants to continue the dialog now
@@ -229,18 +219,6 @@ responses:
   - text: "Sorry, ik kan de planning nu niet invoeren."
 
   
-  ### Activity evaluation
-  utter_pa_completed:
-  - text: "Goed bezig! ..."
-  utter_ask_pa_evaluation_form_pa_evaluation_response:
-  - text: >
-      Hoe ging het? Geef dit aan op een schaal
-      van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
-  utter_feedback_pa_evaluation_high:
-  - text: "Fijn om te horen dat het goed ging!"
-  utter_feedback_pa_evaluation_low:
-  - text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
-
   ## Ask data from tracker
   utter_tracked_cigarettes:
     - text: "Je hebt vandaag {number_of_cigarettes} sigaretten gerookt."
@@ -403,9 +381,6 @@ actions:
 - action_get_name_from_database
 - action_save_plan_week_calendar
 - action_set_reminder
-- validate_pa_evaluation_form
-- action_utter_pa_evaluation_form_filled
-- action_store_pa_evaluation
 ### Future self dialog
 - action_store_smoker_words
 - action_store_mover_words
@@ -441,9 +416,6 @@ actions:
 
 
 forms:
-  pa_evaluation_form:
-    required_slots:
-      - pa_evaluation_response
   pick_smoker_words_form:
     required_slots:
       - picked_words

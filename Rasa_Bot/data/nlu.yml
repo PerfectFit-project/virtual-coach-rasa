@@ -98,6 +98,11 @@ nlu:
   examples: |
     - "Start future self dialog."
     - "Ik wil future self dialog."
+    
+- intent: get_first_aid_kit
+  examples: |
+    - "Get first aid kit"
+    - "Ik wil first aid kit"
 
 - intent: request_tracked_cigarettes
   examples: |

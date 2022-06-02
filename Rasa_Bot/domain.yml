@@ -109,6 +109,15 @@ slots:
     - type: from_text
       conditions:
       - active_loop: rescheduling_options_form
+      
+  ### First aid kit
+  
+  # Text of first aid kit to present to user
+  first_aid_kit_text:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
 
   ### Future-self dialog
   
@@ -560,6 +569,8 @@ actions:
 - action_save_number_cigarettes
 - action_get_number_cigarettes
 - action_set_cigarettes_tracker_reminder
+### First aid kit
+- action_get_first_aid_kit
 
 
 forms:
@@ -600,4 +611,3 @@ forms:
   rescheduling_options_form:
     required_slots:
       - rescheduling_option
-  

@@ -380,3 +380,10 @@ stories:
     - action: action_set_future_self_dialog_state_step_1
     - action: action_store_future_self_dialog_state
     - action: utter_close_future_self_step_1
+    
+
+## Get first aid kit
+- story: Get first aid kit
+  steps:
+    - intent: get_first_aid_kit
+    - action: action_get_first_aid_kit

@@ -893,9 +893,9 @@ class ActionGetFirstAidKit(Action):
         for activity_idx, activity in enumerate(selected):
             kit_text += str(activity_idx + 1) + ") "
             if activity.intervention_activity_id is None:
-                kit_text += activity.title
+                kit_text += activity.user_activity_title
             else:
-                kit_text += activity.intervention_activity.title
+                kit_text += activity.intervention_activity.intervention_activity_title
             kit_text += "\n"
         
         return [SlotSet("first_aid_kit_text", kit_text)]

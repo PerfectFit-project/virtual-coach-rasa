@@ -890,15 +890,23 @@ class ActionGetFirstAidKit(Action):
         )
         
         kit_text = ""
-        for activity_idx, activity in enumerate(selected):
-            kit_text += str(activity_idx + 1) + ") "
-            if activity.intervention_activity_id is None:
-                kit_text += activity.user_activity_title
-            else:
-                kit_text += activity.intervention_activity.intervention_activity_title
-            kit_text += "\n"
+        kit_exists = False
         
-        return [SlotSet("first_aid_kit_text", kit_text)]
+        if selected is not None:
+            
+            kit_exists = True
+        
+            for activity_idx, activity in enumerate(selected):
+                kit_text += str(activity_idx + 1) + ") "
+                if activity.intervention_activity_id is None:
+                    kit_text += activity.user_activity_title
+                else:
+                    kit_text += activity.intervention_activity.intervention_activity_title
+                if not activity_idx == len(selected) - 1:
+                    kit_text += "\n"
+        
+        return [SlotSet("first_aid_kit_text", kit_text),
+                SlotSet("first_aid_kit_exists", kit_exists)]
 
 
 # Set smoked cigarettes tracker reminder

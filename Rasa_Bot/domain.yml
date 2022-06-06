@@ -118,6 +118,12 @@ slots:
     influence_conversation: false
     mappings:
     - type: custom
+  # Whether the user has something in his/her first aid kit
+  first_aid_kit_exists:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
 
   ### Future-self dialog
   
@@ -306,7 +312,9 @@ responses:
 
   ### First-aid kit
   utter_first_aid_kit:
-     - text: "Hier is je EHBO doos:\n{first_aid_kit_text}."
+      - text: "Hier is je EHBO doos:\n{first_aid_kit_text}."
+  utter_first_aid_kit_empty:
+      - text: "Je hebt niets in je EHBO doos.\nProbeer iets te bedenken waar je dankbaar voor bent."
 
 
   ### General rescheduling query dialog

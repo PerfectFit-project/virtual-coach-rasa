@@ -306,7 +306,7 @@ responses:
 
   ### First-aid kit
   utter_first_aid_kit:
-     - text: "Here is your first aid kit: {first_aid_kit_text}."
+     - text: "Hier is je EHBO doos: {first_aid_kit_text}."
 
 
   ### General rescheduling query dialog

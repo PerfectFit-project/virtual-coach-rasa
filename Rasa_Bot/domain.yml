@@ -302,6 +302,11 @@ responses:
      - text: "Zou je dat in meer woorden kunnen omschrijven?"
   utter_did_not_understand:
      - text: "Hmm ik heb dat niet begrepen."
+     
+
+  ### First-aid kit
+  utter_first_aid_kit:
+     - text: "Here is your first aid kit: {first_aid_kit_text}."
 
 
   ### General rescheduling query dialog

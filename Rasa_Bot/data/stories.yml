@@ -387,3 +387,4 @@ stories:
   steps:
     - intent: get_first_aid_kit
     - action: action_get_first_aid_kit
+    - action: utter_first_aid_kit

@@ -109,6 +109,21 @@ slots:
     - type: from_text
       conditions:
       - active_loop: rescheduling_options_form
+      
+  ### First aid kit
+  
+  # Text of first aid kit to present to user
+  first_aid_kit_text:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  # Whether the user has something in his/her first aid kit
+  first_aid_kit_exists:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
 
   ### Future-self dialog
   
@@ -293,6 +308,13 @@ responses:
      - text: "Zou je dat in meer woorden kunnen omschrijven?"
   utter_did_not_understand:
      - text: "Hmm ik heb dat niet begrepen."
+     
+
+  ### First-aid kit
+  utter_first_aid_kit:
+      - text: "Hier is je EHBO doos:\n{first_aid_kit_text}."
+  utter_first_aid_kit_empty:
+      - text: "Je hebt niets in je EHBO doos.\nProbeer iets te bedenken waar je dankbaar voor bent."
 
 
   ### General rescheduling query dialog
@@ -560,6 +582,8 @@ actions:
 - action_save_number_cigarettes
 - action_get_number_cigarettes
 - action_set_cigarettes_tracker_reminder
+### First aid kit
+- action_get_first_aid_kit
 
 
 forms:
@@ -600,4 +624,3 @@ forms:
   rescheduling_options_form:
     required_slots:
       - rescheduling_option
-  

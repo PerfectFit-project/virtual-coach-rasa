@@ -1,16 +1,19 @@
 version: "3.0"  # orig 3.0
 services:
   rasa_server:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.rasa_server
     ports:
       - 5005:5005
     volumes:
       - ./:/app
     expose: ["5005"]
-    env_file:
-      - .env
   rasa_actions:
-    build: actions/
+    build:
+      context: ./actions/
+      dockerfile: Dockerfile.rasa_actions
     expose: ["5055"]
-    env_file:
-      - .env
+    environment:
+      - DB_HOST=host.docker.internal:5432
+      - NICEDAY_API_ENDPOINT='http://niceday_api:8080/'

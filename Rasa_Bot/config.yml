@@ -37,7 +37,10 @@ pipeline:
 # NB: Make sure to adapt the max_history setting in the Rasa CI if the highest max_history value for any policy below changes.
 policies:
   - name: MemoizationPolicy
-    max_history: 13
+    max_history: 14
+  - name: TEDPolicy
+    max_history: 5
+    epochs: 50
     #augmentation: 50 # if 0, no augmentation of stories
   - name: RulePolicy
     core_fallback_threshold: 0.2 # NB: important to tune this carefully.

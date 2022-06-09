@@ -13,6 +13,8 @@ intents:
 - how_are_you
 - request_plan_week
 - EXTERNAL_trigger_ask_foreseen_hrs
+- EXTERNAL_trigger_profile_creation
+- EXTERNAL_trigger_medication_talk
 - completed_pa
 - request_future_self_dialog
 - request_tracked_cigarettes
@@ -538,6 +540,12 @@ responses:
     - text: "Oke laten we het nog een keer proberen. ..."
   utter_reminder_is_set:
     - text: "The reminder is set. ..."
+
+  ##Utterances related to preparation phase
+  utter_ask_profile_info:
+   - text: "Asking for profile info..."
+  utter_medication_talk:
+   - text: "Conducting medical talk..."
     
 actions:
 - action_get_plan_week
@@ -584,6 +592,9 @@ actions:
 - action_set_cigarettes_tracker_reminder
 ### First aid kit
 - action_get_first_aid_kit
+### Profile Creation
+- action_save_profile_info
+- action_save_medication_talk
 
 
 forms:

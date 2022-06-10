@@ -48,7 +48,7 @@ rules:
   steps:
   - intent: EXTERNAL_trigger_profile_creation
   - action: utter_ask_profile_info 
-  - action: action_save_profile_info ##for now it will only save the next intervention component to be triggered
+ # - action: action_save_profile_info ##for now it will only save the next intervention component to be triggered
   ##TO DO save the relevant information in the database
 
   #On connection, scheduler checks the intervention component, if it's on medication talk this is triggered
@@ -56,7 +56,7 @@ rules:
   steps:
   - intent: EXTERNAL_trigger_medication_talk
   - action: utter_medication_talk
-  - action: action_save_medication_talk ##for now it will only save the next intervention component to be triggered
+ # - action: action_save_medication_talk ##for now it will only save the next intervention component to be triggered
   ##TO DO save the relevant information in the database
 
   

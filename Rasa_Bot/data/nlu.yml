@@ -111,3 +111,7 @@ nlu:
 - intent: request_tracker_reminder
   examples: |
     - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"
+
+- intent: EXTERNAL_trigger_profile_creation
+  examples: |
+    - "EXTERNAL_trigger_profile_creation"

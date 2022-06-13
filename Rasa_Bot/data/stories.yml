@@ -401,6 +401,8 @@ stories:
       - first_aid_kit_exists: false
     - action: utter_first_aid_kit_empty
 
+###Preparation Phase stories
+
  ## Profile Creation
 - story: Profile Creation placeholder
   steps:
@@ -414,4 +416,36 @@ stories:
    - intent: EXTERNAL_trigger_medication_talk
    - action: utter_medication_talk
 #   - action: action_save_medication_talk
+
+## Cold Turkey
+- story: Cold Turkey placeholder
+  steps:
+  - intent: EXTERNAL_trigger_cold_turkey
+  - action: utter_cold_turkey
+# - action: action_save_cold_turkey
+
+## Plan Quit & Start Date
+- story: Plan Quit & Start Date placeholder
+  steps:
+   - intent: EXTERNAL_trigger_plan_quit_start
+   - action: utter_plan_quit_start
+#   - action: action_save_plan_quit_start
+
+## Mental-contrasting
+- story: Mental-contrasting placeholder
+  steps:
+  - intent: EXTERNAL_trigger_mental_contrasting
+  - action: utter_mental_contrasting
+#   - action: action_save_mental_contrasting
+
+## Goal-setting
+- story: Goal-setting placeholder
+  steps:
+  - intent: EXTERNAL_trigger_goal_setting
+  - action: utter_goal_setting
+#   - action: action_save_goal_setting
+
+
+
+
 

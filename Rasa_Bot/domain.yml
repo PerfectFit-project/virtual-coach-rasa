@@ -15,6 +15,10 @@ intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
 - EXTERNAL_trigger_profile_creation
 - EXTERNAL_trigger_medication_talk
+- EXTERNAL_trigger_cold_turkey
+- EXTERNAL_trigger_plan_quit_start
+- EXTERNAL_trigger_mental_contrasting
+- EXTERNAL_trigger_goal_setting
 - completed_pa
 - request_future_self_dialog
 - request_tracked_cigarettes
@@ -546,6 +550,15 @@ responses:
    - text: "Asking for profile info..."
   utter_medication_talk:
    - text: "Conducting medical talk..."
+  utter_cold_turkey:
+   - text: "Cold turkey talk..."
+  utter_plan_quit_start:
+   - text: "Planning quit and start date..."
+  utter_mental_contrasting:
+   - text: "Conducting mental contrasting talk..."
+  utter_goal_setting:
+   - text: "Setting goals..."
+
     
 actions:
 - action_get_plan_week
@@ -592,9 +605,13 @@ actions:
 - action_set_cigarettes_tracker_reminder
 ### First aid kit
 - action_get_first_aid_kit
-### Profile Creation
+### Preparation Phase actions
 - action_save_profile_info
 - action_save_medication_talk
+- action_save_cold_turkey
+- action_save_plan_quit_start
+- action_save_mental_contrasting
+- action_save_goal_setting
 
 
 forms:

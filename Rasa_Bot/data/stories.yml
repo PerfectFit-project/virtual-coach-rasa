@@ -408,7 +408,7 @@ stories:
   steps:
     - intent: EXTERNAL_trigger_profile_creation
     - action: utter_ask_profile_info 
-#    - action: action_save_profile_info 
+    - action: action_store_intervention_component
 
 ## Medication Talk
 - story: Medication Talk placeholder

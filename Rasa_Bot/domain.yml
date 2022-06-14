@@ -226,6 +226,23 @@ slots:
     mappings:
     - type: custom
 
+### Preparation Phase
+  current_intervention_component:
+    type: categorical
+    initial_value: NONE
+    values: 
+     - NONE
+     - PROFILE_CREATION
+     - MEDICATION_TALK
+     - COLD_TURKEY
+     - PLAN_QUIT_START_DATE
+     - MENTAL_CONTRASTING
+     - GOAL_SETTING
+    mappings:
+     - type: custom
+     
+
+
 responses:
   # Fallback
   utter_default:
@@ -606,6 +623,7 @@ actions:
 ### First aid kit
 - action_get_first_aid_kit
 ### Preparation Phase actions
+- action_store_intervention_component
 - action_save_profile_info
 - action_save_medication_talk
 - action_save_cold_turkey

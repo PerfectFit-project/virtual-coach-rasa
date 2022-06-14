@@ -3,6 +3,7 @@
 #
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
+from celery import Celery
 import datetime
 import logging
 import os
@@ -28,8 +29,12 @@ from virtual_coach_db.helper.helper import get_db_session
 DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
+REDIS_URL = os.getenv('REDIS_URL')
+
 # Timezone for saving data to database
 TIMEZONE = tz.gettz("Europe/Amsterdam")
+
+celery = Celery(broker=REDIS_URL)
 
 
 class DialogQuestions(Enum):
@@ -50,6 +55,33 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
                           datetime=datetime.datetime.now().astimezone(TIMEZONE))
 
     selected.dialog_answers.append(entry)
+    session.commit()  # Update database
+
+
+class InterventionComponents(Enum):
+    NONE = 1
+    PROFILE_CREATION = 2
+    MEDICATION_TALK = 3
+    COLD_TURKEY = 4
+    PLAN_QUIT_START_DATE = 5
+    MENTAL_CONTRASTING = 6
+    GOAL_SETTING = 7
+
+    def succ(self):
+        v = self.value + 1
+        if v > 7:
+            raise ValueError('No more values to take from...')
+        return InterventionComponents(v)
+
+def store_intervention_component_to_db(user_id, component: InterventionComponents):
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    entry = UserInterventionState(intervention_component=component.name,
+                                              last_time=datetime.datetime.now().astimezone(TIMEZONE), 
+                                              last_part=0)
+
+    selected.user_intervention_state.append(entry)
     session.commit()  # Update database
 
 
@@ -924,3 +956,37 @@ class SetCigarettesTrackerReminder(Action):
                                     "This is a tracker",
                                     recursive_rule)
         return[]
+
+#Store last intervention component in database
+class StoreLastInterventionComponent(Action):
+    def name(self):
+        return "action_store_intervention_component"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        user_id = int(tracker.current_state()['sender_id']) #retrieve userID
+
+        # selects the row from the table corresponding to our user
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid==user_id
+            )
+            .one_or_none()
+        )
+
+        last_inter_comp = selected.intervention_component # retrieve the actual component from the selected user
+
+        ## if there is no record of a last intervention component in the database, set it to profile creation (the first one)
+        if last_inter_comp is None:
+            store_intervention_component_to_db(user_id, InterventionComponents.PROFILE_CREATION)
+        
+        else:
+            next_inter_comp = InterventionComponents.valueOf(last_inter_comp).succ()
+            store_intervention_component_to_db(user_id, next_inter_comp)
+        
+        return
+
+

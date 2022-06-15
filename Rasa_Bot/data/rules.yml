@@ -60,7 +60,7 @@ rules:
   - intent: EXTERNAL_trigger_medication_talk
   - action: action_slot_medication_talk
   - action: utter_medication_talk
- # - action: action_save_medication_talk ##for now it will only save the next intervention component to be triggered
+  - action: action_store_intervention_component #for now it will only save the next intervention component to be triggered
   ##TO DO save the relevant information in the database
 
   #On connection, scheduler checks the intervention component, if it's on cold turkey this is triggered
@@ -69,7 +69,7 @@ rules:
   - intent: EXTERNAL_trigger_cold_turkey
   - action: action_slot_cold_turkey
   - action: utter_cold_turkey
- # - action: action_save_cold_turkey ##for now it will only save the next intervention component to be triggered
+  - action: action_store_intervention_component #for now it will only save the next intervention component to be triggered
   ##TO DO save the relevant information in the database
 
   #On connection, scheduler checks the intervention component, if it's on plan quit & start date this is triggered
@@ -78,7 +78,7 @@ rules:
   - intent: EXTERNAL_trigger_plan_quit_start
   - action: action_slot_plan_quit_start
   - action: utter_plan_quit_start
- # - action: action_save_plan_quit_start ##for now it will only save the next intervention component to be triggered
+  - action: action_store_intervention_component #for now it will only save the next intervention component to be triggered
   ##TO DO save the relevant information in the database
 
   #On connection, scheduler checks the intervention component, if it's on mental-contrasting this is triggered
@@ -87,7 +87,7 @@ rules:
   - intent: EXTERNAL_trigger_mental_contrasting
   - action: action_slot_mental_contrasting
   - action: utter_mental_contrasting
- # - action: action_save_mental_contrasting ##for now it will only save the next intervention component to be triggered
+  - action: action_store_intervention_component #for now it will only save the next intervention component to be triggered
   ##TO DO save the relevant information in the database
 
   #On connection, scheduler checks the intervention component, if it's on Goal-setting this is triggered
@@ -96,7 +96,7 @@ rules:
   - intent: EXTERNAL_trigger_goal_setting
   - action: action_slot_goal_setting
   - action: utter_goal_setting
- # - action: action_save_goal_setting ##for now it will only save the next intervention component to be triggered
+  - action: action_store_intervention_component #for now it will only save the next intervention component to be triggered
   ##TO DO save the relevant information in the database
 
 

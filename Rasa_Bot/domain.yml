@@ -228,18 +228,11 @@ slots:
 
 ### Preparation Phase
   current_intervention_component:
-    type: categorical
+    type: text
     initial_value: 'NONE'
-    values: 
-     - 'NONE'
-     - 'PROFILE_CREATION'
-     - 'MEDICATION_TALK'
-     - 'COLD_TURKEY'
-     - 'PLAN_QUIT_START'
-     - 'MENTAL_CONTRASTING'
-     - 'GOAL_SETTING'
     mappings:
-     - type: custom
+    - type: custom
+
      
 
 

@@ -8,6 +8,7 @@ import datetime
 import logging
 import os
 import string
+from virtual_coach_db.helper.definitions import PreparationDialogs
 from enum import Enum
 from typing import Any, Dict, Text
 
@@ -73,15 +74,18 @@ class InterventionComponents(Enum):
             raise ValueError('No more values to take from...')
         return InterventionComponents(v)
 
-def store_intervention_component_to_db(user_id, component: InterventionComponents):
+def store_intervention_component_to_db(user_id, intervention_component):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
-    entry = UserInterventionState(intervention_component=component.name,
+    entry = UserInterventionState(intervention_component=intervention_component,
                                               last_time=datetime.datetime.now().astimezone(TIMEZONE), 
                                               last_part=0)
 
+    logging.info("db entry done")
     selected.user_intervention_state.append(entry)
+
+    logging.info("entry added perhaps")
     session.commit()  # Update database
 
 
@@ -965,10 +969,14 @@ class StoreLastInterventionComponent(Action):
     async def run(self, dispatcher, tracker, domain):
 
         user_id = int(tracker.current_state()['sender_id']) #retrieve userID
-        session = get_db_session(db_url=DATABASE_URL)
 
         slot = tracker.get_slot("current_intervention_component")
         logging.info(slot)
+
+        #store_intervention_component_to_db(user_id, slot)
+
+        celery.send_task('celery_tasks.dialog_completed', (user_id, slot))
+        logging.info("no celery error")
         
         return[]
 
@@ -979,39 +987,39 @@ class SetSlotProfileCreation(Action):
         return "action_slot_profile_creation"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", 'PROFILE_CREATION')]
+        return [SlotSet("current_intervention_component", PreparationDialogs.PROFILE_CREATION)]
 
 class SetSlotMedicationTalk(Action):
     def name(self):
         return "action_slot_medication_talk"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", 'MEDICATION_TALK')]
+        return [SlotSet("current_intervention_component", PreparationDialogs.MEDICATION_TALK)]
 
 class SetSlotColdTurkey(Action):
     def name(self):
         return "action_slot_cold_turkey"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", 'COLD_TURKEY')]
+        return [SlotSet("current_intervention_component", PreparationDialogs.COLD_TURKEY)]
 
 class SetSlotPlanQuitStart(Action):
     def name(self):
         return "action_slot_plan_quit_start"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", 'PLAN_QUIT_START')]
+        return [SlotSet("current_intervention_component", PreparationDialogs.PLAN_QUIT_START_DATE)]
 
 class SetSlotMentalContrasting(Action):
     def name(self):
         return "action_slot_mental_contrasting"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", 'MENTAL_CONTRASTING')]
+        return [SlotSet("current_intervention_component", PreparationDialogs.FUTURE_SELF)]
 
 class SetSlotGoalSetting(Action):
     def name(self):
         return "action_slot_goal_setting"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", 'GOAL_SETTING')]
+        return [SlotSet("current_intervention_component", PreparationDialogs.GOAL_SETTING)]

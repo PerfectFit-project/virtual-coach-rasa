@@ -968,9 +968,9 @@ class StoreLastInterventionComponent(Action):
         session = get_db_session(db_url=DATABASE_URL)
 
         slot = tracker.get_slot("current_intervention_component")
-        print(slot)
+        logging.info(slot)
         
-        return
+        return[]
 
 
 ### Slot-setting methods called for rasa to store current intervention component

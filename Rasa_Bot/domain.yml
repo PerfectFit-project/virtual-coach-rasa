@@ -229,15 +229,15 @@ slots:
 ### Preparation Phase
   current_intervention_component:
     type: categorical
-    initial_value: NONE
+    initial_value: 'NONE'
     values: 
-     - NONE
-     - PROFILE_CREATION
-     - MEDICATION_TALK
-     - COLD_TURKEY
-     - PLAN_QUIT_START_DATE
-     - MENTAL_CONTRASTING
-     - GOAL_SETTING
+     - 'NONE'
+     - 'PROFILE_CREATION'
+     - 'MEDICATION_TALK'
+     - 'COLD_TURKEY'
+     - 'PLAN_QUIT_START'
+     - 'MENTAL_CONTRASTING'
+     - 'GOAL_SETTING'
     mappings:
      - type: custom
      
@@ -624,12 +624,12 @@ actions:
 - action_get_first_aid_kit
 ### Preparation Phase actions
 - action_store_intervention_component
-- action_save_profile_info
-- action_save_medication_talk
-- action_save_cold_turkey
-- action_save_plan_quit_start
-- action_save_mental_contrasting
-- action_save_goal_setting
+- action_slot_profile_creation
+- action_slot_medication_talk
+- action_slot_cold_turkey
+- action_slot_plan_quit_start
+- action_slot_mental_contrasting
+- action_slot_goal_setting
 
 
 forms:

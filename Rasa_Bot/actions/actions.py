@@ -965,28 +965,53 @@ class StoreLastInterventionComponent(Action):
     async def run(self, dispatcher, tracker, domain):
 
         user_id = int(tracker.current_state()['sender_id']) #retrieve userID
+        session = get_db_session(db_url=DATABASE_URL)
 
-        # selects the row from the table corresponding to our user
-        selected = (
-            session.query(
-                UserInterventionState
-            )
-            .filter(
-                UserInterventionState.users_nicedayuid==user_id
-            )
-            .one_or_none()
-        )
-
-        last_inter_comp = selected.intervention_component # retrieve the actual component from the selected user
-
-        ## if there is no record of a last intervention component in the database, set it to profile creation (the first one)
-        if last_inter_comp is None:
-            store_intervention_component_to_db(user_id, InterventionComponents.PROFILE_CREATION)
-        
-        else:
-            next_inter_comp = InterventionComponents.valueOf(last_inter_comp).succ()
-            store_intervention_component_to_db(user_id, next_inter_comp)
+        slot = tracker.get_slot("current_intervention_component")
+        print(slot)
         
         return
 
 
+### Slot-setting methods called for rasa to store current intervention component
+class SetSlotProfileCreation(Action):
+    def name(self):
+        return "action_slot_profile_creation"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component", 'PROFILE_CREATION')]
+
+class SetSlotMedicationTalk(Action):
+    def name(self):
+        return "action_slot_medication_talk"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component", 'MEDICATION_TALK')]
+
+class SetSlotColdTurkey(Action):
+    def name(self):
+        return "action_slot_cold_turkey"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component", 'COLD_TURKEY')]
+
+class SetSlotPlanQuitStart(Action):
+    def name(self):
+        return "action_slot_plan_quit_start"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component", 'PLAN_QUIT_START')]
+
+class SetSlotMentalContrasting(Action):
+    def name(self):
+        return "action_slot_mental_contrasting"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component", 'MENTAL_CONTRASTING')]
+
+class SetSlotGoalSetting(Action):
+    def name(self):
+        return "action_slot_goal_setting"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component", 'GOAL_SETTING')]

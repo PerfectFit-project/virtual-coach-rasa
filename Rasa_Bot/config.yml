@@ -21,10 +21,10 @@ pipeline:
     analyzer: "char_wb"
     min_ngram: 1
     max_ngram: 4
-  #- name: DIETClassifier
-  #  epochs: 100
-  #  entity_recognition: False  # We do not currently have entities
-  #- name: EntitySynonymMapper   # We do not currently have entities
+  - name: DIETClassifier
+    epochs: 100
+    entity_recognition: False  # We do not currently have entities
+  - name: EntitySynonymMapper   # We do not currently have entities
   - name: ResponseSelector
     epochs: 100
 

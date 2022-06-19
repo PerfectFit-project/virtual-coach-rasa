@@ -16,7 +16,7 @@ pipeline:
     intent_tokenization_flag: False
   - name: SpacyFeaturizer
   - name: RegexFeaturizer
-  #- name: LexicalSyntacticFeaturizer # for entity extraction
+  - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
     analyzer: "char_wb"
     min_ngram: 1

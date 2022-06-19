@@ -16,21 +16,17 @@ pipeline:
     intent_tokenization_flag: False
   - name: SpacyFeaturizer
   - name: RegexFeaturizer
-  - name: LexicalSyntacticFeaturizer
-  - name: CountVectorsFeaturizer
+  #- name: LexicalSyntacticFeaturizer # for entity extraction
   - name: CountVectorsFeaturizer
     analyzer: "char_wb"
     min_ngram: 1
     max_ngram: 4
-  - name: DIETClassifier
-    epochs: 100
-    entity_recognition: False  # We do not currently have entities
+  #- name: DIETClassifier
+  #  epochs: 100
+  #  entity_recognition: False  # We do not currently have entities
   #- name: EntitySynonymMapper   # We do not currently have entities
   - name: ResponseSelector
     epochs: 100
-  - name: FallbackClassifier
-    threshold: 0.01
-    ambiguity_threshold: 0.1
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
@@ -38,8 +34,7 @@ pipeline:
 policies:
   - name: MemoizationPolicy
     max_history: 8
-    #augmentation: 50 # if 0, no augmentation of stories
   - name: RulePolicy
-    core_fallback_threshold: 0.01 # NB: important to tune this carefully.
+    core_fallback_threshold: 0.1 # NB: important to tune this carefully.
     core_fallback_action_name: action_default_fallback # will be called when confidence below above value
     enable_fallback_prediction: true

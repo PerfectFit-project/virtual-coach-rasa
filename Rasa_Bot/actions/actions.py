@@ -230,11 +230,11 @@ class ValidatePaEvaluationForm(FormValidationAction):
 
 
 # Have a custom response based on the pa_evaluation response
-class ActionUtterPaEvaluationFormFilled(Action):
+class ActionUtterPaEvaluationFormOnceFilled(Action):
     """Custom response based on PA evaluation form"""
 
     def name(self):
-        return "action_utter_pa_evaluation_form_filled"
+        return "action_utter_pa_evaluation_form_once_filled"
 
     async def run(self, dispatcher, tracker, domain):
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")

@@ -1,0 +1,61 @@
+# Domain file that is generic to all dialogs
+session_config:
+  session_expiration_time: 5 # these are minutes
+  carry_over_slots_to_new_session: true
+
+slots:
+  ### General
+  # The name of the agent
+  agent_name:
+    type: text
+    initial_value: 'Kris'
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+
+  ### User data
+  # The user's age
+  age:
+    type: float
+    min_value: 0.0
+    max_value: 123.0
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+    - type: custom
+  # The user's name
+  name:
+    type: text
+    initial_value: 'NAMENOTSET'
+    influence_conversation: false
+    mappings:
+    - type: custom
+  # ID of the user in current conversation
+  sender_id:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+responses:
+  # Fallback
+  utter_default:
+     - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
+
+  ### Re-prompts in forms
+  utter_please_answer_1_2_3:
+     - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
+  utter_please_answer_1_2_3_4:
+     - text: "Antwoord alsjeblieft met '1,' '2,' '3,' of '4.'"
+  utter_please_answer_1_to_5:
+     - text: "Kun je een geheel getal tussen 1 en 5 opgeven? ..."
+  utter_please_answer_yes_no:
+     - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
+  utter_please_answer_now_or_later:
+     - text: "Geef alsjeblieft antwoord met 'nu' of 'later.'"
+  utter_please_answer_more_words:
+     - text: "Zou je dat in meer woorden kunnen omschrijven?"
+  utter_did_not_understand:
+     - text: "Hmm ik heb dat niet begrepen."

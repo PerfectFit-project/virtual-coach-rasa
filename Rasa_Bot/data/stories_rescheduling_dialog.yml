@@ -1,0 +1,42 @@
+# Stories for rescheduling dialog
+version: "3.0"
+stories:
+## Rescheduling query - now
+- story: rescheduling query dialog now
+  steps:
+    - checkpoint: rescheduling_query_dialog
+    - action: rescheduling_now_or_later_form
+    - active_loop: rescheduling_now_or_later_form
+    - slot_was_set:
+      - rescheduling_now: true
+    - active_loop: null
+    - action: utter_user_chose_now
+    - action: action_reset_rescheduling_now_slot
+    - slot_was_set:
+      - rescheduling_now: null
+    - checkpoint: continue_with_future_self_dialog_after_rescheduling_query
+
+
+## Rescheduling query - later
+- story: rescheduling query dialog later
+  steps:
+    - checkpoint: rescheduling_query_dialog
+    - action: rescheduling_now_or_later_form
+    - active_loop: rescheduling_now_or_later_form
+    - slot_was_set:
+      - rescheduling_now: false
+    - active_loop: null
+    - action: utter_user_chose_later
+    - action: action_reset_rescheduling_now_slot
+    - slot_was_set:
+      - rescheduling_now: null
+    - action: action_get_rescheduling_options_list
+    - action: rescheduling_options_form
+    - active_loop: rescheduling_options_form  # TODO: use rescheduling_option slot to reschedule
+    - active_loop: null
+    - action: utter_rescheduling_option_chosen
+    - action: action_reset_rescheduling_option_slot
+    - slot_was_set:
+      - rescheduling_option: null
+    # TODO: what are we going to do at the end of the dialog if the user types something again?
+    # Maybe a ConversationPaused() event from custom action?

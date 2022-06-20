@@ -8,13 +8,9 @@ language: nl
 
 pipeline:
 # See https://rasa.com/docs/rasa/tuning-your-model for more information.
-  - name: SpacyNLP
-    model: "nl_core_news_sm"
-    case_sensitive: False
-  - name: SpacyTokenizer
+  - name: WhitespaceTokenizer
     # Flag to check whether to split intents
     intent_tokenization_flag: False
-  - name: SpacyFeaturizer
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer

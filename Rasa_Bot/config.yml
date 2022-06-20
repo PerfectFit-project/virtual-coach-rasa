@@ -19,9 +19,9 @@ pipeline:
     max_ngram: 4
   - name: KeywordIntentClassifier
     case_sensitive: False
-  #- name: DIETClassifier
-  # epochs: 100
-  #  entity_recognition: False  # We do not currently have entities
+  - name: DIETClassifier
+    epochs: 50
+    entity_recognition: False  # We do not currently have entities
   #- name: EntitySynonymMapper   # We do not currently have entities
   - name: ResponseSelector
     epochs: 100

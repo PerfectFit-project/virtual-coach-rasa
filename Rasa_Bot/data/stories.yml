@@ -48,10 +48,10 @@ stories:
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
   - active_loop: null
-  - action: utter_pa_evaluation_form_once_filled
   - action: action_store_pa_evaluation
   - slot_was_set: 
     - pa_evaluation_response: null
+  - action: utter_pa_evaluation_form_once_filled
 
 
 # User foresees HRS

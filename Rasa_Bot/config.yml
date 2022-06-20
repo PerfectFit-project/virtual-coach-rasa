@@ -18,12 +18,16 @@ pipeline:
     min_ngram: 1
     max_ngram: 4
   - name: KeywordIntentClassifier
+    case_sensitive: False
   #- name: DIETClassifier
   # epochs: 100
   #  entity_recognition: False  # We do not currently have entities
-  - name: EntitySynonymMapper   # We do not currently have entities
+  #- name: EntitySynonymMapper   # We do not currently have entities
   - name: ResponseSelector
     epochs: 100
+  - name: FallbackClassifier
+    threshold: 0.4
+    ambiguity_threshold: 0.1
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/

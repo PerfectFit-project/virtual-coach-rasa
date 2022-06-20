@@ -3,14 +3,8 @@ session_config:
   carry_over_slots_to_new_session: true
 
 intents:
-- goodbye
-- greeting
 - confirm
 - deny
-- positive_mood
-- negative_mood
-- who_are_you
-- how_are_you
 - request_plan_week
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa

@@ -60,7 +60,7 @@ slots:
     type: float
     influence_conversation: false
     mappings:
-      - type: from_text
+      - type: custom
         conditions:
           - active_loop: pa_evaluation_form
           

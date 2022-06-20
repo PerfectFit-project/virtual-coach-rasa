@@ -47,6 +47,7 @@ stories:
   - action: utter_pa_completed
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
+  - active_loop: null
   - action: action_store_pa_evaluation
   - slot_was_set: 
     - pa_evaluation_response: null

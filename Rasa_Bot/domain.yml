@@ -13,15 +13,6 @@ intents:
 - request_tracker_reminder
 
 slots:
-  ### General
-  # The name of the agent
-  agent_name:
-    type: text
-    initial_value: 'Kris'
-    influence_conversation: false
-    mappings:
-    - type: custom
-
   
   ### User data
   # The user's age
@@ -229,22 +220,7 @@ responses:
   - text: "Doei!"
   - text: "Tot straks!"
   - text: "Tot ziens!"
-  utter_ask_back:
-  - text: "En jij?"
-  utter_agent_name:
-  - text: "Ik ben {agent_name}. Ik ben je virtuele coach."
-  utter_agent_purpose:
-  - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
 
-  # Mood
-  utter_agent_mood:
-  - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
-  utter_ask_user_mood:
-  - text: "Hoe gaat het met je?"
-  utter_response_mood_positive:
-  - text: "Ik ben blij dat te horen!"
-  utter_response_mood_negative:
-  - text: "Aww, het spijt me. Ik hoop dat je je snel beter voelt."
 
   # Weekly planning
   utter_plan_week:

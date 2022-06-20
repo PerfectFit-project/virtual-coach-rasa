@@ -26,8 +26,8 @@ pipeline:
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.0001
-    ambiguity_threshold: 0.0001
+    threshold: 0.4
+    ambiguity_threshold: 0.1
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
@@ -36,6 +36,6 @@ policies:
   - name: MemoizationPolicy
     max_history: 8
   - name: RulePolicy
-    core_fallback_threshold: 0.0001 # NB: important to tune this carefully.
+    core_fallback_threshold: 0.1 # NB: important to tune this carefully.
     core_fallback_action_name: action_default_fallback # will be called when confidence below above value
     enable_fallback_prediction: true

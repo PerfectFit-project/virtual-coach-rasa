@@ -408,7 +408,8 @@ stories:
   steps:
     - intent: EXTERNAL_trigger_profile_creation
     - action: action_slot_profile_creation
-    - action: utter_ask_profile_info 
+    - action: utter_ask_profile_info
+    - intent: oke
     - action: action_store_intervention_component
 
 ## Medication Talk
@@ -417,6 +418,7 @@ stories:
    - intent: EXTERNAL_trigger_medication_talk
    - action: action_slot_medication_talk
    - action: utter_medication_talk
+   - intent: oke
    - action: action_store_intervention_component
 
 ## Cold Turkey
@@ -425,6 +427,7 @@ stories:
   - intent: EXTERNAL_trigger_cold_turkey
   - action: action_slot_cold_turkey
   - action: utter_cold_turkey
+  - intent: oke
   - action: action_store_intervention_component
 
 ## Plan Quit & Start Date
@@ -433,6 +436,7 @@ stories:
    - intent: EXTERNAL_trigger_plan_quit_start
    - action: action_slot_plan_quit_start
    - action: utter_plan_quit_start
+   - intent: oke
    - action: action_store_intervention_component
 
 ## Mental-contrasting
@@ -441,6 +445,7 @@ stories:
   - intent: EXTERNAL_trigger_mental_contrasting
   - action: action_slot_mental_contrasting
   - action: utter_mental_contrasting
+  - intent: oke
   - action: action_store_intervention_component
 
 ## Goal-setting
@@ -449,6 +454,7 @@ stories:
   - intent: EXTERNAL_trigger_goal_setting
   - action: action_slot_goal_setting
   - action: utter_goal_setting
+  - intent: oke
   - action: action_store_intervention_component
 
 

@@ -1,8 +1,10 @@
+import logging
 import os
 
 import requests
 from celery import Celery
 from datetime import datetime, timedelta
+from dateutil import tz
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper import get_db_session
 from virtual_coach_db.helper.definitions import Phases, PreparationDialogs, PreparationDialogsTriggers
@@ -10,6 +12,9 @@ from virtual_coach_db.helper.definitions import Phases, PreparationDialogs, Prep
 REDIS_URL = os.getenv('REDIS_URL')
 
 app = Celery('celery_tasks', broker=REDIS_URL)
+
+app.conf.enable_utc = True
+app.conf.timezone = tz.gettz('Europe/Amsterdam')
 
 app.conf.beat_schedule = {
     'trigger_ask_foreseen_hrs': {
@@ -36,7 +41,8 @@ def dialog_completed(user_id, dialog_id):
             requests.post(endpoint, headers=headers, params=params, data=data)
 
         else:
-            plan_execution_dialogs(user_id)
+            logging.info("PREPARATION PHASE ENDED")
+            schedule_dialog_execution(user_id)
 
 
 @app.task
@@ -101,7 +107,7 @@ def get_next_preparation_dialog(dialog_id):
     return next_dialog
 
 
-def plan_execution_dialogs(user_id):
+def schedule_dialog_execution(user_id):
     """
         Get the preferences of a user and plan the execution dialogs
         N.B. ATM this is just a dummy to test the functionality,

@@ -115,3 +115,9 @@ nlu:
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
     - "EXTERNAL_trigger_profile_creation"
+
+- intent: oke
+  examples: |
+    - "Oke"
+    - "Ok"
+

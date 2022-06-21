@@ -45,6 +45,9 @@ stories:
   steps:
   - intent: completed_pa
   - action: utter_pa_completed
+  - action: utter_pa_completed
+  - action: utter_pa_completed
+  - action: utter_pa_completed
   - action: pa_evaluation_form
   - active_loop: pa_evaluation_form
   - active_loop: null

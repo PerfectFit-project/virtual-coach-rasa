@@ -58,6 +58,8 @@ slots:
   # Evaluate completed PA
   pa_evaluation_response:
     type: float
+    min_value: 1
+    max_value: 5
     influence_conversation: false
     mappings:
       - type: custom

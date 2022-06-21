@@ -1,0 +1,136 @@
+# Domain file specific to minimum functional product dialogs
+
+intents:
+- goodbye
+- greeting
+- confirm
+- deny
+- positive_mood
+- negative_mood
+- who_are_you
+- how_are_you
+- request_plan_week
+- EXTERNAL_trigger_ask_foreseen_hrs
+- completed_pa
+- request_tracked_cigarettes
+- request_tracker_reminder
+
+slots:
+  ### Weekly planning
+  # The plan for the week
+  plan_week:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: custom
+  # Whether saving the weekly plan in the calendar succeeded
+  success_save_calendar_plan_week:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
+
+  # Evaluate completed PA
+  pa_evaluation_response:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_evaluation_form
+
+  ### Data from custom tracker
+  number_of_cigarettes:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+
+responses:
+  # General
+  utter_greet:
+    - text: "Hey {name}!"
+    - text: "Hi {name}!"
+    - text: "Hallo {name}!"
+    - text: "Hoi {name}!"
+  utter_goodbye:
+    - text: "Doei!"
+    - text: "Tot straks!"
+    - text: "Tot ziens!"
+  utter_ask_back:
+    - text: "En jij?"
+  utter_agent_name:
+    - text: "Ik ben {agent_name}. Ik ben je virtuele coach."
+  utter_agent_purpose:
+    - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
+
+  # Mood
+  utter_agent_mood:
+    - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
+  utter_ask_user_mood:
+    - text: "Hoe gaat het met je?"
+  utter_response_mood_positive:
+    - text: "Ik ben blij dat te horen!"
+  utter_response_mood_negative:
+    - text: "Aww, het spijt me. Ik hoop dat je je snel beter voelt."
+
+  # Weekly planning
+  utter_plan_week:
+    - text: "{plan_week} ..."
+  utter_ask_plan_calendar:
+    - text: "Zal ik de planning in je NiceDay agenda zetten?"
+    - text: "Wil je dat ik de planning in je NiceDay agenda zet?"
+  utter_plan_calendar_confirmation:
+    - text: "Cool, ik heb de planning in je NiceDay agenda ingevoerd."
+    - text: "Okay, de planning staat nu in je NiceDay agenda."
+  utter_okay:
+    - text: "Okay!"
+    - text: "OK!"
+  utter_error_save_plan_week_calendar:
+    - text: "Sorry, ik kan de planning nu niet invoeren."
+
+
+  ### Activity evaluation
+  utter_pa_completed:
+    - text: "Goed bezig! ..."
+  utter_ask_pa_evaluation_form_pa_evaluation_response:
+    - text: >
+        Hoe ging het? Geef dit aan op een schaal
+        van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
+  utter_feedback_pa_evaluation_high:
+    - text: "Fijn om te horen dat het goed ging!"
+  utter_feedback_pa_evaluation_low:
+    - text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
+
+  ## Ask data from tracker
+  utter_tracked_cigarettes:
+    - text: "Je hebt vandaag {number_of_cigarettes} sigaretten gerookt."
+
+  ### Foreseen HRSs smoking
+  utter_ask_foreseen_hrs:
+    - text: "Denk je dat je vandaag in een situatie komt waarin je trek krijgt in een sigaret?"
+  utter_watering_plants:
+    - text: "Als je hunkert naar een sigaret, kan het helpen om de plantjes water te geven"
+  utter_be_careful_for_hrs:
+    - text: "Wees voorzichtig, het kan zijn dat je onvoorzien alsnog in zo'n situatie komt. Ik ben hier om je te helpen"
+
+forms:
+  pa_evaluation_form:
+    required_slots:
+      - pa_evaluation_response
+
+actions:
+  - action_get_plan_week
+  - action_get_age_from_database
+  - action_get_name_from_database
+  - action_save_plan_week_calendar
+  - action_set_reminder
+  - validate_pa_evaluation_form
+  - action_utter_pa_evaluation_form_filled
+  - action_store_pa_evaluation
+  - action_save_number_cigarettes
+  - action_get_number_cigarettes
+  - action_set_cigarettes_tracker_reminder

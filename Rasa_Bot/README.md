@@ -24,7 +24,7 @@ in `endpoints.yml`.
 
 ## Future Changes
 ### Language
-We now use spacy language embeddings, and we removed entity recognition from the pipeline. Let's keep an eye on whether we want to keep doing this.
+We no longer use spacy language embeddings, and we removed entity recognition from the pipeline. Let's keep an eye on whether we want to keep doing this.
 
 ### Rasa Version
 Currently, the model is trained in Rasa 3.1.0. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one. See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. 
@@ -67,12 +67,6 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 
 ### Add dependencies for action server to requirements
 In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder.
-
-### Spacy language embeddings 
-We now use spacy language embeddings (specified in config.yml). This means that for training a model, you now need to download the spacy language model that we use:
-
-`python -m spacy download nl_core_news_sm`
-`python -m spacy link nl_core_news_sm nl`
 
 ### Retraining when making changes to Language Model
 Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.

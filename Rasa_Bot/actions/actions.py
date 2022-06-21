@@ -229,23 +229,6 @@ class ValidatePaEvaluationForm(FormValidationAction):
         return True
 
 
-# Have a custom response based on the pa_evaluation response
-class ActionUtterPaEvaluationFormFilled(Action):
-    """Custom response based on PA evaluation form"""
-
-    def name(self):
-        return "action_utter_pa_evaluation_form_filled"
-
-    async def run(self, dispatcher, tracker, domain):
-        pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-
-        if pa_evaluation_response >= 4:
-            dispatcher.utter_message(response="utter_feedback_pa_evaluation_high")
-        else:
-            dispatcher.utter_message(response="utter_feedback_pa_evaluation_low")
-        return []
-
-
 class ActionStorePaEvaluation(Action):
     """"To save user input from PA evaluation form to database"""
 

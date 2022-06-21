@@ -21,10 +21,10 @@ class ActionGetFirstAidKit(Action):
             session.query(
                 FirstAidKit
             )
-                .filter(
+            .filter(
                 FirstAidKit.users_nicedayuid == user_id
             )
-                .all()
+            .all()
         )
 
         kit_text = ""

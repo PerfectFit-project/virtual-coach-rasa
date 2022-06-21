@@ -368,7 +368,7 @@ def get_most_recent_question_answer_from_database(session, user_id,
         session.query(
             func.max(DialogAnswers.datetime)
         )
-            .filter(
+        .filter(
             DialogAnswers.users_nicedayuid == user_id,
             DialogAnswers.question_id == question_id
         )
@@ -378,12 +378,12 @@ def get_most_recent_question_answer_from_database(session, user_id,
         session.query(
             DialogAnswers
         )
-            .filter(
+        .filter(
             DialogAnswers.users_nicedayuid == user_id,
             DialogAnswers.question_id == question_id,
             DialogAnswers.datetime == subquery
         )
-            .first()
+        .first()
     )
 
     words = query.answer
@@ -407,11 +407,11 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             session.query(
                 UserInterventionState
             )
-                .filter(
+            .filter(
                 UserInterventionState.users_nicedayuid == user_id,
                 UserInterventionState.intervention_component == "future_self_dialog"
             )
-                .one_or_none()
+            .one_or_none()
         )
 
         # If already an entry for the user for the future self dialog exists
@@ -453,11 +453,11 @@ class ActionStoreFutureSelfDialogState(Action):
             session.query(
                 UserInterventionState
             )
-                .filter(
+            .filter(
                 UserInterventionState.users_nicedayuid == user_id,
                 UserInterventionState.intervention_component == "future_self_dialog"
             )
-                .one_or_none()
+            .one_or_none()
         )
 
         # Current time to be saved in database

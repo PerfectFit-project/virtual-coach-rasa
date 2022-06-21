@@ -61,6 +61,8 @@ slots:
     influence_conversation: false
     mappings:
       - type: from_text
+        conditions:
+        - active_loop: pa_evaluation_form
           
 
   ### Rescheduling query dialog

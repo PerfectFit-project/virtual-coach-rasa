@@ -271,7 +271,6 @@ responses:
           name: pa_evaluation_response
           value: 1
       text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
-    - text: "Other value."
 
   ## Ask data from tracker
   utter_tracked_cigarettes:

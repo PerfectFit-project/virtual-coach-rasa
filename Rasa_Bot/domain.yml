@@ -6,6 +6,7 @@ intents:
 - confirm
 - deny
 - request_plan_week
+- get_first_aid_kit
 - EXTERNAL_trigger_ask_foreseen_hrs
 - completed_pa
 - request_future_self_dialog

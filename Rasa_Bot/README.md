@@ -69,4 +69,4 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder.
 
 ### Retraining when making changes to Language Model
-Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.
+Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train --domain domain/`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.

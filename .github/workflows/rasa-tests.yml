@@ -52,7 +52,7 @@ jobs:
     - name: Train model
       run: |
         cd Rasa_Bot
-        rasa train
+        rasa train --domain domain/
     - name: Test End 2 End Stories
       run: |
         cd Rasa_Bot

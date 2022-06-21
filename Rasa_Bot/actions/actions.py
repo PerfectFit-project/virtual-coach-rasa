@@ -23,7 +23,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
-                                              FirstAidKit, UserInterventionState)
+                                              FirstAidKit, UserInterventionState, InterventionComponents)
 from virtual_coach_db.helper.helper import get_db_session
 
 # load database url and niceday_api_endopint variables
@@ -59,28 +59,15 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
     session.commit()  # Update database
 
 
-class InterventionComponents(Enum):
-    NONE = 1
-    PROFILE_CREATION = 2
-    MEDICATION_TALK = 3
-    COLD_TURKEY = 4
-    PLAN_QUIT_START_DATE = 5
-    MENTAL_CONTRASTING = 6
-    GOAL_SETTING = 7
-
-    def succ(self):
-        v = self.value + 1
-        if v > 7:
-            raise ValueError('No more values to take from...')
-        return InterventionComponents(v)
-
-def store_intervention_component_to_db(user_id, intervention_component):
+def store_intervention_component_to_db(user_id, intervention_phase_id, intervention_component_id, completed):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
-    entry = UserInterventionState(intervention_component=intervention_component,
-                                              last_time=datetime.datetime.now().astimezone(TIMEZONE), 
-                                              last_part=0)
+    entry = UserInterventionState(intervention_phase_id =intervention_phase_id,
+                                  intervention_component_id=intervention_component_id,
+                                  completed=completed,
+                                  last_time=datetime.datetime.now().astimezone(TIMEZONE),
+                                  last_part=0)
 
     logging.info("db entry done")
     selected.user_intervention_state.append(entry)
@@ -819,9 +806,13 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             session.query(
                 UserInterventionState
             )
+            .join(InterventionComponents)
             .filter(
-                UserInterventionState.users_nicedayuid==user_id, 
-                UserInterventionState.intervention_component=="future_self_dialog"
+                UserInterventionState.users_nicedayuid==user_id,
+                InterventionComponents.intervention_component_name==PreparationDialogs.FUTURE_SELF.value
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid==user_id
             )
             .one_or_none()
         )
@@ -866,9 +857,10 @@ class ActionStoreFutureSelfDialogState(Action):
             session.query(
                 UserInterventionState
             )
+            .join(InterventionComponents)
             .filter(
-                UserInterventionState.users_nicedayuid==user_id, 
-                UserInterventionState.intervention_component=="future_self_dialog"
+                UserInterventionState.users_nicedayuid==user_id,
+                InterventionComponents.intervention_component_name==PreparationDialogs.FUTURE_SELF.value
             )
             .one_or_none()
         )
@@ -890,7 +882,7 @@ class ActionStoreFutureSelfDialogState(Action):
 
             # User exists in Users table
             if selected_user is not None:
-                entry = UserInterventionState(intervention_component="future_self_dialog",
+                entry = UserInterventionState(intervention_component_id=5,
                                               last_time=last_time, 
                                               last_part=step)
                 selected_user.user_intervention_state.append(entry)

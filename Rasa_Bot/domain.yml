@@ -3,15 +3,10 @@ session_config:
   carry_over_slots_to_new_session: true
 
 intents:
-- goodbye
-- greeting
 - confirm
 - deny
-- positive_mood
-- negative_mood
-- who_are_you
-- how_are_you
 - request_plan_week
+- get_first_aid_kit
 - EXTERNAL_trigger_ask_foreseen_hrs
 - EXTERNAL_trigger_profile_creation
 - EXTERNAL_trigger_medication_talk
@@ -25,15 +20,6 @@ intents:
 - request_tracker_reminder
 
 slots:
-  ### General
-  # The name of the agent
-  agent_name:
-    type: text
-    initial_value: 'Kris'
-    influence_conversation: false
-    mappings:
-    - type: custom
-
   
   ### User data
   # The user's age
@@ -81,9 +67,7 @@ slots:
     type: float
     influence_conversation: false
     mappings:
-      - type: from_text
-        conditions:
-          - active_loop: pa_evaluation_form
+      - type: custom
           
 
   ### Rescheduling query dialog
@@ -251,22 +235,7 @@ responses:
   - text: "Doei!"
   - text: "Tot straks!"
   - text: "Tot ziens!"
-  utter_ask_back:
-  - text: "En jij?"
-  utter_agent_name:
-  - text: "Ik ben {agent_name}. Ik ben je virtuele coach."
-  utter_agent_purpose:
-  - text: "Ik ben hier om je te helpen stoppen met roken en lichamelijk actiever te worden."
 
-  # Mood
-  utter_agent_mood:
-  - text: "Ik voel me geweldig. Ik vind het leuk om mensen te helpen gezonder te worden."
-  utter_ask_user_mood:
-  - text: "Hoe gaat het met je?"
-  utter_response_mood_positive:
-  - text: "Ik ben blij dat te horen!"
-  utter_response_mood_negative:
-  - text: "Aww, het spijt me. Ik hoop dat je je snel beter voelt."
 
   # Weekly planning
   utter_plan_week:
@@ -291,10 +260,33 @@ responses:
   - text: >
       Hoe ging het? Geef dit aan op een schaal
       van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
-  utter_feedback_pa_evaluation_high:
-  - text: "Fijn om te horen dat het goed ging!"
-  utter_feedback_pa_evaluation_low:
-  - text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
+  utter_pa_evaluation_form_once_filled:
+    - condition:
+        - type: slot
+          name: pa_evaluation_response
+          value: 4 
+      text: "Fijn om te horen dat het goed ging!"
+    - condition:
+        - type: slot
+          name: pa_evaluation_response
+          value: 5 
+      text: "Fijn om te horen dat het goed ging!"
+    - condition:
+        - type: slot
+          name: pa_evaluation_response
+          value: 3
+      text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
+    - condition:
+        - type: slot
+          name: pa_evaluation_response
+          value: 2
+      text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
+    - condition:
+        - type: slot
+          name: pa_evaluation_response
+          value: 1
+      text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
+    - text: "Other value."
 
   ## Ask data from tracker
   utter_tracked_cigarettes:
@@ -577,7 +569,6 @@ actions:
 - action_save_plan_week_calendar
 - action_set_reminder
 - validate_pa_evaluation_form
-- action_utter_pa_evaluation_form_filled
 - action_store_pa_evaluation
 ### Future self dialog
 - action_get_future_self_repetition_from_database

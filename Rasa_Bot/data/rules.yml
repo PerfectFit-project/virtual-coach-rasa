@@ -6,20 +6,6 @@ rules:
   steps:
   - intent: goodbye
   - action: utter_goodbye
-
-- rule: introduce and define purpose when user asks who the agent is
-  steps:
-  - intent: who_are_you
-  - action: utter_agent_name
-  - action: utter_agent_purpose
-  
-- rule:  when user says hi at start of conversation, say hi back and ask for mood
-  conversation_start: true # only applies at a conversation start
-  steps: 
-  - intent: greeting
-  - action: action_get_name_from_database
-  - action: utter_greet
-  - action: utter_ask_user_mood
   
 - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
   steps:

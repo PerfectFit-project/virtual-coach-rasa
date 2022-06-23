@@ -58,24 +58,6 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
     selected.dialog_answers.append(entry)
     session.commit()  # Update database
 
-
-def store_intervention_component_to_db(user_id, intervention_phase_id, intervention_component_id, completed):
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-    entry = UserInterventionState(intervention_phase_id =intervention_phase_id,
-                                  intervention_component_id=intervention_component_id,
-                                  completed=completed,
-                                  last_time=datetime.datetime.now().astimezone(TIMEZONE),
-                                  last_part=0)
-
-    logging.info("db entry done")
-    selected.user_intervention_state.append(entry)
-
-    logging.info("entry added perhaps")
-    session.commit()  # Update database
-
-
 # Get the user's age from the database.
 # Save the extracted age to a slot.
 class GetAgeFromDatabase(Action):
@@ -947,9 +929,7 @@ class StoreLastInterventionComponent(Action):
 
         slot = tracker.get_slot("current_intervention_component")
         logging.info(slot)
-
-        #store_intervention_component_to_db(user_id, slot)
-
+        
         celery.send_task('celery_tasks.dialog_completed', (user_id, slot))
         logging.info("no celery error")
         

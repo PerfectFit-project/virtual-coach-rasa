@@ -150,10 +150,8 @@ def store_intervention_component_to_db(user_id: int, intervention_phase_id: int,
                                   last_time=datetime.now().astimezone(TIMEZONE),
                                   last_part=0)
 
-    logging.info("db entry done")
     selected.user_intervention_state.append(entry)
 
-    logging.info("entry added perhaps")
     session.commit()  # Update database
 
 

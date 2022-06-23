@@ -23,8 +23,9 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
-                                              FirstAidKit, UserInterventionState, InterventionComponents)
-from virtual_coach_db.helper.helper import get_db_session
+                                              FirstAidKit, UserInterventionState,
+                                              InterventionComponents)
+from virtual_coach_db.helper.helper_functions import get_db_session
 
 # load database url and niceday_api_endopint variables
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -57,6 +58,7 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
 
     selected.dialog_answers.append(entry)
     session.commit()  # Update database
+
 
 # Get the user's age from the database.
 # Save the extracted age to a slot.
@@ -140,7 +142,6 @@ class GetPlanWeek(Action):
         return "action_get_plan_week"
 
     async def run(self, dispatcher, tracker, domain):
-
         age = tracker.get_slot("age")
 
         # Calculates weekly kilometers based on age
@@ -157,7 +158,6 @@ class SaveNumberCigarettes(Action):
         return "action_save_number_cigarettes"
 
     async def run(self, dispatcher, tracker, domain):
-
         client = NicedayClient(NICEDAY_API_ENDPOINT)
 
         # get the user_id
@@ -187,11 +187,10 @@ class GetNumberCigarettes(Action):
         return "action_get_number_cigarettes"
 
     async def run(self, dispatcher, tracker, domain):
-
         number_of_cigarettes = tracker.get_slot("number_of_cigarettes")
         dispatcher.utter_message(response="utter_tracked_cigarettes",
                                  number_of_cigarettes=number_of_cigarettes)
-        return[]
+        return []
 
 
 # Save weekly plan in calendar
@@ -200,7 +199,6 @@ class SavePlanWeekCalendar(Action):
         return "action_save_plan_week_calendar"
 
     async def run(self, dispatcher, tracker, domain):
-
         success = True
 
         return [SlotSet("success_save_calendar_plan_week", success)]
@@ -241,7 +239,6 @@ class ActionStorePaEvaluation(Action):
         return "action_store_pa_evaluation"
 
     async def run(self, dispatcher, tracker, domain):
-
         pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
         session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
 
@@ -253,7 +250,7 @@ class ActionStorePaEvaluation(Action):
                                   datetime=datetime.datetime.now().astimezone(TIMEZONE))
         selected.closed_user_answers.append(entry)
         session.commit()  # Update database
-        
+
         return [SlotSet("pa_evaluation_response", None)]
 
 
@@ -445,31 +442,30 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         if value.lower() in ['later', 'later.', 'niet nu']:
             return False
         return None
-    
+
 
 class ActionGetReschedulingOptionsList(Action):
     """Get the possible rescheduling options."""
-    
+
     def name(self):
         return "action_get_rescheduling_options_list"
-    
+
     async def run(self, dispatcher, tracker, domain):
-        
+
         # define morning, afternoon, evening
         MORNING = (6, 12)
         AFTERNOON = (12, 18)
         EVENING = (18, 24)
-        
+
         options = ["In een uur"]
-        
+
         current_hour = datetime.datetime.now().astimezone(TIMEZONE).hour
-        
-        
+
         # In the morning
         if MORNING[0] <= current_hour < MORNING[1]:
-            options +=  ["Vanmiddag, om 16:00",
-                         "Vanavond, om 21:00",
-                         "Morgenochtend om deze tijd"]
+            options += ["Vanmiddag, om 16:00",
+                        "Vanavond, om 21:00",
+                        "Morgenochtend om deze tijd"]
         # In the afternoon
         elif AFTERNOON[0] <= current_hour < AFTERNOON[1]:
             options += ["Vanavond, om 21:00",
@@ -482,10 +478,10 @@ class ActionGetReschedulingOptionsList(Action):
                         "Morgenavond om deze tijd"]
         # In the night
         else:
-            options +=  ["Vanmiddag, om 16:00",
-                         "Vanavond, om 21:00",
-                         "Morgen om deze tijd"]
-        
+            options += ["Vanmiddag, om 16:00",
+                        "Vanavond, om 21:00",
+                        "Morgen om deze tijd"]
+
         # Create string of options to utter them
         num_options = len(options)
         rescheduling_options_string = ""
@@ -493,9 +489,9 @@ class ActionGetReschedulingOptionsList(Action):
             rescheduling_options_string += "(" + str(o + 1) + ") " + options[o] + "."
             if not o == len(options) - 1:
                 rescheduling_options_string += " "
-        
+
         return [SlotSet("rescheduling_options_list", options),
-                SlotSet("rescheduling_options_string", 
+                SlotSet("rescheduling_options_string",
                         rescheduling_options_string)]
 
 
@@ -705,7 +701,7 @@ class ValidateWhyPickedSmokerWordsForm(FormValidationAction):
         long_enough_response = validate_long_enough_response(value)
         if not long_enough_response:
             dispatcher.utter_message(response="utter_please_answer_more_words")
-            return{"why_picked_words": None}
+            return {"why_picked_words": None}
 
         logging.info(
             "%s why_picked_words: %s ", type(self).__name__, long_enough_response
@@ -723,30 +719,30 @@ class ActionSetFutureSelfDialogStateStep1(Action):
         return [SlotSet("future_self_dialog_state", 1)]
 
 
-def get_most_recent_question_answer_from_database(session, user_id, 
+def get_most_recent_question_answer_from_database(session, user_id,
                                                   question_id):
     """To get chosen words from last run of future self dialog from database"""
 
-    subquery =  (
+    subquery = (
         session.query(
-           func.max(DialogAnswers.datetime)
+            func.max(DialogAnswers.datetime)
         )
-        .filter(
-            DialogAnswers.users_nicedayuid==user_id,
-            DialogAnswers.question_id==question_id
+            .filter(
+            DialogAnswers.users_nicedayuid == user_id,
+            DialogAnswers.question_id == question_id
         )
     )
 
-    query =  (
+    query = (
         session.query(
-           DialogAnswers
+            DialogAnswers
         )
-        .filter(
-            DialogAnswers.users_nicedayuid==user_id,
-            DialogAnswers.question_id==question_id,
-            DialogAnswers.datetime==subquery
+            .filter(
+            DialogAnswers.users_nicedayuid == user_id,
+            DialogAnswers.question_id == question_id,
+            DialogAnswers.datetime == subquery
         )
-        .first()
+            .first()
     )
 
     words = query.answer
@@ -763,7 +759,6 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         return "action_get_future_self_repetition_from_database"
 
     async def run(self, dispatcher, tracker, domain):
-
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
 
@@ -773,11 +768,11 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             )
             .join(InterventionComponents)
             .filter(
-                UserInterventionState.users_nicedayuid==user_id,
-                InterventionComponents.intervention_component_name==PreparationDialogs.FUTURE_SELF.value
+                UserInterventionState.users_nicedayuid == user_id,
+                InterventionComponents.intervention_component_name == PreparationDialogs.FUTURE_SELF.value
             )
             .filter(
-                UserInterventionState.users_nicedayuid==user_id
+                UserInterventionState.users_nicedayuid == user_id
             )
             .one_or_none()
         )
@@ -785,17 +780,16 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         # If already an entry for the user for the future self dialog exists
         # in the intervention state table
         if selected is not None:
-
             # Get most recent saved chosen smoker words
             question_id = DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
-            smoker_words = get_most_recent_question_answer_from_database(session, 
-                                                                         user_id, 
+            smoker_words = get_most_recent_question_answer_from_database(session,
+                                                                         user_id,
                                                                          question_id)
 
             # Same for mover
             question_id = DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
-            mover_words = get_most_recent_question_answer_from_database(session, 
-                                                                        user_id, 
+            mover_words = get_most_recent_question_answer_from_database(session,
+                                                                        user_id,
                                                                         question_id)
 
             return [SlotSet("future_self_dialog_step_1_repetition", True),
@@ -805,7 +799,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         # No entry exists yet for user for the future self dialog in 
         # the intervention state table
         return [SlotSet("future_self_dialog_step_1_repetition", False)]
-     
+
 
 class ActionStoreFutureSelfDialogState(Action):
     """To save state of future self dialog"""
@@ -824,12 +818,12 @@ class ActionStoreFutureSelfDialogState(Action):
             )
             .join(InterventionComponents)
             .filter(
-                UserInterventionState.users_nicedayuid==user_id,
-                InterventionComponents.intervention_component_name==PreparationDialogs.FUTURE_SELF.value
+                UserInterventionState.users_nicedayuid == user_id,
+                InterventionComponents.intervention_component_name == PreparationDialogs.FUTURE_SELF.value
             )
             .one_or_none()
         )
-        
+
         # Current time to be saved in database
         last_time = datetime.datetime.now().astimezone(TIMEZONE)
 
@@ -837,8 +831,8 @@ class ActionStoreFutureSelfDialogState(Action):
         # in the intervention state table
         if selected is not None:
             # Update time and part of future self dialog
-            selected.last_time=last_time
-            selected.last_part=step
+            selected.last_time = last_time
+            selected.last_part = step
 
         # No entry exists yet for user for the future self dialog in 
         # the intervention state table
@@ -848,7 +842,7 @@ class ActionStoreFutureSelfDialogState(Action):
             # User exists in Users table
             if selected_user is not None:
                 entry = UserInterventionState(intervention_component_id=5,
-                                              last_time=last_time, 
+                                              last_time=last_time,
                                               last_part=step)
                 selected_user.user_intervention_state.append(entry)
 
@@ -859,8 +853,8 @@ class ActionStoreFutureSelfDialogState(Action):
         session.commit()  # Update database
 
         return []
-    
-    
+
+
 class ActionGetFirstAidKit(Action):
     """To get the first aid kit from the database."""
 
@@ -868,27 +862,27 @@ class ActionGetFirstAidKit(Action):
         return "action_get_first_aid_kit"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
-        
+
         selected = (
             session.query(
                 FirstAidKit
             )
             .filter(
-                FirstAidKit.users_nicedayuid==user_id
+                FirstAidKit.users_nicedayuid == user_id
             )
             .all()
         )
-        
+
         kit_text = ""
         kit_exists = False
-        
+
         if selected is not None:
-            
+
             kit_exists = True
-        
+
             for activity_idx, activity in enumerate(selected):
                 kit_text += str(activity_idx + 1) + ") "
                 if activity.intervention_activity_id is None:
@@ -897,7 +891,7 @@ class ActionGetFirstAidKit(Action):
                     kit_text += activity.intervention_activity.intervention_activity_title
                 if not activity_idx == len(selected) - 1:
                     kit_text += "\n"
-        
+
         return [SlotSet("first_aid_kit_text", kit_text),
                 SlotSet("first_aid_kit_exists", kit_exists)]
 
@@ -916,24 +910,24 @@ class SetCigarettesTrackerReminder(Action):
                                     definitions.TrackerName.SMOKING.value,
                                     "This is a tracker",
                                     recursive_rule)
-        return[]
+        return []
 
-#Store last intervention component in database
+
+# Store last intervention component in database
 class StoreLastInterventionComponent(Action):
     def name(self):
         return "action_store_intervention_component"
 
     async def run(self, dispatcher, tracker, domain):
-
-        user_id = int(tracker.current_state()['sender_id']) #retrieve userID
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         slot = tracker.get_slot("current_intervention_component")
         logging.info(slot)
-        
+
         celery.send_task('celery_tasks.dialog_completed', (user_id, slot))
         logging.info("no celery error")
-        
-        return[]
+
+        return []
 
 
 ### Slot-setting methods called for rasa to store current intervention component
@@ -944,12 +938,14 @@ class SetSlotProfileCreation(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.PROFILE_CREATION)]
 
+
 class SetSlotMedicationTalk(Action):
     def name(self):
         return "action_slot_medication_talk"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.MEDICATION_TALK)]
+
 
 class SetSlotColdTurkey(Action):
     def name(self):
@@ -958,6 +954,7 @@ class SetSlotColdTurkey(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.COLD_TURKEY)]
 
+
 class SetSlotPlanQuitStart(Action):
     def name(self):
         return "action_slot_plan_quit_start"
@@ -965,12 +962,14 @@ class SetSlotPlanQuitStart(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.PLAN_QUIT_START_DATE)]
 
+
 class SetSlotMentalContrasting(Action):
     def name(self):
         return "action_slot_mental_contrasting"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.FUTURE_SELF)]
+
 
 class SetSlotGoalSetting(Action):
     def name(self):

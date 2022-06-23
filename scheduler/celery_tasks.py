@@ -7,8 +7,9 @@ from datetime import datetime, timedelta
 from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
                                               InterventionComponents)
-from virtual_coach_db.helper.helper import get_db_session
-from virtual_coach_db.helper.definitions import Phases, PreparationDialogs, PreparationDialogsTriggers
+from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.definitions import (Phases, PreparationDialogs,
+                                                 PreparationDialogsTriggers)
 
 REDIS_URL = os.getenv('REDIS_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -112,15 +113,20 @@ def get_current_phase(user_id: int) -> InterventionPhases:
 def get_next_preparation_dialog(dialog_id: str):
     next_dialog = 0
     if dialog_id == PreparationDialogs.PROFILE_CREATION:
-        next_dialog = [PreparationDialogs.MEDICATION_TALK, PreparationDialogsTriggers.MEDICATION_TALK.value]
+        next_dialog = [PreparationDialogs.MEDICATION_TALK,
+                       PreparationDialogsTriggers.MEDICATION_TALK.value]
     if dialog_id == PreparationDialogs.MEDICATION_TALK:
-        next_dialog = [PreparationDialogs.COLD_TURKEY, PreparationDialogsTriggers.COLD_TURKEY.value]
+        next_dialog = [PreparationDialogs.COLD_TURKEY,
+                       PreparationDialogsTriggers.COLD_TURKEY.value]
     if dialog_id == PreparationDialogs.COLD_TURKEY:
-        next_dialog = [PreparationDialogs.PLAN_QUIT_START_DATE, PreparationDialogsTriggers.PLAN_QUIT_START_DATE.value]
+        next_dialog = [PreparationDialogs.PLAN_QUIT_START_DATE,
+                       PreparationDialogsTriggers.PLAN_QUIT_START_DATE.value]
     if dialog_id == PreparationDialogs.PLAN_QUIT_START_DATE:
-        next_dialog = [PreparationDialogs.FUTURE_SELF, PreparationDialogsTriggers.FUTURE_SELF.value]
+        next_dialog = [PreparationDialogs.FUTURE_SELF,
+                       PreparationDialogsTriggers.FUTURE_SELF.value]
     if dialog_id == PreparationDialogs.FUTURE_SELF:
-        next_dialog = [PreparationDialogs.GOAL_SETTING, PreparationDialogsTriggers.GOAL_SETTING.value]
+        next_dialog = [PreparationDialogs.GOAL_SETTING,
+                       PreparationDialogsTriggers.GOAL_SETTING.value]
     if dialog_id == PreparationDialogs.GOAL_SETTING:
         next_dialog = None
 
@@ -136,10 +142,14 @@ def schedule_dialog_execution(user_id: int):
     """
     planned_date = datetime.now() + timedelta(minutes = 1)
     print(planned_date)
-    trigger_dialog.apply_async(args=[user_id, PreparationDialogsTriggers.PROFILE_CREATION.value], eta=planned_date)
+    trigger_dialog.apply_async(args=[user_id,
+                                     PreparationDialogsTriggers.PROFILE_CREATION.value],
+                               eta=planned_date)
 
 
-def store_intervention_component_to_db(user_id: int, intervention_phase_id: int, intervention_component_id: int,
+def store_intervention_component_to_db(user_id: int,
+                                       intervention_phase_id: int, 
+                                       intervention_component_id: int,
                                        completed: bool):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()

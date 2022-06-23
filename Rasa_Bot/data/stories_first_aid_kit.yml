@@ -1,6 +1,7 @@
 # Stories related to the first aid kit functionality
 version: "3.0"
 
+stories:
 ## Get first aid kit - kit exists
 - story: Get first aid kit exists
   steps:

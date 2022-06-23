@@ -1,8 +1,7 @@
 # Dockerfile for rasa server, compatible with macos M1 chip
 
-# Apple M1 chip compatible Dockerfile with rasa 3.0.5 based on https://github.com/khalo-sa/rasa-apple-silicon
-# This doesn't match the version 3.1.0 that we use in the rest of the project, but it is compatible
-FROM svenvanderburg/rasa-apple-silicon:3.0.5
+# Apple M1 chip compatible Dockerfile with rasa 3.1.0 based on https://github.com/khalo-sa/rasa-apple-silicon
+FROM svenvanderburg/rasa-apple-silicon:3.1.0
 
 # Change to root user to install dependencies
 USER root
@@ -20,21 +19,14 @@ RUN pip install $(grep -ivE "^rasa|^#|^\s*$" requirements.txt | sed s/#.*//g)
 # https://stackoverflow.com/questions/66060487/valueerror-numpy-ndarray-size-changed-may-indicate-binary-incompatibility-exp
 RUN python -m pip install --upgrade numpy
 
-# Necessary because of error on sanic
-# self.error_handler.add(exception, handler.handler, route_names)
-# TypeError: add() takes 3 positional arguments but 4 were given
-RUN pip install sanic==21.6.2
-
-# Spacy language model
-RUN python -m spacy download nl_core_news_sm
-RUN python -m spacy link nl_core_news_sm nl
-
-# Don't use root user to run code
-USER 1001
-
 # Use subdirectory as working directory
 WORKDIR /app
 
 COPY . /app
+
+RUN chmod -R 777 /app
+
+# Don't use root user to run code
+USER 1001
 
 ENTRYPOINT ["rasa", "run", "--enable-api"]

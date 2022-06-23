@@ -148,7 +148,7 @@ def schedule_dialog_execution(user_id: int):
 
 
 def store_intervention_component_to_db(user_id: int,
-                                       intervention_phase_id: int, 
+                                       intervention_phase_id: int,
                                        intervention_component_id: int,
                                        completed: bool):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db

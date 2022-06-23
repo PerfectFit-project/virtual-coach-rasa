@@ -727,7 +727,7 @@ def get_most_recent_question_answer_from_database(session, user_id,
         session.query(
             func.max(DialogAnswers.datetime)
         )
-            .filter(
+        .filter(
             DialogAnswers.users_nicedayuid == user_id,
             DialogAnswers.question_id == question_id
         )
@@ -737,12 +737,12 @@ def get_most_recent_question_answer_from_database(session, user_id,
         session.query(
             DialogAnswers
         )
-            .filter(
+        .filter(
             DialogAnswers.users_nicedayuid == user_id,
             DialogAnswers.question_id == question_id,
             DialogAnswers.datetime == subquery
         )
-            .first()
+        .first()
     )
 
     words = query.answer
@@ -769,7 +769,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                InterventionComponents.intervention_component_name == PreparationDialogs.FUTURE_SELF.value
+                InterventionComponents.intervention_component_name==PreparationDialogs.FUTURE_SELF.value
             )
             .filter(
                 UserInterventionState.users_nicedayuid == user_id

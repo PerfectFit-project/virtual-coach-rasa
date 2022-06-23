@@ -8,7 +8,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 
 from Rasa_Bot.actions.actions_future_self_dialog import ValidateWhyPickedMoverWordsForm
-from Rasa_Bot.actions.actions_minimum_functional_product import SavePlanWeekCalendar, ActionStorePaEvaluation
+from Rasa_Bot.actions.actions_minimum_functional_product import (SavePlanWeekCalendar,
+                                                                 ActionStorePaEvaluation)
 from Rasa_Bot.tests.conftest import EMPTY_TRACKER
 
 

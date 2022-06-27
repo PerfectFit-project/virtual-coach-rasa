@@ -1,0 +1,22 @@
+# Stories related to the first aid kit functionality
+version: "3.0"
+
+stories:
+## Get first aid kit - kit exists
+- story: Get first aid kit exists
+  steps:
+    - intent: get_first_aid_kit
+    - action: action_get_first_aid_kit
+    - slot_was_set:
+      - first_aid_kit_exists: true
+    - action: utter_first_aid_kit
+
+
+## Get first aid kit - kit does not exist yet
+- story: Get first aid kit does not exist
+  steps:
+    - intent: get_first_aid_kit
+    - action: action_get_first_aid_kit
+    - slot_was_set:
+      - first_aid_kit_exists: false
+    - action: utter_first_aid_kit_empty

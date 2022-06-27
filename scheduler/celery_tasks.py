@@ -48,7 +48,7 @@ preparationTriggersOrder = [PreparationInterventionComponentsTriggers.PROFILE_CR
 @app.task
 def intervention_component_completed(user_id: int, intervention_component_name: str):
     phase = get_current_phase(user_id)
-    intervention_component_id = get_intervention_component_id(intervention_component_name, DATABASE_URL)
+    intervention_component_id = get_intervention_component_id(intervention_component_name)
     store_intervention_component_to_db(user_id, phase.phase_id, intervention_component_id, True)
 
     next_intervention_component = None
@@ -60,7 +60,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
             endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
             headers = {'Content-Type': 'application/json'}
             params = {'output_channel': 'niceday_input_channel'}
-            data = '{"name": "' + next_intervention_component[1] + '" }'
+            data = '{"name": "' + next_intervention_component + '" }'
             requests.post(endpoint, headers=headers, params=params, data=data)
 
         else:
@@ -131,7 +131,7 @@ def get_next_preparation_intervention_component(intervention_component_id: str):
 
     current_index = preparationComponentsOrder.index(intervention_component_id)
     if current_index < len(preparationComponentsOrder)-1:
-        next_intervention_component = current_index + 1
+        next_intervention_component = preparationTriggersOrder[current_index + 1]
     else:
         next_intervention_component = None
 
@@ -150,7 +150,7 @@ def schedule_intervention_component_execution(user_id: int):
     print(planned_date)
     trigger_intervention_component.apply_async(args=[user_id,
                                      PreparationInterventionComponentsTriggers.PROFILE_CREATION.value],
-                               eta=planned_date)
+                                     eta=planned_date)
 
 
 def store_intervention_component_to_db(user_id: int,
@@ -169,7 +169,6 @@ def store_intervention_component_to_db(user_id: int,
     selected.user_intervention_state.append(entry)
 
     session.commit()  # Update database
-
 
 
 def get_intervention_component_id(intervention_component_name: str) -> int:

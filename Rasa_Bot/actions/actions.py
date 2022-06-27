@@ -797,7 +797,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             .filter(
                 UserInterventionState.users_nicedayuid == user_id
             )
-            .one_or_none()
+            .first()
         )
 
         # If already an entry for the user for the future self dialog exists
@@ -844,7 +844,7 @@ class ActionStoreFutureSelfDialogState(Action):
                 UserInterventionState.users_nicedayuid == user_id,
                 InterventionComponents.intervention_component_name == PreparationInterventionComponents.FUTURE_SELF.value
             )
-            .one_or_none()
+            .first()
         )
 
         # Current time to be saved in database
@@ -860,8 +860,7 @@ class ActionStoreFutureSelfDialogState(Action):
         # No entry exists yet for user for the future self dialog in 
         # the intervention state table
         else:
-            intervention_component_id = get_intervention_component_id(PreparationInterventionComponents.FUTURE_SELF,
-                                                                      DATABASE_URL)
+            intervention_component_id = get_intervention_component_id(PreparationInterventionComponents.FUTURE_SELF)
             selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
 
             # User exists in Users table

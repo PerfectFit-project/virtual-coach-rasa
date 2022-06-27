@@ -25,7 +25,7 @@ from virtual_coach_db.helper.definitions import PreparationDialogs
 from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
                                               FirstAidKit, UserInterventionState,
                                               InterventionComponents)
-from virtual_coach_db.helper.helper_functions import get_db_session, get_intervention_component_id
+from virtual_coach_db.helper.helper_functions import get_db_session
 
 # load database url and niceday_api_endopint variables
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -59,6 +59,29 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
     selected.dialog_answers.append(entry)
     session.commit()  # Update database
 
+
+
+
+def get_intervention_component_id(intervention_component_name: str) -> int:
+    """
+       Get the id of an intervention component as stored in the DB
+        from the intervention's name.
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (
+        session.query(
+            InterventionComponents
+        )
+        .filter(
+            InterventionComponents.intervention_component_name == intervention_component_name
+        )
+        .all()
+    )
+
+    intervention_component_id = selected[0].intervention_component_id
+    return intervention_component_id
 
 # Get the user's age from the database.
 # Save the extracted age to a slot.

@@ -377,55 +377,55 @@ stories:
 - story: Profile Creation placeholder
   steps:
     - intent: EXTERNAL_trigger_profile_creation
-    - action: action_slot_profile_creation
+    - action: action_set_slot_profile_creation
     - action: utter_ask_profile_info
     - intent: oke
-    - action: action_store_intervention_component
+    - action: mark_dialog_as_completed
 
 ## Medication Talk
 - story: Medication Talk placeholder
   steps:
    - intent: EXTERNAL_trigger_medication_talk
-   - action: action_slot_medication_talk
+   - action: action_set_slot_medication_talk
    - action: utter_medication_talk
    - intent: oke
-   - action: action_store_intervention_component
+   - action: mark_dialog_as_completed
 
 ## Cold Turkey
 - story: Cold Turkey placeholder
   steps:
   - intent: EXTERNAL_trigger_cold_turkey
-  - action: action_slot_cold_turkey
+  - action: action_set_slot_cold_turkey
   - action: utter_cold_turkey
   - intent: oke
-  - action: action_store_intervention_component
+  - action: mark_dialog_as_completed
 
 ## Plan Quit & Start Date
 - story: Plan Quit & Start Date placeholder
   steps:
    - intent: EXTERNAL_trigger_plan_quit_start
-   - action: action_slot_plan_quit_start
+   - action: action_set_slot_plan_quit_start_date
    - action: utter_plan_quit_start
    - intent: oke
-   - action: action_store_intervention_component
+   - action: mark_dialog_as_completed
 
 ## Mental-contrasting
 - story: Mental-contrasting placeholder
   steps:
   - intent: EXTERNAL_trigger_mental_contrasting
-  - action: action_slot_mental_contrasting
+  - action: action_set_slot_mental_contrasting
   - action: utter_mental_contrasting
   - intent: oke
-  - action: action_store_intervention_component
+  - action: mark_dialog_as_completed
 
 ## Goal-setting
 - story: Goal-setting placeholder
   steps:
   - intent: EXTERNAL_trigger_goal_setting
-  - action: action_slot_goal_setting
+  - action: action_set_slot_goal_setting
   - action: utter_goal_setting
   - intent: oke
-  - action: action_store_intervention_component
+  - action: mark_dialog_as_completed
 
 
 

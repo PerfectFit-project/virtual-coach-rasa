@@ -607,13 +607,13 @@ actions:
 ### First aid kit
 - action_get_first_aid_kit
 ### Preparation Phase actions
-- action_store_intervention_component
-- action_slot_profile_creation
-- action_slot_medication_talk
-- action_slot_cold_turkey
-- action_slot_plan_quit_start
-- action_slot_mental_contrasting
-- action_slot_goal_setting
+- mark_dialog_as_completed
+- action_set_slot_profile_creation
+- action_set_slot_medication_talk
+- action_set_slot_cold_turkey
+- action_set_slot_plan_quit_start_date
+- action_set_slot_mental_contrasting
+- action_set_slot_goal_setting
 
 
 forms:

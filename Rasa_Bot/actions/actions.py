@@ -8,7 +8,6 @@ import datetime
 import logging
 import os
 import string
-from virtual_coach_db.helper.definitions import PreparationDialogs
 from enum import Enum
 from typing import Any, Dict, Text
 
@@ -22,10 +21,11 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
+from virtual_coach_db.helper.definitions import PreparationDialogs
 from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
                                               FirstAidKit, UserInterventionState,
                                               InterventionComponents)
-from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.helper_functions import get_db_session, get_intervention_component_id
 
 # load database url and niceday_api_endopint variables
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -837,11 +837,13 @@ class ActionStoreFutureSelfDialogState(Action):
         # No entry exists yet for user for the future self dialog in 
         # the intervention state table
         else:
+            intervention_component_id = get_intervention_component_id(PreparationDialogs.FUTURE_SELF,
+                                                                      DATABASE_URL)
             selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
 
             # User exists in Users table
             if selected_user is not None:
-                entry = UserInterventionState(intervention_component_id=5,
+                entry = UserInterventionState(intervention_component_id=intervention_component_id,
                                               last_time=last_time,
                                               last_part=step)
                 selected_user.user_intervention_state.append(entry)
@@ -914,9 +916,9 @@ class SetCigarettesTrackerReminder(Action):
 
 
 # Store last intervention component in database
-class StoreLastInterventionComponent(Action):
+class MarkDialogAsCompleted(Action):
     def name(self):
-        return "action_store_intervention_component"
+        return "mark_dialog_as_completed"
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
@@ -924,7 +926,7 @@ class StoreLastInterventionComponent(Action):
         slot = tracker.get_slot("current_intervention_component")
         logging.info(slot)
 
-        celery.send_task('celery_tasks.dialog_completed', (user_id, slot))
+        celery.send_task('celery_tasks.intervention_component_completed', (user_id, slot))
         logging.info("no celery error")
 
         return []

@@ -957,9 +957,9 @@ class SetSlotColdTurkey(Action):
         return [SlotSet("current_intervention_component", PreparationDialogs.COLD_TURKEY)]
 
 
-class SetSlotPlanQuitStart(Action):
+class SetSlotPlanQuitStartDate(Action):
     def name(self):
-        return "action_slot_plan_quit_start"
+        return "action_slot_plan_quit_start_date"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.PLAN_QUIT_START_DATE)]
@@ -967,7 +967,7 @@ class SetSlotPlanQuitStart(Action):
 
 class SetSlotMentalContrasting(Action):
     def name(self):
-        return "action_slot_mental_contrasting"
+        return "action_set_slot_mental_contrasting"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.FUTURE_SELF)]
@@ -975,7 +975,7 @@ class SetSlotMentalContrasting(Action):
 
 class SetSlotGoalSetting(Action):
     def name(self):
-        return "action_slot_goal_setting"
+        return "action_set_slot_goal_setting"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component", PreparationDialogs.GOAL_SETTING)]

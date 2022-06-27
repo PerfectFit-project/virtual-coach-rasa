@@ -21,7 +21,7 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
-from virtual_coach_db.helper.definitions import PreparationDialogs
+from virtual_coach_db.helper.definitions import PreparationInterventionComponents
 from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
                                               FirstAidKit, UserInterventionState,
                                               InterventionComponents)
@@ -792,7 +792,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                InterventionComponents.intervention_component_name==PreparationDialogs.FUTURE_SELF.value
+                InterventionComponents.intervention_component_name==PreparationInterventionComponents.FUTURE_SELF.value
             )
             .filter(
                 UserInterventionState.users_nicedayuid == user_id
@@ -842,7 +842,7 @@ class ActionStoreFutureSelfDialogState(Action):
             .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                InterventionComponents.intervention_component_name == PreparationDialogs.FUTURE_SELF.value
+                InterventionComponents.intervention_component_name == PreparationInterventionComponents.FUTURE_SELF.value
             )
             .one_or_none()
         )
@@ -860,7 +860,7 @@ class ActionStoreFutureSelfDialogState(Action):
         # No entry exists yet for user for the future self dialog in 
         # the intervention state table
         else:
-            intervention_component_id = get_intervention_component_id(PreparationDialogs.FUTURE_SELF,
+            intervention_component_id = get_intervention_component_id(PreparationInterventionComponents.FUTURE_SELF,
                                                                       DATABASE_URL)
             selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
 
@@ -958,34 +958,34 @@ class MarkDialogAsCompleted(Action):
 ### Slot-setting methods called for rasa to store current intervention component
 class SetSlotProfileCreation(Action):
     def name(self):
-        return "action_slot_profile_creation"
+        return "action_set_slot_profile_creation"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationDialogs.PROFILE_CREATION)]
+        return [SlotSet("current_intervention_component", PreparationInterventionComponents.PROFILE_CREATION)]
 
 
 class SetSlotMedicationTalk(Action):
     def name(self):
-        return "action_slot_medication_talk"
+        return "action_set_slot_medication_talk"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationDialogs.MEDICATION_TALK)]
+        return [SlotSet("current_intervention_component", PreparationInterventionComponents.MEDICATION_TALK)]
 
 
 class SetSlotColdTurkey(Action):
     def name(self):
-        return "action_slot_cold_turkey"
+        return "action_set_slot_cold_turkey"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationDialogs.COLD_TURKEY)]
+        return [SlotSet("current_intervention_component", PreparationInterventionComponents.COLD_TURKEY)]
 
 
 class SetSlotPlanQuitStartDate(Action):
     def name(self):
-        return "action_slot_plan_quit_start_date"
+        return "action_set_slot_plan_quit_start_date"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationDialogs.PLAN_QUIT_START_DATE)]
+        return [SlotSet("current_intervention_component", PreparationInterventionComponents.PLAN_QUIT_START_DATE)]
 
 
 class SetSlotMentalContrasting(Action):
@@ -993,7 +993,7 @@ class SetSlotMentalContrasting(Action):
         return "action_set_slot_mental_contrasting"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationDialogs.FUTURE_SELF)]
+        return [SlotSet("current_intervention_component", PreparationInterventionComponents.FUTURE_SELF)]
 
 
 class SetSlotGoalSetting(Action):
@@ -1001,4 +1001,4 @@ class SetSlotGoalSetting(Action):
         return "action_set_slot_goal_setting"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationDialogs.GOAL_SETTING)]
+        return [SlotSet("current_intervention_component", PreparationInterventionComponents.GOAL_SETTING)]

@@ -8,8 +8,8 @@ from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
-from virtual_coach_db.helper.definitions import (Phases, PreparationDialogs,
-                                                 PreparationDialogsTriggers)
+from virtual_coach_db.helper.definitions import (Phases, PreparationInterventionComponents,
+                                                 PreparationInterventionComponentsTriggers)
 
 REDIS_URL = os.getenv('REDIS_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -28,6 +28,22 @@ app.conf.beat_schedule = {
         'args': (),
     },
 }
+
+# ordered lists of the intervention components
+preparationComponentsOrder = [PreparationInterventionComponents.PROFILE_CREATION,
+                              PreparationInterventionComponents.MEDICATION_TALK,
+                              PreparationInterventionComponents.COLD_TURKEY,
+                              PreparationInterventionComponents.PLAN_QUIT_START_DATE,
+                              PreparationInterventionComponents.FUTURE_SELF,
+                              PreparationInterventionComponents.GOAL_SETTING]
+
+preparationTriggersOrder = [PreparationInterventionComponentsTriggers.PROFILE_CREATION.value,
+                            PreparationInterventionComponentsTriggers.MEDICATION_TALK.value,
+                            PreparationInterventionComponentsTriggers.COLD_TURKEY.value,
+                            PreparationInterventionComponentsTriggers.PLAN_QUIT_START_DATE.value,
+                            PreparationInterventionComponentsTriggers.FUTURE_SELF.value,
+                            PreparationInterventionComponentsTriggers.GOAL_SETTING.value]
+
 
 @app.task
 def intervention_component_completed(user_id: int, intervention_component_name: str):
@@ -112,22 +128,11 @@ def get_current_phase(user_id: int) -> InterventionPhases:
 
 def get_next_preparation_intervention_component(intervention_component_id: str):
     next_intervention_component = 0
-    if intervention_component_id == PreparationDialogs.PROFILE_CREATION:
-        next_intervention_component = [PreparationDialogs.MEDICATION_TALK,
-                       PreparationDialogsTriggers.MEDICATION_TALK.value]
-    if intervention_component_id == PreparationDialogs.MEDICATION_TALK:
-        next_intervention_component = [PreparationDialogs.COLD_TURKEY,
-                       PreparationDialogsTriggers.COLD_TURKEY.value]
-    if intervention_component_id == PreparationDialogs.COLD_TURKEY:
-        next_intervention_component = [PreparationDialogs.PLAN_QUIT_START_DATE,
-                       PreparationDialogsTriggers.PLAN_QUIT_START_DATE.value]
-    if intervention_component_id == PreparationDialogs.PLAN_QUIT_START_DATE:
-        next_intervention_component = [PreparationDialogs.FUTURE_SELF,
-                       PreparationDialogsTriggers.FUTURE_SELF.value]
-    if intervention_component_id == PreparationDialogs.FUTURE_SELF:
-        next_intervention_component = [PreparationDialogs.GOAL_SETTING,
-                       PreparationDialogsTriggers.GOAL_SETTING.value]
-    if intervention_component_id == PreparationDialogs.GOAL_SETTING:
+
+    current_index = preparationComponentsOrder.index(intervention_component_id)
+    if current_index < len(preparationComponentsOrder)-1:
+        next_intervention_component = current_index + 1
+    else:
         next_intervention_component = None
 
     return next_intervention_component
@@ -144,7 +149,7 @@ def schedule_intervention_component_execution(user_id: int):
     planned_date = datetime.now() + timedelta(minutes = 1)
     print(planned_date)
     trigger_intervention_component.apply_async(args=[user_id,
-                                     PreparationDialogsTriggers.PROFILE_CREATION.value],
+                                     PreparationInterventionComponentsTriggers.PROFILE_CREATION.value],
                                eta=planned_date)
 
 

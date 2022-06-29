@@ -66,6 +66,26 @@ nlu:
   examples: |
     - "EXTERNAL_trigger_profile_creation"
 
+- intent: EXTERNAL_trigger_medication_talk
+  examples: |
+    - "EXTERNAL_trigger_medication_talk"
+
+- intent: EXTERNAL_trigger_cold_turkey
+  examples: |
+    - "EXTERNAL_trigger_cold_turkey"
+
+- intent: EXTERNAL_trigger_plan_quit_start
+  examples: |
+    - "EXTERNAL_trigger_plan_quit_start"
+
+- intent: EXTERNAL_trigger_mental_contrasting
+  examples: |
+    - "EXTERNAL_trigger_mental_contrasting"
+
+- intent: EXTERNAL_trigger_goal_setting
+  examples: |
+    - "EXTERNAL_trigger_goal_setting"
+
 - intent: oke
   examples: |
     - "Oke"

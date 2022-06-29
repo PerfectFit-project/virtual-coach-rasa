@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from virtual_coach_db.dbschema.models import Users
-from virtual_coach_db.helper.helper import get_db_session
+from virtual_coach_db.helper.helper_functions import get_db_session
 from niceday_client import NicedayClient, TrackerStatus
 from niceday_client.definitions import Tracker
 

@@ -7,10 +7,10 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 
-from .actions_future_self_dialog import ValidateWhyPickedMoverWordsForm
-from .actions_minimum_functional_product import (SavePlanWeekCalendar,
+from Rasa_Bot.actions.actions_future_self_dialog import ValidateWhyPickedMoverWordsForm
+from Rasa_Bot.actions.actions_minimum_functional_product import (SavePlanWeekCalendar,
                                                                  ActionStorePaEvaluation)
-from .tests.conftest import EMPTY_TRACKER
+from Rasa_Bot.actions.tests.conftest import EMPTY_TRACKER
 
 
 # NB: This is just an example test. The custom action tested here

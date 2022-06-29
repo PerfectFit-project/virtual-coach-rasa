@@ -6,9 +6,11 @@ from typing import Text, Union
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from Rasa_Bot.tests.conftest import EMPTY_TRACKER
 
-from Rasa_Bot.actions import actions
+from .actions_future_self_dialog import ValidateWhyPickedMoverWordsForm
+from .actions_minimum_functional_product import (SavePlanWeekCalendar,
+                                                                 ActionStorePaEvaluation)
+from .tests.conftest import EMPTY_TRACKER
 
 
 # NB: This is just an example test. The custom action tested here
@@ -18,7 +20,7 @@ from Rasa_Bot.actions import actions
 async def test_run_action_save_plan_week_calendar(
         dispatcher: CollectingDispatcher, domain: DomainDict):
     tracker = EMPTY_TRACKER
-    action = actions.SavePlanWeekCalendar()
+    action = SavePlanWeekCalendar()
     events = await action.run(dispatcher, tracker, domain)
     expected_events = [
         SlotSet("success_save_calendar_plan_week", True),
@@ -27,7 +29,7 @@ async def test_run_action_save_plan_week_calendar(
 
 
 @pytest.mark.asyncio
-@mock.patch("Rasa_Bot.actions.actions.get_db_session")
+@mock.patch(".actions_minimum_functional_product.get_db_session")
 async def test_run_action_store_pa_evaluation(
         mock_get_db_session, dispatcher: CollectingDispatcher, domain: DomainDict):
     mock_result = mock.MagicMock(name="mock_result")
@@ -37,7 +39,7 @@ async def test_run_action_store_pa_evaluation(
     tracker = EMPTY_TRACKER
     test_evaluation_response = 3
     tracker.slots['pa_evaluation_response'] = test_evaluation_response
-    action = actions.ActionStorePaEvaluation()
+    action = ActionStorePaEvaluation()
     events = await action.run(dispatcher, tracker, domain)
     expected_events = [SlotSet("pa_evaluation_response", None)]
     assert events == expected_events
@@ -76,7 +78,7 @@ async def test_run_action_validate_why_picked_mover_words_form(
         expected: Union[Text, None],
 ):
     with latest_message(EMPTY_TRACKER, response) as tracker:
-        action = actions.ValidateWhyPickedMoverWordsForm()
+        action = ValidateWhyPickedMoverWordsForm()
         slots = action.validate_why_picked_words(
             response,
             dispatcher,

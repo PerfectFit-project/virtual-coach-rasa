@@ -1,0 +1,27 @@
+intents:
+  - get_first_aid_kit
+slots:
+  ### First aid kit
+
+  # Text of first aid kit to present to user
+  first_aid_kit_text:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # Whether the user has something in his/her first aid kit
+  first_aid_kit_exists:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+responses:
+  ### First-aid kit
+  utter_first_aid_kit:
+    - text: "Hier is je EHBO doos:\n{first_aid_kit_text}."
+  utter_first_aid_kit_empty:
+    - text: "Je hebt niets in je EHBO doos.\nProbeer iets te bedenken waar je dankbaar voor bent."
+
+actions:
+  - action_get_first_aid_kit

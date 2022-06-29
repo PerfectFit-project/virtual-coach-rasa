@@ -53,14 +53,18 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 ## Components
 
 - actions
-   - actions.py: custom actions, e.g. for reading from a database or file.
+   - actions_*.py: custom actions separated per dialog, e.g. for reading from a database or file.
+   - definitions.py: Stores definitions used in rasa actions, related to database, endpoints, timezone etcetera.
+   - helper.py: Generic helper functions for rasa actions
    - requirements-actions.txt: requirements for the custom action code to be installed in the Docker container for the custom actions.
 - data:
    - nlu.yml: contains the intents that the agent can recognize and training examples for each such intent. We have intents e.g. for a positive mood, for confirming, and for requesting the weekly planning.
    - rules.yml: rules override actions predicted based on stories. We currently use them to e.g. always say bye back after the user says goodbye. There is also a fallback rule for low NLU confidence.
-   - stories.yml: training stories, i.e. the conversation paths the agent can take.
+   - stories_*.yml: training stories, separated per dialog i.e. the conversation paths the agent can take.
+- domain:
+  - domain_*.yml: contains all slots, utterances, etc. Separate file per dialog. 
+     Also defines the time period after which a new conversation starts in case of inactivity.
 - models: contains trained models
-- domain.yml: contains all slots, utterances, etc. Also defines the time period after which a new conversation starts in case of inactivity.
 - config.yml: sets the training configuration for rasa core (e.g. which policies to use, what the fallback should be when the agent is not sure what the next action should be, ...), the threshold for low NLU confidence (the threshold for the FallbackClassifier), etc.
 
 ## Tips for developers
@@ -69,4 +73,4 @@ The timeout is currently set to 5 minutes (in the "domain.yml"-file). This is th
 In case the new custom action code requires any libraries, these need to be added to "requirements-actions.txt" in the "actions"-folder.
 
 ### Retraining when making changes to Language Model
-Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.
+Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train --domain domain/`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.

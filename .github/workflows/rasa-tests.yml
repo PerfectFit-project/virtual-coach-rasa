@@ -27,14 +27,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip==20.2
         pip install -r Rasa_Bot/requirements.txt
-        python -m spacy download nl_core_news_sm
-        python -m spacy link nl_core_news_sm nl
     # The number for max-history needs to be adapted based on config.yml
     - name: Rasa Data Validation
       run: | 
         cd Rasa_Bot
         rasa telemetry disable
-        rasa data validate --max-history 10
+        rasa data validate --max-history 10 --domain domain/
   training-testing:
     name: Train and Test model
     runs-on: ubuntu-latest
@@ -50,13 +48,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip==20.2
         pip install -r Rasa_Bot/requirements.txt
-        python -m spacy download nl_core_news_sm
-        python -m spacy link nl_core_news_sm nl
         rasa --version
     - name: Train model
       run: |
         cd Rasa_Bot
-        rasa train
+        rasa train --domain domain/
     - name: Test End 2 End Stories
       run: |
         cd Rasa_Bot

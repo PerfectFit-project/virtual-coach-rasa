@@ -13,6 +13,8 @@ NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 # Timezone for saving data to database
 TIMEZONE = tz.gettz("Europe/Amsterdam")
 
+REDIS_URL = os.getenv('REDIS_URL')
+
 
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?

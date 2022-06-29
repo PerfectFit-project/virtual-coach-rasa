@@ -29,7 +29,7 @@ async def test_run_action_save_plan_week_calendar(
 
 
 @pytest.mark.asyncio
-@mock.patch("Rasa_Bot.actions.actions_minimum_functional_product.get_db_session")
+@mock.patch(".actions_minimum_functional_product.get_db_session")
 async def test_run_action_store_pa_evaluation(
         mock_get_db_session, dispatcher: CollectingDispatcher, domain: DomainDict):
     mock_result = mock.MagicMock(name="mock_result")

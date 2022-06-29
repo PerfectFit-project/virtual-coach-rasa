@@ -1,9 +1,9 @@
 from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
 from virtual_coach_db.dbschema.models import FirstAidKit
-from virtual_coach_db.helper.helper import get_db_session
+from virtual_coach_db.helper.helper_functions import get_db_session
 
-from Rasa_Bot.actions.definitions import DATABASE_URL
+from .definitions import DATABASE_URL
 
 
 class ActionGetFirstAidKit(Action):

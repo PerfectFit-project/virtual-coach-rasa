@@ -9,7 +9,7 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 
-from Rasa_Bot.actions.definitions import TIMEZONE
+from .definitions import TIMEZONE
 
 
 class ActionResetReschedulingNowSlot(Action):

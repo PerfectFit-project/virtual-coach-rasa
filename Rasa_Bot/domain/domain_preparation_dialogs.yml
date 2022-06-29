@@ -1,0 +1,42 @@
+intents:
+- EXTERNAL_trigger_ask_foreseen_hrs
+- EXTERNAL_trigger_profile_creation
+- EXTERNAL_trigger_medication_talk
+- EXTERNAL_trigger_cold_turkey
+- EXTERNAL_trigger_plan_quit_start
+- EXTERNAL_trigger_mental_contrasting
+- EXTERNAL_trigger_goal_setting
+- oke
+slots:
+### Preparation Phase
+  current_intervention_component:
+    type: text
+    initial_value: 'NONE'
+    mappings:
+    - type: custom
+
+
+responses:
+  ##Utterances related to preparation phase
+  utter_ask_profile_info:
+   - text: "Asking for profile info..."
+  utter_medication_talk:
+   - text: "Conducting medical talk..."
+  utter_cold_turkey:
+   - text: "Cold turkey talk..."
+  utter_plan_quit_start:
+   - text: "Planning quit and start date..."
+  utter_mental_contrasting:
+   - text: "Conducting mental contrasting talk..."
+  utter_goal_setting:
+   - text: "Setting goals..."
+
+actions:
+### Preparation Phase actions
+- mark_dialog_as_completed
+- action_set_slot_profile_creation
+- action_set_slot_medication_talk
+- action_set_slot_cold_turkey
+- action_set_slot_plan_quit_start_date
+- action_set_slot_mental_contrasting
+- action_set_slot_goal_setting

@@ -11,11 +11,14 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
-from virtual_coach_db.dbschema.models import UserInterventionState, Users, DialogAnswers
-from virtual_coach_db.helper import get_db_session
+from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.definitions import PreparationInterventionComponents
+from virtual_coach_db.dbschema.models import (Users, DialogAnswers, UserInterventionState,
+                                              InterventionComponents)
 
-from Rasa_Bot.actions.definitions import DialogQuestions, TIMEZONE, DATABASE_URL
-from Rasa_Bot.actions.helper import store_dialog_answer_to_db
+from .definitions import DialogQuestions, TIMEZONE, DATABASE_URL
+from .helper import (store_dialog_answer_to_db,
+                                    get_intervention_component_id)
 
 
 class ActionStoreSmokerWords(Action):
@@ -407,11 +410,15 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             session.query(
                 UserInterventionState
             )
+            .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                UserInterventionState.intervention_component == "future_self_dialog"
+                InterventionComponents.intervention_component_name==PreparationInterventionComponents.FUTURE_SELF.value
             )
-            .one_or_none()
+            .filter(
+                UserInterventionState.users_nicedayuid == user_id
+            )
+            .first()
         )
 
         # If already an entry for the user for the future self dialog exists
@@ -453,11 +460,12 @@ class ActionStoreFutureSelfDialogState(Action):
             session.query(
                 UserInterventionState
             )
+            .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                UserInterventionState.intervention_component == "future_self_dialog"
+                InterventionComponents.intervention_component_name == PreparationInterventionComponents.FUTURE_SELF.value
             )
-            .one_or_none()
+            .first()
         )
 
         # Current time to be saved in database
@@ -473,11 +481,12 @@ class ActionStoreFutureSelfDialogState(Action):
         # No entry exists yet for user for the future self dialog in
         # the intervention state table
         else:
+            intervention_component_id = get_intervention_component_id(PreparationInterventionComponents.FUTURE_SELF)
             selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
 
             # User exists in Users table
             if selected_user is not None:
-                entry = UserInterventionState(intervention_component="future_self_dialog",
+                entry = UserInterventionState(intervention_component_id=intervention_component_id,
                                               last_time=last_time,
                                               last_part=step)
                 selected_user.user_intervention_state.append(entry)

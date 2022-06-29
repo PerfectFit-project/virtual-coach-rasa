@@ -10,7 +10,7 @@ from rasa_sdk.types import DomainDict
 from Rasa_Bot.actions.actions_future_self_dialog import ValidateWhyPickedMoverWordsForm
 from Rasa_Bot.actions.actions_minimum_functional_product import (SavePlanWeekCalendar,
                                                                  ActionStorePaEvaluation)
-from Rasa_Bot.actions.tests.conftest import EMPTY_TRACKER
+from Rasa_Bot.tests.conftest import EMPTY_TRACKER
 
 
 # NB: This is just an example test. The custom action tested here

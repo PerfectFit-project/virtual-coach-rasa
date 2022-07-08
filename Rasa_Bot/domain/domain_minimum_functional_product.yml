@@ -23,15 +23,6 @@ slots:
     mappings:
     - type: custom
 
-  # Evaluate completed PA
-  pa_evaluation_response:
-    type: float
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-        - active_loop: pa_evaluation_form
-
   ### Data from custom tracker
   number_of_cigarettes:
     type: float
@@ -67,41 +58,6 @@ responses:
   utter_error_save_plan_week_calendar:
   - text: "Sorry, ik kan de planning nu niet invoeren."
 
-
-  ### Activity evaluation
-  utter_pa_completed:
-  - text: "Goed bezig! ..."
-  utter_ask_pa_evaluation_form_pa_evaluation_response:
-  - text: >
-      Hoe ging het? Geef dit aan op een schaal
-      van 1 tot 5, waarbij 1 zeer slecht en 5 zeer goed.
-  utter_pa_evaluation_form_once_filled:
-    - condition:
-        - type: slot
-          name: pa_evaluation_response
-          value: 4
-      text: "Fijn om te horen dat het goed ging!"
-    - condition:
-        - type: slot
-          name: pa_evaluation_response
-          value: 5
-      text: "Fijn om te horen dat het goed ging!"
-    - condition:
-        - type: slot
-          name: pa_evaluation_response
-          value: 3
-      text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
-    - condition:
-        - type: slot
-          name: pa_evaluation_response
-          value: 2
-      text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
-    - condition:
-        - type: slot
-          name: pa_evaluation_response
-          value: 1
-      text: "Jammer, probeer nu goed uit te rusten, dan gaat het de volgende keer vast beter!"
-
   ## Ask data from tracker
   utter_tracked_cigarettes:
     - text: "Je hebt vandaag {number_of_cigarettes} sigaretten gerookt."
@@ -125,14 +81,7 @@ actions:
   - action_get_name_from_database
   - action_save_plan_week_calendar
   - action_set_reminder
-  - validate_pa_evaluation_form
-  - action_store_pa_evaluation
   ### Data from custom tracker
   - action_save_number_cigarettes
   - action_get_number_cigarettes
   - action_set_cigarettes_tracker_reminder
-
-forms:
-  pa_evaluation_form:
-    required_slots:
-      - pa_evaluation_response

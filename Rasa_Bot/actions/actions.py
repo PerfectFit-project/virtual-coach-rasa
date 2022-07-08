@@ -22,7 +22,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.helper.definitions import PreparationInterventionComponents
-from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers, DialogAnswers,
+from virtual_coach_db.dbschema.models import (Users, DialogAnswers,
                                               FirstAidKit, UserInterventionState,
                                               InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session

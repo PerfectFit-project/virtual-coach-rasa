@@ -13,7 +13,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers)
+from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 from .definitions import TIMEZONE, DATABASE_URL, NICEDAY_API_ENDPOINT

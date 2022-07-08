@@ -37,12 +37,6 @@ nlu:
     - "Nee, bedankt."
     - "Nee"
     - Nee, klopt niet
-  
-- intent: completed_pa
-  examples: |
-    - "Ik heb net gesport."
-    - "Ik heb net gelopen."
-    - "Ik heb net gewandeld."
 
 - intent: request_future_self_dialog
   examples: |

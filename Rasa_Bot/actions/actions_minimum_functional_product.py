@@ -13,7 +13,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from virtual_coach_db.dbschema.models import (Users, ClosedUserAnswers)
+from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 from .definitions import TIMEZONE, DATABASE_URL, NICEDAY_API_ENDPOINT
@@ -161,56 +161,6 @@ class SavePlanWeekCalendar(Action):
         success = True
 
         return [SlotSet("success_save_calendar_plan_week", success)]
-
-
-# Validate input of liker scale form
-class ValidatePaEvaluationForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_pa_evaluation_form'
-
-    def validate_pa_evaluation_response(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate pa_evaluation_response input."""
-
-        if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_please_answer_1_to_5")
-            return {"pa_evaluation_response": None}
-        pa_evaluation_response = int(value)
-        return {"pa_evaluation_response": pa_evaluation_response}
-
-    @staticmethod
-    def _is_valid_input(value):
-        try:
-            value = int(value)
-        except ValueError:
-            return False
-        if (value < 1) or (value > 5):
-            return False
-        return True
-
-
-class ActionStorePaEvaluation(Action):
-    """"To save user input from PA evaluation form to database"""
-
-    def name(self):
-        return "action_store_pa_evaluation"
-
-    async def run(self, dispatcher, tracker, domain):
-        pa_evaluation_response = tracker.get_slot("pa_evaluation_response")
-        session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-
-        user_id = tracker.current_state()['sender_id']
-        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-        entry = ClosedUserAnswers(value=pa_evaluation_response,
-                                  question='paevaluation',
-                                  datetime=datetime.datetime.now().astimezone(TIMEZONE))
-        selected.closed_user_answers.append(entry)
-        session.commit()  # Update database
-
-        return [SlotSet("pa_evaluation_response", None)]
 
 
 # Set smoked cigarettes tracker reminder

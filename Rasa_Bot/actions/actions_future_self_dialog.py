@@ -405,6 +405,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
     async def run(self, dispatcher, tracker, domain):
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
+        future_self_value = PreparationInterventionComponents.FUTURE_SELF.value
 
         selected = (
             session.query(
@@ -413,8 +414,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                # pylint: disable=line-too-long
-                InterventionComponents.intervention_component_name == PreparationInterventionComponents.FUTURE_SELF.value
+                InterventionComponents.intervention_component_name == future_self_value
             )
             .filter(
                 UserInterventionState.users_nicedayuid == user_id
@@ -456,6 +456,8 @@ class ActionStoreFutureSelfDialogState(Action):
         step = tracker.get_slot("future_self_dialog_state")
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
+        future_self_value = PreparationInterventionComponents.FUTURE_SELF.value
+
         selected = (
             session.query(
                 UserInterventionState
@@ -463,8 +465,7 @@ class ActionStoreFutureSelfDialogState(Action):
             .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                # pylint: disable=line-too-long
-                InterventionComponents.intervention_component_name == PreparationInterventionComponents.FUTURE_SELF.value
+                InterventionComponents.intervention_component_name == future_self_value
             )
             .first()
         )

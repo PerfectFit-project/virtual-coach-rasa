@@ -1,6 +1,5 @@
 """Unit tests for the custom actions"""
 import pytest
-from unittest import mock
 from contextlib import contextmanager
 from typing import Text, Union
 from rasa_sdk.events import SlotSet

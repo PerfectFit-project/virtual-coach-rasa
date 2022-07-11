@@ -403,6 +403,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         return "action_get_future_self_repetition_from_database"
 
     async def run(self, dispatcher, tracker, domain):
+        # pylint: disable=line-too-long
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
 
@@ -452,7 +453,7 @@ class ActionStoreFutureSelfDialogState(Action):
         return "action_store_future_self_dialog_state"
 
     async def run(self, dispatcher, tracker, domain):
-
+        # pylint: disable=line-too-long
         step = tracker.get_slot("future_self_dialog_state")
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']

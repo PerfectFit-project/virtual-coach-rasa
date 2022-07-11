@@ -13,6 +13,7 @@ stories:
       Nee
     intent: deny
   - action: utter_okay
+  - action: action_end_dialog
 
 - story: Ask foreseen HRS, user does not foresee HRS
   steps:
@@ -22,3 +23,4 @@ stories:
       Nee
     intent: deny
   - action: utter_be_careful_for_hrs
+  - action: action_end_dialog

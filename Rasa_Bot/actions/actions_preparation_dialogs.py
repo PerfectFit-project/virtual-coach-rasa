@@ -36,7 +36,8 @@ class SetSlotProfileCreation(Action):
         return "action_set_slot_profile_creation"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationInterventionComponents.PROFILE_CREATION)]
+        return [SlotSet("current_intervention_component",
+                        PreparationInterventionComponents.PROFILE_CREATION)]
 
 
 class SetSlotMedicationTalk(Action):
@@ -44,7 +45,8 @@ class SetSlotMedicationTalk(Action):
         return "action_set_slot_medication_talk"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationInterventionComponents.MEDICATION_TALK)]
+        return [SlotSet("current_intervention_component",
+                        PreparationInterventionComponents.MEDICATION_TALK)]
 
 
 class SetSlotColdTurkey(Action):
@@ -52,7 +54,8 @@ class SetSlotColdTurkey(Action):
         return "action_set_slot_cold_turkey"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationInterventionComponents.COLD_TURKEY)]
+        return [SlotSet("current_intervention_component",
+                        PreparationInterventionComponents.COLD_TURKEY)]
 
 
 class SetSlotPlanQuitStartDate(Action):
@@ -60,7 +63,8 @@ class SetSlotPlanQuitStartDate(Action):
         return "action_set_slot_plan_quit_start_date"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationInterventionComponents.PLAN_QUIT_START_DATE)]
+        return [SlotSet("current_intervention_component",
+                        PreparationInterventionComponents.PLAN_QUIT_START_DATE)]
 
 
 class SetSlotMentalContrasting(Action):
@@ -68,7 +72,8 @@ class SetSlotMentalContrasting(Action):
         return "action_set_slot_mental_contrasting"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationInterventionComponents.FUTURE_SELF)]
+        return [SlotSet("current_intervention_component",
+                        PreparationInterventionComponents.FUTURE_SELF)]
 
 
 class SetSlotGoalSetting(Action):
@@ -76,4 +81,5 @@ class SetSlotGoalSetting(Action):
         return "action_set_slot_goal_setting"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", PreparationInterventionComponents.GOAL_SETTING)]
+        return [SlotSet("current_intervention_component",
+                        PreparationInterventionComponents.GOAL_SETTING)]

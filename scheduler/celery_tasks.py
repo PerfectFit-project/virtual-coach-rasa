@@ -114,13 +114,13 @@ def get_current_phase(user_id: int) -> InterventionPhases:
         session.query(
             UserInterventionState
         )
-            .join(InterventionPhases)
-            .filter(
+        .join(InterventionPhases)
+        .filter(
             UserInterventionState.users_nicedayuid == user_id
         )
-            .order_by(UserInterventionState.id.desc())  # order by descending id
-            .limit(1)  # get only the first result
-            .all()
+        .order_by(UserInterventionState.id.desc())  # order by descending id
+        .limit(1)  # get only the first result
+        .all()
     )
 
     phase = selected[0].phase
@@ -185,10 +185,10 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
         session.query(
             InterventionComponents
         )
-            .filter(
+        .filter(
             InterventionComponents.intervention_component_name == intervention_component_name
         )
-            .all()
+        .all()
     )
 
     intervention_component_id = selected[0].intervention_component_id

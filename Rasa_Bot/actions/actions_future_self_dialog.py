@@ -403,7 +403,6 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         return "action_get_future_self_repetition_from_database"
 
     async def run(self, dispatcher, tracker, domain):
-        # pylint: disable=line-too-long
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
 
@@ -414,7 +413,8 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
             .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
-                InterventionComponents.intervention_component_name==PreparationInterventionComponents.FUTURE_SELF.value
+                # pylint: disable=line-too-long
+                InterventionComponents.intervention_component_name == PreparationInterventionComponents.FUTURE_SELF.value
             )
             .filter(
                 UserInterventionState.users_nicedayuid == user_id
@@ -453,7 +453,6 @@ class ActionStoreFutureSelfDialogState(Action):
         return "action_store_future_self_dialog_state"
 
     async def run(self, dispatcher, tracker, domain):
-        # pylint: disable=line-too-long
         step = tracker.get_slot("future_self_dialog_state")
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
@@ -464,6 +463,7 @@ class ActionStoreFutureSelfDialogState(Action):
             .join(InterventionComponents)
             .filter(
                 UserInterventionState.users_nicedayuid == user_id,
+                # pylint: disable=line-too-long
                 InterventionComponents.intervention_component_name == PreparationInterventionComponents.FUTURE_SELF.value
             )
             .first()
@@ -482,7 +482,8 @@ class ActionStoreFutureSelfDialogState(Action):
         # No entry exists yet for user for the future self dialog in
         # the intervention state table
         else:
-            intervention_component_id = get_intervention_component_id(PreparationInterventionComponents.FUTURE_SELF)
+            intervention_component_id = \
+                get_intervention_component_id(PreparationInterventionComponents.FUTURE_SELF)
             selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
 
             # User exists in Users table

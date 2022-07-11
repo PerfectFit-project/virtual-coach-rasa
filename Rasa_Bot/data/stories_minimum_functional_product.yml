@@ -43,19 +43,6 @@ stories:
   - action: utter_okay
   - action: action_end_dialog
 
-# User indicates completion PA
-- story: user_indicate_pa
-  steps:
-  - intent: completed_pa
-  - action: utter_pa_completed
-  - action: pa_evaluation_form
-  - active_loop: pa_evaluation_form
-  - active_loop: null
-  - action: utter_pa_evaluation_form_once_filled
-  - action: action_store_pa_evaluation
-  - slot_was_set:
-    - pa_evaluation_response: null
-  - action: action_end_dialog
 
 # User foresees HRS
 - story: user_foresees_hrs

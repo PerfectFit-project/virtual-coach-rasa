@@ -14,6 +14,7 @@ stories:
   - slot_was_set:
     - success_save_calendar_plan_week: True
   - action: utter_plan_calendar_confirmation
+  - action: action_end_dialog
 
 # saving in calendar failed
 - story: request_plan_week_calendarYes_Error
@@ -28,6 +29,7 @@ stories:
   - slot_was_set:
     - success_save_calendar_plan_week: False
   - action: utter_error_save_plan_week_calendar
+  - action: action_end_dialog
 
 # User does not want to save plan in calendar
 - story: request_plan_week_calendarNo
@@ -39,6 +41,7 @@ stories:
   - action: utter_ask_plan_calendar
   - intent: deny
   - action: utter_okay
+  - action: action_end_dialog
 
 
 # User foresees HRS
@@ -48,6 +51,7 @@ stories:
     - action: utter_ask_foreseen_hrs
     - intent: confirm
     - action: utter_watering_plants
+    - action: action_end_dialog
 
 # User does not foresee HRS
 - story: user_does_not_foresee_hrs
@@ -56,3 +60,4 @@ stories:
     - action: utter_ask_foreseen_hrs
     - intent: deny
     - action: utter_be_careful_for_hrs
+    - action: action_end_dialog

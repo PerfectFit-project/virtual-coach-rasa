@@ -3,16 +3,13 @@ Contains custom actions for dialogs implemented as part of the 'Minimum Function
 """
 import datetime
 import logging
-from typing import Any, Dict, Text
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, DAILY
 from niceday_client import NicedayClient, definitions
 from paalgorithms import weekly_kilometers
-from rasa_sdk import Action, Tracker
+from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
-from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 

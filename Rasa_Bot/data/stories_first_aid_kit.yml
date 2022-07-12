@@ -10,6 +10,7 @@ stories:
     - slot_was_set:
       - first_aid_kit_exists: true
     - action: utter_first_aid_kit
+    - action: action_end_dialog
 
 
 ## Get first aid kit - kit does not exist yet
@@ -20,3 +21,4 @@ stories:
     - slot_was_set:
       - first_aid_kit_exists: false
     - action: utter_first_aid_kit_empty
+    - action: action_end_dialog

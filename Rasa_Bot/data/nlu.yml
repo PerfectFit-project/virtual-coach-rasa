@@ -47,6 +47,7 @@ nlu:
   examples: |
     - "Get first aid kit"
     - "Ik wil first aid kit"
+    - "First aid kit"
 
 - intent: request_tracked_cigarettes
   examples: |

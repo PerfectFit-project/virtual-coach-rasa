@@ -40,5 +40,6 @@ stories:
     - action: action_reset_rescheduling_option_slot
     - slot_was_set:
       - rescheduling_option: null
+    - action: action_end_dialog
     # TODO: what are we going to do at the end of the dialog if the user types something again?
     # Maybe a ConversationPaused() event from custom action?

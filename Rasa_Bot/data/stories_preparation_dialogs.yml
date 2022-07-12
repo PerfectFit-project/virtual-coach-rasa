@@ -13,6 +13,7 @@ stories:
     - action: utter_ask_profile_info
     - intent: oke
     - action: mark_dialog_as_completed
+    - action: action_end_dialog
 
 ## Medication Talk
 - story: Medication Talk placeholder
@@ -22,6 +23,7 @@ stories:
    - action: utter_medication_talk
    - intent: oke
    - action: mark_dialog_as_completed
+   - action: action_end_dialog
 
 ## Cold Turkey
 - story: Cold Turkey placeholder
@@ -31,6 +33,7 @@ stories:
   - action: utter_cold_turkey
   - intent: oke
   - action: mark_dialog_as_completed
+  - action: action_end_dialog
 
 ## Plan Quit & Start Date
 - story: Plan Quit & Start Date placeholder
@@ -40,6 +43,7 @@ stories:
    - action: utter_plan_quit_start
    - intent: oke
    - action: mark_dialog_as_completed
+   - action: action_end_dialog
 
 ## Mental-contrasting
 - story: Mental-contrasting placeholder
@@ -49,6 +53,7 @@ stories:
   - action: utter_mental_contrasting
   - intent: oke
   - action: mark_dialog_as_completed
+  - action: action_end_dialog
 
 ## Goal-setting
 - story: Goal-setting placeholder
@@ -58,3 +63,4 @@ stories:
   - action: utter_goal_setting
   - intent: oke
   - action: mark_dialog_as_completed
+  - action: action_end_dialog

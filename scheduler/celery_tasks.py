@@ -3,13 +3,16 @@ import os
 
 import requests
 from celery import Celery
+from celery.schedules import crontab
 from datetime import datetime, timedelta
 from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Phases, PreparationInterventionComponents,
-                                                 PreparationInterventionComponentsTriggers)
+                                                 PreparationInterventionComponentsTriggers,
+                                                 ExecutionInterventionComponents,
+                                                 ExecutionInterventionComponentsTriggers)
 
 REDIS_URL = os.getenv('REDIS_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -79,6 +82,15 @@ def trigger_intervention_component(user_id, trigger):
     requests.post(endpoint, headers=headers, params=params, data=data)
 
 
+@app.task
+def trigger_intervention_component_schedule(user_id, trigger):
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
+    headers = {'Content-Type': 'application/json'}
+    params = {'output_channel': 'niceday_input_channel'}
+    data = '{"name": "' + trigger + '" }'
+    requests.post(endpoint, headers=headers, params=params, data=data)
+
+
 @app.task(bind=True)
 def trigger_ask_foreseen_hrs(self):  # pylint: disable=unused-argument
     """Task to trigger RASA to set reminder for every user.
@@ -139,7 +151,9 @@ def get_next_preparation_intervention_component(intervention_component_id: str):
     return next_intervention_component
 
 
-def schedule_intervention_component_execution(user_id: int):
+def schedule_intervention_component_execution(user_id: int,
+                                              date: datetime,
+                                              recurrence: str = None):
     """
         Get the preferences of a user and plan the execution of
          an intervention component
@@ -147,12 +161,22 @@ def schedule_intervention_component_execution(user_id: int):
             it triggers the profile creation intervention component one minute after the request
         TODO: Check DB to get the preferences, schedule all intervention components accordingly
     """
-    planned_date = datetime.now() + timedelta(minutes=1)
-    print(planned_date)
-    trigger_intervention_component.apply_async(
-        args=[user_id,
-              PreparationInterventionComponentsTriggers.PROFILE_CREATION.value],
-        eta=planned_date)
+    if recurrence is not None:
+        if recurrence == 'daily':
+            schedule = crontab(minute=date.minute,
+                               hour=date.hour)
+        elif recurrence == 'weekly':
+            schedule = crontab(minute=date.minute,
+                               hour=date.hour,
+                               day_of_week=date.isoweekday())
+        else:
+            raise NameError('Recurrence type not found')
+
+    else:
+        trigger_intervention_component.apply_async(
+            args=[user_id,
+                  PreparationInterventionComponentsTriggers.PROFILE_CREATION.value],
+            eta=date)
 
 
 def store_intervention_component_to_db(user_id: int,

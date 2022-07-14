@@ -43,12 +43,19 @@ preparation_triggers_order = [PreparationInterventionComponentsTriggers.PROFILE_
 @app.task
 def intervention_component_completed(user_id: int, intervention_component_name: str):
     phase = get_current_phase(user_id)
-    intervention_component_id = get_intervention_component_id(intervention_component_name)
-    store_intervention_component_to_db(user_id, phase.phase_id, intervention_component_id, True)
+    intervention_component = get_intervention_component(intervention_component_name)
+    intervention_component_id = intervention_component.intervention_component_id
 
     next_intervention_component = None
 
     if phase.phase_name == Phases.PREPARATION:
+
+        store_intervention_component_to_db(user_id=user_id,
+                                           intervention_phase_id=phase.phase_id,
+                                           intervention_component_id=intervention_component_id,
+                                           completed=True,
+                                           last_time=datetime.now().astimezone(TIMEZONE))
+
         next_intervention_component = \
             get_next_preparation_intervention_component(intervention_component_name)
 
@@ -61,15 +68,25 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
         else:
             logging.info("PREPARATION PHASE ENDED")
-            # TODO: implement execution phase dialogs scheduling
-            planned_date = datetime.now() + timedelta(minutes=2)
-            task_uuid = trigger_intervention_component.apply_async(
-                args=[user_id,
-                      PreparationInterventionComponentsTriggers.PROFILE_CREATION.value],
-                eta=planned_date)
-            print(task_uuid)
-            app.control.revoke(str(task_uuid))
-            #schedule_intervention_component_execution(user_id, datetime.now(), 'daily')
+            plan_execution_dialogs(user_id)
+
+    elif phase.phase_name == Phases.EXECUTION:
+
+        trigger = intervention_component.intervention_component_trigger
+        next_planned_date = get_next_planned_date(user_id, intervention_component_id)
+
+        # schedule the task
+        task_uuid = trigger_intervention_component.apply_async(
+                                                               args=[user_id, trigger],
+                                                               eta=next_planned_date)
+
+        store_intervention_component_to_db(user_id=user_id,
+                                           intervention_phase_id=2,
+                                           intervention_component_id=intervention_component_id,
+                                           completed=True,
+                                           last_time=datetime.now().astimezone(TIMEZONE),
+                                           next_planned_date=next_planned_date,
+                                           task_uuid=task_uuid)
 
 
 @app.task(bind=True)
@@ -93,6 +110,28 @@ def trigger_ask_foreseen_hrs(self):  # pylint: disable=unused-argument
         params = {'output_channel': 'niceday_input_channel'}
         data = '{"name": "EXTERNAL_trigger_ask_foreseen_hrs"}'
         requests.post(endpoint, headers=headers, params=params, data=data)
+
+
+def compute_next_day(selectable_days: list) -> date:
+    # get the weekday number of current date
+    today = datetime.today()
+    today_weekday = today.isoweekday()
+
+    selectable_days.sort()
+    # get the nex usable day in the week
+    available_days = [i for i in selectable_days if i > today_weekday]
+
+    if available_days:
+        # if there are available day further in the week, get the next one
+        next_weekday = available_days[0]
+    else:
+        # if no further days are available, get the first available in the week
+        next_weekday = selectable_days[0]
+
+    # compute the date of the next selected day
+    next_date = today + timedelta((next_weekday-today_weekday) % 7)
+
+    return next_date
 
 
 def get_user_ids():
@@ -141,69 +180,7 @@ def get_next_preparation_intervention_component(intervention_component_id: str):
     return next_intervention_component
 
 
-def schedule_intervention_component_execution(user_id: int):
-    """
-        Get the preferences of a user and plan the execution of
-         an intervention component
-         N.B. ATM this is just a dummy to test the functionality,
-            it triggers the profile creation intervention component one minute after the request
-        TODO: Check DB to get the preferences, schedule all intervention components accordingly
-    """
-    if recurrence is not None:
-        if recurrence == 'daily':
-            schedule = crontab(minute=date.minute,
-                               hour=date.hour)
-        elif recurrence == 'weekly':
-            schedule = crontab(minute=date.minute,
-                               hour=date.hour,
-                               day_of_week=date.isoweekday())
-        else:
-            raise NameError('Recurrence type not found')
-    else:
-        trigger_intervention_component.apply_async(
-            args=[user_id,
-                  PreparationInterventionComponentsTriggers.PROFILE_CREATION.value],
-            eta=date)
-
-
-def store_intervention_component_to_db(user_id: int,
-                                       intervention_phase_id: int,
-                                       intervention_component_id: int,
-                                       completed: bool):
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-    next_planned_date = get_next_planned_date(user_id, intervention_component_id)
-
-    entry = UserInterventionState(intervention_phase_id=intervention_phase_id,
-                                  intervention_component_id=intervention_component_id,
-                                  completed=completed,
-                                  last_time=datetime.now().astimezone(TIMEZONE),
-                                  last_part=0,
-                                  nenext_planned_date = next_planned_date)
-
-    selected.user_intervention_state.append(entry)
-
-    session.commit()  # Update database
-
-
-def get_all_intervention_components() -> list:
-    """
-       Get the list of ids of all the intervention components.
-    """
-    session = get_db_session(DATABASE_URL)
-
-    components = (
-        session.query(
-            InterventionComponents
-        )
-        .all()
-    )
-
-    return [component.intervention_component_id for component in components]
-
-
-def get_intervention_component_id(intervention_component_name: str) -> int:
+def get_intervention_component(intervention_component_name: str):
     """
        Get the id of an intervention component as stored in the DB
         from the intervention's name.
@@ -221,8 +198,7 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
         .all()
     )
 
-    intervention_component_id = selected[0].intervention_component_id
-    return intervention_component_id
+    return selected[0]
 
 
 def get_next_planned_date(user_id: int, intervention_component_id: int) -> datetime:
@@ -250,23 +226,59 @@ def get_next_planned_date(user_id: int, intervention_component_id: int) -> datet
     return next_planned_date
 
 
-def compute_next_day(selectable_days: list) -> date:
-    # get the weekday number of current date
-    today = datetime.today()
-    today_weekday = today.isoweekday()
+def plan_execution_dialogs(user_id: int):
+    """
+        Get the preferences of a user and plan the execution of
+         all the intervention components
+    """
+    session = get_db_session(db_url=DATABASE_URL)
 
-    selectable_days.sort()
-    # get the nex usable day in the week
-    available_days = [i for i in selectable_days if i > today_weekday]
+    preferences = (
+        session.query(UserPreferences)
+        .filter(users_nicedayuid=user_id)
+        .all()
+    )
 
-    if available_days:
-        # if there are available day further in the week, get the next one
-        next_weekday = available_days[0]
-    else:
-        # if no further days are available, get the first available in the week
-        next_weekday = selectable_days[0]
+    for preference in preferences:
 
-    # compute the date of the next selected day
-    next_date = today + timedelta((next_weekday-today_weekday) % 7)
+        intervention_component_id = preference.intervention_component_id
+        trigger = preference.InterventionComponents.intervention_component_trigger
+        next_planned_date = get_next_planned_date(user_id, intervention_component_id)
 
-    return next_date
+        # schedule the task
+        task_uuid = trigger_intervention_component.apply_async(
+                                                               args=[user_id, trigger],
+                                                               eta=next_planned_date)
+
+        # update the DB
+        store_intervention_component_to_db(user_id=user_id,
+                                           intervention_phase_id=2,
+                                           intervention_component_id=intervention_component_id,
+                                           completed=False,
+                                           next_planned_date=next_planned_date,
+                                           task_uuid=task_uuid)
+
+
+def store_intervention_component_to_db(user_id: int,
+                                       intervention_phase_id: int,
+                                       intervention_component_id: int,
+                                       completed: bool,
+                                       last_time: datetime = None,
+                                       last_part: int = 0,
+                                       next_planned_date: datetime = None,
+                                       task_uuid: str = None):
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    entry = UserInterventionState(intervention_phase_id=intervention_phase_id,
+                                  intervention_component_id=intervention_component_id,
+                                  completed=completed,
+                                  last_time=last_time,
+                                  last_part=last_part,
+                                  next_planned_date=next_planned_date,
+                                  task_uuid=task_uuid)
+
+    selected.user_intervention_state.append(entry)
+
+    session.commit()  # Update database

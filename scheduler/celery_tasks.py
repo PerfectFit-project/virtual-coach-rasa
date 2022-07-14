@@ -81,13 +81,37 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
                                                                eta=next_planned_date)
 
         store_intervention_component_to_db(user_id=user_id,
-                                           intervention_phase_id=2,
+                                           intervention_phase_id=phase.phase_id,
                                            intervention_component_id=intervention_component_id,
                                            completed=True,
                                            last_time=datetime.now().astimezone(TIMEZONE),
                                            next_planned_date=next_planned_date,
                                            task_uuid=task_uuid)
 
+
+@app.task
+def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
+    
+    intervention_component = get_intervention_component(intervention_component_name)
+    intervention_component_id = intervention_component.intervention_component_id
+
+    phase = get_current_phase(user_id)
+
+    # schedule the task
+    task_uuid = trigger_intervention_component.apply_async(
+        args=[user_id, intervention_component.trigger],
+        eta=new_date)
+
+    last_state = get_last_component_state(user_id, intervention_component_id)
+
+    store_intervention_component_to_db(user_id=user_id,
+                                       intervention_phase_id=phase.phase_id,
+                                       intervention_component_id=intervention_component_id,
+                                       completed=False,
+                                       last_time=last_state.last_time,
+                                       last_part=last_state.last_part,
+                                       next_planned_date=new_date,
+                                       task_uuid=task_uuid)
 
 @app.task(bind=True)
 def trigger_intervention_component(self, user_id, trigger): # pylint: disable=unused-argument
@@ -96,20 +120,6 @@ def trigger_intervention_component(self, user_id, trigger): # pylint: disable=un
     params = {'output_channel': 'niceday_input_channel'}
     data = '{"name": "' + trigger + '" }'
     requests.post(endpoint, headers=headers, params=params, data=data)
-
-
-@app.task(bind=True)
-def trigger_ask_foreseen_hrs(self):  # pylint: disable=unused-argument
-    """Task to trigger RASA to set reminder for every user.
-    """
-    # TODO: add Celery or http error handling
-    user_ids = get_user_ids()
-    for user in user_ids:
-        endpoint = f'http://rasa_server:5005/conversations/{user}/trigger_intent'
-        headers = {'Content-Type': 'application/json'}
-        params = {'output_channel': 'niceday_input_channel'}
-        data = '{"name": "EXTERNAL_trigger_ask_foreseen_hrs"}'
-        requests.post(endpoint, headers=headers, params=params, data=data)
 
 
 def compute_next_day(selectable_days: list) -> date:
@@ -132,6 +142,27 @@ def compute_next_day(selectable_days: list) -> date:
     next_date = today + timedelta((next_weekday-today_weekday) % 7)
 
     return next_date
+
+
+def get_last_component_state(user_id: int, intervention_component_id: int) -> UserInterventionState:
+
+    session = get_db_session(DATABASE_URL)
+
+    selected = (
+        session.query(
+            UserInterventionState
+        )
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_id == intervention_component_id
+        )
+        .order_by(UserInterventionState.id.desc())  # order by descending id
+        .limit(1)  # get only the first result
+        .all()
+    )
+
+    return selected[0]
+
 
 
 def get_user_ids():

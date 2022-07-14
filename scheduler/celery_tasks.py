@@ -3,16 +3,13 @@ import os
 
 import requests
 from celery import Celery
-from celery.schedules import crontab
 from datetime import datetime, date, timedelta
 from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Phases, PreparationInterventionComponents,
-                                                 PreparationInterventionComponentsTriggers,
-                                                 ExecutionInterventionComponents,
-                                                 ExecutionInterventionComponentsTriggers)
+                                                 PreparationInterventionComponentsTriggers)
 
 REDIS_URL = os.getenv('REDIS_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -91,7 +88,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
 @app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
-    
+
     intervention_component = get_intervention_component(intervention_component_name)
     intervention_component_id = intervention_component.intervention_component_id
 
@@ -162,17 +159,6 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
     )
 
     return selected[0]
-
-
-
-def get_user_ids():
-    """
-    Get user ids of all existing users in the database
-    TODO: Add filters, i.e. active users or in a specific phase of intervention.
-    """
-    session = get_db_session(DATABASE_URL)
-    users = session.query(Users).all()
-    return [user.nicedayuid for user in users]
 
 
 def get_current_phase(user_id: int) -> InterventionPhases:

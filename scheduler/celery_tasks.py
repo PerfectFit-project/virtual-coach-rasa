@@ -4,7 +4,7 @@ import os
 import requests
 from celery import Celery
 from celery.schedules import crontab
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState,
                                               InterventionPhases, InterventionComponents)
@@ -23,14 +23,6 @@ app = Celery('celery_tasks', broker=REDIS_URL)
 
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
-
-app.conf.beat_schedule = {
-    'trigger_ask_foreseen_hrs': {
-        'task': 'celery_tasks.trigger_ask_foreseen_hrs',
-        'schedule': 3600.0,  # every hour
-        'args': (),
-    },
-}
 
 # ordered lists of the intervention components
 preparation_components_order = [PreparationInterventionComponents.PROFILE_CREATION,
@@ -70,20 +62,18 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
         else:
             logging.info("PREPARATION PHASE ENDED")
             # TODO: implement execution phase dialogs scheduling
-            # schedule_intervention_component_execution(user_id)
+            planned_date = datetime.now() + timedelta(minutes=2)
+            task_uuid = trigger_intervention_component.apply_async(
+                args=[user_id,
+                      PreparationInterventionComponentsTriggers.PROFILE_CREATION.value],
+                eta=planned_date)
+            print(task_uuid)
+            app.control.revoke(str(task_uuid))
+            #schedule_intervention_component_execution(user_id, datetime.now(), 'daily')
 
 
-@app.task
-def trigger_intervention_component(user_id, trigger):
-    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
-    headers = {'Content-Type': 'application/json'}
-    params = {'output_channel': 'niceday_input_channel'}
-    data = '{"name": "' + trigger + '" }'
-    requests.post(endpoint, headers=headers, params=params, data=data)
-
-
-@app.task
-def trigger_intervention_component_schedule(user_id, trigger):
+@app.task(bind=True)
+def trigger_intervention_component(self, user_id, trigger): # pylint: disable=unused-argument
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_input_channel'}
@@ -151,9 +141,7 @@ def get_next_preparation_intervention_component(intervention_component_id: str):
     return next_intervention_component
 
 
-def schedule_intervention_component_execution(user_id: int,
-                                              date: datetime,
-                                              recurrence: str = None):
+def schedule_intervention_component_execution(user_id: int):
     """
         Get the preferences of a user and plan the execution of
          an intervention component
@@ -171,7 +159,6 @@ def schedule_intervention_component_execution(user_id: int,
                                day_of_week=date.isoweekday())
         else:
             raise NameError('Recurrence type not found')
-
     else:
         trigger_intervention_component.apply_async(
             args=[user_id,
@@ -186,15 +173,34 @@ def store_intervention_component_to_db(user_id: int,
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
+    next_planned_date = get_next_planned_date(user_id, intervention_component_id)
+
     entry = UserInterventionState(intervention_phase_id=intervention_phase_id,
                                   intervention_component_id=intervention_component_id,
                                   completed=completed,
                                   last_time=datetime.now().astimezone(TIMEZONE),
-                                  last_part=0)
+                                  last_part=0,
+                                  nenext_planned_date = next_planned_date)
 
     selected.user_intervention_state.append(entry)
 
     session.commit()  # Update database
+
+
+def get_all_intervention_components() -> list:
+    """
+       Get the list of ids of all the intervention components.
+    """
+    session = get_db_session(DATABASE_URL)
+
+    components = (
+        session.query(
+            InterventionComponents
+        )
+        .all()
+    )
+
+    return [component.intervention_component_id for component in components]
 
 
 def get_intervention_component_id(intervention_component_name: str) -> int:
@@ -217,3 +223,50 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
 
     intervention_component_id = selected[0].intervention_component_id
     return intervention_component_id
+
+
+def get_next_planned_date(user_id: int, intervention_component_id: int) -> datetime:
+    session = get_db_session(DATABASE_URL)
+    selected = (
+        session.query(
+            UserPreferences
+        )
+        .filter(
+            UserPreferences.users_nicedayuid == user_id,
+            UserPreferences.intervention_component_id == intervention_component_id
+        )
+        .all()
+    )
+
+    days_str = selected.week_days
+    days_list = list(map(int, days_str.split(',')))
+
+    preferred_time = UserPreferences.preferred_time
+
+    next_day = compute_next_day(days_list)
+
+    next_planned_date = datetime.combine(next_day, preferred_time)
+
+    return next_planned_date
+
+
+def compute_next_day(selectable_days: list) -> date:
+    # get the weekday number of current date
+    today = datetime.today()
+    today_weekday = today.isoweekday()
+
+    selectable_days.sort()
+    # get the nex usable day in the week
+    available_days = [i for i in selectable_days if i > today_weekday]
+
+    if available_days:
+        # if there are available day further in the week, get the next one
+        next_weekday = available_days[0]
+    else:
+        # if no further days are available, get the first available in the week
+        next_weekday = selectable_days[0]
+
+    # compute the date of the next selected day
+    next_date = today + timedelta((next_weekday-today_weekday) % 7)
+
+    return next_date

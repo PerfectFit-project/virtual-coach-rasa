@@ -22,6 +22,5 @@ jobs:
         uses: macbre/push-to-ghcr@master
         with:
           context: ./Rasa_Bot/
-          dockerfile: Dockerfile.rasa_server
           image_name: rasa_bot
           github_token: ${{ secrets.GITHUB_TOKEN }}

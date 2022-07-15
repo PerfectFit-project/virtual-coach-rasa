@@ -29,7 +29,12 @@ slots:
     - type: from_text
       conditions:
       - active_loop: rescheduling_options_form
-
+  # Chosen rescheduling option, stored as datetime
+  rescheduling_options_datetime:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
 responses:
 
   ### General rescheduling query dialog

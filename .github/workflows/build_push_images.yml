@@ -21,7 +21,7 @@ jobs:
       - name: Build and publish Docker image for rasa server
         uses: macbre/push-to-ghcr@master
         with:
-          context: ${{ github.repository }}/Rasa_Bot/
+          context: ./Rasa_Bot/
           dockerfile: Dockerfile.rasa_server
           image_name: rasa_bot
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -20,3 +20,6 @@ jobs:
         run: |
           cd Rasa_Bot/
           docker build . -t rasa_bot -f Dockerfile
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin

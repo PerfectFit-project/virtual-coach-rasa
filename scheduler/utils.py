@@ -159,7 +159,7 @@ def store_intervention_component_to_db(user_id: int,
                                        last_part: int = 0,
                                        next_planned_date: datetime = None,
                                        task_uuid: str = None):
-
+    
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 

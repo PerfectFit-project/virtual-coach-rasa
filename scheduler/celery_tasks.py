@@ -10,6 +10,7 @@ from virtual_coach_db.dbschema.models import UserPreferences
 from virtual_coach_db.helper.definitions import Phases
 from virtual_coach_db.helper.helper_functions import get_db_session
 
+DATABASE_URL = os.getenv('DATABASE_URL')
 REDIS_URL = os.getenv('REDIS_URL')
 
 TIMEZONE = tz.gettz("Europe/Amsterdam")
@@ -24,7 +25,7 @@ app.conf.timezone = TIMEZONE
 def intervention_component_completed(user_id: int, intervention_component_name: str):
     phase = utils.get_current_phase(user_id)
     intervention_component = utils.get_intervention_component(intervention_component_name)
-    intervention_component_id = intervention_component.intervention_component_id
+    intervention_id = intervention_component.intervention_component_id
 
     next_intervention_component = None
 
@@ -32,7 +33,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
         utils.store_intervention_component_to_db(user_id=user_id,
                                                  intervention_phase_id=phase.phase_id,
-                                                 intervention_component_id=intervention_component_id,
+                                                 intervention_component_id=intervention_id,
                                                  completed=True,
                                                  last_time=datetime.now().astimezone(TIMEZONE))
 
@@ -53,7 +54,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
     elif phase.phase_name == Phases.EXECUTION:
 
         trigger = intervention_component.intervention_component_trigger
-        next_planned_date = utils.get_next_planned_date(user_id, intervention_component_id)
+        next_planned_date = utils.get_next_planned_date(user_id, intervention_id)
 
         # schedule the task
         task_uuid = trigger_intervention_component.apply_async(
@@ -62,7 +63,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
         utils.store_intervention_component_to_db(user_id=user_id,
                                                  intervention_phase_id=phase.phase_id,
-                                                 intervention_component_id=intervention_component_id,
+                                                 intervention_component_id=intervention_id,
                                                  completed=True,
                                                  last_time=datetime.now().astimezone(TIMEZONE),
                                                  next_planned_date=next_planned_date,
@@ -111,14 +112,14 @@ def plan_execution_dialogs(user_id: int):
 
     preferences = (
         session.query(UserPreferences)
-            .filter(UserPreferences.users_nicedayuid == user_id)
-            .all()
+               .filter(UserPreferences.users_nicedayuid == user_id)
+               .all()
     )
 
     for preference in preferences:
-        intervention_component_id = preference.intervention_component_id
+        intervention_id = preference.intervention_component_id
         trigger = preference.intervention_component.intervention_component_trigger
-        next_planned_date = utils.get_next_planned_date(user_id, intervention_component_id)
+        next_planned_date = utils.get_next_planned_date(user_id, intervention_id)
 
         # schedule the task
         task_uuid = trigger_intervention_component.apply_async(
@@ -128,7 +129,7 @@ def plan_execution_dialogs(user_id: int):
         # update the DB
         utils.store_intervention_component_to_db(user_id=user_id,
                                                  intervention_phase_id=2,
-                                                 intervention_component_id=intervention_component_id,
+                                                 intervention_component_id=intervention_id,
                                                  completed=False,
                                                  next_planned_date=next_planned_date,
                                                  task_uuid=str(task_uuid))

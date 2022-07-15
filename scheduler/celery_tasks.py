@@ -5,7 +5,7 @@ import requests
 from celery import Celery
 from datetime import datetime, date, timedelta
 from dateutil import tz
-from virtual_coach_db.dbschema.models import (Users, UserInterventionState,
+from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Phases, PreparationInterventionComponents,
@@ -71,7 +71,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
         trigger = intervention_component.intervention_component_trigger
         next_planned_date = get_next_planned_date(user_id, intervention_component_id)
-
+        next_planned_date = datetime.now()+ timedelta(minutes=2)
         # schedule the task
         task_uuid = trigger_intervention_component.apply_async(
                                                                args=[user_id, trigger],
@@ -83,7 +83,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
                                            completed=True,
                                            last_time=datetime.now().astimezone(TIMEZONE),
                                            next_planned_date=next_planned_date,
-                                           task_uuid=task_uuid)
+                                           task_uuid=str(task_uuid))
 
 
 @app.task
@@ -108,7 +108,7 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
                                        last_time=last_state.last_time,
                                        last_part=last_state.last_part,
                                        next_planned_date=new_date,
-                                       task_uuid=task_uuid)
+                                       task_uuid=str(task_uuid))
 
 @app.task(bind=True)
 def trigger_intervention_component(self, user_id, trigger): # pylint: disable=unused-argument
@@ -220,7 +220,7 @@ def get_intervention_component(intervention_component_name: str):
 
 def get_next_planned_date(user_id: int, intervention_component_id: int) -> datetime:
     session = get_db_session(DATABASE_URL)
-    selected = (
+    preferences = (
         session.query(
             UserPreferences
         )
@@ -228,13 +228,13 @@ def get_next_planned_date(user_id: int, intervention_component_id: int) -> datet
             UserPreferences.users_nicedayuid == user_id,
             UserPreferences.intervention_component_id == intervention_component_id
         )
-        .all()
+        .one()
     )
 
-    days_str = selected.week_days
+    days_str = preferences.week_days
     days_list = list(map(int, days_str.split(',')))
 
-    preferred_time = UserPreferences.preferred_time
+    preferred_time = preferences.preferred_time
 
     next_day = compute_next_day(days_list)
 
@@ -252,14 +252,13 @@ def plan_execution_dialogs(user_id: int):
 
     preferences = (
         session.query(UserPreferences)
-        .filter(users_nicedayuid=user_id)
+        .filter(UserPreferences.users_nicedayuid == user_id)
         .all()
     )
 
     for preference in preferences:
-
         intervention_component_id = preference.intervention_component_id
-        trigger = preference.InterventionComponents.intervention_component_trigger
+        trigger = preference.intervention_component.intervention_component_trigger
         next_planned_date = get_next_planned_date(user_id, intervention_component_id)
 
         # schedule the task
@@ -273,7 +272,7 @@ def plan_execution_dialogs(user_id: int):
                                            intervention_component_id=intervention_component_id,
                                            completed=False,
                                            next_planned_date=next_planned_date,
-                                           task_uuid=task_uuid)
+                                           task_uuid=str(task_uuid))
 
 
 def store_intervention_component_to_db(user_id: int,

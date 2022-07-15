@@ -1,7 +1,7 @@
 """
 Contains custom actions for rescheduling dialog
 """
-import datetime
+import datetime, timedelta
 from typing import Any, Dict, Text
 
 from rasa_sdk import Action, Tracker
@@ -62,28 +62,50 @@ class ActionGetReschedulingOptionsList(Action):
 
         options = ["In een uur"]
 
-        current_hour = datetime.datetime.now().astimezone(TIMEZONE).hour
-
+        current_time = datetime.datetime.now().astimezone(TIMEZONE)
+        options_datetime = [current_time + datetime.timedelta(hours=1)]
         # In the morning
-        if MORNING[0] <= current_hour < MORNING[1]:
+        if MORNING[0] <= current_time.hour < MORNING[1]:
             options += ["Vanmiddag, om 16:00",
                         "Vanavond, om 21:00",
                         "Morgenochtend om deze tijd"]
+
+            options_datetime += [current_time.replace(hour=16, minute=0, second=0),
+                                 current_time.replace(hour=21, minute=0, second=0),
+                                 current_time + datetime.timedelta(days=1)]
+
         # In the afternoon
-        elif AFTERNOON[0] <= current_hour < AFTERNOON[1]:
+        elif AFTERNOON[0] <= current_time.hour < AFTERNOON[1]:
             options += ["Vanavond, om 21:00",
                         "Morgenochtend, om 8:00",
                         "Morgenmiddag om deze tijd"]
+
+            options_datetime += [current_time.replace(hour=21, minute=0, second=0),
+                                 current_time.replace(hour=8, minute=0, second=0) +
+                                                       datetime.timedelta(days=1),
+                                 current_time + datetime.timedelta(days=1)]
+
         # In the evening
-        elif EVENING[0] <= current_hour < EVENING[1]:
+        elif EVENING[0] <= current_time.hour < EVENING[1]:
             options += ["Morgenochtend, om 8:00",
                         "Morgenmiddag, om 16:00",
                         "Morgenavond om deze tijd"]
+
+            options_datetime += [current_time.replace(hour=8, minute=0, second=0) +
+                                                      datetime.timedelta(days=1),
+                                 current_time.replace(hour=16, minute=0, second=0) +
+                                                       datetime.timedelta(days=1),
+                                 current_time + datetime.timedelta(days=1)]
+
         # In the night
         else:
             options += ["Vanmiddag, om 16:00",
                         "Vanavond, om 21:00",
                         "Morgen om deze tijd"]
+
+            options_datetime += [current_time.replace(hour=16, minute=0, second=0),
+                                 current_time.replace(hour=21, minute=0, second=0),
+                                 current_time + datetime.timedelta(days=1)]
 
         # Create string of options to utter them
         num_options = len(options)

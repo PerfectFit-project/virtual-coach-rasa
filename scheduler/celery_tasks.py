@@ -1,10 +1,14 @@
 import logging
-
+import os
 import requests
+import utils
+
 from celery import Celery
+from datetime import datetime
 from dateutil import tz
-from utils import *
+from virtual_coach_db.dbschema.models import UserPreferences
 from virtual_coach_db.helper.definitions import Phases
+from virtual_coach_db.helper.helper_functions import get_db_session
 
 REDIS_URL = os.getenv('REDIS_URL')
 
@@ -18,22 +22,22 @@ app.conf.timezone = TIMEZONE
 
 @app.task
 def intervention_component_completed(user_id: int, intervention_component_name: str):
-    phase = get_current_phase(user_id)
-    intervention_component = get_intervention_component(intervention_component_name)
+    phase = utils.get_current_phase(user_id)
+    intervention_component = utils.get_intervention_component(intervention_component_name)
     intervention_component_id = intervention_component.intervention_component_id
 
     next_intervention_component = None
 
     if phase.phase_name == Phases.PREPARATION:
 
-        store_intervention_component_to_db(user_id=user_id,
-                                           intervention_phase_id=phase.phase_id,
-                                           intervention_component_id=intervention_component_id,
-                                           completed=True,
-                                           last_time=datetime.now().astimezone(TIMEZONE))
+        utils.store_intervention_component_to_db(user_id=user_id,
+                                                 intervention_phase_id=phase.phase_id,
+                                                 intervention_component_id=intervention_component_id,
+                                                 completed=True,
+                                                 last_time=datetime.now().astimezone(TIMEZONE))
 
         next_intervention_component = \
-            get_next_preparation_intervention_component(intervention_component_name)
+            utils.get_next_preparation_intervention_component(intervention_component_name)
 
         if next_intervention_component is not None:
             endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
@@ -49,48 +53,48 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
     elif phase.phase_name == Phases.EXECUTION:
 
         trigger = intervention_component.intervention_component_trigger
-        next_planned_date = get_next_planned_date(user_id, intervention_component_id)
+        next_planned_date = utils.get_next_planned_date(user_id, intervention_component_id)
 
         # schedule the task
         task_uuid = trigger_intervention_component.apply_async(
-                                                               args=[user_id, trigger],
-                                                               eta=next_planned_date)
+            args=[user_id, trigger],
+            eta=next_planned_date)
 
-        store_intervention_component_to_db(user_id=user_id,
-                                           intervention_phase_id=phase.phase_id,
-                                           intervention_component_id=intervention_component_id,
-                                           completed=True,
-                                           last_time=datetime.now().astimezone(TIMEZONE),
-                                           next_planned_date=next_planned_date,
-                                           task_uuid=str(task_uuid))
+        utils.store_intervention_component_to_db(user_id=user_id,
+                                                 intervention_phase_id=phase.phase_id,
+                                                 intervention_component_id=intervention_component_id,
+                                                 completed=True,
+                                                 last_time=datetime.now().astimezone(TIMEZONE),
+                                                 next_planned_date=next_planned_date,
+                                                 task_uuid=str(task_uuid))
 
 
 @app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
-
-    intervention_component = get_intervention_component(intervention_component_name)
+    intervention_component = utils.get_intervention_component(intervention_component_name)
     intervention_component_id = intervention_component.intervention_component_id
 
-    phase = get_current_phase(user_id)
+    phase = utils.get_current_phase(user_id)
 
     # schedule the task
     task_uuid = trigger_intervention_component.apply_async(
         args=[user_id, intervention_component.trigger],
         eta=new_date)
 
-    last_state = get_last_component_state(user_id, intervention_component_id)
+    last_state = utils.get_last_component_state(user_id, intervention_component_id)
 
-    store_intervention_component_to_db(user_id=user_id,
-                                       intervention_phase_id=phase.phase_id,
-                                       intervention_component_id=intervention_component_id,
-                                       completed=False,
-                                       last_time=last_state.last_time,
-                                       last_part=last_state.last_part,
-                                       next_planned_date=new_date,
-                                       task_uuid=str(task_uuid))
+    utils.store_intervention_component_to_db(user_id=user_id,
+                                             intervention_phase_id=phase.phase_id,
+                                             intervention_component_id=intervention_component_id,
+                                             completed=False,
+                                             last_time=last_state.last_time,
+                                             last_part=last_state.last_part,
+                                             next_planned_date=new_date,
+                                             task_uuid=str(task_uuid))
+
 
 @app.task(bind=True)
-def trigger_intervention_component(self, user_id, trigger): # pylint: disable=unused-argument
+def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=unused-argument
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_input_channel'}
@@ -107,24 +111,24 @@ def plan_execution_dialogs(user_id: int):
 
     preferences = (
         session.query(UserPreferences)
-        .filter(UserPreferences.users_nicedayuid == user_id)
-        .all()
+            .filter(UserPreferences.users_nicedayuid == user_id)
+            .all()
     )
 
     for preference in preferences:
         intervention_component_id = preference.intervention_component_id
         trigger = preference.intervention_component.intervention_component_trigger
-        next_planned_date = get_next_planned_date(user_id, intervention_component_id)
+        next_planned_date = utils.get_next_planned_date(user_id, intervention_component_id)
 
         # schedule the task
         task_uuid = trigger_intervention_component.apply_async(
-                                                               args=[user_id, trigger],
-                                                               eta=next_planned_date)
+            args=[user_id, trigger],
+            eta=next_planned_date)
 
         # update the DB
-        store_intervention_component_to_db(user_id=user_id,
-                                           intervention_phase_id=2,
-                                           intervention_component_id=intervention_component_id,
-                                           completed=False,
-                                           next_planned_date=next_planned_date,
-                                           task_uuid=str(task_uuid))
+        utils.store_intervention_component_to_db(user_id=user_id,
+                                                 intervention_phase_id=2,
+                                                 intervention_component_id=intervention_component_id,
+                                                 completed=False,
+                                                 next_planned_date=next_planned_date,
+                                                 task_uuid=str(task_uuid))

@@ -16,11 +16,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      # https://github.com/marketplace/actions/push-to-ghcr
-      - name: Build and publish Docker image for rasa server
-        uses: macbre/push-to-ghcr@master
-        with:
-          context: ./Rasa_Bot/
-          image_name: rasa_bot
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build docker image
+        run: |
+          cd Rasa_Bot/
+          docker build . -t rasa_bot -f Dockerfile

@@ -119,8 +119,7 @@ class ActionGetReschedulingOptionsList(Action):
             if not o == len(options) - 1:
                 rescheduling_options_string += " "
 
-        return [SlotSet("rescheduling_options_list", options),  # We might remove this (unused)
-                SlotSet("rescheduling_options_string", rescheduling_options_string),
+        return [SlotSet("rescheduling_options_string", rescheduling_options_string),
                 SlotSet("rescheduling_options_datetime", options_datetime)]
 
 

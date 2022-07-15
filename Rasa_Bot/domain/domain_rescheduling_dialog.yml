@@ -9,12 +9,6 @@ slots:
     - type: from_text
       conditions:
       - active_loop: rescheduling_now_or_later_form
-  # List of rescheduling options
-  rescheduling_options_list:
-    type: list
-    influence_conversation: false
-    mappings:
-    - type: custom
   # String with rescheduling options for uttering the options
   rescheduling_options_string:
     type: text

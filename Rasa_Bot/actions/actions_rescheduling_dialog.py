@@ -1,7 +1,8 @@
 """
 Contains custom actions for rescheduling dialog
 """
-import datetime, timedelta
+from celery import Celery
+import datetime
 from typing import Any, Dict, Text
 
 from rasa_sdk import Action, Tracker
@@ -9,7 +10,10 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 
+from .definitions import REDIS_URL
 from .definitions import TIMEZONE
+
+celery = Celery(broker=REDIS_URL)
 
 
 class ActionResetReschedulingNowSlot(Action):
@@ -115,9 +119,9 @@ class ActionGetReschedulingOptionsList(Action):
             if not o == len(options) - 1:
                 rescheduling_options_string += " "
 
-        return [SlotSet("rescheduling_options_list", options),
-                SlotSet("rescheduling_options_string",
-                        rescheduling_options_string)]
+        return [SlotSet("rescheduling_options_list", options),  # We might remove this (unused)
+                SlotSet("rescheduling_options_string", rescheduling_options_string),
+                SlotSet("rescheduling_options_datetime", options_datetime)]
 
 
 class ActionResetReschedulingOptionSlot(Action):
@@ -155,3 +159,19 @@ class ValidateReschedulingOptionsForm(FormValidationAction):
         if (value < 1) or (value > 4):
             return False
         return True
+
+
+class ActionRescheduleDialog(Action):
+    """Reschedule the dialog at the chosen time"""
+
+    def name(self):
+        return "action_reschedule_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+        chosen_option = tracker.get_slot('rescheduling_option')
+        datetime_options = tracker.get_slot('rescheduling_options_datetime')
+        dialog = tracker.get_slot('current_intervention_component')
+        eta = datetime_options[chosen_option-1]  # Note the -1 as the first option is 1 (not 0)
+
+        celery.send_task('celery_task.reschedule_dialog', (user_id, dialog, eta))

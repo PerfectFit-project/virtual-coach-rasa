@@ -4,8 +4,7 @@ from datetime import datetime, date, timedelta
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.definitions import (PreparationInterventionComponents,
-                                                 PreparationInterventionComponentsTriggers,
-                                                 Phases)
+                                                 PreparationInterventionComponentsTriggers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 

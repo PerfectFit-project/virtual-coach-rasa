@@ -4,7 +4,7 @@ import requests
 import utils
 
 from celery import Celery
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil import tz
 from virtual_coach_db.dbschema.models import UserPreferences, UserInterventionState
 from virtual_coach_db.helper.definitions import Phases

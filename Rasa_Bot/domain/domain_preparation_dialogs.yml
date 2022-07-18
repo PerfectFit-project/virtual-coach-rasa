@@ -7,13 +7,6 @@ intents:
 - EXTERNAL_trigger_mental_contrasting
 - EXTERNAL_trigger_goal_setting
 - oke
-slots:
-### Preparation Phase
-  current_intervention_component:
-    type: text
-    initial_value: 'NONE'
-    mappings:
-    - type: custom
 
 
 responses:
@@ -33,7 +26,6 @@ responses:
 
 actions:
 ### Preparation Phase actions
-- mark_dialog_as_completed
 - action_set_slot_profile_creation
 - action_set_slot_medication_talk
 - action_set_slot_cold_turkey

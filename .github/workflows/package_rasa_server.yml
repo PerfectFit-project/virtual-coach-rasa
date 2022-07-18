@@ -19,4 +19,4 @@ jobs:
     uses: ./.github/workflows/ghcr_build_and_push.yml
     with:
       imagename: rasa_server
-      context: RasaBot/
+      context: Rasa_Bot/

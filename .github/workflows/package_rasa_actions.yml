@@ -1,0 +1,22 @@
+name: Build and publish the rasa_actions image to ghcr.io
+
+on:   
+  push:
+    # Publish `main` as Docker `latest` image.
+    branches:
+      - main
+      - issue172_design_deployment_process
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Run tests for any PRs.
+  pull_request:
+
+jobs:
+  publish_rasa_server:
+    uses: ./.github/workflows/ghcr_build_and_push.yml
+    with:
+      imagename: rasa_actions
+      context: Rasa_Bot/actions/

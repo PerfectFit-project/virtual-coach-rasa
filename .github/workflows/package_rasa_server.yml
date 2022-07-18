@@ -16,7 +16,7 @@ on:
 
 jobs:
   publish_rasa_server:
-    uses: ghcr_build_and_push.yml
+    uses: ./.github/workflows/ghcr_build_and_push.yml
     with:
       imagename: rasa_server
       context: RasaBot/

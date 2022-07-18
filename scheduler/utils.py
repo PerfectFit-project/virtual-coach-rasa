@@ -4,7 +4,8 @@ from datetime import datetime, date, timedelta
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.definitions import (PreparationInterventionComponents,
-                                                 PreparationInterventionComponentsTriggers)
+                                                 PreparationInterventionComponentsTriggers,
+                                                 Phases)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -28,6 +29,19 @@ preparation_triggers_order = [PreparationInterventionComponentsTriggers.PROFILE_
 
 
 def compute_next_day(selectable_days: list) -> date:
+    """
+    Given a list of days in the week, returns the date of
+    the closest future day among the ones provided in the list
+
+    Args:
+        selectable_days: a list of the week days among to search for.
+                         The list is a list of int, each int represents
+                         the day of the week (e.g., 1 = Monday
+
+    Returns:
+        The date of the next day available in the list, starting from
+             current date.
+    """
     # get the weekday number of current date
     today = datetime.today()
     today_weekday = today.isoweekday()
@@ -50,7 +64,19 @@ def compute_next_day(selectable_days: list) -> date:
 
 
 def get_last_component_state(user_id: int, intervention_component_id: int) -> UserInterventionState:
+    """
+    Gets the last state saved in the DB for an intervention component
 
+    Args:
+        user_id: the id of the user
+            intervention_component_id: the id of the intervention component as
+            saved in the DB
+
+    Returns:
+            The last row saved in the user_intervention_state table in the DB for the
+            given user and intervention component. A UserInterventionState object is
+            returned.
+    """
     session = get_db_session(DATABASE_URL)
 
     selected = (
@@ -71,7 +97,14 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
 
 def get_current_phase(user_id: int) -> InterventionPhases:
     """
-       Get the current phase of the intervention of a user.
+    Get the current phase of the intervention of a user.
+
+    Args:
+        user_id: the id of the user
+
+    Returns:
+            The current intervention phase for the given user as
+            an InterventionPhases object.
 
     """
     session = get_db_session(DATABASE_URL)
@@ -93,10 +126,23 @@ def get_current_phase(user_id: int) -> InterventionPhases:
     return phase
 
 
-def get_next_preparation_intervention_component(intervention_component_id: str):
+def get_next_preparation_intervention_component(intervention_component: str):
+    """
+    Get the next intervention component to be administered in the preparation
+    phase, given the current completed intervention component.
+
+    Args:
+        intervention_component: the name of the currently completed component.
+                                The names are listed in virtual_coach_db.helper.definitions
+                                in the PreparationInterventionComponents class
+
+    Returns:
+            The next intervention component to be administered
+
+    """
     next_intervention_component = 0
 
-    current_index = preparation_components_order.index(intervention_component_id)
+    current_index = preparation_components_order.index(intervention_component)
     if current_index < len(preparation_components_order) - 1:
         next_intervention_component = preparation_triggers_order[current_index + 1]
     else:
@@ -107,8 +153,16 @@ def get_next_preparation_intervention_component(intervention_component_id: str):
 
 def get_intervention_component(intervention_component_name: str):
     """
-       Get the id of an intervention component as stored in the DB
-        from the intervention's name.
+    Get the intervention component as stored in the DB from the
+    intervention component's name.
+
+    Args:
+        intervention_component_name: the name of the intervention component.
+                                The names are listed in virtual_coach_db.helper.definitions
+                                in the PreparationInterventionComponents class
+
+    Returns:
+            The intervention component as an InterventionComponents object.
 
     """
     session = get_db_session(DATABASE_URL)
@@ -127,6 +181,19 @@ def get_intervention_component(intervention_component_name: str):
 
 
 def get_next_planned_date(user_id: int, intervention_component_id: int) -> datetime:
+    """
+    Get the date planned for the administration of an intervention component, considering
+    the user preferences saved in the DB.
+
+    Args:
+        user_id: the id of the user
+        intervention_component_id: the id of the interventions component
+
+    Returns:
+            The date planned for the execution of the component.
+
+    """
+
     session = get_db_session(DATABASE_URL)
     preferences = (
         session.query(
@@ -151,25 +218,55 @@ def get_next_planned_date(user_id: int, intervention_component_id: int) -> datet
     return next_planned_date
 
 
-def store_intervention_component_to_db(user_id: int,
-                                       intervention_phase_id: int,
-                                       intervention_component_id: int,
-                                       completed: bool,
-                                       last_time: datetime = None,
-                                       last_part: int = 0,
-                                       next_planned_date: datetime = None,
-                                       task_uuid: str = None):
-    
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+def get_phase_object(phase_name: str) -> InterventionPhases:
+    """
+    Get the phase as stored in the DB from the phase name.
 
-    entry = UserInterventionState(intervention_phase_id=intervention_phase_id,
-                                  intervention_component_id=intervention_component_id,
-                                  completed=completed,
-                                  last_time=last_time,
-                                  last_part=last_part,
-                                  next_planned_date=next_planned_date,
-                                  task_uuid=task_uuid)
+    Args:
+        phase_name: the name of the intervention component.
+                    The names are listed in virtual_coach_db.helper.definitions
+                    in the Phases class
+
+    Returns:
+            The phase as an InterventionPhases object.
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    phases = (
+        session.query(
+            InterventionPhases
+        )
+        .filter(
+            InterventionPhases.phase_name == phase_name
+        )
+        .all()
+    )
+
+    return phases[0]
+
+
+def store_intervention_component_to_db(state: UserInterventionState):
+    """
+    Writes a new row in the user_intervention_state table in the DB.
+
+    Args:
+        state: the UserInterventionState to be written int the DB
+
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=state.users_nicedayuid).one()
+
+    entry = UserInterventionState(
+        intervention_phase_id=state.intervention_phase_id,
+        intervention_component_id=state.intervention_component_id,
+        completed=state.completed,
+        last_time=state.last_time,
+        last_part=state.last_part,
+        next_planned_date=state.next_planned_date,
+        task_uuid=state.task_uuid
+    )
 
     selected.user_intervention_state.append(entry)
 

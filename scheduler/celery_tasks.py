@@ -4,9 +4,9 @@ import requests
 import utils
 
 from celery import Celery
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import tz
-from virtual_coach_db.dbschema.models import UserPreferences
+from virtual_coach_db.dbschema.models import UserPreferences, UserInterventionState
 from virtual_coach_db.helper.definitions import Phases
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -31,11 +31,17 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
     if phase.phase_name == Phases.PREPARATION:
 
-        utils.store_intervention_component_to_db(user_id=user_id,
-                                                 intervention_phase_id=phase.phase_id,
-                                                 intervention_component_id=intervention_id,
-                                                 completed=True,
-                                                 last_time=datetime.now().astimezone(TIMEZONE))
+        state = UserInterventionState(
+            users_nicedayuid=user_id,
+            intervention_phase_id=phase.phase_id,
+            intervention_component_id=intervention_id,
+            completed=True,
+            last_time=datetime.now().astimezone(TIMEZONE),
+            last_part=0,
+            next_planned_date=None,
+            task_uuid=None
+        )
+        utils.store_intervention_component_to_db(state)
 
         next_intervention_component = \
             utils.get_next_preparation_intervention_component(intervention_component_name)
@@ -61,13 +67,18 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
             args=[user_id, trigger],
             eta=next_planned_date)
 
-        utils.store_intervention_component_to_db(user_id=user_id,
-                                                 intervention_phase_id=phase.phase_id,
-                                                 intervention_component_id=intervention_id,
-                                                 completed=True,
-                                                 last_time=datetime.now().astimezone(TIMEZONE),
-                                                 next_planned_date=next_planned_date,
-                                                 task_uuid=str(task_uuid))
+        state = UserInterventionState(
+            users_nicedayuid=user_id,
+            intervention_phase_id=phase.phase_id,
+            intervention_component_id=intervention_id,
+            completed=True,
+            last_time=datetime.now().astimezone(TIMEZONE),
+            last_part=0,
+            next_planned_date=next_planned_date,
+            task_uuid=str(task_uuid)
+        )
+
+        utils.store_intervention_component_to_db(state)
 
 
 @app.task
@@ -84,14 +95,18 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
 
     last_state = utils.get_last_component_state(user_id, intervention_component_id)
 
-    utils.store_intervention_component_to_db(user_id=user_id,
-                                             intervention_phase_id=phase.phase_id,
-                                             intervention_component_id=intervention_component_id,
-                                             completed=False,
-                                             last_time=last_state.last_time,
-                                             last_part=last_state.last_part,
-                                             next_planned_date=new_date,
-                                             task_uuid=str(task_uuid))
+    state = UserInterventionState(
+        users_nicedayuid=user_id,
+        intervention_phase_id=phase.phase_id,
+        intervention_component_id=intervention_component_id,
+        completed=True,
+        last_time=last_state.last_time,
+        last_part=last_state.last_part,
+        next_planned_date=new_date,
+        task_uuid=str(task_uuid)
+    )
+
+    utils.store_intervention_component_to_db(state)
 
 
 @app.task(bind=True)
@@ -126,10 +141,17 @@ def plan_execution_dialogs(user_id: int):
             args=[user_id, trigger],
             eta=next_planned_date)
 
+        phase = utils.get_phase_object(Phases.EXECUTION.value)
+
         # update the DB
-        utils.store_intervention_component_to_db(user_id=user_id,
-                                                 intervention_phase_id=2,
-                                                 intervention_component_id=intervention_id,
-                                                 completed=False,
-                                                 next_planned_date=next_planned_date,
-                                                 task_uuid=str(task_uuid))
+        state = UserInterventionState(
+            users_nicedayuid=user_id,
+            intervention_phase_id=phase.phase_id,
+            intervention_component_id=intervention_id,
+            completed=False,
+            last_time=None,
+            last_part=0,
+            next_planned_date=next_planned_date,
+            task_uuid=str(task_uuid)
+        )
+        utils.store_intervention_component_to_db(state)

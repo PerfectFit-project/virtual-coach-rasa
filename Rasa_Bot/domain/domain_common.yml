@@ -1,2 +1,3 @@
 actions:
   - action_end_dialog
+  - mark_dialog_as_completed

@@ -124,7 +124,7 @@ class ActionRescheduleDialog(Action):
         chosen_option = tracker.get_slot('rescheduling_option')
         timestamp = tracker.get_slot('rescheduling_options_timestamp')
         dialog = tracker.get_slot('current_intervention_component')
-        eta = get_reschedule_date(timestamp, chosen_option)  # Note the -1 as the first option is 1 (not 0)
+        eta = get_reschedule_date(timestamp, chosen_option)
 
         celery.send_task('celery_tasks.reschedule_dialog', (user_id, dialog, eta))
 

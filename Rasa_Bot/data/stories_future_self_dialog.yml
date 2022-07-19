@@ -9,6 +9,7 @@ stories:
 - story: future-self dialog introduction
   steps:
     - intent: request_future_self_dialog # TODO: Replace with external trigger
+    - action: action_set_slot_future_self_dialog
     - action: action_get_name_from_database
     - action: utter_greet
     - action: utter_future_self_intro

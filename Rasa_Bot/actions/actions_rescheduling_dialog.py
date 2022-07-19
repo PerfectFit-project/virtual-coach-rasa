@@ -12,6 +12,7 @@ from rasa_sdk.forms import FormValidationAction
 
 from .definitions import REDIS_URL
 from .definitions import TIMEZONE
+from .definitions import MORNING, AFTERNOON, EVENING
 
 celery = Celery(broker=REDIS_URL)
 
@@ -59,57 +60,7 @@ class ActionGetReschedulingOptionsList(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        # define morning, afternoon, evening
-        MORNING = (6, 12)
-        AFTERNOON = (12, 18)
-        EVENING = (18, 24)
-
-        options = ["In een uur"]
-
-        current_time = datetime.datetime.now().astimezone(TIMEZONE)
-        options_datetime = [current_time + datetime.timedelta(hours=1)]
-        # In the morning
-        if MORNING[0] <= current_time.hour < MORNING[1]:
-            options += ["Vanmiddag, om 16:00",
-                        "Vanavond, om 21:00",
-                        "Morgenochtend om deze tijd"]
-
-            options_datetime += [current_time.replace(hour=16, minute=0, second=0),
-                                 current_time.replace(hour=21, minute=0, second=0),
-                                 current_time + datetime.timedelta(days=1)]
-
-        # In the afternoon
-        elif AFTERNOON[0] <= current_time.hour < AFTERNOON[1]:
-            options += ["Vanavond, om 21:00",
-                        "Morgenochtend, om 8:00",
-                        "Morgenmiddag om deze tijd"]
-
-            options_datetime += [current_time.replace(hour=21, minute=0, second=0),
-                                 current_time.replace(hour=8, minute=0, second=0) +
-                                                       datetime.timedelta(days=1),
-                                 current_time + datetime.timedelta(days=1)]
-
-        # In the evening
-        elif EVENING[0] <= current_time.hour < EVENING[1]:
-            options += ["Morgenochtend, om 8:00",
-                        "Morgenmiddag, om 16:00",
-                        "Morgenavond om deze tijd"]
-
-            options_datetime += [current_time.replace(hour=8, minute=0, second=0) +
-                                                      datetime.timedelta(days=1),
-                                 current_time.replace(hour=16, minute=0, second=0) +
-                                                       datetime.timedelta(days=1),
-                                 current_time + datetime.timedelta(days=1)]
-
-        # In the night
-        else:
-            options += ["Vanmiddag, om 16:00",
-                        "Vanavond, om 21:00",
-                        "Morgen om deze tijd"]
-
-            options_datetime += [current_time.replace(hour=16, minute=0, second=0),
-                                 current_time.replace(hour=21, minute=0, second=0),
-                                 current_time + datetime.timedelta(days=1)]
+        options = get_reschedule_options_str()
 
         # Create string of options to utter them
         num_options = len(options)
@@ -119,8 +70,10 @@ class ActionGetReschedulingOptionsList(Action):
             if not o == len(options) - 1:
                 rescheduling_options_string += " "
 
+        timestamp = datetime.datetime.timestamp(datetime.datetime.now())
+
         return [SlotSet("rescheduling_options_string", rescheduling_options_string),
-                SlotSet("rescheduling_options_datetime", options_datetime)]
+                SlotSet("rescheduling_options_timestamp", timestamp)]
 
 
 class ActionResetReschedulingOptionSlot(Action):
@@ -169,8 +122,84 @@ class ActionRescheduleDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
         chosen_option = tracker.get_slot('rescheduling_option')
-        datetime_options = tracker.get_slot('rescheduling_options_datetime')
+        timestamp = tracker.get_slot('rescheduling_options_timestamp')
         dialog = tracker.get_slot('current_intervention_component')
-        eta = datetime_options[chosen_option-1]  # Note the -1 as the first option is 1 (not 0)
+        eta = get_reschedule_date(timestamp, chosen_option)  # Note the -1 as the first option is 1 (not 0)
 
-        celery.send_task('celery_task.reschedule_dialog', (user_id, dialog, eta))
+        celery.send_task('celery_tasks.reschedule_dialog', (user_id, dialog, eta))
+
+
+def get_reschedule_options_str() -> list:
+
+    options = ["In een uur"]
+
+    current_time = datetime.datetime.now().astimezone(TIMEZONE)
+
+    # In the morning
+    if MORNING[0] <= current_time.hour < MORNING[1]:
+        options += ["Vanmiddag, om 16:00",
+                    "Vanavond, om 21:00",
+                    "Morgenochtend om deze tijd"]
+
+    # In the afternoon
+    elif AFTERNOON[0] <= current_time.hour < AFTERNOON[1]:
+        options += ["Vanavond, om 21:00",
+                    "Morgenochtend, om 8:00",
+                    "Morgenmiddag om deze tijd"]
+
+    # In the evening
+    elif EVENING[0] <= current_time.hour < EVENING[1]:
+        options += ["Morgenochtend, om 8:00",
+                    "Morgenmiddag, om 16:00",
+                    "Morgenavond om deze tijd"]
+
+    # In the night
+    else:
+        options += ["Vanmiddag, om 16:00",
+                    "Vanavond, om 21:00",
+                    "Morgen om deze tijd"]
+
+    return options
+
+
+def get_reschedule_date(timestamp: float, choice: int) -> datetime.datetime:
+
+    dt_object = datetime.datetime.fromtimestamp(timestamp, TIMEZONE)
+
+    morning_time = dt_object.replace(hour=8, minute=0, second=0)
+    afternoon_time = dt_object.replace(hour=16, minute=0, second=0)
+    evening_time = dt_object.replace(hour=21, minute=0, second=0)
+
+    if choice == 1:
+        reschedule_time = dt_object + datetime.timedelta(hours=1)
+    elif choice == 4:
+        reschedule_time = dt_object + datetime.timedelta(days=1)
+    else:
+        if MORNING[0] <= dt_object.hour < MORNING[1]:
+            if choice == 2:
+                reschedule_time = afternoon_time
+            elif choice == 3:
+                reschedule_time = evening_time
+
+        # In the afternoon
+        elif AFTERNOON[0] <= dt_object.hour < AFTERNOON[1]:
+            if choice == 2:
+                reschedule_time = evening_time
+            elif choice == 3:
+                reschedule_time = morning_time + datetime.timedelta(days=1)
+
+        # In the evening
+        elif EVENING[0] <= dt_object.hour < EVENING[1]:
+            if choice == 2:
+                reschedule_time = morning_time + datetime.timedelta(days=1)
+            elif choice == 3:
+                reschedule_time = afternoon_time + datetime.timedelta(days=1)
+
+        # In the night
+        else:
+            if choice == 2:
+                reschedule_time = afternoon_time
+            elif choice == 3:
+                reschedule_time = evening_time
+
+    return reschedule_time

@@ -24,7 +24,7 @@ slots:
       conditions:
       - active_loop: rescheduling_options_form
   # Chosen rescheduling option, stored as datetime
-  rescheduling_options_datetime:
+  rescheduling_options_timestamp:
     type: any
     influence_conversation: false
     mappings:
@@ -54,6 +54,7 @@ actions:
   - action_get_rescheduling_options_list
   - validate_rescheduling_options_form
   - action_reset_rescheduling_option_slot
+  - action_reschedule_dialog
 
 forms:
   rescheduling_now_or_later_form:

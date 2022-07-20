@@ -155,8 +155,8 @@ def get_reschedule_options_str() -> list:
 
     # In the night
     else:
-        options += ["Vanmiddag, om 16:00",
-                    "Vanavond, om 21:00",
+        options += ["Om 16:00",
+                    "Om 21:00",
                     "Morgen om deze tijd"]
 
     return options

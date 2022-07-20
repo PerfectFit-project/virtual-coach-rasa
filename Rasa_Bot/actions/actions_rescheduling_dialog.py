@@ -131,7 +131,7 @@ class ActionRescheduleDialog(Action):
 
 def get_reschedule_options_str() -> list:
 
-    options = ["Over 10 secondes"]
+    options = ["In een uur"]
 
     current_time = datetime.datetime.now().astimezone(TIMEZONE)
 
@@ -171,7 +171,7 @@ def get_reschedule_date(timestamp: float, choice: int) -> datetime.datetime:
     evening_time = dt_object.replace(hour=21, minute=0, second=0)
 
     if choice == 1:
-        reschedule_time = dt_object + datetime.timedelta(seconds=10)
+        reschedule_time = dt_object + datetime.timedelta(hours=1)
     elif choice == 4:
         reschedule_time = dt_object + datetime.timedelta(days=1)
     else:

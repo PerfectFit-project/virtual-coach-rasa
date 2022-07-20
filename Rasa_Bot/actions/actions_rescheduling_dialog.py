@@ -131,7 +131,7 @@ class ActionRescheduleDialog(Action):
 
 def get_reschedule_options_str() -> list:
 
-    options = ["In een uur"]
+    options = ["Over 10 secondes"]
 
     current_time = datetime.datetime.now().astimezone(TIMEZONE)
 

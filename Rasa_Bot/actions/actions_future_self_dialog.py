@@ -21,6 +21,15 @@ from .helper import (store_dialog_answer_to_db,
                                     get_intervention_component_id)
 
 
+class SetSlotFutureSelfDialog(Action):
+    def name(self):
+        return "action_set_slot_future_self_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        PreparationInterventionComponents.FUTURE_SELF)]
+
+
 class ActionStoreSmokerWords(Action):
     """"To save user input on smoker words from future self dialog to database"""
 

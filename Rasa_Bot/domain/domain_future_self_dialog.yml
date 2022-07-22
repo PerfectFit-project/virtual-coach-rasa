@@ -315,6 +315,7 @@ actions:
   - validate_why_picked_smoker_words_form
   - action_store_future_self_dialog_state
   - action_set_future_self_dialog_state_step_1
+  - action_set_slot_future_self_dialog
 forms:
   pick_smoker_words_form:
     required_slots:

@@ -24,5 +24,5 @@ def dispatcher() -> CollectingDispatcher:
 @pytest.fixture
 def domain() -> DomainDict:
     """Load the domain and return it as a dictionary"""
-    domain = Domain.load("Rasa_Bot/domain.yml")
+    domain = Domain.from_directory("Rasa_Bot/domain/")
     return domain.as_dict()

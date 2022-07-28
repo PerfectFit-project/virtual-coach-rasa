@@ -42,6 +42,7 @@ nlu:
   examples: |
     - "Start future self dialog."
     - "Ik wil future self dialog."
+    - "future self dialog."
     
 - intent: get_first_aid_kit
   examples: |

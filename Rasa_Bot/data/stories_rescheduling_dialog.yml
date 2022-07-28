@@ -36,6 +36,7 @@ stories:
     - action: rescheduling_options_form
     - active_loop: rescheduling_options_form  # TODO: use rescheduling_option slot to reschedule
     - active_loop: null
+    - action: action_reschedule_dialog
     - action: utter_rescheduling_option_chosen
     - action: action_reset_rescheduling_option_slot
     - slot_was_set:

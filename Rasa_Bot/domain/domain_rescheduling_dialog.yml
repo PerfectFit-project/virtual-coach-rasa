@@ -9,12 +9,6 @@ slots:
     - type: from_text
       conditions:
       - active_loop: rescheduling_now_or_later_form
-  # List of rescheduling options
-  rescheduling_options_list:
-    type: list
-    influence_conversation: false
-    mappings:
-    - type: custom
   # String with rescheduling options for uttering the options
   rescheduling_options_string:
     type: text
@@ -29,7 +23,12 @@ slots:
     - type: from_text
       conditions:
       - active_loop: rescheduling_options_form
-
+  # Chosen rescheduling option, stored as datetime
+  rescheduling_options_timestamp:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
 responses:
 
   ### General rescheduling query dialog
@@ -55,6 +54,7 @@ actions:
   - action_get_rescheduling_options_list
   - validate_rescheduling_options_form
   - action_reset_rescheduling_option_slot
+  - action_reschedule_dialog
 
 forms:
   rescheduling_now_or_later_form:

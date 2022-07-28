@@ -90,7 +90,7 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
 
     # schedule the task
     task_uuid = trigger_intervention_component.apply_async(
-        args=[user_id, intervention_component.trigger],
+        args=[user_id, intervention_component.intervention_component_trigger],
         eta=new_date)
 
     last_state = utils.get_last_component_state(user_id, intervention_component_id)

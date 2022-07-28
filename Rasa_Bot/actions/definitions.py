@@ -15,6 +15,9 @@ TIMEZONE = tz.gettz("Europe/Amsterdam")
 
 REDIS_URL = os.getenv('REDIS_URL')
 
+MORNING = (6, 12)
+AFTERNOON = (12, 18)
+EVENING = (18, 24)
 
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?

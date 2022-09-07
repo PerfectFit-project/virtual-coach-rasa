@@ -82,6 +82,11 @@ nlu:
   examples: |
     - "EXTERNAL_trigger_goal_setting"
 
+- intent: submit_user_preferences
+  examples: |
+    - "I would like to submit my user preferences"
+    - "User preferences"
+
 - intent: oke
   examples: |
     - "Oke"

@@ -24,3 +24,20 @@ rules:
   - action: action_set_cigarettes_tracker_reminder
   - action: utter_reminder_is_set
   - action: action_end_dialog
+
+- rule: Activate user preferences form
+  steps:
+  - intent: submit_user_preferences
+  - action: user_preferences_form
+  - active_loop: user_preferences_form
+
+- rule: Submit user preferences form
+  condition:
+  - active_loop: user_preferences_form
+  steps:
+  - action: user_preferences_form
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: utter_confirm
+  - action: utter_user_preferences

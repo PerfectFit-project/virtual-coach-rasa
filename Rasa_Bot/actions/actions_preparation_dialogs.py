@@ -109,20 +109,24 @@ class ValidateUserPreferencesForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        """Validate `week_days` value."""
+        """Validate `time_stamp` value."""
 
         logging.info("timestamp 1")
         timestring = slot_value
         format = "%H:%M:%S"
-        res = True
+        res = False
 
+        logging.info("res initialized")
         # using try-except to check for truth value
         try:
             res = bool(datetime.strptime(timestring, format))
+            logging.info("res is now:" + res)
         except ValueError:
             res = False
 
-        if res:
+        logging.info("after the value error line res is:" + res)
+
+        if not res:
             dispatcher.utter_message(text=f"Please submit an answer as given by the example: 20:34:20")
             return {"time_stamp": None}
         dispatcher.utter_message(text=f"OK! You want to receive reminders at {slot_value}.")

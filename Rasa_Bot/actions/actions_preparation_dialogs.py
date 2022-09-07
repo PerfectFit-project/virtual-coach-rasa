@@ -3,6 +3,7 @@ Contains custom actions related to the preparation dialogs
 """
 from typing import Text, List, Any, Dict
 from datetime import datetime
+import logging
 
 from rasa_sdk import Tracker, FormValidationAction, Action
 from rasa_sdk.events import EventType, SlotSet
@@ -79,7 +80,7 @@ class ValidateUserPreferencesForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         """Validate recursive_reminder` value."""
-
+        logging.info("recursive reminder validation 1")
         if slot_value.lower() not in YES_OR_NO:
             dispatcher.utter_message(text=f"We only accept 'yes' or 'no' as answers")
             return {"recursive_reminder": None}
@@ -94,7 +95,7 @@ class ValidateUserPreferencesForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         """Validate `week_days` value."""
-
+        logging.info("week days 1")
         if slot_value not in ALLOWED_WEEK_DAYS:
             dispatcher.utter_message(text=f"I don't recognize that day of the week, try again!")
             return {"week_days": None}
@@ -110,6 +111,7 @@ class ValidateUserPreferencesForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         """Validate `week_days` value."""
 
+        logging.info("timestamp 1")
         timestring = slot_value
         format = "%H:%M:%S"
         res = True

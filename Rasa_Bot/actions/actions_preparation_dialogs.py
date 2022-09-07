@@ -120,11 +120,11 @@ class ValidateUserPreferencesForm(FormValidationAction):
         # using try-except to check for truth value
         try:
             res = bool(datetime.strptime(timestring, format))
-            logging.info("res is now:" + res)
+            logging.info("res is now: " + str(res))
         except ValueError:
             res = False
 
-        logging.info("after the value error line res is:" + res)
+        logging.info("after the value error line res is: " + str(res))
 
         if not res:
             dispatcher.utter_message(text=f"Please submit an answer as given by the example: 20:34:20")

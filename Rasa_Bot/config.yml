@@ -26,8 +26,8 @@ pipeline:
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.4
-    ambiguity_threshold: 0.1
+    threshold: 0.4  # NB: threshold for low NLU confidence. Need to tune carefully.
+    
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/

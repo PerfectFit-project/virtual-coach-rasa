@@ -16,18 +16,27 @@ slots:
     mappings:
     - type: from_text
       not_intent: submit_user_preferences
+      conditions:
+      - active_loop: user_preferences_form
+        requested_slot: recursive_reminder
   week_days:
     type: text
     influence_conversation: true
     mappings:
     - type: from_text
       not_intent: submit_user_preferences
+      conditions:
+      - active_loop: user_preferences_form
+        requested_slot: week_days
   time_stamp:
     type: text
     influence_conversation: true
     mappings:
     - type: from_text
       not_intent: submit_user_preferences
+      conditions:
+      - active_loop: user_preferences_form
+        requested_slot: time_stamp
 
 forms:
   user_preferences_form:

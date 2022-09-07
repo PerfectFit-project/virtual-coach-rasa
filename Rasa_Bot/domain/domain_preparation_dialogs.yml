@@ -15,16 +15,19 @@ slots:
     influence_conversation: true
     mappings:
     - type: from_text
+      not_intent: submit_user_preferences
   week_days:
     type: text
     influence_conversation: true
     mappings:
     - type: from_text
+      not_intent: submit_user_preferences
   time_stamp:
     type: text
     influence_conversation: true
     mappings:
     - type: from_text
+      not_intent: submit_user_preferences
 
 forms:
   user_preferences_form:

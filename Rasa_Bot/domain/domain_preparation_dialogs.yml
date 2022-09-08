@@ -79,4 +79,5 @@ actions:
 - action_set_slot_plan_quit_start_date
 - action_set_slot_mental_contrasting
 - action_set_slot_goal_setting
+- action_store_user_preferences_to_db
 - validate_user_preferences_form

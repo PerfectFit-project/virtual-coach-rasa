@@ -40,4 +40,5 @@ rules:
   - slot_was_set:
     - requested_slot: null
   - action: utter_confirm
+  - action: action_store_user_preferences_to_db
   - action: utter_user_preferences

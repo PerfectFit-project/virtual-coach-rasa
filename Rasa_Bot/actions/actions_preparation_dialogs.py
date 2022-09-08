@@ -11,6 +11,11 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from virtual_coach_db.helper.definitions import PreparationInterventionComponents
 
+from virtual_coach_db.helper.helper_functions import get_db_session
+from .helper import (store_user_preferences_to_db, get_intervention_component_id)
+from virtual_coach_db.dbschema.models import (Users, DialogAnswers, UserInterventionState,
+                                              InterventionComponents)
+
 YES_OR_NO = ["yes", "no"]
 ALLOWED_WEEK_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
@@ -131,3 +136,30 @@ class ValidateUserPreferencesForm(FormValidationAction):
             return {"time_stamp": None}
         dispatcher.utter_message(text=f"OK! You want to receive reminders at {slot_value}.")
         return {"time_stamp": slot_value}
+
+class StoreUserPreferencesToDb(Action):
+    def name(self) -> Text:
+        return "action_store_user_preferences_to_db"
+
+    async def run(self, dispatcher, tracker, domain):
+        logging.info("running custom action StoreUserPreferences to DB")
+        user_id = tracker.current_state()['sender_id']
+
+        logging.info("user id is: " + str(user_id))
+
+        recursive = tracker.get_slot("recursive_reminder")
+        week_days = tracker.get_slot("week_days")
+        preferred_time = tracker.get_slot("time_stamp")
+        logging.info("recursive slot is: " + str(recursive) + ", week days slot is: " + str(week_days) + ", preferred time is: " + str(preferred_time))
+
+        recursive_bool = False
+        if recursive == "yes":
+            recursive_bool = True
+
+        logging.info("boolean is now: " + str(recursive_bool))
+
+        ##intervention_component_string = tracker.get_slot("current_intervention_component")
+        intervention_component = get_intervention_component_id("profile_creation")
+        logging.info("storing into db, intervention comp id is: " + str(intervention_component))
+        store_user_preferences_to_db(user_id, intervention_component, recursive_bool, week_days, preferred_time)
+        return

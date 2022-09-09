@@ -143,13 +143,14 @@ class StoreUserPreferencesToDb(Action):
 
     async def run(self, dispatcher, tracker, domain):
         logging.info("running custom action StoreUserPreferences to DB")
-        user_id = tracker.current_state()['sender_id']
+        ##user_id = tracker.current_state()['sender_id']
+        user_id = 41482
 
         logging.info("user id is: " + str(user_id))
 
         recursive = tracker.get_slot("recursive_reminder")
         week_days = tracker.get_slot("week_days")
-        preferred_time = tracker.get_slot("time_stamp")
+        preferred_time_string = tracker.get_slot("time_stamp")
         logging.info("recursive slot is: " + str(recursive) + ", week days slot is: " + str(week_days) + ", preferred time is: " + str(preferred_time))
 
         recursive_bool = False
@@ -161,5 +162,10 @@ class StoreUserPreferencesToDb(Action):
         ##intervention_component_string = tracker.get_slot("current_intervention_component")
         intervention_component = get_intervention_component_id("profile_creation")
         logging.info("storing into db, intervention comp id is: " + str(intervention_component))
+
+        datetime_format = datetime.strptime(preferred_time_string, '%H:%M:%S')
+        preferred_time = datetime_format.timestamp()
+        logging.info("successfully converted to timestamp, calling helper function")
+
         store_user_preferences_to_db(user_id, intervention_component, recursive_bool, week_days, preferred_time)
         return

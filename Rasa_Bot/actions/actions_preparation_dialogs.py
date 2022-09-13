@@ -11,6 +11,11 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from virtual_coach_db.helper.definitions import PreparationInterventionComponents
 
+from virtual_coach_db.helper.helper_functions import get_db_session
+from .helper import (store_user_preferences_to_db, get_intervention_component_id, week_day_to_numerical_form)
+from virtual_coach_db.dbschema.models import (Users, DialogAnswers, UserInterventionState,
+                                              InterventionComponents)
+
 YES_OR_NO = ["yes", "no"]
 ALLOWED_WEEK_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
@@ -80,7 +85,6 @@ class ValidateUserPreferencesForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         """Validate recursive_reminder` value."""
-        logging.info("recursive reminder validation 1")
         if slot_value.lower() not in YES_OR_NO:
             dispatcher.utter_message(text=f"We only accept 'yes' or 'no' as answers")
             return {"recursive_reminder": None}
@@ -95,11 +99,19 @@ class ValidateUserPreferencesForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         """Validate `week_days` value."""
-        logging.info("week days 1")
-        if slot_value not in ALLOWED_WEEK_DAYS:
-            dispatcher.utter_message(text=f"I don't recognize that day of the week, try again!")
+
+        week_days_string = slot_value
+        week_days_list = week_days_string.split(", ")
+        invalidinput = False
+
+        for weekday in week_days_list:
+            if weekday.lower() not in ALLOWED_WEEK_DAYS:
+                invalidinput = True
+
+        if invalidinput:
+            dispatcher.utter_message(text=f"Please submit the days of the week as a comma separated list!")
             return {"week_days": None}
-        dispatcher.utter_message(text=f"OK! You want to receive reminders on {slot_value}s.")
+        dispatcher.utter_message(text=f"OK! You want to receive reminders on these days of the week: {slot_value}.")
         return {"week_days": slot_value}
 
     def validate_time_stamp(
@@ -111,23 +123,51 @@ class ValidateUserPreferencesForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         """Validate `time_stamp` value."""
 
-        logging.info("timestamp 1")
         timestring = slot_value
         format = "%H:%M:%S"
         res = False
 
-        logging.info("res initialized")
         # using try-except to check for truth value
         try:
             res = bool(datetime.strptime(timestring, format))
-            logging.info("res is now: " + str(res))
         except ValueError:
             res = False
-
-        logging.info("after the value error line res is: " + str(res))
 
         if not res:
             dispatcher.utter_message(text=f"Please submit an answer as given by the example: 20:34:20")
             return {"time_stamp": None}
         dispatcher.utter_message(text=f"OK! You want to receive reminders at {slot_value}.")
         return {"time_stamp": slot_value}
+
+class StoreUserPreferencesToDb(Action):
+    def name(self) -> Text:
+        return "action_store_user_preferences_to_db"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+
+        recursive = tracker.get_slot("recursive_reminder")
+        week_days = tracker.get_slot("week_days")
+        preferred_time_string = tracker.get_slot("time_stamp")
+
+        recursive_bool = False
+        if recursive == "yes" or recursive == "Yes":
+            recursive_bool = True
+
+        week_days_numbers = ""
+        week_days_list = week_days.split(", ")
+        for weekday in week_days_list:
+            week_days_numbers += str(week_day_to_numerical_form(weekday))
+            week_days_numbers += ","
+
+        ##TODO Set the slot in rasa
+        # When calling this in the right context, the intervention component slot should have a value.
+        # Uncomment the next two lines and remove the one under those two to switch from a hardcoded intervention component to the one decided by the slot.
+        ##intervention_component_string = tracker.get_slot("current_intervention_component")
+        ##intervention_component = get_intervention_component_id(intervention_component_string)
+        intervention_component = get_intervention_component_id("profile_creation")
+
+        datetime_format = datetime.strptime(preferred_time_string, '%H:%M:%S')
+
+        store_user_preferences_to_db(user_id, intervention_component, recursive_bool, week_days_numbers.rstrip(week_days_numbers[-1]), datetime_format)
+        return

@@ -12,7 +12,7 @@ from rasa_sdk.types import DomainDict
 from virtual_coach_db.helper.definitions import PreparationInterventionComponents
 
 from virtual_coach_db.helper.helper_functions import get_db_session
-from .helper import (store_user_preferences_to_db, get_intervention_component_id)
+from .helper import (store_user_preferences_to_db, get_intervention_component_id, week_day_to_numerical_form)
 from virtual_coach_db.dbschema.models import (Users, DialogAnswers, UserInterventionState,
                                               InterventionComponents)
 
@@ -100,11 +100,19 @@ class ValidateUserPreferencesForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         """Validate `week_days` value."""
-        logging.info("week days 1")
-        if slot_value not in ALLOWED_WEEK_DAYS:
-            dispatcher.utter_message(text=f"I don't recognize that day of the week, try again!")
+
+        week_days_string = slot_value
+        week_days_list = week_days_string.split(", ")
+        invalidinput = False
+
+        for weekday in week_days_list:
+            if weekday.lower() not in ALLOWED_WEEK_DAYS:
+                invalidinput = True
+
+        if invalidinput:
+            dispatcher.utter_message(text=f"Please submit the days of the week as a comma separated list!")
             return {"week_days": None}
-        dispatcher.utter_message(text=f"OK! You want to receive reminders on {slot_value}s.")
+        dispatcher.utter_message(text=f"OK! You want to receive reminders on these days of the week: {slot_value}.")
         return {"week_days": slot_value}
 
     def validate_time_stamp(
@@ -143,29 +151,38 @@ class StoreUserPreferencesToDb(Action):
 
     async def run(self, dispatcher, tracker, domain):
         logging.info("running custom action StoreUserPreferences to DB")
-        ##user_id = tracker.current_state()['sender_id']
-        user_id = 41482
+        user_id = tracker.current_state()['sender_id']
 
         logging.info("user id is: " + str(user_id))
 
         recursive = tracker.get_slot("recursive_reminder")
         week_days = tracker.get_slot("week_days")
         preferred_time_string = tracker.get_slot("time_stamp")
-        logging.info("recursive slot is: " + str(recursive) + ", week days slot is: " + str(week_days) + ", preferred time is: " + str(preferred_time))
+        logging.info("recursive slot is: " + str(recursive) + ", week days slot is: " + str(week_days) + ", preferred time is: " + str(preferred_time_string))
 
         recursive_bool = False
-        if recursive == "yes":
+        if recursive == "yes" or recursive == "Yes":
             recursive_bool = True
 
         logging.info("boolean is now: " + str(recursive_bool))
 
+        week_days_numbers = ""
+        week_days_list = week_days.split(", ")
+        for weekday in week_days_list:
+            week_days_numbers += str(week_day_to_numerical_form(weekday))
+            week_days_numbers += ","
+            logging.info(week_days_numbers)
+
+        ##TODO Set the slot in rasa
+        # When calling this in the right context, the intervention component slot should have a value.
+        # Uncomment the next two lines and remove the one under those two to switch from a hardcoded intervention component to the one decided by the slot.
         ##intervention_component_string = tracker.get_slot("current_intervention_component")
+        ##intervention_component = get_intervention_component_id(intervention_component_string)
         intervention_component = get_intervention_component_id("profile_creation")
         logging.info("storing into db, intervention comp id is: " + str(intervention_component))
 
         datetime_format = datetime.strptime(preferred_time_string, '%H:%M:%S')
-        preferred_time = datetime_format.timestamp()
         logging.info("successfully converted to timestamp, calling helper function")
 
-        store_user_preferences_to_db(user_id, intervention_component, recursive_bool, week_days, preferred_time)
+        store_user_preferences_to_db(user_id, intervention_component, recursive_bool, week_days_numbers.rstrip(week_days_numbers[-1]), datetime_format)
         return

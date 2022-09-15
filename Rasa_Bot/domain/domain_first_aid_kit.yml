@@ -1,5 +1,5 @@
 intents:
-  - get_first_aid_kit
+  - CENTRAL_get_first_aid_kit
 slots:
   ### First aid kit
 

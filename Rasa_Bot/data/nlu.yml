@@ -52,8 +52,8 @@ nlu:
     - "EHBO doos"
     
 - intent: urgent
-   - "Ik ben depressief"
-   - "dood"
+    - "Ik ben depressief"
+    - "dood"
 
 - intent: request_tracked_cigarettes
   examples: |

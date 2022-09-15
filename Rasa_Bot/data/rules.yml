@@ -8,6 +8,15 @@ rules:
   - action: utter_central_mode_options
   - action: action_end_dialog
 
+# Only applies at start of conversation
+- rule: Process when people talk about urgent things that we cannot handle
+  conversation_start: true
+  steps:
+  - intent: urgent
+  - action: utter_refer
+  - action: utter_central_mode_options
+  - action: action_end_dialog
+
 - rule: Ask for foreseen smoking HRS whenever this is externally triggered (by scheduler)
   steps:
   - intent: EXTERNAL_trigger_ask_foreseen_hrs

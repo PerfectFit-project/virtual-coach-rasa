@@ -50,6 +50,10 @@ nlu:
     - "Ik wil first aid kit"
     - "First aid kit"
     - "EHBO doos"
+    
+- intent: urgent
+   - "Ik ben depressief"
+   - "dood"
 
 - intent: request_tracked_cigarettes
   examples: |

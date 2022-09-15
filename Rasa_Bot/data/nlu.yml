@@ -52,6 +52,7 @@ nlu:
     - "EHBO doos"
     
 - intent: urgent
+  examples: |
     - "Ik ben depressief"
     - "dood"
 

@@ -36,7 +36,7 @@ responses:
     - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
   # We present the user with the options from the central mode
   utter_central_mode_options:
-    - text: "Je kunt deze woorden gebruiken: 1) EHBO doos, 2) ..., ... ."
+    - text: "Je kunt deze woorden gebruiken om met mij the praten: 1) EHBO doos, 2) ..., ... ."
 
   ### Re-prompts in forms
   utter_please_answer_1_2_3:

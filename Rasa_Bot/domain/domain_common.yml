@@ -2,6 +2,7 @@ actions:
   - action_end_dialog
   - mark_dialog_as_completed
   - action_handle_urgent_intent
+  - urgent
 
 
 responses:

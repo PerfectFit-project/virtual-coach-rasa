@@ -87,3 +87,51 @@ nlu:
     - "Oke"
     - "Ok"
 
+- intent: greeting
+  examples: |
+    - Hi
+    - Hey
+    - Hallo
+    - Hoi
+    - Hoi coach
+    - Hi coach
+    - Goedemorgen
+    - Goedenavond
+    - "Hallo coach"
+    - "Hi Kris"
+
+- intent: goodbye
+  examples: |
+    - Doei
+    - Tot ziens
+    - Tot straks
+    - "Fijne dag"
+    - "Fijne dag verder!"
+
+- intent: how_are_you
+  examples: |
+    - "Hoe gaat het met je?"
+    - "Hoe gaat het met jou?"
+    - "Hoe gaat het?"
+
+- intent: who_are_you
+  examples: |
+    - "Wie ben je?"
+    - "Wat kan je?"
+    - "Wat is dit?"
+    - "Wat kan je doen?"
+    - "Jij bent?"
+    - "Met wie praat ik?"
+
+- intent: positive_mood
+  examples: |
+    - "Ik voel me ook goed."
+    - "Ik ben in orde."
+    - "Super goed!"
+    - "Heel goed!"
+    - "Goed!"
+
+- intent: negative_mood
+  examples: |
+    - "Ik voel me niet lekker."
+    - "Slecht."

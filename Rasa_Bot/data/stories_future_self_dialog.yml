@@ -8,10 +8,8 @@ version: "3.0"
 stories:
 - story: future-self dialog introduction
   steps:
-    - intent: request_future_self_dialog # TODO: Replace with external trigger
+    - checkpoint: continue_self_dialog
     - action: action_set_slot_future_self_dialog
-    - action: action_get_name_from_database
-    - action: utter_greet
     - action: utter_future_self_intro
     - action: action_get_future_self_repetition_from_database
     - action: utter_future_self_intro_exercise_name
@@ -244,4 +242,5 @@ stories:
     - action: action_set_future_self_dialog_state_step_1
     - action: action_store_future_self_dialog_state
     - action: utter_close_future_self_step_1
+    - action: utter_type_help
     - action: action_end_dialog

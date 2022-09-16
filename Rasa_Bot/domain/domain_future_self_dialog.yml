@@ -290,6 +290,8 @@ responses:
     - text: "Oke laten we het opnieuw proberen. ..."
   utter_try_again_see_myself_mover:
     - text: "Oke laten we het nog een keer proberen. ..."
+  utter_type_help:
+    - text: "Als je je first aid kit nodig hebt typ 'First aid kit'."
 
 actions:
   - action_get_future_self_repetition_from_database

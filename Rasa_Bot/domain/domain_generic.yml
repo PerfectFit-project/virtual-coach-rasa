@@ -1,5 +1,5 @@
 session_config:
-  session_expiration_time: 5 # these are minutes
+  session_expiration_time: 60 # these are minutes
   carry_over_slots_to_new_session: true
 
 slots:

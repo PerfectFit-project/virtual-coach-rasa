@@ -51,7 +51,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
             headers = {'Content-Type': 'application/json'}
             params = {'output_channel': 'niceday_input_channel'}
             data = '{"name": "' + next_intervention_component + '" }'
-            requests.post(endpoint, headers=headers, params=params, data=data)
+            requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
         else:
             logging.info("PREPARATION PHASE ENDED")
@@ -115,7 +115,7 @@ def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=u
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_input_channel'}
     data = '{"name": "' + trigger + '" }'
-    requests.post(endpoint, headers=headers, params=params, data=data)
+    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
 
 def plan_execution_dialogs(user_id: int):

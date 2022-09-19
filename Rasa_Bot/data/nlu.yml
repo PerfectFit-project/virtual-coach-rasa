@@ -54,6 +54,7 @@ nlu:
 - intent: urgent
   examples: |
     - "dood"
+    - "Ik ben depressief"
 
 - intent: request_tracked_cigarettes
   examples: |

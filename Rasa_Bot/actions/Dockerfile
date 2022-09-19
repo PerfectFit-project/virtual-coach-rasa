@@ -1,7 +1,7 @@
 # Dockerfile for rasa actions server
 
 # Pull SDK image as base image, version must be compatible with Rasa version
-FROM rasa/rasa-sdk:3.1.1
+FROM rasa/rasa-sdk:3.2.1
 
 # Use subdirectory as working directory
 WORKDIR /app

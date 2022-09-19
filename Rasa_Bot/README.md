@@ -17,7 +17,7 @@ The steps are as follows:
    - The output for the above command should be something like this: [{"recipient_id":"user","text":"Sure, you should ..."}]
    - See [this page](https://rasa.com/docs/rasa/connectors/your-own-website#restinput) for details on how to use the REST channel.
 
-Note that while the requirements-file lists Rasa 3.1.0 as a requirement, this is only needed to train a language model and handy when developing.
+Note that while the requirements-file lists Rasa 3.2.8 as a requirement, this is only needed to train a language model and handy when developing.
 
 NB: If you want to run rasa outside of docker, you might want to change the urls
 in `endpoints.yml`.
@@ -27,7 +27,7 @@ in `endpoints.yml`.
 We no longer use spacy language embeddings, and we removed entity recognition from the pipeline. Let's keep an eye on whether we want to keep doing this.
 
 ### Rasa Version
-Currently, the model is trained in Rasa 3.1.0. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one. See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. 
+Currently, the model is trained in Rasa 3.2.8. Different Rasa versions are not necessarily compatible w.r.t. e.g. layout of the language model files, so we should eventually choose a specific Rasa version, probably the most current one. See [here](https://rasa.com/docs/rasa/changelog) for the changelog for Rasa Open Source. 
 
 ### Agent Name
 The agent name is set in the "domain.yml"-file in the slot "agent_name." Changing this name in said file requires retraining the model. 

@@ -1,7 +1,7 @@
 # Preparation dialogs stories
 # Purpose: Placeholder for the stories to be triggered in the preparation phase
 # Context: Preparation phase
-version: "3.0"
+version: "3.1"
 
 stories:
 

@@ -19,14 +19,14 @@ pipeline:
     max_ngram: 4
   - name: KeywordIntentClassifier
     case_sensitive: False
-  #- name: DIETClassifier
-   # epochs: 50
-   # entity_recognition: False  # We do not currently have entities
+  - name: DIETClassifier
+    epochs: 50
+    entity_recognition: False  # We do not currently have entities
   #- name: EntitySynonymMapper   # We do not currently have entities
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.7  # NB: threshold for low NLU confidence. Need to tune carefully.
+    threshold: 0.3  # NB: threshold for low NLU confidence. Need to tune carefully.
     
 
 # Configuration for Rasa Core.

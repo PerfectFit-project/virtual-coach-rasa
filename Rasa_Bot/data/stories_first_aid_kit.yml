@@ -1,5 +1,5 @@
 # Stories related to the first aid kit functionality
-version: "3.0"
+version: "3.1"
 
 stories:
 ## Get first aid kit - kit exists

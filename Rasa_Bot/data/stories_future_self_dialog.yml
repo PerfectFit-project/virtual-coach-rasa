@@ -3,7 +3,7 @@
 # Context: Preparation phase, one or two days (to be decided)
 # after deciding whether or not to use medication.
 # This activity is being repeated several times throughout the intervention.
-version: "3.0"
+version: "3.1"
 
 stories:
 - story: future-self dialog introduction

@@ -14,7 +14,7 @@ class ManagedContentReader:
     """
 
     def __init__(self):
-        r = requests.get(MANAGED_CONTENT_URL)
+        r = requests.get(MANAGED_CONTENT_URL, timeout=60)
         if r.status_code != 200:
             logging.error(
                 f'Failed to fetch from URL: {MANAGED_CONTENT_URL} '

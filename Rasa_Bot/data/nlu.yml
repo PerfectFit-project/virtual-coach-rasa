@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.1"
 
 nlu:
 - intent: request_plan_week
@@ -44,11 +44,17 @@ nlu:
     - "Ik wil future self dialog."
     - "future self dialog."
     
-- intent: get_first_aid_kit
+- intent: CENTRAL_get_first_aid_kit
   examples: |
     - "Get first aid kit"
     - "Ik wil first aid kit"
     - "First aid kit"
+    - "EHBO doos"
+    
+- intent: urgent
+  examples: |
+    - "dood"
+    - "Ik ben depressief"
 
 - intent: request_tracked_cigarettes
   examples: |
@@ -57,7 +63,7 @@ nlu:
 - intent: request_tracker_reminder
   examples: |
     - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"
-
+    
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
     - "EXTERNAL_trigger_profile_creation"

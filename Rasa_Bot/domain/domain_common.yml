@@ -1,3 +1,13 @@
+intents:
+  - urgent
+
 actions:
   - action_end_dialog
   - mark_dialog_as_completed
+  - action_handle_urgent_intent
+
+
+responses:
+  # To refer a user to a human
+  utter_refer:
+    - text: "Volgens mij heb je een probleem waar een mens je beter mee kan helpen. Ik raad je aan om contact op te nemen met iemand die je vertrouwt, zoals je huisarts."

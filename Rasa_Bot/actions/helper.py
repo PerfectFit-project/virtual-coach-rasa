@@ -70,5 +70,4 @@ def week_day_to_numerical_form(week_day):
         return 6
     if week_day.lower() == "sunday":
         return 7
-    else:
-        return -1
+    return -1

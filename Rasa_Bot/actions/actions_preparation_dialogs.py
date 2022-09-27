@@ -3,7 +3,6 @@ Contains custom actions related to the preparation dialogs
 """
 from typing import Text, Any, Dict
 from datetime import datetime
-##import logging
 
 from rasa_sdk import Tracker, FormValidationAction, Action
 from rasa_sdk.events import SlotSet
@@ -11,11 +10,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from virtual_coach_db.helper.definitions import PreparationInterventionComponents
 
-##from virtual_coach_db.helper.helper_functions import get_db_session
 from .helper import (store_user_preferences_to_db, get_intervention_component_id,
                      week_day_to_numerical_form)
-from virtual_coach_db.dbschema.models import (Users, DialogAnswers, UserInterventionState,
-                                              InterventionComponents)
 
 YES_OR_NO = ["yes", "no"]
 ALLOWED_WEEK_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
@@ -85,6 +81,7 @@ class ValidateUserPreferencesForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
         """Validate recursive_reminder` value."""
         if slot_value.lower() not in YES_OR_NO:
             dispatcher.utter_message(text="We only accept 'yes' or 'no' as answers")
@@ -99,6 +96,7 @@ class ValidateUserPreferencesForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
         """Validate `week_days` value."""
 
         week_days_string = slot_value
@@ -124,6 +122,7 @@ class ValidateUserPreferencesForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
         """Validate `time_stamp` value."""
 
         timestring = slot_value
@@ -174,5 +173,6 @@ class StoreUserPreferencesToDb(Action):
 
         datetime_format = datetime.strptime(preferred_time_string, '%H:%M:%S')
 
-        store_user_preferences_to_db(user_id, intervention_component, recursive_bool, week_days_numbers.rstrip(week_days_numbers[-1]), datetime_format)
+        store_user_preferences_to_db(user_id, intervention_component, recursive_bool,
+                                week_days_numbers.rstrip(week_days_numbers[-1]), datetime_format)
         return

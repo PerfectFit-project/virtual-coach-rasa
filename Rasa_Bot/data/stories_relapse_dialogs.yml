@@ -1,0 +1,11 @@
+# Stories for relapse dialogs
+version: "3.1"
+
+stories:
+
+## Trigger relapse phase
+- story: Relapse phase triggered
+  steps:
+    - intent: relapse_dialog
+    - action: utter_relapse
+    - action: action_end_dialog

@@ -1,0 +1,8 @@
+intents:
+  - relapse_dialog
+  - EXTERNAL_trigger_relapse_phase
+
+responses:
+  ##Dummy response for the relapse dialog
+  utter_relapse:
+    - text: "Relapse dialog initiated..."

@@ -88,6 +88,11 @@ nlu:
   examples: |
     - "EXTERNAL_trigger_goal_setting"
 
+- intent: relapse_dialog
+  examples: |
+    - "relapse"
+    - "Relapse"
+
 - intent: oke
   examples: |
     - "Oke"

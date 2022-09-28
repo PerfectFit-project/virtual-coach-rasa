@@ -2,7 +2,6 @@
 Helper functions for rasa actions
 """
 import datetime
-##import logging
 
 from .definitions import DialogQuestions, DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogAnswers, InterventionComponents,

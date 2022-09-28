@@ -175,4 +175,3 @@ class StoreUserPreferencesToDb(Action):
 
         store_user_preferences_to_db(user_id, intervention_component, recursive_bool,
                                 week_days_numbers.rstrip(week_days_numbers[-1]), datetime_format)
-        return

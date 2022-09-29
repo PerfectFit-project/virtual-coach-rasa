@@ -7,5 +7,14 @@ stories:
 - story: Relapse phase triggered
   steps:
     - intent: relapse_dialog
+    - action: action_trigger_relapse
     - action: utter_relapse
+    - action: action_end_dialog
+
+
+## External trigger relapse phase
+- story: Relapse phase triggered externally
+  steps:
+    - intent: EXTERNAL_trigger_relapse_phase
+    - action: utter_relapse_external
     - action: action_end_dialog

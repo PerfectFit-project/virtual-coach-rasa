@@ -80,6 +80,33 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
         utils.store_intervention_component_to_db(state)
 
+@app.task
+def relapse_dialog(user_id: int, intervention_component_name: str):
+    ##TODO functionality to detect relapse and return to correct component
+    logging.info("celery received")
+    phase = utils.get_phase_object(Phases.LAPSE.value)
+
+    logging.info("celery received the message")
+
+    state = UserInterventionState(
+        users_nicedayuid=user_id,
+        intervention_phase_id=phase.phase_id,
+        intervention_component_id=1,
+        completed=False,
+        last_time=datetime.now().astimezone(TIMEZONE),
+        last_part=0,
+        next_planned_date=None,
+        task_uuid=None
+    )
+
+    utils.store_intervention_component_to_db(state)
+
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
+    headers = {'Content-Type': 'application/json'}
+    params = {'output_channel': 'niceday_input_channel'}
+    data = '{"name": "' + 'EXTERNAL_trigger_relapse_phase' + '" }'
+    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+
 
 @app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):

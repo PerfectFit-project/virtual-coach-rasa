@@ -6,3 +6,8 @@ responses:
   ##Dummy response for the relapse dialog
   utter_relapse:
     - text: "Relapse dialog initiated..."
+  utter_relapse_external:
+    - text: "Relapse dialog externally triggered..."
+
+actions:
+  - action_trigger_relapse

@@ -2,6 +2,12 @@
 version: "3.1"
 
 stories:
+- story: request_plan
+  steps:
+  - intent: request_plan
+  - action: utter_explanation
+  - action: action_end_dialog
+  
 - story: request_plan_week_calendarYes
   steps:
   - intent: request_plan_week

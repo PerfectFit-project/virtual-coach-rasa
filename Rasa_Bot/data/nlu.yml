@@ -1,6 +1,13 @@
 version: "3.1"
 
 nlu:
+- intent: request_plan
+  examples: |
+    - "Kan je uitleggen wat de bedoeling is?"
+    - "Wat gaan we doen?"
+    - "Hoe werkt dit?"
+    - "Wat is het plan?"
+
 - intent: request_plan_week
   examples: |
     - "Kan ik de agenda voor de week krijgen?"

@@ -43,6 +43,11 @@ responses:
     - text: "Tot straks!"
     - text: "Tot ziens!"
 
+  # General explanation
+  utter_explanation:
+  - text: "Het idee is dat we een planning maken en in je agenda zetten."
+  - text: "We gaan kijken wat je stop-met roken plannen zijn en agendapuntjes maken hiervoor"
+
   # Weekly planning
   utter_plan_week:
   - text: "{plan_week} ..."

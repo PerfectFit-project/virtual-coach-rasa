@@ -175,3 +175,15 @@ class SetCigarettesTrackerReminder(Action):
                                     "This is a tracker",
                                     recursive_rule)
         return[]
+
+
+class GetMetadata(Action):
+    def name(self):
+        return "action_build_metadata"
+
+    async def run(self, dispatcher, tracker, domain):
+        dispatcher.utter_message(
+            json_message={"text": "message",
+                          "attachmentIds": [1733]},
+        )
+        return[]

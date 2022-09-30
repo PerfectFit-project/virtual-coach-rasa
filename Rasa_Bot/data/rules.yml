@@ -53,3 +53,9 @@ rules:
   - action: utter_confirm
   - action: action_store_user_preferences_to_db
   - action: utter_user_preferences
+
+- rule:  Test metadata
+  steps:
+  - intent: request_metadata
+  - action: action_build_metadata
+  - action: action_end_dialog

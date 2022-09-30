@@ -1,7 +1,7 @@
 import inspect
-from typing import Text, Callable, Awaitable, Any
+from typing import Text, Callable, Awaitable, Any, Optional, Dict, List
 
-from rasa.core.channels.channel import InputChannel, OutputChannel, UserMessage
+from rasa.core.channels.channel import InputChannel, OutputChannel, UserMessage, CollectingOutputChannel
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
@@ -11,23 +11,43 @@ from niceday_client import NicedayClient
 NICEDAY_API_URL = 'http://niceday_api:8080/'
 
 
-class NicedayOutputChannel(OutputChannel):
+class NicedayOutputChannel(CollectingOutputChannel):
     """
     Output channel that sends messages to Niceday server
     """
-    def __init__(self):
-        self.niceday_client = NicedayClient(niceday_api_uri=NICEDAY_API_URL)
+    def __init__(self) -> None:
+        super().__init__()
 
     @classmethod
     def name(cls) -> Text:
         return "niceday_output_channel"
 
-    async def send_text_message(
-        self, recipient_id: Text, text: Text, **kwargs: Any
-    ) -> None:
-        """Send a message through this channel."""
-        for message_part in text.strip().split("\n\n"):
-            self.niceday_client.post_message(int(recipient_id), message_part)
+    def _message(self,
+                 recipient_id: Text,
+                 text: Text = None,
+                 image: Text = None,
+                 buttons: List[Dict[Text, Any]] = None,
+                 attachment: Text = None,
+                 custom: Dict[Text, Any] = None,
+                 metadata: Dict[Text, Any] = None
+                 ) -> Dict:
+        msg_metadata = None
+        if custom is not None:
+            text = custom["text"]
+            msg_metadata = custom["attachmentIds"]
+            custom = None
+        obj = {
+            "recipient_id": recipient_id,
+            "text": text,
+            "image": image,
+            "buttons": buttons,
+            "attachment": attachment,
+            "custom": custom,
+            "metadata": msg_metadata
+        }
+
+        # filter out any values that are `None`
+        return {k: v for k, v in obj.items() if v is not None}
 
 
 class NicedayInputChannel(InputChannel):
@@ -57,18 +77,18 @@ class NicedayInputChannel(InputChannel):
         async def receive(request: Request) -> HTTPResponse:
             sender_id = request.json.get("sender")  # method to get sender_id
             text = request.json.get("message")  # method to fetch text
-
+            metadata = self.get_metadata(request)
             collector = self.get_output_channel()
             await on_new_message(
-                UserMessage(text, collector, sender_id, input_channel=self.name())
+                UserMessage(text, collector, sender_id, input_channel=self.name(), metadata=metadata)
             )
-            return response.text("success")
+            return response.json(collector.messages)
 
         return custom_webhook
 
-    def get_output_channel(self) -> OutputChannel:
+    def get_output_channel(self) -> CollectingOutputChannel:
         """
         Register output channel. This is the output channel that is used when calling the
         'trigger_intent' endpoint.
         """
-        return self.output_channel
+        return NicedayOutputChannel()

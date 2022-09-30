@@ -35,3 +35,9 @@ rules:
   - action: action_set_cigarettes_tracker_reminder
   - action: utter_reminder_is_set
   - action: action_end_dialog
+
+- rule:  Test metadata
+  steps:
+  - intent: request_metadata
+  - action: action_build_metadata
+  - action: action_end_dialog

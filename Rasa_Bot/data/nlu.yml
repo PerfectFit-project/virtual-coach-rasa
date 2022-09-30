@@ -93,3 +93,7 @@ nlu:
     - "Oke"
     - "Ok"
 
+- intent: request_metadata
+  examples: |
+    - "Metadata"
+    - "Ik wil metadata"

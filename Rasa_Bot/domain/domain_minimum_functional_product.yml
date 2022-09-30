@@ -85,3 +85,4 @@ actions:
   - action_save_number_cigarettes
   - action_get_number_cigarettes
   - action_set_cigarettes_tracker_reminder
+  - action_build_metadata

@@ -1,0 +1,12 @@
+intents:
+  - review_last_activity
+
+responses:
+  utter_request_rating:
+    - text: "Laten we eerst terug kijken op je vorige activiteit. Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
+
+    
+actions:
+  - validate_activity_usefulness_form
+
+    

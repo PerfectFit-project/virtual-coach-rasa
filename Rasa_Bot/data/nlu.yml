@@ -92,6 +92,7 @@ nlu:
   examples: |
     - "relapse"
     - "Relapse"
+    - "help"
 
 - intent: oke
   examples: |

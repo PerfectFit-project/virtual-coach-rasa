@@ -1,6 +1,3 @@
-entities:
-- activity_useful_rating
-
 
 slots:
   # The user's rating of previous activity
@@ -10,8 +7,7 @@ slots:
     max_value: 10
     initial_value: 0
     mappings:
-    - type: from_entity
-      entity: activity_useful_rating
+    - type: from_text
 
 forms:
   activity_usefulness_form:
@@ -30,7 +26,7 @@ responses:
   - text: "bye!"
   
   # form slot responses obligatory see https://rasa.com/docs/rasa/forms/
-utter_ask_activity_usefulness_form_activity_useful_rating:
+  utter_ask_activity_usefulness_form_activity_useful_rating:
   - text: "Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
   
      

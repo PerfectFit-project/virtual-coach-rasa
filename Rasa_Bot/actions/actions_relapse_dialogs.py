@@ -1,10 +1,14 @@
 """
 Contains custom actions related to the relapse dialogs
 """
-from celery import Celery
-from rasa_sdk import Action
-from .definitions import REDIS_URL
 import logging
+from typing import Any, Dict, Text
+
+from celery import Celery
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.forms import FormValidationAction
+from .definitions import REDIS_URL
 
 celery = Celery(broker=REDIS_URL)
 
@@ -23,3 +27,62 @@ class TriggerRelapseDialog(Action):
         logging.info("no celery error")
 
         return []
+
+
+class ValidateSmokeOrPaForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_smoke_or_pa_form'
+
+    def validate_smoke_or_pa_form(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate smoke or pa input."""
+
+        dispatcher.utter_message(text="Checking the form")  # Debug message
+
+        if not self._is_valid_input(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"smoke_or_pa": None}
+
+        return {"smoke_or_pa": value}
+
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 2):
+            return False
+        return True
+
+
+class ValidateCraveLapseRelapse(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_crave_lapse_relapse_form'
+
+    def validate_smoke_or_pa_form(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate crave, lapse of relapse input."""
+
+        if not self._is_valid_input(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            return {"crave_lapse_relapse": None}
+
+        return {"crave_lapse_relapse": value}
+
+
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 3):
+            return False
+        return True

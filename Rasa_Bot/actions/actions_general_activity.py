@@ -1,11 +1,27 @@
 
 from rasa_sdk.forms import FormValidationAction
+from typing import Any, Dict, Text, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet
+from rasa_sdk.executor import CollectingDispatcher
+from rasa.core.actions.forms import FormAction
 
 
-class ValidateActivityUsefullnessForm(FormValidationAction):
+class ValidateActivityUsefullnessForm(FormAction):
     def name(self) -> Text:
-        return 'validate_activity_usefulness_form'
+        return 'form_get_usefulness_rating'
 
+    @staticmethod
+    def required_slots(tracker: Tracker) -> List[Text]:
+        """A list of required slots that the form has to fill."""
+         
+        return ["activity_useful_rating"]
+    
+    def submit(self,dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any],):
+        # Do something dramatically here, like call an API for example lol
+
+        return []
+    
     def validate_rescheduling_option(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:

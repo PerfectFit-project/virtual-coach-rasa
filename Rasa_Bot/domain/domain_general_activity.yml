@@ -1,12 +1,32 @@
+entities:
+- activity_useful_rating
+
+
+slots:
+  # The user's rating of previous activity
+  activity_useful_rating:
+    type: float
+    min_value: 0
+    max_value: 10
+    initial_value: 0
+    mappings:
+    - type: from_entity
+      entity: activity_useful_rating
+
+forms:
+  activity_usefulness_form:
+    required_slots:
+    - activity_useful_rating
+    
 intents:
   - review_last_activity
 
 responses:
   utter_request_rating:
     - text: "Laten we eerst terug kijken op je vorige activiteit. Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
-
+  utter_ok:
+    - text: "ok thanks for your rating"
+  utter_bye:
+    - text: "bye!"
     
-actions:
-  - validate_activity_usefulness_form
-
     

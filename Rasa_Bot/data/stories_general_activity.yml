@@ -1,18 +1,16 @@
-# Activities dialog stories
+## Activities dialog stories
 # Purpose: Reflecting previous (=last) activity that the user has done.
 version: "3.1"
+
+
 
 stories:
 - story: introduction PF
   steps:
     - intent: review_last_activity
-    - action: utter_greet # Load in rescheduling dialog? If user chooses "nu"?
-#    - checkpoint: rate_usefulness
-#    - checkpoint: rescheduling_query_dialog
-    
-- story: rate usefulness of previous activity
-  steps:
-    - intent: rate_usefulness
     - action: utter_request_rating
-    - action: validate_activity_usefulness_form
-
+    - action: activity_usefulness_form
+    - active_loop: activity_usefulness_form
+    - action: utter_ok
+    - checkpoint: rescheduling_query_dialog
+    

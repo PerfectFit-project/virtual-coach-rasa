@@ -11,6 +11,7 @@ stories:
     - action: utter_checking_activities
     - action: activity_usefulness_form
     - active_loop: activity_usefulness_form
+    - active_loop: null
     - action: utter_ok
     - checkpoint: rescheduling_query_dialog
     

@@ -1,3 +1,6 @@
+#entities:
+#- activity_useful_rating
+
 
 slots:
   # The user's rating of previous activity
@@ -7,7 +10,9 @@ slots:
     max_value: 10
     initial_value: 0
     mappings:
-    - type: from_text
+    - type: custom
+      action: activity_usefulness_form
+    
 
 forms:
   activity_usefulness_form:
@@ -21,7 +26,7 @@ responses:
   utter_checking_activities:
   - text: "Laten we eerst terug kijken op je vorige activiteit."
   utter_ok:
-  - text: "ok thanks for your rating"
+  - text: "ok thanks for your rating {activity_useful_rating}"
   utter_bye:
   - text: "bye!"
   
@@ -29,4 +34,6 @@ responses:
   utter_ask_activity_usefulness_form_activity_useful_rating:
   - text: "Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
   
-     
+actions:
+  - activity_usefulness_form
+  

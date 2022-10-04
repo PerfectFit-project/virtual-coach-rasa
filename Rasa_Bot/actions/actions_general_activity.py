@@ -1,46 +1,52 @@
 
-from rasa_sdk.forms import FormValidationAction
-from typing import Any, Dict, Text, List
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet
+from typing import Any, Dict, Text, Optional
 from rasa_sdk.executor import CollectingDispatcher
-from rasa.core.actions.forms import FormAction
+from rasa_sdk.forms import FormValidationAction
+from rasa_sdk.types import DomainDict
 
 
-class ValidateActivityUsefullnessForm(FormAction):
+class ValidateActivityUsefullnessForm(FormValidationAction):
+    '''
+    https://rasa.com/docs/action-server/next/validation-action/
+    runs when the form specified in its name is activated
+    '''
+
     def name(self) -> Text:
-        return 'form_get_usefulness_rating'
+        return 'activity_usefulness_form'
 
-    @staticmethod
-    def required_slots(tracker: Tracker) -> List[Text]:
-        """A list of required slots that the form has to fill."""
-         
-        return ["activity_useful_rating"]
-    
-    def submit(self,dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any],):
-        # Do something dramatically here, like call an API for example lol
+# We can implement this directly but not needed for FormValidationAction
+#    async def run(self, dispatcher, tracker, domain):
+#        return {"activity_useful_rating",self.getVal()}
 
-        return []
-    
-    def validate_rescheduling_option(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+    def validate_activity_useful_rating(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate rescheduling_option input."""
-
-        if not self._is_valid_input(value):
+        """
+        You can implement a Custom Action validate_<form_name> 
+        to validate any extracted slots. 
+        Make sure to add this action to the actions section of your domain:
+        """
+        val=self.getVal(slot_value)
+        if val==None:
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-            return {"activity_usefulness": None}
 
-        return {"activity_usefulness": int(value)}
+        return { "activity_useful_rating": val }
 
-    @staticmethod
-    def _is_valid_input(value):
+    def getVal(self, value:str) -> Optional[int]:
+        '''
+        return True iff value text can be cconverted to int in [1,4]
+        '''
         try:
-            value = int(value)
+            val = int(value)
         except ValueError:
-            return False
-        if (value < 1) or (value > 4):
-            return False
-        return True
+            return None
+        if val < 1 or val > 4:
+            return None
+        return val
     

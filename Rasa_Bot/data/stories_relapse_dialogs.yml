@@ -3,18 +3,72 @@ version: "3.1"
 
 stories:
 
-## Trigger relapse phase
-- story: Relapse phase triggered
+## Trigger relapse phase and ask smoke/pa: Smoking
+- story: Relapse phase triggered smoke
   steps:
     - intent: relapse_dialog
-    - action: action_trigger_relapse
-    - action: utter_relapse
-    - action: action_end_dialog
+    - action: utter_relapse_intro_codeword
+    - action: utter_relapse_intro_offer_help
+    - action: utter_ask_smoke_or_pa
+    - action: utter_debug_ab
+    - action: smoke_or_pa_form
+    - active_loop: smoke_or_pa_form
+    - slot_was_set:
+        - smoke_or_pa: 1
+    - active_loop: null
+    - checkpoint: smoke_parent
+#    - slot_was_set:
+#        - smoke_or_pa: 2
+#    - checkpoint: pa_parent
 
-
-## External trigger relapse phase
-- story: Relapse phase triggered externally
+## Parent for Smoking: ask crave, lapse and relapse
+- story: smoking parent
   steps:
-    - intent: EXTERNAL_trigger_relapse_phase
-    - action: utter_relapse_external
-    - action: action_end_dialog
+  - checkpoint: smoke_parent
+  - action: utter_specify_smoke
+  - action: utter_ask_crave_lapse_relapse
+  - action: crave_lapse_relapse_form
+  - active_loop: crave_lapse_relapse_form
+  - active_loop: null
+  - slot_was_set:
+      - crave_lapse_relapse: 1
+  - checkpoint: smoke_hrs
+  - slot_was_set:
+      - crave_lapse_relapse: 2
+  - checkpoint: smoke_lapse
+  - slot_was_set:
+      - crave_lapse_relapse: 3
+  - checkpoint: smoke_relapse
+
+
+## Smoking, HRS
+- story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
+  steps:
+  - checkpoint: smoke_hrs
+  - action: utter_thanks_for_saying_crave
+  - action: utter_smoke_crave_1
+  - action: utter_smoke_crave_2
+  - action: utter_smoke_crave_3
+  - action: utter_smoke_crave_4
+  - action: utter_smoke_crave_5
+  - action: utter_smoke_crave_6
+  - action: utter_smoke_crave_7
+  - action: utter_smoke_crave_8
+  - action: utter_smoke_crave_9
+  - action: utter_smoke_crave_10
+## Should I re-use the form from crave, lapse, relapse or create a new form? If reused: make sure it is reset
+
+### Smoking, Lapse
+#- story: smoke lapse
+#  steps:
+#  - checkpoint: smoke_lapse
+#
+### Smoking, Relapse
+#- story: smoke relapse
+#  steps:
+#  - checkpoint: smoke_relapse
+#
+### Parent for PA
+#- story: pa parent
+#  steps:
+#  - checkpoint: pa_parent

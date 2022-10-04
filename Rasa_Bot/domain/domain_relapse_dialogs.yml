@@ -1,13 +1,85 @@
+version: "3.1"
+
 intents:
   - relapse_dialog
   - EXTERNAL_trigger_relapse_phase
 
+slots:
+  smoke_or_pa:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: custom
+        conditions:
+          - active_loop: smoke_or_pa_form
+            requested_slot: smoke_or_pa
+
+  crave_lapse_relapse:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: crave_lapse_relapse_form
+
 responses:
-  ##Dummy response for the relapse dialog
-  utter_relapse:
-    - text: "Relapse dialog initiated..."
+  utter_debug_ab:
+    - text: "De waarde van smoke or pa form is: {smoke_or_pa}"
+  utter_relapse_intro_codeword:
+    - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
+  utter_relapse_intro_offer_help:
+    - text: "Ik ga je helpen."
   utter_relapse_external:
-    - text: "Relapse dialog externally triggered..."
+    - text: "Goed dat je om hulp vraagt! Gaat het om roken of lichamelijke beweging?"
+  utter_ask_smoke_or_pa:
+    - text: "Typ '1' als je het gaat om roken. Typ '2' als het gaat om lichamelijke beweging."
+  utter_specify_smoke:
+    - text: "Kun je mij vertellen wat er aan de hand is?"
+  utter_ask_crave_lapse_relapse:
+    - text: "Typ '1' als je zin hebt om te roken. Typ '2' als je vandaag één of meer sigaretten hebt
+             gerookt. Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.
+             "
+  utter_smoke_crave_1:
+    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid"
+  utter_smoke_crave_2:
+    - text: "Het is vervelend, maar wel heel logisch dat je nog zin hebt om te roken als je net bent gestopt."
+  utter_smoke_crave_3:
+    - text: "Heftige trek kan je soms overspoelen en dan weet je even niet hoe je kan omgaan met deze trek."
+  utter_smoke_crave_4:
+    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt?"
+  utter_smoke_crave_5:
+    - text: "Eerst is het heel heftig, maar na een paar minuten wordt het vanzelf minder."
+  utter_smoke_crave_6:
+    - text: "Je kan erop vertrouwen dat de trek vanzelf weer minder wordt."
+  utter_smoke_crave_7:
+    - text: "Wat helpt is om tijdens deze heftige trek wat te gaan doen."
+  utter_smoke_crave_8:
+    - text: "Ik kan je daarbij helpen. Wat zullen we doen?"
+  utter_smoke_crave_9:
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ 1 als je een oefening uit je EHBO-doos wilt doen."
+  utter_smoke_crave_10:
+    - text: "Typ 2 als ik een oefening mag voorstellen. Typ 3 als je zelf een activiteit wilt kiezen."
+
+## Should I re-use the form from crave, lapse, relapse or create a new form?
+
 
 actions:
   - action_trigger_relapse
+  - validate_smoke_or_pa_form
+  - validate_crave_lapse_relapse_form
+
+forms:
+  smoke_or_pa_form:
+    required_slots:
+      - smoke_or_pa
+
+  crave_lapse_relapse_form:
+    required_slots:
+      - crave_lapse_relapse

@@ -8,7 +8,7 @@ stories:
 - story: introduction PF
   steps:
     - intent: review_last_activity
-    - action: utter_request_rating
+    - action: utter_checking_activities
     - action: activity_usefulness_form
     - active_loop: activity_usefulness_form
     - action: utter_ok

@@ -19,14 +19,18 @@ forms:
     - activity_useful_rating
     
 intents:
-  - review_last_activity
+- review_last_activity
 
 responses:
-  utter_request_rating:
-    - text: "Laten we eerst terug kijken op je vorige activiteit. Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
+  utter_checking_activities:
+  - text: "Laten we eerst terug kijken op je vorige activiteit."
   utter_ok:
-    - text: "ok thanks for your rating"
+  - text: "ok thanks for your rating"
   utter_bye:
-    - text: "bye!"
-    
-    
+  - text: "bye!"
+  
+  # form slot responses obligatory see https://rasa.com/docs/rasa/forms/
+utter_ask_activity_usefulness_form_activity_useful_rating:
+  - text: "Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
+  
+     

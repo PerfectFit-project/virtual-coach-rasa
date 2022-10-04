@@ -12,10 +12,9 @@ slots:
       - 2
     influence_conversation: true
     mappings:
-      - type: custom
-        conditions:
-          - active_loop: smoke_or_pa_form
-            requested_slot: smoke_or_pa
+    - type: from_text
+      conditions:
+        - active_loop: smoke_or_pa_form
 
   crave_lapse_relapse:
     type: categorical

@@ -3,7 +3,7 @@ version: "3.1"
 
 stories:
 
-## Trigger relapse phase and ask smoke/pa: Smoking
+## Trigger help - smoking
 - story: Relapse phase triggered smoke
   steps:
     - intent: relapse_dialog
@@ -16,7 +16,26 @@ stories:
     - slot_was_set:
         - smoke_or_pa: 1
     - active_loop: null
+    - action: utter_debug_ab
     - checkpoint: smoke_parent
+
+
+## Trigger help - PA
+- story: Relapse phase triggered PA
+  steps:
+    - intent: relapse_dialog
+    - action: utter_relapse_intro_codeword
+    - action: utter_relapse_intro_offer_help
+    - action: utter_ask_smoke_or_pa
+    - action: utter_debug_ab
+    - action: smoke_or_pa_form
+    - active_loop: smoke_or_pa_form
+    - slot_was_set:
+      - smoke_or_pa: 2
+    - active_loop: null
+    - action: utter_debug_ab
+    - action: utter_relapse_intro_codeword
+    - checkpoint: pa_parent
 #    - slot_was_set:
 #        - smoke_or_pa: 2
 #    - checkpoint: pa_parent

@@ -2,15 +2,18 @@
 #- activity_useful_rating
 
 
+intents:
+- review_last_activity
+
+
 slots:
   # The user's rating of previous activity
   activity_useful_rating:
-    type: float
-    min_value: 0
-    max_value: 10
+    type: text
     mappings:
-    - type: custom
-      action: activity_usefulness_form
+    - type: from_text
+      conditions:
+      - active_loop: activity_usefulness_form
     
 
 forms:
@@ -18,9 +21,6 @@ forms:
     required_slots:
     - activity_useful_rating
     
-intents:
-- review_last_activity
-
 responses:
   utter_checking_activities:
   - text: "Laten we eerst terug kijken op je vorige activiteit."

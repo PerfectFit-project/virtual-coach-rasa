@@ -17,3 +17,4 @@ stories:
   - action: utter_ok
   - checkpoint: rescheduling_query_dialog
   
+  

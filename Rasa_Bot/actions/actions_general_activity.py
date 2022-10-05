@@ -1,4 +1,4 @@
-
+import logging
 from rasa_sdk import Action, Tracker
 from typing import Any, Dict, Text, Optional
 from rasa_sdk.executor import CollectingDispatcher
@@ -32,10 +32,12 @@ class ValidateActivityUsefullnessForm(FormValidationAction):
         to validate any extracted slots. 
         Make sure to add this action to the actions section of your domain:
         """
+        dispatcher.utter_message(response="validating your answer")
+        #logging.log("validating activity rating");
         val=self.getVal(slot_value)
         if val==None:
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-
+        # if val=None, this indicates to rasa the value is not known yet.
         return { "activity_useful_rating": val }
 
     def getVal(self, value:str) -> Optional[int]:

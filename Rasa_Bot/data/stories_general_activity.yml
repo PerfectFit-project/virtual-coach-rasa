@@ -12,9 +12,9 @@ stories:
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form
   - slot_was_set:
-    - activity_useful_rating: 1
-  - active_loop: null
+    - activity_useful_rating
   - action: utter_ok
+  - active_loop: null
   - checkpoint: rescheduling_query_dialog
   
   

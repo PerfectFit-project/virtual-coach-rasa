@@ -32,8 +32,8 @@ class ValidateActivityUsefullnessForm(FormValidationAction):
         to validate any extracted slots. 
         Make sure to add this action to the actions section of your domain:
         """
-        dispatcher.utter_message(response="validating your answer")
-        #logging.log("validating activity rating");
+        #dispatcher.utter_message(response="validating your answer")
+        logging.info("validating activity rating")
         val=self.getVal(slot_value)
         if val==None:
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")

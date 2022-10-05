@@ -4,7 +4,8 @@ Helper functions for rasa actions
 import datetime
 
 from .definitions import DialogQuestions, DATABASE_URL, TIMEZONE
-from virtual_coach_db.dbschema.models import (Users, DialogAnswers, InterventionComponents)
+from virtual_coach_db.dbschema.models import (Users, DialogAnswers, InterventionComponents,
+                                              UserPreferences)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -15,8 +16,20 @@ def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
     entry = DialogAnswers(answer=answer,
                           question_id=question.value,
                           datetime=datetime.datetime.now().astimezone(TIMEZONE))
-
     selected.dialog_answers.append(entry)
+    session.commit()  # Update database
+
+def store_user_preferences_to_db(user_id, intervention_component, recursive, week_days,
+                                 preferred_time):
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    entry = UserPreferences(users_nicedayuid=user_id,
+                            intervention_component_id=intervention_component,
+                            recursive=recursive,
+                            week_days=week_days,
+                            preferred_time=preferred_time)
+    selected.user_preferences.append(entry)
     session.commit()  # Update database
 
 
@@ -40,3 +53,20 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
 
     intervention_component_id = selected[0].intervention_component_id
     return intervention_component_id
+
+def week_day_to_numerical_form(week_day):
+    if week_day.lower() == "monday":
+        return 1
+    if week_day.lower() == "tuesday":
+        return 2
+    if week_day.lower() == "wednesday":
+        return 3
+    if week_day.lower() == "thursday":
+        return 4
+    if week_day.lower() == "friday":
+        return 5
+    if week_day.lower() == "saturday":
+        return 6
+    if week_day.lower() == "sunday":
+        return 7
+    return -1

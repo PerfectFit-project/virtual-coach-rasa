@@ -3,62 +3,76 @@ version: "3.1"
 
 stories:
 
-## Trigger help - smoking
+## 1a: Trigger relapse dialog - smoking
 - story: Relapse phase triggered smoke
   steps:
     - intent: relapse_dialog
     - action: utter_relapse_intro_codeword
     - action: utter_relapse_intro_offer_help
+    - action: utter_relapse_smoke_or_pa
     - action: utter_ask_smoke_or_pa
-    - action: utter_debug_ab
     - action: smoke_or_pa_form
     - active_loop: smoke_or_pa_form
     - slot_was_set:
         - smoke_or_pa: 1
     - active_loop: null
-    - action: utter_debug_ab
     - checkpoint: smoke_parent
 
 
-## Trigger help - PA
+## 1b: Trigger relapse dialog - PA
 - story: Relapse phase triggered PA
   steps:
     - intent: relapse_dialog
     - action: utter_relapse_intro_codeword
     - action: utter_relapse_intro_offer_help
+    - action: utter_relapse_smoke_or_pa
     - action: utter_ask_smoke_or_pa
-    - action: utter_debug_ab
     - action: smoke_or_pa_form
     - active_loop: smoke_or_pa_form
     - slot_was_set:
       - smoke_or_pa: 2
     - active_loop: null
-    - action: utter_debug_ab
-    - action: utter_relapse_intro_codeword
     - checkpoint: pa_parent
-#    - slot_was_set:
-#        - smoke_or_pa: 2
-#    - checkpoint: pa_parent
 
-## Parent for Smoking: ask crave, lapse and relapse
-- story: smoking parent
+## Stories for smoking
+## 2a: Parent for Smoking - crave
+- story: smoking parent crave
   steps:
   - checkpoint: smoke_parent
   - action: utter_specify_smoke
   - action: utter_ask_crave_lapse_relapse
   - action: crave_lapse_relapse_form
   - active_loop: crave_lapse_relapse_form
+  - slot_was_set:
+    - crave_lapse_relapse: 1
   - active_loop: null
-  - slot_was_set:
-      - crave_lapse_relapse: 1
   - checkpoint: smoke_hrs
-  - slot_was_set:
-      - crave_lapse_relapse: 2
-  - checkpoint: smoke_lapse
-  - slot_was_set:
-      - crave_lapse_relapse: 3
-  - checkpoint: smoke_relapse
 
+## 2b: Parent for Smoking - lapse
+- story: smoking parent lapse
+  steps:
+  - checkpoint: smoke_parent
+  - action: utter_specify_smoke
+  - action: utter_ask_crave_lapse_relapse
+  - action: crave_lapse_relapse_form
+  - active_loop: crave_lapse_relapse_form
+  - slot_was_set:
+    - crave_lapse_relapse: 2
+  - active_loop: null
+  - checkpoint: smoke_lapse
+
+## 2c Parent for Smoking - relapse
+- story: smoking parent relapse
+  steps:
+  - checkpoint: smoke_parent
+  - action: utter_specify_smoke
+  - action: utter_ask_crave_lapse_relapse
+  - action: crave_lapse_relapse_form
+  - active_loop: crave_lapse_relapse_form
+  - slot_was_set:
+    - crave_lapse_relapse: 3
+  - active_loop: null
+  - checkpoint: smoke_relapse
 
 ## Smoking, HRS
 - story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
@@ -75,19 +89,18 @@ stories:
   - action: utter_smoke_crave_8
   - action: utter_smoke_crave_9
   - action: utter_smoke_crave_10
-## Should I re-use the form from crave, lapse, relapse or create a new form? If reused: make sure it is reset
 
-### Smoking, Lapse
-#- story: smoke lapse
-#  steps:
-#  - checkpoint: smoke_lapse
-#
-### Smoking, Relapse
-#- story: smoke relapse
-#  steps:
-#  - checkpoint: smoke_relapse
-#
-### Parent for PA
-#- story: pa parent
-#  steps:
-#  - checkpoint: pa_parent
+## Stories for PA
+## 2d Parent for PA - HRS
+- story: pa parent hrs
+  steps:
+  - checkpoint: pa_parent
+  - action: utter_pa_define_1
+  - action: utter_pa_define_2
+
+## 2e Parent for PA - Relapse
+- story: pa parent
+  steps:
+  - checkpoint: pa_parent
+  - action: utter_pa_define_1
+  - action: utter_pa_define_2

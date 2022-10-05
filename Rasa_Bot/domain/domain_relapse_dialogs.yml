@@ -14,7 +14,7 @@ slots:
     mappings:
     - type: from_text
       conditions:
-        - active_loop: smoke_or_pa_form
+      - active_loop: smoke_or_pa_form
 
   crave_lapse_relapse:
     type: categorical
@@ -24,21 +24,24 @@ slots:
       - 3
     influence_conversation: true
     mappings:
-      - type: from_text
-        conditions:
-          - active_loop: crave_lapse_relapse_form
+    - type: from_text
+      conditions:
+      - active_loop: crave_lapse_relapse_form
 
 responses:
+# General
   utter_debug_ab:
     - text: "De waarde van smoke or pa form is: {smoke_or_pa}"
   utter_relapse_intro_codeword:
     - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
   utter_relapse_intro_offer_help:
     - text: "Ik ga je helpen."
-  utter_relapse_external:
+  utter_relapse_smoke_or_pa:
     - text: "Goed dat je om hulp vraagt! Gaat het om roken of lichamelijke beweging?"
   utter_ask_smoke_or_pa:
     - text: "Typ '1' als je het gaat om roken. Typ '2' als het gaat om lichamelijke beweging."
+
+ # Smoke
   utter_specify_smoke:
     - text: "Kun je mij vertellen wat er aan de hand is?"
   utter_ask_crave_lapse_relapse:
@@ -66,8 +69,13 @@ responses:
   utter_smoke_crave_10:
     - text: "Typ 2 als ik een oefening mag voorstellen. Typ 3 als je zelf een activiteit wilt kiezen."
 
-## Should I re-use the form from crave, lapse, relapse or create a new form?
-
+# PA
+  utter_pa_define_1:
+    - text: "Kun je mij vertellen wat er aan de hand is?"
+  utter_pa_define_2:
+    - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt. Typ '2' als je merkt
+             dat het bewegen over het algemeen niet zo goed gaat als je zou willen.
+             "
 
 actions:
   - action_trigger_relapse

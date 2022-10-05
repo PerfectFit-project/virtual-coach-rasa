@@ -33,14 +33,13 @@ class ValidateSmokeOrPaForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_smoke_or_pa_form'
 
-    def validate_smoke_or_pa_form(
+    def validate_smoke_or_pa(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate smoke or pa input."""
+        """Validate smoke_or_pa input."""
 
-        dispatcher.utter_message(text="Checking the form")  # Debug message
-
+        logging.info("Performing the action validate_smoke_or_pa")  # Debug message
         if not self._is_valid_input(value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
@@ -63,11 +62,11 @@ class ValidateCraveLapseRelapse(FormValidationAction):
     def name(self) -> Text:
         return 'validate_crave_lapse_relapse_form'
 
-    def validate_smoke_or_pa_form(
+    def validate_crave_lapse_relapse(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate crave, lapse of relapse input."""
+        """Validate crave, lapse or relapse input."""
 
         if not self._is_valid_input(value):
             dispatcher.utter_message(response="utter_did_not_understand")
@@ -75,7 +74,6 @@ class ValidateCraveLapseRelapse(FormValidationAction):
             return {"crave_lapse_relapse": None}
 
         return {"crave_lapse_relapse": value}
-
 
     @staticmethod
     def _is_valid_input(value):

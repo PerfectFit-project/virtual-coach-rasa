@@ -5,7 +5,7 @@ intents:
   - EXTERNAL_trigger_relapse_phase
 
 slots:
-  smoke_or_pa:
+  one_or_two:
     type: categorical
     values:
       - 1
@@ -14,7 +14,7 @@ slots:
     mappings:
     - type: from_text
       conditions:
-      - active_loop: smoke_or_pa_form
+      - active_loop: two_options_form
 
   crave_lapse_relapse:
     type: categorical
@@ -31,13 +31,13 @@ slots:
 responses:
 # General
   utter_debug_ab:
-    - text: "De waarde van smoke or pa form is: {smoke_or_pa}"
+    - text: "De waarde van one or two form is: {one_or_two}"
   utter_relapse_intro_codeword:
     - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
   utter_relapse_intro_offer_help:
-    - text: "Ik ga je helpen."
+    - text: "Goed dat je hulp vraagt. Ik ga je helpen."
   utter_relapse_smoke_or_pa:
-    - text: "Goed dat je om hulp vraagt! Gaat het om roken of lichamelijke beweging?"
+    - text: "Gaat het om roken of lichamelijke beweging?"
   utter_ask_smoke_or_pa:
     - text: "Typ '1' als je het gaat om roken. Typ '2' als het gaat om lichamelijke beweging."
 
@@ -79,13 +79,14 @@ responses:
 
 actions:
   - action_trigger_relapse
-  - validate_smoke_or_pa_form
+  - action_reset_one_or_two_slot
+  - validate_two_options_form
   - validate_crave_lapse_relapse_form
 
 forms:
-  smoke_or_pa_form:
+  two_options_form:
     required_slots:
-      - smoke_or_pa
+      - one_or_two
 
   crave_lapse_relapse_form:
     required_slots:

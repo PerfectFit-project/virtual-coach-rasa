@@ -6,6 +6,7 @@ from typing import Any, Dict, Text
 
 from celery import Celery
 from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from .definitions import REDIS_URL
@@ -29,23 +30,23 @@ class TriggerRelapseDialog(Action):
         return []
 
 
-class ValidateSmokeOrPaForm(FormValidationAction):
+class ValidateTwoOptionsForm(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_smoke_or_pa_form'
+        return 'validate_two_options_form'
 
-    def validate_smoke_or_pa(
+    def validate_one_or_two(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate smoke_or_pa input."""
+        """Validate one or two input."""
 
-        logging.info("Performing the action validate_smoke_or_pa")  # Debug message
+        logging.info("Performing the action to validate one_or_two_options_form")  # Debug message
         if not self._is_valid_input(value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
-            return {"smoke_or_pa": None}
+            return {"one_or_two": None}
 
-        return {"smoke_or_pa": value}
+        return {"one_or_two": value}
 
     @staticmethod
     def _is_valid_input(value):
@@ -57,6 +58,16 @@ class ValidateSmokeOrPaForm(FormValidationAction):
             return False
         return True
 
+
+class ActionResetOneOrTwoSlot(Action):
+    """Reset one_or_two slot"""
+
+    def name(self):
+        return "action_reset_one_or_two_slot"
+
+    logging.info("Performing the action to validate reset_one_or_two_slot")  # debug msg
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("one_or_two", None)]
 
 class ValidateCraveLapseRelapse(FormValidationAction):
     def name(self) -> Text:

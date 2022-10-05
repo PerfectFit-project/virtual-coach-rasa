@@ -34,5 +34,6 @@ responses:
   - text: "Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
   
 actions:
-  - activity_usefulness_form
+  - validate_activity_usefulness_form
+  
   

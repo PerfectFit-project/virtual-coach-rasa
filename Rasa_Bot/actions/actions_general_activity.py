@@ -13,7 +13,7 @@ class ValidateActivityUsefullnessForm(FormValidationAction):
     '''
 
     def name(self) -> Text:
-        return 'activity_usefulness_form'
+        return 'validate_activity_usefulness_form'
 
 # We can implement this directly but not needed for FormValidationAction
 #    async def run(self, dispatcher, tracker, domain):

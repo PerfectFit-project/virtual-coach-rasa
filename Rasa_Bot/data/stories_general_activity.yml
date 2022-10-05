@@ -7,11 +7,13 @@ version: "3.1"
 stories:
 - story: introduction PF
   steps:
-    - intent: review_last_activity
-    - action: utter_checking_activities
-    - action: activity_usefulness_form
-    - active_loop: activity_usefulness_form
-    - active_loop: null
-    - action: utter_ok
-    - checkpoint: rescheduling_query_dialog
-    
+  - intent: review_last_activity
+  - action: utter_checking_activities
+  - action: activity_usefulness_form
+  - active_loop: activity_usefulness_form
+  - slot_was_set:
+    - activity_useful_rating: 1
+  - active_loop: null
+  - action: utter_ok
+  - checkpoint: rescheduling_query_dialog
+  

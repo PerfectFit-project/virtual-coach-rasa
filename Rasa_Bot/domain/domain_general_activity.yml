@@ -8,7 +8,6 @@ slots:
     type: float
     min_value: 0
     max_value: 10
-    initial_value: 0
     mappings:
     - type: custom
       action: activity_usefulness_form

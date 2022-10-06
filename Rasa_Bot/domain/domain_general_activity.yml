@@ -56,6 +56,10 @@ slots:
     conditions:
     - active_loop: learned_from_activity_changed_form
   
+  #true iff user gets to choose the activity #30
+  is_user_choosing_activity:
+    type: boolean
+  
   # name of first proposed next activity
   activity1_name
     type: text
@@ -164,5 +168,13 @@ actions:
   - check_action_requires_user_text #20/28 sets action_requires_user_text
   - get_previously_learned      #sets what was previously learned from this activity
   - store_learned_from_activity # stores the learned-from-activity var in DB
+  - get_activity                # sets activity1 to the activity the coach has determined, or None if user can choose 
+  - pick_3_activities           # sets activity1_name -  activity3_name to (random?) 3 possible next activities
+  - set_next_activity			# sets the activity selected by next_activity as next activity
+  
+  
+  
+  
+  
   
   

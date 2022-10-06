@@ -111,8 +111,70 @@ Here all above dialogs converge to for step 2
   
 - story: choose the next activity #30
   - checkpoint: CHOOSE_ACTIVITY_STORY
-  #TODO 
-  # finished this, back to the root
+  - action: get_activity
+  - checkpoint: determine_next_activity
+  # finished this, back to the root 
   
   
+- story: user chooses next activity
+  - checkpoint: determine_next_activity
+  - slot_was_set:
+    - activity1: None #31
+  action: pick_3_activities
+  action: next_activity_form
+  active_loop: next_activity_form
+  - slot_was_set:
+    - next_activity
+  active_loop: null
+  #32 FIXME "Next time the user is in this dialogue again, the activity that gets chosen here (so the one the user completes) gets inserted at line 7. The activity only needs to be saved once to be inserted at line 7, after that it can be overwritten by the newly completed activity. "?
+  checkpoint: check_chosen_action
   
+- story:  user chose activity 1
+  - checkpoint: check_chosen_action
+  - slot_was_set:
+    - next_activity: 1 #31
+  action: set_next_activity
+  #this finishes the stories
+  
+- story:  user chose activity 2
+  - checkpoint: check_chosen_action
+  - slot_was_set:
+    - next_activity: 2 #31
+  - action: set_next_activity
+  #this finishes the stories
+  
+- story:  user chose activity 3
+  - checkpoint: check_chosen_action
+  - slot_was_set:
+    - next_activity: 3 #31
+  - action: set_next_activity
+  #this finishes the stories
+
+- story: user chose 'another activity' (option  4)
+  - checkpoint: check_chosen_action
+  - slot_was_set:
+    - next_activity: 3 #31
+  - checkpoint: determine_next_activity # loop back to picking 3
+
+- story: we have obligatory next activity (which is activity1_name)
+  - checkpoint: determine_next_activity
+  - slot_was_set:
+    - activity1: someactivity : #35
+  - slot{"next_activity",1} # activity1_name was set by get_activity
+  - action: utter_tell_next_activity
+  - action: set_next_activity
+  #this finishes the stories
+  
+   
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    

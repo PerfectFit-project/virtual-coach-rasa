@@ -1,13 +1,16 @@
 ## Activities dialog stories
-# Purpose: Reflecting previous (=last) activity that the user has done.
+# Purpose: Reflecting previous (=last) activity that the user has done
+# and picking the next activity.
 version: "3.1"
 
-
+# the numbers in the story refer to lines in the database
 
 stories:
 - story: introduction PF
   steps:
   - intent: review_last_activity
+  - action: action_get_name_from_database
+  - action: utter_greet # 4
   - action: utter_checking_activities
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form

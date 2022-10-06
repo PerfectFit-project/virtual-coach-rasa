@@ -14,12 +14,77 @@ slots:
     - type: from_text
       conditions:
       - active_loop: activity_usefulness_form
-    
+      
+  learned_from_activity:
+    type: text
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: learned_from_activity_form
+  
+  # do-you-want-to-change flag
+  learned_from_activity_needs_change:
+    type: boolean
+    - type: from_text
+      conditions:
+      - active_loop: learned_from_activity_needs_change_form
+  
+  # previous "learned_from_activity" text
+  # of the current activity. To be fetched from DB.
+  learned_from_activity_changed:
+    type: text
+    mappings:
+    - type: from_text
+    conditions:
+    - active_loop: learned_from_activity_changed_form
+  
+  # name of first proposed next activity
+  activity1_name
+    type: text
+  # name of second proposed next activity
+  activity2_name
+    type: text
+  # name of third proposed next activity
+  activity3_name
+    type: text
+
+  next_activity
+    type: categorical
+    values:
+    - 1
+    - 2
+    - 3
+    - 4
+    influence_conversation: true
+    conditions:   
+      active_loop: next_activity_form
 
 forms:
+  # this form is about most recent activity
   activity_usefulness_form:
     required_slots:
     - activity_useful_rating
+
+  # this form is about most recent activity
+  learned_from_activity_form:
+    required_slots:
+    - learned_from_activity
+
+  # this form is to ask if user wants to modify previous text
+  learned_from_activity_needs_change_form:
+    required_slots:
+    - learned_from_activity_needs_change
+    
+  # this form allows user to modify the previous text
+  learned_from_activity_changed_form:
+    required_slots:
+    - learned_from_activity_changed
+    
+  # this form allows user to select the next activity
+  next_activity_form:
+    required_slots:
+    - next_activity
+    
     
 responses:
   utter_checking_activities:
@@ -29,9 +94,43 @@ responses:
   utter_bye:
   - text: "bye!"
   
-  # form slot responses obligatory see https://rasa.com/docs/rasa/forms/
+  # All utter_ask_... texts are automatic form texts
+  # See https://rasa.com/docs/rasa/forms/
   utter_ask_activity_usefulness_form_activity_useful_rating:
-  - text: "Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helamaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0-10."
+  - text: "Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10. "
+  utter_thanks_feedback:
+  - text: "Bedankt voor je feedback."
+  utter_thanks_feedback_added:
+  - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+  utter_what_you_learned_from_activity
+  - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze activiteit? Dus wat je wilt onthouden van deze activiteit? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
+  utter_ask_learned_from_activity_form_learned_from_activity:
+  - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos."
+  utter_learned_from_activity_request_more:
+  - text: "Kun je dat wat uitgebreider uitleggen?"
+  utter_learned_from_activity_thanks:
+  - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos."
+
+  # this previous_learned_from_activity requires variable to be set properly
+  utter_thanks_learned_from_activity_modification:
+  - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos. Deze activiteit heb je al eerder als nuttig beoordeeld. Toen heb je opgeschreven wat je hebt geleerd van de activiteit. Dit heb je toen opgeschreven: {previous_learned_from_activity}"
+  utter_ask_learned_from_activity_needs_change: #22
+  - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor "Bewaren", Typ 2 voor 'Aanpassen'. "
+  utter_ask_learned_from_activity_changed: #24
+  - text: "Prima! Pas dan nu je stuk tekst aan:"
+  utter_thanks_learned_from_activity_modification: #29
+  - text: "Super. De nieuwe tekst wordt opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
+
+  utter_choose_new_activity #31
+  - text: "Dan is het nu tijd voor nieuwe activiteit. Je kunt kiezen uit drie activiteiten. Welke activiteit wil je doen? "
+  # requires activity1_name, activity2_name and activity3_name to be loaded.
+  utter_ask_next_activity_number:
+  - text: "Typ 1 als je {activity1_name} wilt doen. Typ 2 als je {activity2_name} wil doen. Typ 3 als je {activity3_name} activity wil doen. Typ 4 als je wil kiezen uit drie nieuwe activiteiten. "  
+  utter_thanks_activity_choice: #34
+  - text: "Oké, goede keuze! Veel succes met het uitvoeren van de activiteit. "
+  # requires activity1_name to be set
+  utter_tell_next_activity: #35
+  - text: "Dan is het nu tijd voor nieuwe activiteit. Ik stel voor om de activiteit {activity1_name} te doen. Veel succes! "
   
 actions:
   - validate_activity_usefulness_form

@@ -1,6 +1,9 @@
 ## Activities dialog stories
 # Purpose: Reflecting previous (=last) activity that the user has done
 # and picking the next activity.
+# The story flow from the excel sheet is confusing.
+# And the flow diagram that came with it is a total mismatch
+# Instead check the general_activity_dialog.graphml file
 version: "3.1"
 
 # the numbers in the story refer to lines in the database
@@ -10,14 +13,106 @@ stories:
   steps:
   - intent: review_last_activity
   - action: action_get_name_from_database
-  - action: utter_greet # 4
-  - action: utter_checking_activities
+  - action: utter_greet #4
+  - action: utter_checking_last_activity
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form
   - slot_was_set:
     - activity_useful_rating
-  - action: utter_ok
   - active_loop: null
-  - checkpoint: rescheduling_query_dialog
+  - action: check_rating_is_low
+  - checkpoint: low_or_high_rating
+  
+  
+- story: if rating is low then just thanks
+  - checkpoint: low_or_high_rating
+  - slot_was_set:
+    rating_is_low: true
+  - action: utter_thanks_feedback #9
+  - checkpoint: CHOOSE_ACTIVITY_STORY
+
+- story: if rating high then check if this activity requires text input
+  - checkpoint: low_or_high_rating
+  - slot_was_set:
+    rating_is_low: false #10 it's high
+  - action: check_action_requires_user_text #11
+  - checkpoint: what_we_learned_ask_text_or_not
+
+- story: user needs to enter text. But is there already text?
+  - checkpoint: what_we_learned_ask_text_or_not
+  - slot_was_set:
+    action_requires_user_text: true #11
+  - action: get_previously_learned
+  - checkpoint: add_or_edit_what_was_learned
+
+- story: 
+  - checkpoint: add_or_edit_what_was_learned
+   - slot_was_set: 
+    - previously_learned: None #12
+  - action: utter_thanks_feedback_added
+  - action: utter_what_you_learned_from_activity
+  - action: learned_from_activity_form
+  - active_loop: learned_from_activity_form #14
+  - slot_was_set:
+    - learned_from_activity
+  - active_loop: null
+  - # FIXME what to do with #16? It does not lead to any new action
+  - action: utter_learned_from_activity_thanks  #19
+  - action: store_learned_from_activity
+  - checkpoint: CHOOSE_ACTIVITY_STORY
+  
+- story: 
+  - checkpoint: add_or_edit_what_was_learned
+   - slot_was_set: 
+    - previously_learned: anytext #20
+  - action: utter_thanks_learned_from_activity_modification
+  - action: change_learned_from_activity_form
+  - active_loop: change_learned_from_activity_form #14
+  - slot_was_set:
+    - change_learned_from_activity
+  - active_loop: null
+  - checkpoint: check_change_learned_from_activity
+  
+- story: user wants to change his 'learned from' text
+  - checkpoint: check_change_learned_from_activity
+  - slot_was_set:
+    - change_learned_from_activity: true #23
+  - action: utter_ask_learned_from_activity_changed #24
+  # FIXME we just ask for new text, dont know how to show old text.
+  - active_loop: learned_from_activity_form #14
+  - slot_was_set:
+    - learned_from_activity
+  - active_loop: null
+  - action: utter_thanks_learned_from_activity_modification #29
+  - action: store_learned_from_activity
+  - checkpoint: CHOOSE_ACTIVITY_STORY
+    
+    
+- story: user does not want to change his 'learned from' text.
+  - checkpoint: check_change_learned_from_activity
+  - slot_was_set:
+    - change_learned_from_activity: false #23
+  - checkpoint: CHOOSE_ACTIVITY_STORY
+    
+- story: this action  takes the "original resource text" as "what was learned"
+  - checkpoint: what_we_learned_ask_text_or_not
+  - slot_was_set:
+    action_requires_user_text: false #28 no special text needed
+  # FIXME store "original resource text" in first-aid kit
+  # I have no clue what this text is . Probably need to call an action
+  # no user input
+  - checkpoint: CHOOSE_ACTIVITY_STORY
+  
+  
+  
+############################################## 
+#30 
+Here all above dialogs converge to for step 2
+  
+- story: choose the next activity #30
+  - checkpoint: CHOOSE_ACTIVITY_STORY
+  #TODO 
+  # finished this, back to the root
+  
   
   

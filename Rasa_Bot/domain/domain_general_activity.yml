@@ -28,6 +28,24 @@ slots:
     - type: from_text
       conditions:
       - active_loop: learned_from_activity_needs_change_form
+    
+  # true iff learned_from_activity contains <=50 chars
+  is_learned_text_short:
+    type: boolean
+    
+  # true iff last action requires user to type his 
+  # "what was learned from" text #10
+  action_requires_user_text:
+    type: boolean
+    
+  # the text that was previously learned. None if not set.
+  previously_leaned:
+    type: text
+  
+  # true iff user wants to change previously learned 
+  change_learned_from_activity:
+    type: boolean
+  
   
   # previous "learned_from_activity" text
   # of the current activity. To be fetched from DB.
@@ -85,18 +103,18 @@ forms:
     required_slots:
     - next_activity
     
+  change_learned_from_activity_form:
+    required_slots:
+    - change_learned_from_activity
+  
+    
     
 responses:
-  utter_checking_activities:
+  utter_checking_last_activity:#6
   - text: "Laten we eerst terug kijken op je vorige activiteit."
-  utter_ok:
-  - text: "ok thanks for your rating {activity_useful_rating}"
-  utter_bye:
-  - text: "bye!"
-  
   # All utter_ask_... texts are automatic form texts
   # See https://rasa.com/docs/rasa/forms/
-  utter_ask_activity_usefulness_form_activity_useful_rating:
+  utter_ask_activity_useful_rating: #6
   - text: "Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10. "
   utter_thanks_feedback:
   - text: "Bedankt voor je feedback."
@@ -104,7 +122,7 @@ responses:
   - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
   utter_what_you_learned_from_activity
   - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze activiteit? Dus wat je wilt onthouden van deze activiteit? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
-  utter_ask_learned_from_activity_form_learned_from_activity:
+  utter_ask_learned_from_activity: #form text
   - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos."
   utter_learned_from_activity_request_more:
   - text: "Kun je dat wat uitgebreider uitleggen?"
@@ -113,7 +131,7 @@ responses:
 
   # this previous_learned_from_activity requires variable to be set properly
   utter_thanks_learned_from_activity_modification:
-  - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos. Deze activiteit heb je al eerder als nuttig beoordeeld. Toen heb je opgeschreven wat je hebt geleerd van de activiteit. Dit heb je toen opgeschreven: {previous_learned_from_activity}"
+  - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos. Deze activiteit heb je al eerder als nuttig beoordeeld. Toen heb je opgeschreven wat je hebt geleerd van de activiteit. Dit heb je toen opgeschreven: {previously_leaned}"
   utter_ask_learned_from_activity_needs_change: #22
   - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor "Bewaren", Typ 2 voor 'Aanpassen'. "
   utter_ask_learned_from_activity_changed: #24
@@ -132,7 +150,19 @@ responses:
   utter_tell_next_activity: #35
   - text: "Dan is het nu tijd voor nieuwe activiteit. Ik stel voor om de activiteit {activity1_name} te doen. Veel succes! "
   
+  #extra for debugging the dialog
+  utter_ok: 
+  - text: "ok thanks for your rating {activity_useful_rating}"
+  utter_bye:
+  - text: "bye!"
+  
 actions:
   - validate_activity_usefulness_form
+  - check_rating_is_low         #that sets rating_is_low to activity_useful_rating<=5
+  - check_activity_is_rated     #sets activity_is_rated variable
+  - check_is_learned_text_short #sets is_learned_text_short variable
+  - check_action_requires_user_text #20/28 sets action_requires_user_text
+  - get_previously_learned      #sets what was previously learned from this activity
+  - store_learned_from_activity # stores the learned-from-activity var in DB
   
   

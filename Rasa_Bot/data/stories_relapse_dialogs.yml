@@ -84,7 +84,6 @@ stories:
 - story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
   steps:
   - checkpoint: smoke_hrs
-  - action: utter_thanks_for_saying_crave
   - action: utter_smoke_crave_1
   - action: utter_smoke_crave_2
   - action: utter_smoke_crave_3
@@ -94,7 +93,33 @@ stories:
   - action: utter_smoke_crave_7
   - action: utter_smoke_crave_8
   - action: utter_smoke_crave_9
-  - action: utter_smoke_crave_10
+  - action: utter_smoke_crave_10  # TODO: insert form
+
+
+  ## 3b smoking - lapse
+- story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
+  steps:
+    - checkpoint: smoke_lapse
+    - action: utter_smoke_lapse_1
+    - action: utter_smoke_lapse_2  # TODO: form to ask what smoked
+    - action: utter_smoke_lapse_3  # TODO: form to ask how many, store answer in DB.
+    - action: utter_smoke_lapse_4  # TODO: Validate the previous answer with yes/no
+    - action: utter_smoke_lapse_5
+    - action: utter_smoke_lapse_6
+    - action: utter_smoke_lapse_7
+    - action: utter_smoke_lapse_8
+    - action: utter_smoke_lapse_9
+    - action: utter_smoke_crave_10
+    - action: utter_smoke_crave_11
+    - action: utter_smoke_crave_12  # TODO: insert form, numbers 1-7
+    - action: utter_smoke_crave_13
+    - action: utter_smoke_crave_14  # TODO: insert form, multiple answers are allowed
+    - action: utter_smoke_crave_15
+    - action: utter_smoke_crave_16
+    - action: utter_smoke_crave_17  # TODO: insert form: 1-6, multiple answers allowed. Store to DB
+    - action: utter_smoke_crave_18  # TODO: insert form: free text
+    - action: utter_smoke_crave_19
+    - action: utter_smoke_crave_20
 
 ## Stories for PA
 ## 2d Parent for PA - HRS

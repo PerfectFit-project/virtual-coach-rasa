@@ -1,5 +1,3 @@
-version: "3.1"
-
 intents:
   - relapse_dialog
   - EXTERNAL_trigger_relapse_phase
@@ -69,69 +67,69 @@ responses:
   utter_smoke_crave_10:
     - text: "Typ 2 als ik een oefening mag voorstellen. Typ 3 als je zelf een activiteit wilt kiezen."
 
-  utter_smoke_lapse_1:
-    - text: "Goed dat je dit aangeeft"
-  utter_smoke_lapse_2:
-    - text: "Kun je aangeven wat je vandaag hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor
-             e-sigaretten. Typ 3 voor shags. Typ 4 als je iets anders hebt gerookt.
-             "
-  utter_smoke_lapse_3:
-    - text: "Hoeveel heb je daarvan gerookt?"
-  utter_smoke_lapse_4:
-    - text: "Dit is wat je hebt ingevuld, klopt dat? Typ 1 voor ja, typ 2 voor nee."
-  utter_smoke_lapse_5:
-    - text: "Bedankt voor jouw eerlijkheid."
-  utter_smoke_lapse_6:
-    - text: "Je hebt gerookt, maar dat betekent gelukkig niet dat het stoppen met roken mislukt is.
-            Stopen met roken is een process van vallen en opstaan. Het vallen is niet erg als je
-            maar weer opstaat. Uiteindelijk wordt dat steeds gemakkelijker.
-            "
-  utter_smoke_lapse_7:
-    - text: "Wees niet te hard voor jezelf omdat je weer hebt gerookt. Dit kan juist zorgen voor
-            meer stress en heftige trek. De stap om meer te roken is dan vaak heel klein.
-            "
-  utter_smoke_lapse_8:
-    - text: "Het belangrijkste is dat je kan leren van deze situaties. Als je stopt oefen je juist
-            ook in dit soort momenten hoe je de trek kan weerstaan. Zo wordt je er steeds beter in.
-            "
-  utter_smoke_lapse_9:
-    - text: "Om hiervan te leren helpt het om te kijken naar de situatie(s) waarin je toch weer ging roken."
- utter_smoke_lapse_10:
-    - text: "Daarom wil ik je daar wat vragen over stellen."
- utter_smoke_lapse_11:
-    - text: "Wat was je aan het doen toen je rookte?"
- utter_smoke_lapse_12:
-    - text: "Je mag meerdere antwoorden geven. Typ 1 als je aan het werk was. Typ 2 als je thuis
-            bezig was met klusjes of huishouden. Typ 3 als je iets voor jezelf deed (hobby, met
-            iemand afspreken). Typ 4 als je aan het eten of drinken was. Typ 5 als je net alcohol of
-            koffie hebt gedronken. Typ 6 als je net wakker bent. Type 7 als je iets deed wat niet in
-            het lijstje staat.
-            "
- utter_smoke_lapse_13:
-    - text: "Kun je vertellen hoe je je voelde toen je rookte?"
- utter_smoke_lapse_14:
-    - text: "Je mag meerdere antwoorden geven. Typ 1 als je je schuldig voelde. Typ 2 als je je
-            vervelend voelde. Typ 3 als je je verdrietig voelde. Typ 4 als je je het gevoel had dat
-            het niet zou lukken om te stoppen met roken. Typ 5 als je je opgelucht voelde.
-            "
- utter_smoke_lapse_15:
-    - text: "Goed dat je je gevoelens kan benoemen. "
- utter_smoke_lapse_16:
-    - text: "Met wie was je toen je rookte?"
- utter_smoke_lapse_17:
-    - text: "Je mag meerdere antwoorden geven. Typ 1 als je met je partner was. Typ 2 als je alleen
-            was. Typ 3 als je met vrienden en/of familie was. Typ 4 als was je met kennissen was.
-            Typ 5 als je met collega's was. Typ 6 als je met andere rokers was.
-            "
- utter_smoke_lapse_18:
-    - text: "Gebeurde er iets bijzonders?"
- utter_smoke_lapse_19:
-    - text: "Dankjewel voor het delen."
- utter_smoke_lapse_20:
-    - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren 
-            patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende 
-            keer dat je in die situatie zit.
-            "
+#  utter_smoke_lapse_1:
+#    - text: "Goed dat je dit aangeeft"
+#  utter_smoke_lapse_2:
+#    - text: "Kun je aangeven wat je vandaag hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor
+#             e-sigaretten. Typ 3 voor shags. Typ 4 als je iets anders hebt gerookt.
+#             "
+#  utter_smoke_lapse_3:
+#    - text: "Hoeveel heb je daarvan gerookt?"
+#  utter_smoke_lapse_4:
+#    - text: "Dit is wat je hebt ingevuld, klopt dat? Typ 1 voor ja, typ 2 voor nee."
+#  utter_smoke_lapse_5:
+#    - text: "Bedankt voor jouw eerlijkheid."
+#  utter_smoke_lapse_6:
+#    - text: "Je hebt gerookt, maar dat betekent gelukkig niet dat het stoppen met roken mislukt is.
+#            Stopen met roken is een process van vallen en opstaan. Het vallen is niet erg als je
+#            maar weer opstaat. Uiteindelijk wordt dat steeds gemakkelijker.
+#            "
+#  utter_smoke_lapse_7:
+#    - text: "Wees niet te hard voor jezelf omdat je weer hebt gerookt. Dit kan juist zorgen voor
+#            meer stress en heftige trek. De stap om meer te roken is dan vaak heel klein.
+#            "
+#  utter_smoke_lapse_8:
+#    - text: "Het belangrijkste is dat je kan leren van deze situaties. Als je stopt oefen je juist
+#            ook in dit soort momenten hoe je de trek kan weerstaan. Zo wordt je er steeds beter in.
+#            "
+#  utter_smoke_lapse_9:
+#    - text: "Om hiervan te leren helpt het om te kijken naar de situatie(s) waarin je toch weer ging roken."
+# utter_smoke_lapse_10:
+#    - text: "Daarom wil ik je daar wat vragen over stellen."
+# utter_smoke_lapse_11:
+#    - text: "Wat was je aan het doen toen je rookte?"
+# utter_smoke_lapse_12:
+#    - text: "Je mag meerdere antwoorden geven. Typ 1 als je aan het werk was. Typ 2 als je thuis
+#            bezig was met klusjes of huishouden. Typ 3 als je iets voor jezelf deed (hobby, met
+#            iemand afspreken). Typ 4 als je aan het eten of drinken was. Typ 5 als je net alcohol of
+#            koffie hebt gedronken. Typ 6 als je net wakker bent. Type 7 als je iets deed wat niet in
+#            het lijstje staat.
+#            "
+# utter_smoke_lapse_13:
+#    - text: "Kun je vertellen hoe je je voelde toen je rookte?"
+# utter_smoke_lapse_14:
+#    - text: "Je mag meerdere antwoorden geven. Typ 1 als je je schuldig voelde. Typ 2 als je je
+#            vervelend voelde. Typ 3 als je je verdrietig voelde. Typ 4 als je je het gevoel had dat
+#            het niet zou lukken om te stoppen met roken. Typ 5 als je je opgelucht voelde.
+#            "
+# utter_smoke_lapse_15:
+#    - text: "Goed dat je je gevoelens kan benoemen. "
+# utter_smoke_lapse_16:
+#    - text: "Met wie was je toen je rookte?"
+# utter_smoke_lapse_17:
+#    - text: "Je mag meerdere antwoorden geven. Typ 1 als je met je partner was. Typ 2 als je alleen
+#            was. Typ 3 als je met vrienden en/of familie was. Typ 4 als was je met kennissen was.
+#            Typ 5 als je met collega's was. Typ 6 als je met andere rokers was.
+#            "
+# utter_smoke_lapse_18:
+#    - text: "Gebeurde er iets bijzonders?"
+# utter_smoke_lapse_19:
+#    - text: "Dankjewel voor het delen."
+# utter_smoke_lapse_20:
+#    - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren
+#            patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende
+#            keer dat je in die situatie zit.
+#            "
 
 # PA
   utter_pa_define_1:

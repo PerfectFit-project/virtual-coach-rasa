@@ -57,5 +57,5 @@ rules:
 - rule:  Test metadata
   steps:
   - intent: request_metadata
-  - action: action_build_metadata
+  - action: action_upload_file
   - action: action_end_dialog

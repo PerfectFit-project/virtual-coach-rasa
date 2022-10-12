@@ -3,7 +3,7 @@ import logging
 from celery import Celery
 from niceday_client import NicedayClient, definitions
 from rasa_sdk import Action
-from rasa_sdk.events import FollowupAction
+from rasa_sdk.events import FollowupAction, SlotSet
 from .definitions import REDIS_URL, NICEDAY_API_ENDPOINT
 
 celery = Celery(broker=REDIS_URL)
@@ -39,14 +39,15 @@ class MarkDialogAsCompleted(Action):
         return []
 
 
-class GetMetadata(Action):
+class SendMetadata(Action):
     def name(self):
-        return "action_build_metadata"
+        return "action_send_metadata"
 
     async def run(self, dispatcher, tracker, domain):
+        id_file = tracker.get_slot("uploaded_file_id")
         dispatcher.utter_message(
-            json_message={"text": "message",
-                          "attachmentIds": [1733]},
+            json_message={"text": "image",
+                          "attachmentIds": [id_file]},
         )
         return[]
 
@@ -56,15 +57,27 @@ class UploadFile(Action):
         return "action_upload_file"
 
     async def run(self, dispatcher, tracker, domain):
-        import os
-        cwd = os.getcwd()
-        logging.info("CURRENT DIRECTORY")
-        logging.info(cwd)
         client = NicedayClient(NICEDAY_API_ENDPOINT)
         user_id = int(tracker.current_state()['sender_id'])
 
-        file = open('/app/tst.PNG', 'rb')
-        filepath = '/app/tst.PNG'
+        filepath = tracker.get_slot('upload_file_path')
+        file = open(filepath, 'rb')
 
         response = client.upload_file(user_id, 'tst.png', filepath, file)
-        return[]
+        file_id = response['id']
+        logging.info(response)
+        logging.info(file_id)
+
+        return[SlotSet("uploaded_file_id", file_id)]
+
+
+class SetFilePath(Action):
+    def name(self):
+        return "action_set_file_path"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        # This is hardcoded for testing. Needs to be set according to the use case
+        filepath = '/app/tst.PNG'
+
+        return[SlotSet("upload_file_path", filepath)]

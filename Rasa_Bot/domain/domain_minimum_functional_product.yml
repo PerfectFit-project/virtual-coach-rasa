@@ -31,6 +31,7 @@ slots:
     mappings:
     - type: custom
 
+
 responses:
   # General
   utter_greet:
@@ -75,6 +76,7 @@ responses:
   utter_reminder_is_set:
     - text: "The reminder is set. ..."
 
+
 actions:
   - action_get_plan_week
   - action_get_age_from_database
@@ -85,5 +87,3 @@ actions:
   - action_save_number_cigarettes
   - action_get_number_cigarettes
   - action_set_cigarettes_tracker_reminder
-  - action_build_metadata
-  - action_upload_file

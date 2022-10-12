@@ -1,13 +1,35 @@
 intents:
   - urgent
 
+slots:
+  ### Id obtained from NiceDay when uploading a file
+  uploaded_file_id:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+  ### Id obtained from NiceDay when uploading a file
+  upload_file_path:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
 actions:
   - action_end_dialog
   - mark_dialog_as_completed
   - action_handle_urgent_intent
+  - action_upload_file
+  - action_send_metadata
+  - action_set_file_path
 
 
 responses:
   # To refer a user to a human
   utter_refer:
     - text: "Volgens mij heb je een probleem waar een mens je beter mee kan helpen. Ik raad je aan om contact op te nemen met iemand die je vertrouwt, zoals je huisarts."
+
+  ## send a file
+  utter_file_sent:
+    - text: "Here is your file"

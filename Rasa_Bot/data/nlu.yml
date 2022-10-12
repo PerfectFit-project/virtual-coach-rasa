@@ -102,3 +102,5 @@ nlu:
   examples: |
     - "Metadata"
     - "Ik wil metadata"
+    - "metadata"
+    - "Dit is metadata"

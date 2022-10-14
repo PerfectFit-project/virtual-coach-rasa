@@ -1,6 +1,6 @@
 intents:
   - urgent
-
+  - request_metadata
 slots:
   ### Id obtained from NiceDay when uploading a file
   uploaded_file_id:
@@ -23,7 +23,6 @@ actions:
   - action_upload_file
   - action_send_metadata
   - action_set_file_path
-  - request_metadata
 
 
 responses:

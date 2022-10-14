@@ -19,7 +19,7 @@ class NicedayOutputChannel(CollectingOutputChannel):
     def name(cls) -> Text:
         return "niceday_output_channel"
 
-    def _message(self, # pylint: disable=too-many-arguments
+    def _message(self, # pylint: disable=too-many-arguments, arguments-renamed
                  recipient_id: Text,
                  text: Text = None,
                  image: Text = None,

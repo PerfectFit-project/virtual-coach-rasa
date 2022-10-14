@@ -3,13 +3,16 @@ Contains custom actions for dialogs implemented as part of the 'Minimum Function
 """
 import datetime
 import logging
+from typing import Text, Dict, Any
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, DAILY
 from niceday_client import NicedayClient, definitions
 from paalgorithms import weekly_kilometers
-from rasa_sdk import Action
+from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -175,3 +178,38 @@ class SetCigarettesTrackerReminder(Action):
                                     "This is a tracker",
                                     recursive_rule)
         return[]
+
+
+class ValidateActivityGetFileForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_activity_get_file_form'
+
+    def validate_received_file_text(
+            self, slot_value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate the presence of an attached file"""
+
+        # here the message metadata are retrieved
+        events = tracker.current_state()['events']
+        user_events = []
+        for e in events:
+            if e['event'] == 'user':
+                user_events.append(e)
+        # we defined the metadata key name 'attachmentIds' is defined in the broker
+        received_file_ids_list = user_events[-1]['metadata']['attachmentIds']
+
+        if not self._is_valid_input(received_file_ids_list):
+            dispatcher.utter_message(response="utter_no_attachment")
+            return {"received_file_text": None}
+
+        # At this point the file ID should be saved in the DB for
+        # re-accessing the shared file
+
+        return {"received_file_text": slot_value}
+
+    @staticmethod
+    def _is_valid_input(value):
+        if len(value) == 0:
+            return False
+        return True

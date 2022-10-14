@@ -14,21 +14,18 @@ class NicedayOutputChannel(CollectingOutputChannel):
     """
     Output channel that sends messages to Niceday server
     """
-    def __init__(self) -> None:
-        super().__init__()
 
     @classmethod
     def name(cls) -> Text:
         return "niceday_output_channel"
 
-    def _message(self,
+    def _message(self, # pylint: disable=too-many-arguments
                  recipient_id: Text,
                  text: Text = None,
                  image: Text = None,
                  buttons: List[Dict[Text, Any]] = None,
                  attachment: Text = None,
-                 custom: Dict[Text, Any] = None,
-                 metadata: Dict[Text, Any] = None
+                 custom: Dict[Text, Any] = None
                  ) -> Dict:
         msg_metadata = None
         if custom is not None:
@@ -79,7 +76,11 @@ class NicedayInputChannel(InputChannel):
             metadata = request.json.get("metadata")
             collector = self.get_output_channel()
             await on_new_message(
-                UserMessage(text, collector, sender_id, input_channel=self.name(), metadata=metadata)
+                UserMessage(text,
+                            collector,
+                            sender_id,
+                            input_channel=self.name(),
+                            metadata=metadata)
             )
             return response.json(collector.messages)
 

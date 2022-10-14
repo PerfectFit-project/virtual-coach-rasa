@@ -1,7 +1,7 @@
 import logging
 
 from celery import Celery
-from niceday_client import NicedayClient, definitions
+from niceday_client import NicedayClient
 from rasa_sdk import Action
 from rasa_sdk.events import FollowupAction, SlotSet
 from .definitions import REDIS_URL, NICEDAY_API_ENDPOINT
@@ -61,7 +61,8 @@ class UploadFile(Action):
         user_id = int(tracker.current_state()['sender_id'])
 
         filepath = tracker.get_slot('upload_file_path')
-        file = open(filepath, 'rb')
+        with open(filepath, 'rb') as content:
+            file = content.read()
 
         response = client.upload_file(user_id, 'tst.png', filepath, file)
         file_id = response['id']

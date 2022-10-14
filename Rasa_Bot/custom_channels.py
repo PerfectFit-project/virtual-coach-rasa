@@ -1,12 +1,11 @@
 import inspect
-from typing import Text, Callable, Awaitable, Any, Optional, Dict, List
+from typing import Text, Callable, Awaitable, Any, Dict, List
 
-from rasa.core.channels.channel import InputChannel, OutputChannel, UserMessage, CollectingOutputChannel
+from rasa.core.channels.channel import InputChannel, UserMessage, CollectingOutputChannel
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
 
-from niceday_client import NicedayClient
 
 NICEDAY_API_URL = 'http://niceday_api:8080/'
 
@@ -77,7 +76,7 @@ class NicedayInputChannel(InputChannel):
         async def receive(request: Request) -> HTTPResponse:
             sender_id = request.json.get("sender")  # method to get sender_id
             text = request.json.get("message")  # method to fetch text
-            metadata = self.get_metadata(request)
+            metadata = request.json.get("metadata")
             collector = self.get_output_channel()
             await on_new_message(
                 UserMessage(text, collector, sender_id, input_channel=self.name(), metadata=metadata)

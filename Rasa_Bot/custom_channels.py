@@ -1,4 +1,5 @@
 import inspect
+import typing
 from typing import Text, Callable, Awaitable, Any, Dict, List
 
 from rasa.core.channels.channel import InputChannel, UserMessage, CollectingOutputChannel
@@ -21,11 +22,11 @@ class NicedayOutputChannel(CollectingOutputChannel):
 
     def _message(self, # pylint: disable=too-many-arguments, arguments-renamed
                  recipient_id: Text,
-                 text: Text = None,
-                 image: Text = None,
-                 buttons: List[Dict[Text, Any]] = None,
+                 text: typing.Optional[str] = None,
+                 image: typing.Optional[str] = None,
+                 buttons: typing.Optional[List[Dict[str, Any]]] = None,
                  attachment: Text = None,
-                 custom: Dict[Text, Any] = None
+                 custom: typing.Optional[Dict[str, Any]] = None
                  ) -> Dict:
         msg_metadata = None
         if custom is not None:

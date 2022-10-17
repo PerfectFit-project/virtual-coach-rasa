@@ -21,11 +21,11 @@ class NicedayOutputChannel(CollectingOutputChannel):
         return "niceday_output_channel"
 
     def _message(self, # pylint: disable=too-many-arguments, arguments-renamed
-                 recipient_id: Text,
+                 recipient_id: typing.Optional[str],
                  text: typing.Optional[str] = None,
                  image: typing.Optional[str] = None,
                  buttons: typing.Optional[List[Dict[str, Any]]] = None,
-                 attachment: Text = None,
+                 attachment: typing.Optional[str] = None,
                  custom: typing.Optional[Dict[str, Any]] = None
                  ) -> Dict:
         msg_metadata = None

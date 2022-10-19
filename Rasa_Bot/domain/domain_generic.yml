@@ -53,3 +53,5 @@ responses:
      - text: "Zou je dat in meer woorden kunnen omschrijven?"
   utter_did_not_understand:
      - text: "Hmm ik heb dat niet begrepen."
+  utter_greeting:
+     - text: "Hoi!"

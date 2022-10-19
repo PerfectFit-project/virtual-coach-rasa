@@ -3,10 +3,9 @@ version: "3.1"
 nlu:
 - intent: review_last_activity
   examples: |
-    - "Kunnen we de vorige activiteit bespreken?"
-    - "Hoe ging de laatste activiteit?"
-    - "Vorige Activiteit"
-    - "Bla"
+    - "Mijn activiteit"
+    - "activiteit?"
+    - "Activiteit"
 
 - intent: request_plan_week
   examples: |

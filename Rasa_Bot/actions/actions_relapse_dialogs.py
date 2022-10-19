@@ -95,3 +95,16 @@ class ValidateCraveLapseRelapse(FormValidationAction):
         if (value < 1) or (value > 3):
             return False
         return True
+
+
+class CustomCraveLapseRelapse(Action):
+    """Check if the slot has been set at the form activation"""
+
+    def name(self):
+        return "custom_crave_lapse_relapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        if tracker.events[-1]['event'] == 'active_loop' and tracker.events[-1]['name'] == 'crave_lapse_relapse_form':
+            return [SlotSet("crave_lapse_relapse", None)]
+        else:
+            return [SlotSet("crave_lapse_relapse", tracker.latest_message['text'])]

@@ -3,7 +3,7 @@ services:
   rasa_server:
     build:
       context: .
-      dockerfile: Dockerfile.rasa_server
+      dockerfile: Dockerfile
     ports:
       - 5005:5005
     volumes:
@@ -12,7 +12,7 @@ services:
   rasa_actions:
     build:
       context: ./actions/
-      dockerfile: Dockerfile.rasa_actions
+      dockerfile: Dockerfile
     expose: ["5055"]
     environment:
       - DB_HOST=host.docker.internal:5432

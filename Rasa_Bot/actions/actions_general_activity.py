@@ -114,7 +114,7 @@ class ValidateGeneralActivityDescriptionForm(FormValidationAction):
         return False
 
 
-class SaveDescriptionInDb(FormValidationAction):
+class SaveDescriptionInDb(Action):
     def name(self) -> Text:
         return 'save_description_in_db'
 
@@ -124,3 +124,43 @@ class SaveDescriptionInDb(FormValidationAction):
         description = tracker.get_slot('general_activity_description_slot')
 
         return []
+
+
+class GetThreeRandomActivities(Action):
+    def name(self) -> Text:
+        return 'get_three_random_activities'
+
+    async def run(self, dispatcher, tracker, domain):
+        # pylint: disable=unused-argument
+        """pick three random activities and sets the slots"""
+        # TODO: implement resource getting and random assignment
+
+        activity_one = "activity 1"
+        activity_two = "activity 1"
+        activity_three = "activity 1"
+
+        return [SlotSet("activity1_name", activity_one),
+                SlotSet("activity2_name", activity_two),
+                SlotSet("activity3_name", activity_three)]
+
+
+class ValidateGeneralActivityNextActivityForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_general_activity_next_activity_form'
+
+    def validate_general_activity_next_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate general_activity_next_activity_slot input."""
+        if not self._validate_response_length(value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"general_activity_next_activity_slot": None}
+
+        return {"general_activity_next_activity_slot": value}
+
+    @staticmethod
+    def _validate_response_length(value):
+        if int(value) >= 1 or int(value) <= 4:
+            return True
+        return False

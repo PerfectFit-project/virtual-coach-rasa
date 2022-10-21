@@ -105,158 +105,25 @@ stories:
   - slot_was_set:
     - general_activity_low_high_rating: low
   - action: utter_general_activity_thanks #9
- # - checkpoint: CHOOSE_ACTIVITY_STORY
+  - checkpoint: choose_activity_checkpoint
 
-#- story: user needs to enter text. But is there already text?
-#  steps:
-#  - checkpoint: what_we_learned_ask_text_or_not
-#  - slot_was_set:
-#    - action_requires_user_text: true #11
-#  - action: get_previously_learned
-#  - checkpoint: add_or_edit_what_was_learned
-#
-#- story:
-#  - checkpoint: add_or_edit_what_was_learned
-#  steps:
-#  - slot_was_set:
-#    - previously_learned: None #12
-#  - action: utter_thanks_feedback_added
-#  - action: utter_what_you_learned_from_activity
-#  - action: learned_from_activity_form
-#  - active_loop: learned_from_activity_form #14
-#  - slot_was_set:
-#    - learned_from_activity
-#  - active_loop: null
-#  - # FIXME what to do with #16? It does not lead to any new action
-#  - action: utter_learned_from_activity_thanks  #19
-#  - action: store_learned_from_activity
-#  - checkpoint: CHOOSE_ACTIVITY_STORY
-#
-#- story:
-#  - checkpoint: add_or_edit_what_was_learned
-#  steps:
-#  - slot_was_set:
-#    - previously_learned: anytext #20
-#  - action: utter_thanks_learned_from_activity_modification
-#  - action: change_learned_from_activity_form
-#  - active_loop: change_learned_from_activity_form #14
-#  - slot_was_set:
-#    - change_learned_from_activity
-#  - active_loop: null
-#  - checkpoint: check_change_learned_from_activity
-#
-#- story: user wants to change his 'learned from' text
-#  steps:
-#  - checkpoint: check_change_learned_from_activity
-#  - slot_was_set:
-#    - change_learned_from_activity: true #23
-#  - action: utter_ask_learned_from_activity_changed #24
-#  # FIXME we just ask for new text, dont know how to show old text.
-#  - active_loop: learned_from_activity_form #14
-#  - slot_was_set:
-#    - learned_from_activity
-#  - active_loop: null
-#  - action: utter_thanks_learned_from_activity_modification #29
-#  - action: store_learned_from_activity
-#  - checkpoint: CHOOSE_ACTIVITY_STORY
-#
-#
-#- story: user does not want to change his 'learned from' text.
-#  steps:
-#  - checkpoint: check_change_learned_from_activity
-#  - slot_was_set:
-#    - change_learned_from_activity: false #23
-#  - checkpoint: CHOOSE_ACTIVITY_STORY
-#
-#- story: this action  takes the "original resource text" as "what was learned"
-#  steps:
-#  - checkpoint: what_we_learned_ask_text_or_not
-#  - slot_was_set:
-#    action_requires_user_text: false #28 no special text needed
-#  # FIXME store "original resource text" in first-aid kit
-#  # I have no clue what this text is . Probably need to call an action
-#  # no user input
-#  - checkpoint: CHOOSE_ACTIVITY_STORY
-#
-#
-#
-###############################################
-##30
-#Here all above dialogs converge to for step 2
-#
-#- story: choose the next activity #30
-#  steps:
-#  - checkpoint: CHOOSE_ACTIVITY_STORY
-#  - action: get_activity
-#  - checkpoint: determine_next_activity
-#  # finished this, back to the root
-#
-#
-#- story: user chooses next activity
-#  steps:
-#  - checkpoint: determine_next_activity
-#  - slot_was_set:
-#    - activity1: None #31
-#  - action: pick_3_activities
-#  - action: next_activity_form
-#  - active_loop: next_activity_form
-#  - slot_was_set:
-#    - next_activity
-#  - active_loop: null
-#  #32 FIXME "Next time the user is in this dialogue again, the activity that gets chosen here (so the one the user completes) gets inserted at line 7. The activity only needs to be saved once to be inserted at line 7, after that it can be overwritten by the newly completed activity. "?
-#  - checkpoint: check_chosen_action
-#
-#- story:  user chose activity 1
-#  steps:
-#  - checkpoint: check_chosen_action
-#  - slot_was_set:
-#    - next_activity: 1 #31
-#  - action: set_next_activity
-#  #this finishes the stories
-#
-#- story:  user chose activity 2
-#  steps:
-#  - checkpoint: check_chosen_action
-#  - slot_was_set:
-#    - next_activity: 2 #31
-#  - action: set_next_activity
-#  #this finishes the stories
-#
-#- story:  user chose activity 3
-#  steps:
-#  - checkpoint: check_chosen_action
-#  - slot_was_set:
-#    - next_activity: 3 #31
-#  - action: set_next_activity
-#  #this finishes the stories
-#
-#- story: user chose 'another activity' (option  4)
-#  steps:
-#  - checkpoint: check_chosen_action
-#  - slot_was_set:
-#    - next_activity: 3 #31
-#  - checkpoint: determine_next_activity # loop back to picking 3
-#
-#- story: we have obligatory next activity (which is activity1_name)
-#  steps:
-#  - checkpoint: determine_next_activity
-#  - slot_was_set:
-#    - activity1: someactivity #35
-#  - slot{"next_activity",1} # activity1_name was set by get_activity
-#  - action: utter_tell_next_activity
-#  - action: set_next_activity
-  #this finishes the stories
-  
-   
-    
-    
+## 6a: the user choose the activity
 
-    
-    
-    
-    
-    
-    
-    
-    
+- story: new activities are randomly proposed to the user
+  steps:
+  - checkpoint: choose_activity_checkpoint
+  - activity: get_three_random_activities
+  - action: general_activity_next_activity_form
+  - active_loop: general_activity_next_activity_form
+  - active_loop: null
+  - checkpoint: user_activity_choice_checkpoint
+
+## 6a: the user asks another set of activities
+
+- story: user asks another set of activities
+  steps:
+  - checkpoint: user_activity_choice_checkpoint
+  - slot_was_set:
+      - general_activity_next_activity_slot: 4
+  - checkpoint: choose_activity_checkpoint
     

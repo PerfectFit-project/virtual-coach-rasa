@@ -24,7 +24,6 @@ slots:
     influence_conversation: true
     mappings:
       - type: custom
-        #action: general_activity_check_rating
 
  # to check if the user's input is required
   is_user_input_required:
@@ -32,7 +31,6 @@ slots:
     influence_conversation: true
     mappings:
       - type: custom
-        #action: check_user_input_required
 
  # to check if the user had done the activity before
   is_activity_done:
@@ -40,7 +38,6 @@ slots:
     influence_conversation: true
     mappings:
       - type: custom
-        #action: check_activity_done
 
  # name of the selected activity
   activity_user_input:
@@ -48,7 +45,6 @@ slots:
     influence_conversation: false
     mappings:
       - type: custom
-        #action: get_activity_user_input
 
  # save (true) or edit (false) the text
   save_or_edit_slot:
@@ -70,75 +66,39 @@ slots:
       - type: from_text
         conditions:
           - active_loop: general_activity_description_form
-        #action: get_activity_user_input
 
+  # name of first proposed next activity
+  activity1_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of second proposed next activity
+  activity2_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of third proposed next activity
+  activity3_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
 
-#  learned_from_activity:
-#    type: text
-#    mappings:
-#    - type: from_text
-#      conditions:
-#      - active_loop: learned_from_activity_form
-#
-#  # do-you-want-to-change flag
-#  learned_from_activity_needs_change:
-#    type: boolean
-#    mappings:
-#    - type: from_text
-#      conditions:
-#      - active_loop: learned_from_activity_needs_change_form
-#
-#  # true iff learned_from_activity contains <=50 chars
-#  is_learned_text_short:
-#    type: boolean
-#
-#  # true iff last action requires user to type his
-#  # "what was learned from" text #10
-#  action_requires_user_text:
-#    type: boolean
-#
-#  # the text that was previously learned. None if not set.
-#  previously_leaned:
-#    type: text
-#
-#  # true iff user wants to change previously learned
-#  change_learned_from_activity:
-#    type: boolean
-#
-#
-#  # previous "learned_from_activity" text
-#  # of the current activity. To be fetched from DB.
-#  learned_from_activity_changed:
-#    type: text
-#    mappings:
-#    - type: from_text
-#    conditions:
-#    - active_loop: learned_from_activity_changed_form
-#
-#  #true iff user gets to choose the activity #30
-#  is_user_choosing_activity:
-#    type: boolean
-#
-#  # name of first proposed next activity
-#  activity1_name:
-#    type: text
-#  # name of second proposed next activity
-#  activity2_name:
-#    type: text
-#  # name of third proposed next activity
-#  activity3_name:
-#    type: text
-#
-#  next_activity:
-#    type: categorical
-#    values:
-#    - 1
-#    - 2
-#    - 3
-#    - 4
-#    influence_conversation: true
-#    conditions:
-#      active_loop: next_activity_form
+ # options for choosing the next activity
+  general_activity_next_activity_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: general_activity_next_activity_form
 
 forms:
   # this form is for rating the most recent activity
@@ -155,96 +115,39 @@ forms:
   general_activity_description_form:
     required_slots:
       - general_activity_description_slot
+  general_activity_next_activity_form:
+    required_slot:
+      - general_activity_next_activity_slot
 
 
-
-#  # this form is about most recent activity
-#  learned_from_activity_form:
-#    required_slots:
-#    - learned_from_activity
-#
-#  # this form is to ask if user wants to modify previous text
-#  learned_from_activity_needs_change_form:
-#    required_slots:
-#    - learned_from_activity_needs_change
-#
-#  # this form allows user to modify the previous text
-#  learned_from_activity_changed_form:
-#    required_slots:
-#    - learned_from_activity_changed
-#
-#  # this form allows user to select the next activity
-#  next_activity_form:
-#    required_slots:
-#    - next_activity
-#
-#  change_learned_from_activity_form:
-#    required_slots:
-#    - change_learned_from_activity
-  
-    
-    
 responses:
   utter_tst:
     - text: "TEST TEST TEST"
   utter_ask_activity_useful_rating: #6
-  - text: "Laten we eerst terug kijken op je vorige activiteit. Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10. "
+    - text: "Laten we eerst terug kijken op je vorige activiteit. Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10. "
   utter_general_activity_thanks:
-  - text: "Bedankt voor je feedback."
-  utter_general_activity_choose_activity: #32
-  - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit drie oefeningen. Welke oefening wil je doen? Typ 1 als je {activity1_name} wilt doen. Typ 2 als je {activity1_name} wilt doen. Typ 3 als je {activity1_name} wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
+    - text: "Bedankt voor je feedback."
   utter_general_activity_look_back:
-  - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
   utter_general_activity_thanks_top_5_1:
   - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
 #  utter_what_you_learned_from_activity:
   utter_general_activity_thanks_top_5_2:
-  - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
+    - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
   utter_ask_save_or_edit_slot:
-  - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor 'Bewaren', Typ 2 voor 'Aanpassen'. "
+    - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor 'Bewaren', Typ 2 voor 'Aanpassen'. "
   utter_general_activity_save:
-  - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. . "
+    - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. . "
   utter_general_activity_edit_1:
-  - text: "Prima! "
+    - text: "Prima! "
   utter_general_activity_edit_2:
-  - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. "
+    - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. "
   utter_general_activity_edit_3:
     - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
   utter_ask_general_activity_description_form:
     - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos. "
-
-#  - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze activiteit? Dus wat je wilt onthouden van deze activiteit? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
-#  utter_ask_learned_from_activity: #form text
-#  - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos."
-#  utter_learned_from_activity_request_more:
-#  - text: "Kun je dat wat uitgebreider uitleggen?"
-#  utter_learned_from_activity_thanks:
-#  - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos."
-#
-#  # this previous_learned_from_activity requires variable to be set properly
-#  utter_ask_learned_from_activity_needs_change: #22
-#  - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor "Bewaren", Typ 2 voor 'Aanpassen'. "
-#  utter_ask_learned_from_activity_changed: #24
-#  - text: "Prima! Pas dan nu je stuk tekst aan:"
-#  utter_thanks_learned_from_activity_modification: #29
-#  - text: "Super. De nieuwe tekst wordt opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
-#
-#  utter_choose_new_activity: #31
-#  - text: "Dan is het nu tijd voor nieuwe activiteit. Je kunt kiezen uit drie activiteiten. Welke activiteit wil je doen? "
-#  # requires activity1_name, activity2_name and activity3_name to be loaded.
-#  utter_ask_next_activity_number:
-#  - text: "Typ 1 als je {activity1_name} wilt doen. Typ 2 als je {activity2_name} wil doen. Typ 3 als je {activity3_name} activity wil doen. Typ 4 als je wil kiezen uit drie nieuwe activiteiten. "
-#  utter_thanks_activity_choice: #34
-#  - text: "Oké, goede keuze! Veel succes met het uitvoeren van de activiteit. "
-#  # requires activity1_name to be set
-#  utter_tell_next_activity: #35
-#  - text: "Dan is het nu tijd voor nieuwe activiteit. Ik stel voor om de activiteit {activity1_name} te doen. Veel succes! "
-#
-#  #extra for debugging the dialog
-#  utter_ok:
-#  - text: "ok thanks for your rating {activity_useful_rating}"
-#  utter_bye:
-#  - text: "bye!"
+  utter_ask_general_activity_next_activity_form: #32
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit drie oefeningen. Welke oefening wil je doen? Typ 1 als je {activity1_name} wilt doen. Typ 2 als je {activity2_name} wilt doen. Typ 3 als je {activity3_name} wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
 
 actions:
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
@@ -255,20 +158,7 @@ actions:
   - validate_save_or_edit_form # validate the slot save_or_edit_slot
   - validate_general_activity_description_form # check if the description has at least 50 characters
   - save_description_in_db # saves the provided activity description in DB
+  - get_three_random_activities # get three random activities from the resources sets activity1_name -  activity3_name
+  - validate_general_activity_next_activity_form
   #- validate_activity_usefulness_form
-#  - check_rating_is_low         #that sets rating_is_low to activity_useful_rating<=5
-#  - check_activity_is_rated     #sets activity_is_rated variable
-#  - check_is_learned_text_short #sets is_learned_text_short variable
-#  - check_action_requires_user_text #20/28 sets action_requires_user_text
-#  - get_previously_learned      #sets what was previously learned from this activity
-#  - store_learned_from_activity # stores the learned-from-activity var in DB
-#  - get_activity                # sets activity1 to the activity the coach has determined, or None if user can choose
-  - pick_3_activities           # sets activity1_name -  activity3_name to (random?) 3 possible next activities
-#  - set_next_activity			# sets the activity selected by next_activity as next activity
-  
-  
-  
-  
-  
-  
   

@@ -1,58 +1,8 @@
-import logging
-from rasa_sdk import Action, Tracker
-from typing import Any, Dict, Text, Optional
-
+from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.forms import FormValidationAction
-from rasa_sdk.types import DomainDict
+from typing import Text, Dict, Any
 
-
-# class ValidateActivityUsefullnessForm(FormValidationAction):
-#     '''
-#     https://rasa.com/docs/action-server/next/validation-action/
-#     runs when the form specified in its name is activated
-#     '''
-#
-#     def name(self) -> Text:
-#         return 'validate_activity_usefulness_form'
-#
-# # We can implement this directly but not needed for FormValidationAction
-# #    async def run(self, dispatcher, tracker, domain):
-# #        return {"activity_useful_rating",self.getVal()}
-#
-#     def validate_activity_useful_rating(
-#         self,
-#         slot_value: Any,
-#         dispatcher: CollectingDispatcher,
-#         tracker: Tracker,
-#         domain: DomainDict,
-#     ) -> Dict[Text, Any]:
-#         # pylint: disable=unused-argument
-#         """
-#         You can implement a Custom Action validate_<form_name>
-#         to validate any extracted slots.
-#         Make sure to add this action to the actions section of your domain:
-#         """
-#         #dispatcher.utter_message(response="validating your answer")
-#         logging.info("validating activity rating")
-#         val=self.getVal(slot_value)
-#         if val==None:
-#             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-#         # if val=None, this indicates to rasa the value is not known yet.
-#         return { "activity_useful_rating": val }
-#
-#     def getVal(self, value:str) -> Optional[int]:
-#         '''
-#         return True iff value text can be cconverted to int in [1,4]
-#         '''
-#         try:
-#             val = int(value)
-#         except ValueError:
-#             return None
-#         if val < 1 or val > 4:
-#             return None
-#         return val
 
 class GeneralActivityCheckRating(Action):
     """Check if the activity rating is in top five or not"""
@@ -62,8 +12,9 @@ class GeneralActivityCheckRating(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        # at the moment we see only is it's higher
+        # at the moment we see only if it's higher
         # or lower then 5
+        # TODO: check old scoring and determine if it's in top 5
 
         rating_value = tracker.get_slot('activity_useful_rating')
 
@@ -71,3 +22,105 @@ class GeneralActivityCheckRating(Action):
             return [SlotSet("general_activity_low_high_rating", 'low')]
         else:
             return [SlotSet("general_activity_low_high_rating", 'high')]
+
+
+class GetActivityUserInput(Action):
+    """Check if the activity has been already done by the user"""
+
+    def name(self):
+        return "get_activity_user_input"
+
+    async def run(self, dispatcher, tracker, domain):
+        # for testing purposes, uses a random name
+        # TODO: get the name of the activity cheosen from DB
+
+        return [SlotSet("activity_user_input", "This is a random input")]
+
+
+class CheckUserInputRequired(Action):
+    """Check if the activity requires the input of the user"""
+
+    def name(self):
+        return "check_user_input_required"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        # for testing purposes, activities 6 and 7 will require input
+        # activities 8, 9, 10 will not require input
+        # TODO: implement input needed logic
+
+        rating_value = tracker.get_slot('activity_useful_rating')
+
+        if int(rating_value) <= 7:
+            return [SlotSet("is_user_input_required", True)]
+        else:
+            return [SlotSet("is_user_input_required", False)]
+
+
+class CheckActivityDone(Action):
+    """Check if the activity has been already done by the user"""
+
+    def name(self):
+        return "check_activity_done"
+
+    async def run(self, dispatcher, tracker, domain):
+        # for testing purposes, returns false
+        # TODO: implement logic
+
+        return [SlotSet("is_activity_done", True)]
+
+
+class ValidateSaveOrEditForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_save_or_edit_form'
+
+    def validate_save_or_edit_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate save_or_edit_slot input."""
+        if not self._validate_save_or_edit_response(value):
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"save_or_edit_slot": None}
+
+        return {"save_or_edit_slot": value}
+
+    @staticmethod
+    def _validate_save_or_edit_response(value):
+        if value == '1' or value == '2':
+            return True
+        return False
+
+
+class ValidateGeneralActivityDescriptionForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_general_activity_description_form'
+
+    def validate_general_activity_description_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate save_or_edit_slot input."""
+        if not self._validate_response_length(value):
+            dispatcher.utter_message(response="utter_give_more_details")
+            return {"general_activity_description_slot": None}
+
+        return {"general_activity_description_slot": value}
+
+    @staticmethod
+    def _validate_response_length(value):
+        if len(value) >= 50:
+            return True
+        return False
+
+
+class SaveDescriptionInDb(FormValidationAction):
+    def name(self) -> Text:
+        return 'save_description_in_db'
+
+    async def run(self, dispatcher, tracker, domain):
+        # pylint: disable=unused-argument
+        """Save the provided description inf the DB."""
+        description = tracker.get_slot('general_activity_description_slot')
+
+        return []

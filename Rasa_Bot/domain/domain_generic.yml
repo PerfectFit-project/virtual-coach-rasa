@@ -39,6 +39,8 @@ responses:
     - text: "Je kunt deze woorden gebruiken om met mij te praten: 1) EHBO doos, 2) ..., ... ."
 
   ### Re-prompts in forms
+  utter_please_answer_1_2:
+     - text: "Antwoord alsjeblieft met '1,' of '2.'"
   utter_please_answer_1_2_3:
      - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
   utter_please_answer_1_2_3_4:
@@ -55,3 +57,5 @@ responses:
      - text: "Hmm ik heb dat niet begrepen."
   utter_greeting:
      - text: "Hoi!"
+  utter_give_more_details:
+    - text: "Kun je dat wat uitgebreider uitleggen?"

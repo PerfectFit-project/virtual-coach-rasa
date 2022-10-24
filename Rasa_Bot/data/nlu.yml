@@ -6,6 +6,7 @@ nlu:
     - "Mijn activiteit"
     - "activiteit?"
     - "Activiteit"
+    - "Laaste activiteit"
 
 - intent: request_plan_week
   examples: |
@@ -98,4 +99,3 @@ nlu:
   examples: |
     - "Oke"
     - "Ok"
-

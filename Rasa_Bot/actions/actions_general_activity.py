@@ -1,7 +1,9 @@
+from .helper import get_latest_bot_utterance
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from typing import Text, Dict, Any
+from random import randint, seed
 
 
 class GeneralActivityCheckRating(Action):
@@ -32,7 +34,7 @@ class GetActivityUserInput(Action):
 
     async def run(self, dispatcher, tracker, domain):
         # for testing purposes, uses a random name
-        # TODO: get the name of the activity cheosen from DB
+        # TODO: get the name of the activity chosen from DB
 
         return [SlotSet("activity_user_input", "This is a random input")]
 
@@ -70,6 +72,34 @@ class CheckActivityDone(Action):
         return [SlotSet("is_activity_done", True)]
 
 
+class ValidateActivityUsefulnessForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_activity_usefulness_form'
+
+    def validate_activity_useful_rating(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate activity_useful_rating input."""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_activity_useful_rating':
+            return {"activity_useful_rating": None}
+
+        if not self._validate_activity_useful_rating_response(value):
+            dispatcher.utter_message(response="utter_please_answer_1_to_10")
+            return {"activity_useful_rating": None}
+
+        return {"activity_useful_rating": value}
+
+    @staticmethod
+    def _validate_activity_useful_rating_response(value):
+        if 1 <= int(value) <= 10:
+            return True
+        return False
+
+
 class ValidateSaveOrEditForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_save_or_edit_form'
@@ -79,6 +109,12 @@ class ValidateSaveOrEditForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate save_or_edit_slot input."""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_save_or_edit_slot':
+            return {"save_or_edit_slot": None}
+
         if not self._validate_save_or_edit_response(value):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"save_or_edit_slot": None}
@@ -100,7 +136,13 @@ class ValidateGeneralActivityDescriptionForm(FormValidationAction):
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate save_or_edit_slot input."""
+        """Validate general_activity_description_slot input."""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_general_activity_description_slot':
+            return {"general_activity_description_slot": None}
+
         if not self._validate_response_length(value):
             dispatcher.utter_message(response="utter_give_more_details")
             return {"general_activity_description_slot": None}
@@ -134,10 +176,13 @@ class GetThreeRandomActivities(Action):
         # pylint: disable=unused-argument
         """pick three random activities and sets the slots"""
         # TODO: implement resource getting and random assignment
-
-        activity_one = "activity 1"
-        activity_two = "activity 1"
-        activity_three = "activity 1"
+        seed(1)
+        value1 = randint(0, 10)
+        value2 = randint(0, 10)
+        value3 = randint(0, 10)
+        activity_one = "activity " + str(value1)
+        activity_two = "activity " + str(value2)
+        activity_three = "activity " + str(value3)
 
         return [SlotSet("activity1_name", activity_one),
                 SlotSet("activity2_name", activity_two),
@@ -153,14 +198,73 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate general_activity_next_activity_slot input."""
-        if not self._validate_response_length(value):
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_general_activity_next_activity_slot':
+            return {"general_activity_next_activity_slot": None}
+
+        if not self._validate_response_value(value):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"general_activity_next_activity_slot": None}
+
+        if value == '4':
+            seed(1)
+            value1 = randint(0, 10)
+            value2 = randint(0, 10)
+            value3 = randint(0, 10)
+            activity_one = "activity " + str(value1)
+            activity_two = "activity " + str(value2)
+            activity_three = "activity " + str(value3)
+
+            SlotSet("activity1_name", activity_one)
+            SlotSet("activity2_name", activity_two)
+            SlotSet("activity3_name", activity_three)
             return {"general_activity_next_activity_slot": None}
 
         return {"general_activity_next_activity_slot": value}
 
     @staticmethod
-    def _validate_response_length(value):
-        if int(value) >= 1 or int(value) <= 4:
+    def _validate_response_value(value):
+        if 1 <= int(value) <= 4:
             return True
         return False
+
+
+class GetLastPerformedActivity(Action):
+    """Get the last performed activity"""
+
+    def name(self):
+        return "get_last_performed_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+        # for testing purposes, returns a random name
+        # TODO: implement logic
+
+        return [SlotSet("last_activity_slot", "this is your last activity")]
+
+
+class StoreActivityToFak(Action):
+    """Check if the activity has been already done by the user"""
+
+    def name(self):
+        return "store_activity_to_fak"
+
+    async def run(self, dispatcher, tracker, domain):
+        # for testing purposes, returns false
+        # TODO: implement logic
+
+        return []
+
+
+class GetActivityCoachChoice(Action):
+    """The coach chooses the next activity and saves it in the slot"""
+
+    def name(self):
+        return "get_activity_coach_choice"
+
+    async def run(self, dispatcher, tracker, domain):
+        # for testing purposes, returns false
+        # TODO: implement logic
+
+        return [SlotSet("chosen_activity_slot", "this is the chosen activity")]

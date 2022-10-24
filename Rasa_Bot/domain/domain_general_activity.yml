@@ -1,7 +1,3 @@
-#entities:
-#- activity_useful_rating
-
-
 intents:
 - review_last_activity
 
@@ -67,6 +63,13 @@ slots:
         conditions:
           - active_loop: general_activity_description_form
 
+  # name of last performed activity
+  last_activity_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
   # name of first proposed next activity
   activity1_name:
     type: text
@@ -85,16 +88,17 @@ slots:
     influence_conversation: false
     mappings:
       - type: custom
+  # name of chosen activity
+  chosen_activity_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
 
  # options for choosing the next activity
   general_activity_next_activity_slot:
-    type: categorical
-    values:
-      - 1
-      - 2
-      - 3
-      - 4
-    influence_conversation: true
+    type: text
+    influence_conversation: false
     mappings:
       - type: from_text
         conditions:
@@ -116,15 +120,13 @@ forms:
     required_slots:
       - general_activity_description_slot
   general_activity_next_activity_form:
-    required_slot:
+    required_slots:
       - general_activity_next_activity_slot
 
 
 responses:
-  utter_tst:
-    - text: "TEST TEST TEST"
   utter_ask_activity_useful_rating: #6
-    - text: "Laten we eerst terug kijken op je vorige activiteit. Hoe nuttig vond je deze activiteit? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10. "
+    - text: "Laten we eerst terugkijken op je vorige oefening. Hoe nuttig vond je de oefening {last_activity_slot}? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
   utter_general_activity_look_back:
@@ -144,10 +146,14 @@ responses:
     - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. "
   utter_general_activity_edit_3:
     - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
-  utter_ask_general_activity_description_form:
+  utter_ask_general_activity_description_slot:
     - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos. "
-  utter_ask_general_activity_next_activity_form: #32
+  utter_ask_general_activity_next_activity_slot:
     - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit drie oefeningen. Welke oefening wil je doen? Typ 1 als je {activity1_name} wilt doen. Typ 2 als je {activity2_name} wilt doen. Typ 3 als je {activity3_name} wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
+  utter_general_activity_next_user:
+    - text: "Oké, goede keuze! Veel succes met de oefening."
+  utter_general_activity_next_coach:
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen. Veel succes! "
 
 actions:
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
@@ -160,5 +166,6 @@ actions:
   - save_description_in_db # saves the provided activity description in DB
   - get_three_random_activities # get three random activities from the resources sets activity1_name -  activity3_name
   - validate_general_activity_next_activity_form
-  #- validate_activity_usefulness_form
-  
+  - get_last_performed_activity # get the last performed activity
+  - get_activity_coach_choice # the coach chooses the next activity
+  - validate_activity_usefulness_form # validate the slot activity_useful_rating

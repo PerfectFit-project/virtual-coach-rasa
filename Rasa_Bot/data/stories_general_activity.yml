@@ -1,12 +1,7 @@
 ## Activities dialog stories
 # Purpose: Reflecting previous (=last) activity that the user has done
 # and picking the next activity.
-# The story flow from the excel sheet is confusing.
-# And the flow diagram that came with it is a total mismatch
-# Instead check the general_activity_dialog.graphml file
 version: "3.1"
-
-# the numbers in the story refer to lines in the database
 
 ## 1a: Trigger general activity dialog
 
@@ -15,6 +10,7 @@ stories:
   steps:
   - intent: review_last_activity
   - action: utter_greeting #4
+  - action: get_last_performed_activity
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form
   - active_loop: null
@@ -27,12 +23,12 @@ stories:
   steps:
   - checkpoint: low_or_high_rating
   - slot_was_set:
-    - general_activity_low_high_rating: high #10 it's high
+    - general_activity_low_high_rating: high
   - action: utter_general_activity_thanks_top_5_1
   - action: check_user_input_required
   - checkpoint: input_required_check
 
-## 3b: The input of the user is not required
+## 3b: The rating of the activity is in the top 5 and input of the user is not required
 
 - story: if input is not required
   steps:
@@ -41,6 +37,7 @@ stories:
     - is_user_input_required: false
   - action: utter_general_activity_look_back
   - action: store_activity_to_fak
+  - checkpoint: choose_activity_checkpoint
 
 ## 3c: The input of the user is required and already given
 
@@ -74,6 +71,7 @@ stories:
   - slot_was_set:
     - save_or_edit_slot: 1
   - action: utter_general_activity_save
+  - checkpoint: choose_activity_checkpoint
 
 ## 4a: edit option selected
 
@@ -96,6 +94,7 @@ stories:
   - active_loop: null
   - action: save_description_in_db
   - action: utter_general_activity_edit_3
+  - checkpoint: choose_activity_checkpoint
 
 ## 2b: The rating of the activity is not in the top 5
   
@@ -107,23 +106,24 @@ stories:
   - action: utter_general_activity_thanks #9
   - checkpoint: choose_activity_checkpoint
 
-## 6a: the user choose the activity
+## 6a: the user chooses the activity
 
 - story: new activities are randomly proposed to the user
   steps:
   - checkpoint: choose_activity_checkpoint
-  - activity: get_three_random_activities
+  - action: get_three_random_activities
   - action: general_activity_next_activity_form
   - active_loop: general_activity_next_activity_form
   - active_loop: null
-  - checkpoint: user_activity_choice_checkpoint
+  - action: utter_general_activity_next_user
+#  - checkpoint: start_activity_dialog
 
-## 6a: the user asks another set of activities
+## 7a: the coach chooses the activity
 
-- story: user asks another set of activities
+- story: new activities are randomly proposed to the user
   steps:
-  - checkpoint: user_activity_choice_checkpoint
-  - slot_was_set:
-      - general_activity_next_activity_slot: 4
-  - checkpoint: choose_activity_checkpoint
+  #- checkpoint: choose_activity_checkpoint
+  - action: get_activity_coach_choice
+  - action: utter_general_activity_next_coach
+#  - checkpoint: start_activity_dialog
     

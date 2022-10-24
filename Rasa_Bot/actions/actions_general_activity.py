@@ -268,3 +268,18 @@ class GetActivityCoachChoice(Action):
         # TODO: implement logic
 
         return [SlotSet("chosen_activity_slot", "this is the chosen activity")]
+
+
+class CheckWhoDecides(Action):
+    """TCheck if the user or the coach decides the next activity"""
+
+    def name(self):
+        return "check_who_decides"
+
+    async def run(self, dispatcher, tracker, domain):
+        # for testing purposes, the user decides
+        # TODO: implement logic
+
+        decider = 'user'
+
+        return [SlotSet("who_decides_slot", decider)]

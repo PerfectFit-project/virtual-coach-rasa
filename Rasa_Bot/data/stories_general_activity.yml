@@ -49,6 +49,15 @@ stories:
   - action: check_activity_done
   - checkpoint: has_activity_already_done
 
+## 3a: the activity has not been done before
+
+- story: if input is required and previously given
+  steps:
+  - checkpoint: has_activity_already_done
+  - slot_was_set:
+    - is_activity_done: false
+  - checkpoint: input_activity_description
+
 ## 3c: the activity has been already done before
 
 - story: if input is required and previously given
@@ -111,6 +120,9 @@ stories:
 - story: new activities are randomly proposed to the user
   steps:
   - checkpoint: choose_activity_checkpoint
+  - action: check_who_decides
+  - slot_was_set:
+    - who_decides_slot: user
   - action: get_three_random_activities
   - action: general_activity_next_activity_form
   - active_loop: general_activity_next_activity_form
@@ -122,7 +134,10 @@ stories:
 
 - story: new activities are randomly proposed to the user
   steps:
-  #- checkpoint: choose_activity_checkpoint
+  - checkpoint: choose_activity_checkpoint
+  - action: check_who_decides
+  - slot_was_set:
+    - who_decides_slot: coach
   - action: get_activity_coach_choice
   - action: utter_general_activity_next_coach
 #  - checkpoint: start_activity_dialog

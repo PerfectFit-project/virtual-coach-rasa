@@ -104,6 +104,15 @@ slots:
         conditions:
           - active_loop: general_activity_next_activity_form
 
+  who_decides_slot:
+    type: categorical
+    values:
+      - user
+      - coach
+    influence_conversation: true
+    mappings:
+      - type: custom
+
 forms:
   # this form is for rating the most recent activity
   activity_usefulness_form:
@@ -169,3 +178,4 @@ actions:
   - get_last_performed_activity # get the last performed activity
   - get_activity_coach_choice # the coach chooses the next activity
   - validate_activity_usefulness_form # validate the slot activity_useful_rating
+  - check_who_decides # determines if the user can decide or if the coach decides

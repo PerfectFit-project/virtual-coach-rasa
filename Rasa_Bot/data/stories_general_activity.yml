@@ -6,10 +6,17 @@ version: "3.1"
 ## 1a: Trigger general activity dialog
 
 stories:
-- story: introduction PF
+- story: start dialog
   steps:
   - intent: review_last_activity
+  - action: action_set_slot_general_activity
   - action: utter_greeting #4
+  - checkpoint: rescheduling_query_dialog
+
+
+- story: continue after rescheduling
+  steps:
+  - checkpoint: continue_with_general_activity
   - action: get_last_performed_activity
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form

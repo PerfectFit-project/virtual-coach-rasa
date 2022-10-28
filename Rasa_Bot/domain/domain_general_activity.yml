@@ -179,3 +179,4 @@ actions:
   - get_activity_coach_choice # the coach chooses the next activity
   - validate_activity_usefulness_form # validate the slot activity_useful_rating
   - check_who_decides # determines if the user can decide or if the coach decides
+  - action_set_slot_general_activity # set the slot to the current running dialog

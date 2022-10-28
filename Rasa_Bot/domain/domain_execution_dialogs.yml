@@ -8,6 +8,7 @@ slots:
   current_intervention_component:
     type: text
     initial_value: 'NONE'
+    influence_conversation: false
     mappings:
     - type: custom
 

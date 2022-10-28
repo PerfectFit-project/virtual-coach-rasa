@@ -1,3 +1,5 @@
+from virtual_coach_db.helper import ExecutionInterventionComponents
+
 from .helper import get_latest_bot_utterance
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
@@ -283,3 +285,13 @@ class CheckWhoDecides(Action):
         decider = 'user'
 
         return [SlotSet("who_decides_slot", decider)]
+
+
+class SetSlotGeneralActivity(Action):
+    def name(self):
+        return "action_set_slot_general_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        ExecutionInterventionComponents.GENERAL_ACTIVITY)]
+

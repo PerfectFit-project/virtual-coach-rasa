@@ -13,10 +13,8 @@ stories:
       - rescheduling_now: true
     - active_loop: null
     - action: utter_user_chose_now
-    - action: action_reset_rescheduling_now_slot
-    - slot_was_set:
-      - rescheduling_now: null
-    - checkpoint: continue_with_future_self_dialog_after_rescheduling_query
+    - action: action_set_continuation
+    - checkpoint: continue_dialog_checkpoint
 
 
 # Rescheduling query - later
@@ -29,9 +27,6 @@ stories:
       - rescheduling_now: false
     - active_loop: null
     - action: utter_user_chose_later
-    - action: action_reset_rescheduling_now_slot
-    - slot_was_set:
-      - rescheduling_now: null
     - action: action_get_rescheduling_options_list
     - action: rescheduling_options_form
     - active_loop: rescheduling_options_form  # TODO: use rescheduling_option slot to reschedule
@@ -44,3 +39,17 @@ stories:
     - action: action_end_dialog
     # TODO: what are we going to do at the end of the dialog if the user types something again?
     # Maybe a ConversationPaused() event from custom action?
+
+- story: get to general activity dialog
+  steps:
+    - checkpoint: continue_dialog_checkpoint
+    - slot_was_set:
+      - dialog_to_continue: general_activity
+    - checkpoint: continue_with_general_activity
+
+- story: get to future self dialog
+  steps:
+    - checkpoint: continue_dialog_checkpoint
+    - slot_was_set:
+      - dialog_to_continue: future_self_preparation
+    - checkpoint: continue_with_future_self_dialog_after_rescheduling_query

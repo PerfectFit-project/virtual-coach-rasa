@@ -44,6 +44,17 @@ class SendMetadata(Action):
         return "action_send_metadata"
 
     async def run(self, dispatcher, tracker, domain):
+        """
+        Sends the text message specified in the 'text' value of the json_message,
+        and sends the image identified by the id_file under the 'attachmentIds' key.
+
+        The id_file is obtained in the action_upload_file as a result of
+        a file uploaded to the NiceDay server. The id is stored in the
+        uploaded_file_id slot.
+
+        The uploaded file is a local one, and is uses the file indicated
+        by the action_set_file_path
+        """
         id_file = tracker.get_slot("uploaded_file_id")
         dispatcher.utter_message(
             json_message={"text": "image",

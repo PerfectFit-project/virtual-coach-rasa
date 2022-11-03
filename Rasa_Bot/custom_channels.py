@@ -1,4 +1,5 @@
 import inspect
+import os
 import typing
 from typing import Text, Callable, Awaitable, Any, Dict, List
 
@@ -8,7 +9,7 @@ from sanic.request import Request
 from sanic.response import HTTPResponse
 
 
-NICEDAY_API_URL = 'http://niceday_api:8080/'
+NICEDAY_API_URL = os.getenv('NICEDAY_API_ENDPOINT')
 
 
 class NicedayOutputChannel(CollectingOutputChannel):

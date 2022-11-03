@@ -78,7 +78,8 @@ class SetFilePath(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        # This is hardcoded for testing. Needs to be set according to the use case
+        # TODO: This is hardcoded for testing. Needs to be set according to the use case
+
         filepath = '/app/tst.PNG'
 
         return[SlotSet("upload_file_path", filepath)]

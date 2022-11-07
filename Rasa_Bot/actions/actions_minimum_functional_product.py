@@ -192,10 +192,8 @@ class ValidateActivityGetFileForm(FormValidationAction):
 
         # here the message metadata are retrieved
         events = tracker.current_state()['events']
-        user_events = []
+        
         user_events = [e for e in events if e['event'] == 'user']
-            if e['event'] == 'user':
-                user_events.append(e)
         # we defined the metadata key name 'attachmentIds' is defined in the broker
         received_file_ids_list = user_events[-1]['metadata']['attachmentIds']
 

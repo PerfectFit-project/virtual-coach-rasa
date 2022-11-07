@@ -75,7 +75,7 @@ class UploadFile(Action):
         with open(filepath, 'rb') as content:
             file = content.read()
 
-        response = client.upload_file(user_id, 'tst.png', filepath, file)
+        response = client.upload_file(user_id, filepath, file)
         file_id = response['id']
         logging.info(response)
         logging.info(file_id)

@@ -98,3 +98,15 @@ nlu:
     - "Oke"
     - "Ok"
 
+- intent: request_metadata
+  examples: |
+    - "Metadata"
+    - "Ik wil metadata"
+    - "metadata"
+    - "Dit is metadata"
+
+- intent: user_shares_image
+  examples: |
+    - "file"
+    - "File"
+    - "Start file"

@@ -34,7 +34,10 @@ class ActionGetFirstAidKit(Action):
 
             kit_exists = True
 
-            for activity_idx, activity in enumerate(selected):
+            # get up to the first 5 highest rated activities
+            sorted_activities = sorted(selected, key=lambda x: x.activity_rating)[:5]
+
+            for activity_idx, activity in enumerate(sorted_activities):
                 kit_text += str(activity_idx + 1) + ") "
                 if activity.intervention_activity_id is None:
                     kit_text += activity.user_activity_title

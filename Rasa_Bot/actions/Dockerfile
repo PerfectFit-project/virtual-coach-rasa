@@ -9,6 +9,7 @@ WORKDIR /app
 # Copy actions requirements
 COPY requirements-actions.txt ./
 
+COPY tst.PNG ./
 # Change to root user to install dependencies
 USER root
 

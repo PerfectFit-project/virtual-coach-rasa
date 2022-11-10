@@ -31,6 +31,7 @@ slots:
     mappings:
     - type: custom
 
+
 responses:
   # General
   utter_greet:
@@ -74,6 +75,7 @@ responses:
 
   utter_reminder_is_set:
     - text: "The reminder is set. ..."
+
 
 actions:
   - action_get_plan_week

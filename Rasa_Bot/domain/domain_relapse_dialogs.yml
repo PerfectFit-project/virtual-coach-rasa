@@ -3,7 +3,7 @@ intents:
   - EXTERNAL_trigger_relapse_phase
 
 slots:
-  one_or_two:
+  smoke_or_pa:
     type: categorical
     values:
       - 1
@@ -12,7 +12,7 @@ slots:
     mappings:
       - type: from_text
         conditions:
-          - active_loop: two_options_form
+          - active_loop: smoke_or_pa_form
 
   crave_lapse_relapse:
     type: categorical
@@ -22,28 +22,27 @@ slots:
       - 3
     influence_conversation: true
     mappings:
-      - type: custom
-        action: custom_crave_lapse_relapse
+      - type: from_text
         conditions:
           - active_loop: crave_lapse_relapse_form
 
 responses:
 # General
   utter_debug_ab:
-    - text: "De waarde van one or two form is: {one_or_two}"
+    - text: "De waarde van smoke or pa form is: {smoke_or_pa}"
   utter_relapse_intro_codeword:
     - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
   utter_relapse_intro_offer_help:
     - text: "Goed dat je hulp vraagt. Ik ga je helpen."
   utter_relapse_smoke_or_pa:
     - text: "Gaat het om roken of lichamelijke beweging?"
-  utter_ask_one_or_two:
+  utter_ask_smoke_or_pa:
     - text: "Typ '1' als je het gaat om roken. Typ '2' als het gaat om lichamelijke beweging."
 
  # Smoke
   utter_specify_smoke:
     - text: "Kun je mij vertellen wat er aan de hand is?"
-  utter_ask_crave_lapse_relapse_form_crave_lapse_relapse:
+  utter_ask_crave_lapse_relapse:
     - text: "Typ '1' als je zin hebt om te roken. Typ '2' als je vandaag één of meer sigaretten hebt
              gerookt. Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.
              "
@@ -142,17 +141,13 @@ responses:
 
 actions:
   - action_trigger_relapse
-  - action_reset_one_or_two_slot
-  - validate_two_options_form
+  - validate_smoke_or_pa_form
   - validate_crave_lapse_relapse_form
-  - custom_crave_lapse_relapse
 
 forms:
   crave_lapse_relapse_form:
     required_slots:
       - crave_lapse_relapse
-  two_options_form:
-    ignored_intents:
-      - relapse_dialog
+  smoke_or_pa_form:
     required_slots:
-      - one_or_two
+      - smoke_or_pa

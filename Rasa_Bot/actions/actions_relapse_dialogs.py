@@ -1,6 +1,7 @@
 """
 Contains custom actions related to the relapse dialogs
 """
+from .helper import get_latest_bot_utterance
 import logging
 from typing import Any, Dict, Text
 
@@ -30,23 +31,27 @@ class TriggerRelapseDialog(Action):
         return []
 
 
-class ValidateTwoOptionsForm(FormValidationAction):
+class ValidateSmokeOrPaForm(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_two_options_form'
+        return 'validate_smoke_or_pa_form'
 
-    def validate_one_or_two(
+    def validate_smoke_or_pa(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate one or two input."""
+        """Validate smoke or pa input."""
 
-        logging.info("Performing the action to validate one_or_two_options_form")  # Debug message
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_smoke_or_pa':
+            return {"smoke_or_pa": None}
+
+        logging.info("Performing the action to validate smoke_or_pa_form")  # Debug message
         if not self._is_valid_input(value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
-            return {"one_or_two": None}
+            return {"smoke_or_pa": None}
 
-        return {"one_or_two": value}
+        return {"smoke_or_pa": value}
 
     @staticmethod
     def _is_valid_input(value):
@@ -59,16 +64,6 @@ class ValidateTwoOptionsForm(FormValidationAction):
         return True
 
 
-class ActionResetOneOrTwoSlot(Action):
-    """Reset one_or_two slot"""
-
-    def name(self):
-        return "action_reset_one_or_two_slot"
-
-    logging.info("Performing the action to validate reset_one_or_two_slot")  # debug msg
-    async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("one_or_two", None)]
-
 class ValidateCraveLapseRelapse(FormValidationAction):
     def name(self) -> Text:
         return 'validate_crave_lapse_relapse_form'
@@ -78,6 +73,11 @@ class ValidateCraveLapseRelapse(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate crave, lapse or relapse input."""
+        logging.info("Performing the action to validate crave lapse relapse form")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_crave_lapse_relapse':
+            return {"crave_lapse_relapse": None}
 
         if not self._is_valid_input(value):
             dispatcher.utter_message(response="utter_did_not_understand")
@@ -95,16 +95,3 @@ class ValidateCraveLapseRelapse(FormValidationAction):
         if (value < 1) or (value > 3):
             return False
         return True
-
-
-class CustomCraveLapseRelapse(Action):
-    """Check if the slot has been set at the form activation"""
-
-    def name(self):
-        return "custom_crave_lapse_relapse"
-
-    async def run(self, dispatcher, tracker, domain):
-        if tracker.events[-1]['event'] == 'active_loop' and tracker.events[-1]['name'] == 'crave_lapse_relapse_form':
-            return [SlotSet("crave_lapse_relapse", None)]
-        else:
-            return [SlotSet("crave_lapse_relapse", tracker.latest_message['text'])]

@@ -40,3 +40,15 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
 
     intervention_component_id = selected[0].intervention_component_id
     return intervention_component_id
+
+
+def get_latest_bot_utterance(events) -> str:
+    events_bot = []
+
+    for event in events:
+        if event['event'] == 'bot':
+            events_bot.append(event)
+
+    last_utterance = events_bot[-1]['metadata']['utter_action']
+
+    return last_utterance

@@ -10,10 +10,10 @@ stories:
     - action: utter_relapse_intro_codeword
     - action: utter_relapse_intro_offer_help
     - action: utter_relapse_smoke_or_pa
-    - action: two_options_form
-    - active_loop: two_options_form
+    - action: smoke_or_pa_form
+    - active_loop: smoke_or_pa_form
     - slot_was_set:
-      - one_or_two: 1
+      - smoke_or_pa: 1
     - active_loop: null
     - checkpoint: smoke_parent
 
@@ -25,10 +25,10 @@ stories:
     - action: utter_relapse_intro_codeword
     - action: utter_relapse_intro_offer_help
     - action: utter_relapse_smoke_or_pa
-    - action: two_options_form
-    - active_loop: two_options_form
+    - action: smoke_or_pa_form
+    - active_loop: smoke_or_pa_form
     - slot_was_set:
-      - one_or_two: 2
+      - smoke_or_pa: 2
     - active_loop: null
     - checkpoint: pa_parent
 

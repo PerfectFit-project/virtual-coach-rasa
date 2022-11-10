@@ -1,4 +1,4 @@
-from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed
+from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed, FirstAidKit
 from virtual_coach_db.helper import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import TIMEZONE, DATABASE_URL
@@ -22,12 +22,28 @@ class GeneralActivityCheckRating(Action):
         # or lower then 5
         # TODO: check old scoring and determine if it's in top 5
 
-        rating_value = tracker.get_slot('activity_useful_rating')
+        rating_value = int(tracker.get_slot('activity_useful_rating'))
 
-        if int(rating_value) <= 5:
-            return [SlotSet("general_activity_low_high_rating", 'low')]
-        else:
+        session = get_db_session(db_url=DATABASE_URL)
+        user_id = tracker.current_state()['sender_id']
+
+        top_five_activities = (
+            session.query(
+                FirstAidKit
+            ).order_by(FirstAidKit.activity_rating.desc())
+            .filter(
+                FirstAidKit.users_nicedayuid == user_id
+            )
+            .limit(5).all()
+        )
+
+        lowest_score = top_five_activities[-1].activity_rating
+        highest_score = top_five_activities[0].activity_rating
+
+        if lowest_score < rating_value <= highest_score:
             return [SlotSet("general_activity_low_high_rating", 'high')]
+        else:
+            return [SlotSet("general_activity_low_high_rating", 'low')]
 
 
 class GetActivityUserInput(Action):

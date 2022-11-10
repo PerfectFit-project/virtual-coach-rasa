@@ -26,6 +26,36 @@ slots:
         conditions:
           - active_loop: crave_lapse_relapse_form
 
+  ehbo_me_self:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: ehbo_me_self_form
+
+  type_smoke:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: type_smoke
+
+  number_smoke:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: number_smoke
+
 responses:
 # General
   utter_debug_ab:
@@ -62,18 +92,18 @@ responses:
     - text: "Wat helpt is om tijdens deze heftige trek wat te gaan doen."
   utter_smoke_crave_8:
     - text: "Ik kan je daarbij helpen. Wat zullen we doen?"
-  utter_smoke_crave_9:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ 1 als je een oefening uit je EHBO-doos wilt doen."
-  utter_smoke_crave_10:
-    - text: "Typ 2 als ik een oefening mag voorstellen. Typ 3 als je zelf een activiteit wilt kiezen."
+  utter_ask_ehbo_me_self:
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ 1 als je een
+             oefening uit je EHBO-doos wilt doen. ,Typ 2 als ik een oefening mag voorstellen. Typ 3
+             als je zelf een activiteit wilt kiezen."
 
   utter_smoke_lapse_1:
     - text: "Goed dat je dit aangeeft"
-  utter_smoke_lapse_2:
+  utter_ask_type_smoke:
     - text: "Kun je aangeven wat je vandaag hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor
              e-sigaretten. Typ 3 voor shags. Typ 4 als je iets anders hebt gerookt.
              "
-  utter_smoke_lapse_3:
+  utter_ask_number_smoke:
     - text: "Hoeveel heb je daarvan gerookt?"
   utter_smoke_lapse_4:
     - text: "Dit is wat je hebt ingevuld, klopt dat? Typ 1 voor ja, typ 2 voor nee."
@@ -143,6 +173,8 @@ actions:
   - action_trigger_relapse
   - validate_smoke_or_pa_form
   - validate_crave_lapse_relapse_form
+  - validate_ehbo_me_self_form
+  - validate_type_and_number_smoke_form
 
 forms:
   crave_lapse_relapse_form:
@@ -151,3 +183,10 @@ forms:
   smoke_or_pa_form:
     required_slots:
       - smoke_or_pa
+  ehbo_me_self_form:
+    required_slots:
+      - ehbo_me_self
+  type_and_number_smoke_form:
+    required_slots:
+      - type_smoke
+      - number_smoke

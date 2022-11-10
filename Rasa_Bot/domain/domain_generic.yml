@@ -53,5 +53,7 @@ responses:
      - text: "Geef alsjeblieft antwoord met 'nu' of 'later.'"
   utter_please_answer_more_words:
      - text: "Zou je dat in meer woorden kunnen omschrijven?"
+  utter_please_answer_number:
+     - text: "Zou je dat kunnen beantwoorden met een nummer?"
   utter_did_not_understand:
      - text: "Hmm ik heb dat niet begrepen."

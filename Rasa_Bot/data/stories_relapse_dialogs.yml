@@ -72,7 +72,7 @@ stories:
   - active_loop: null
   - checkpoint: smoke_relapse
 
-## 3a smoking - HRS
+## 3a smoking - HRS - EHBO
 - story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
   steps:
   - checkpoint: smoke_hrs
@@ -84,8 +84,50 @@ stories:
   - action: utter_smoke_crave_6
   - action: utter_smoke_crave_7
   - action: utter_smoke_crave_8
-  - action: utter_smoke_crave_9
-  - action: utter_smoke_crave_10  # TODO: insert form
+  - action: ehbo_me_self_form
+  - active_loop: ehbo_me_self_form
+  - slot_was_set:
+    - ehbo_me_self: 1
+  - active_loop: null
+  - checkpoint: smoke_hrs_ehbo
+
+## 3a smoking - HRS - self activity
+- story: smoke hrs
+  steps:
+  - checkpoint: smoke_hrs
+  - action: utter_smoke_crave_1
+  - action: utter_smoke_crave_2
+  - action: utter_smoke_crave_3
+  - action: utter_smoke_crave_4
+  - action: utter_smoke_crave_5
+  - action: utter_smoke_crave_6
+  - action: utter_smoke_crave_7
+  - action: utter_smoke_crave_8
+  - action: ehbo_me_self_form
+  - active_loop: ehbo_me_self_form
+  - slot_was_set:
+    - ehbo_me_self: 2
+  - active_loop: null
+  - checkpoint: smoke_hrs_self
+
+## 3a smoking - HRS - system suggest activity
+- story: smoke hrs
+  steps:
+  - checkpoint: smoke_hrs
+  - action: utter_smoke_crave_1
+  - action: utter_smoke_crave_2
+  - action: utter_smoke_crave_3
+  - action: utter_smoke_crave_4
+  - action: utter_smoke_crave_5
+  - action: utter_smoke_crave_6
+  - action: utter_smoke_crave_7
+  - action: utter_smoke_crave_8
+  - action: ehbo_me_self_form
+  - active_loop: ehbo_me_self_form
+  - slot_was_set:
+    - ehbo_me_self: 3
+  - active_loop: null
+  - checkpoint: smoke_hrs_me
 
 
   ## 3b smoking - lapse
@@ -93,8 +135,13 @@ stories:
   steps:
     - checkpoint: smoke_lapse
     - action: utter_smoke_lapse_1
-    - action: utter_smoke_lapse_2  # TODO: form to ask what smoked
-    - action: utter_smoke_lapse_3  # TODO: form to ask how many, store answer in DB.
+    - action: type_and_number_smoke_form  # TODO: store number in DB.
+    - active_loop: type_and_number_smoke_form
+    - slot_was_set:
+      - requested_slot: type_smoke
+    - slot_was_set:
+      - requested_slot: number_smoke
+    - active_loop: null
     - action: utter_smoke_lapse_4  # TODO: Validate the previous answer with yes/no
     - action: utter_smoke_lapse_5
     - action: utter_smoke_lapse_6

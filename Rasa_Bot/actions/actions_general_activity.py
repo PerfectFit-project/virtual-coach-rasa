@@ -1,5 +1,7 @@
+from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed
 from virtual_coach_db.helper import ExecutionInterventionComponents
-
+from virtual_coach_db.helper.helper_functions import get_db_session
+from .definitions import TIMEZONE, DATABASE_URL
 from .helper import get_latest_bot_utterance
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
@@ -240,10 +242,25 @@ class GetLastPerformedActivity(Action):
         return "get_last_performed_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        # for testing purposes, returns a random name
-        # TODO: implement logic
+        # get the last completed activity from DB and populate the slot
 
-        return [SlotSet("last_activity_slot", "this is your last activity")]
+        session = get_db_session(db_url=DATABASE_URL)
+        user_id = tracker.current_state()['sender_id']
+        last_activity = (
+            session.query(
+                InterventionActivitiesPerformed
+            )
+            .order_by(InterventionActivitiesPerformed.completed_datetime.desc())
+            .filter(
+                InterventionActivitiesPerformed.users_nicedayuid == user_id
+            ).all()
+        )
+
+        if last_activity is not None:
+            activity_title = last_activity.intervention_activity.intervention_activity_title
+            return [SlotSet("last_activity_slot", activity_title)]
+        else:
+            return [SlotSet("last_activity_slot", None)]
 
 
 class StoreActivityToFak(Action):

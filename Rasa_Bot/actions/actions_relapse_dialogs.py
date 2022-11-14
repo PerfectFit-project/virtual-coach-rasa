@@ -155,6 +155,30 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
 
         return {"type_smoke": value}
 
+
+    def validate_type_smoke_confirm(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate type of smoke input confirmation"""
+
+        logging.info("Validate type smoke form confirmation")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_type_smoke_confirm':
+            return {"type_smoke_confirm": None}
+
+        if not self._is_valid_input_yes_no(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_yes_no")
+            return {"type_smoke_confirm": None}
+
+        if value.lower() in ['Nee', 'nee', "nee."]:
+            return {"type_smoke": None, "type_smoke_confirm": None}
+        else:
+            return {"type_smoke_confirm": value}
+
+
     def validate_number_smoke(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -174,6 +198,29 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
 
         return {"number_smoke": value}
 
+
+    def validate_number_smoke_confirm(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate number of smoke input confirmation"""
+
+        logging.info("Validate number smoke form confirmation")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_number_smoke_confirm':
+            return {"number_smoke_confirm": None}
+
+        if not self._is_valid_input_yes_no(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_yes_no")
+            return {"number_smoke_confirm": None}
+
+        if value.lower() in ['Nee', 'nee', "nee."]:
+            return {"number_smoke": None, "number_smoke_confirm": None}
+        else:
+            return {"number_smoke_confirm": value}
+
     @staticmethod
     def _is_valid_input_number(value):
         try:
@@ -191,3 +238,10 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         if (value < 1) or (value > 4):
             return False
         return True
+
+    @staticmethod
+    def _is_valid_input_yes_no(value):
+        if value.lower() in ['Ja', 'ja', 'ja.', 'Nee', 'nee', "nee."]:
+            return True
+        else:
+            return False

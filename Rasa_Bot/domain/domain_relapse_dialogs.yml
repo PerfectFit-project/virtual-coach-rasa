@@ -56,6 +56,24 @@ slots:
           - active_loop: type_and_number_smoke_form
             requested_slot: number_smoke
 
+  number_smoke_confirm:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: number_smoke_confirm
+
+  type_smoke_confirm:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: type_smoke_confirm
+
 responses:
 # General
   utter_debug_ab:
@@ -103,8 +121,12 @@ responses:
     - text: "Kun je aangeven wat je vandaag hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor
              e-sigaretten. Typ 3 voor shags. Typ 4 als je iets anders hebt gerookt.
              "
+  utter_ask_type_smoke_confirm:
+    - text: "Je hebt aangegeven dat je {type_smoke} hebt gerookt. Klopt dat? Typ ja of nee."
   utter_ask_number_smoke:
     - text: "Hoeveel heb je daarvan gerookt?"
+  utter_ask_number_smoke_confirm:
+    - text: "Je hebt aangegeven dat je daar {number_smoke} van hebt gerookt. Klopt dat?"
   utter_smoke_lapse_4:
     - text: "Dit is wat je hebt ingevuld, klopt dat? Typ 1 voor ja, typ 2 voor nee."
   utter_smoke_lapse_5:
@@ -189,4 +211,6 @@ forms:
   type_and_number_smoke_form:
     required_slots:
       - type_smoke
+      - type_smoke_confirm
       - number_smoke
+      - number_smoke_confirm

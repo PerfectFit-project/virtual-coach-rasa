@@ -133,32 +133,35 @@ stories:
   ## 3b smoking - lapse
 - story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
   steps:
-    - checkpoint: smoke_lapse
-    - action: utter_smoke_lapse_1
-    - action: type_and_number_smoke_form  # TODO: store number in DB.
-    - active_loop: type_and_number_smoke_form
-    - slot_was_set:
-      - requested_slot: type_smoke
-    - slot_was_set:
-      - requested_slot: number_smoke
-    - active_loop: null
-    - action: utter_smoke_lapse_4  # TODO: Validate the previous answer with yes/no
-    - action: utter_smoke_lapse_5
-    - action: utter_smoke_lapse_6
-    - action: utter_smoke_lapse_7
-    - action: utter_smoke_lapse_8
-    - action: utter_smoke_lapse_9
-    - action: utter_smoke_crave_10
-    - action: utter_smoke_crave_11
-    - action: utter_smoke_crave_12  # TODO: insert form, numbers 1-7
-    - action: utter_smoke_crave_13
-    - action: utter_smoke_crave_14  # TODO: insert form, multiple answers are allowed
-    - action: utter_smoke_crave_15
-    - action: utter_smoke_crave_16
-    - action: utter_smoke_crave_17  # TODO: insert form: 1-6, multiple answers allowed. Store to DB
-    - action: utter_smoke_crave_18  # TODO: insert form: free text
-    - action: utter_smoke_crave_19
-    - action: utter_smoke_crave_20
+  - checkpoint: smoke_lapse
+  - action: utter_smoke_lapse_1
+  - action: type_and_number_smoke_form  # TODO: store number in DB.
+  - active_loop: type_and_number_smoke_form
+  - slot_was_set:
+    - requested_slot: type_smoke
+  - slot_was_set:
+    - requested_slot: type_smoke_confirm  # TODO: maybe later substitue number for actual type
+  - slot_was_set:
+    - requested_slot: number_smoke
+  - slot_was_set:
+    - requested_slot: number_smoke_confirm
+  - active_loop: null
+  - action: utter_smoke_lapse_5
+  - action: utter_smoke_lapse_6
+  - action: utter_smoke_lapse_7
+  - action: utter_smoke_lapse_8
+  - action: utter_smoke_lapse_9
+  - action: utter_smoke_lapse_10
+  - action: utter_smoke_lapse_11
+  - action: utter_smoke_lapse_12  # TODO: insert form, numbers 1-7
+  - action: utter_smoke_lapse_13
+  - action: utter_smoke_lapse_14  # TODO: insert form, multiple answers are allowed
+  - action: utter_smoke_lapse_15
+  - action: utter_smoke_lapse_16
+  - action: utter_smoke_lapse_17  # TODO: insert form: 1-6, multiple answers allowed. Store to DB
+  - action: utter_smoke_lapse_18  # TODO: insert form: free text
+  - action: utter_smoke_lapse_19
+  - action: utter_smoke_lapse_20
 
 ## Stories for PA
 ## 2d Parent for PA - HRS

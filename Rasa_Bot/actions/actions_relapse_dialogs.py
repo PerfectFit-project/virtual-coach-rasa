@@ -245,3 +245,63 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             return True
         else:
             return False
+
+
+class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_what_doing_how_feel_smoke_form'
+
+    def validate_what_doing_smoke(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate what doing while smoking"""
+        max_val = 7
+        logging.info("Validate what doing smoke")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_what_doing_smoke':
+            return {"what_doing_smoke": None}
+
+        value = self._input_to_list(value, max_val)
+
+        if value is False:
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_numbers")
+            return {"what_doing_smoke": None}
+
+        return {"what_doing_smoke": value}
+
+
+    def validate_how_feel_smoke(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate type of smoke input confirmation"""
+        max_val = 6
+        logging.info("Validate how feel smoke")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_how_feel_smoke':
+            return {"how_feel_smoke": None}
+
+        value = self._input_to_list(value, max_val)
+
+        if value is False:
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_numbers")
+            return {"how_feel_smoke": None}
+
+        return {"how_feel_smoke": value}
+
+    @staticmethod
+    def _input_to_list(value, max_val):
+        try:
+            value = list(map(int, value.split()))
+        except ValueError:
+            return False
+        else:
+            if min(value) < 0 or max(value) > max_val:
+                return False
+            else:
+                return value

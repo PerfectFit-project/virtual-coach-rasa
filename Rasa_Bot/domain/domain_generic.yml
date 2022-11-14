@@ -55,5 +55,7 @@ responses:
      - text: "Zou je dat in meer woorden kunnen omschrijven?"
   utter_please_answer_number:
      - text: "Zou je dat kunnen beantwoorden met een nummer?"
+  utter_please_answer_numbers:
+    - text: "Zou je dat kunnen beantwoorden met één of meerdere nummers met een spatie er tussen?"
   utter_did_not_understand:
      - text: "Hmm ik heb dat niet begrepen."

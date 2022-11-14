@@ -152,7 +152,14 @@ stories:
   - action: utter_smoke_lapse_8
   - action: utter_smoke_lapse_9
   - action: utter_smoke_lapse_10
-  - action: utter_smoke_lapse_11
+  - action: what_doing_how_feel_smoke_form
+  - active_loop: what_doing_how_feel_smoke_form
+  - slot_was_set:
+    - requested_slot: what_doing_smoke
+  - slot_was_set:
+    - requested_slot: how_feel_smoke
+  - active_loop: null
+  - action: utter_smoke_lapse_11  # TODO: store to DB
   - action: utter_smoke_lapse_12  # TODO: insert form, numbers 1-7
   - action: utter_smoke_lapse_13
   - action: utter_smoke_lapse_14  # TODO: insert form, multiple answers are allowed

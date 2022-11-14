@@ -74,6 +74,24 @@ slots:
           - active_loop: type_and_number_smoke_form
             requested_slot: type_smoke_confirm
 
+  what_doing_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: what_doing_how_feel_smoke_form
+            requested_slot: what_doing_smoke
+
+  how_feel_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: what_doing_how_feel_smoke_form
+            requested_slot: how_feel_smoke
+
 responses:
 # General
   utter_debug_ab:
@@ -127,8 +145,6 @@ responses:
     - text: "Hoeveel heb je daarvan gerookt?"
   utter_ask_number_smoke_confirm:
     - text: "Je hebt aangegeven dat je daar {number_smoke} van hebt gerookt. Klopt dat?"
-  utter_smoke_lapse_4:
-    - text: "Dit is wat je hebt ingevuld, klopt dat? Typ 1 voor ja, typ 2 voor nee."
   utter_smoke_lapse_5:
     - text: "Bedankt voor jouw eerlijkheid."
   utter_smoke_lapse_6:
@@ -145,28 +161,28 @@ responses:
             ook in dit soort momenten hoe je de trek kan weerstaan. Zo wordt je er steeds beter in.
             "
   utter_smoke_lapse_9:
-    - text: "Om hiervan te leren helpt het om te kijken naar de situatie(s) waarin je toch weer ging roken."
+    - text: "Om hiervan te leren helpt het om te kijken naar de situatie(s) waarin je toch weer ging
+             roken. Daarom wil ik je daar wat vragen over stellen."
   utter_smoke_lapse_10:
     - text: "Daarom wil ik je daar wat vragen over stellen."
-  utter_smoke_lapse_11:
-    - text: "Wat was je aan het doen toen je rookte?"
-  utter_smoke_lapse_12:
-    - text: "Je mag meerdere antwoorden geven. Typ 1 als je aan het werk was. Typ 2 als je thuis
+  utter_ask_what_doing_smoke:
+    - text: "Wat was je aan het doen toen je rookte? Je mag meerdere antwoorden geven met een spatie
+            er tussen. Typ 1 als je aan het werk was. Typ 2 als je thuis
             bezig was met klusjes of huishouden. Typ 3 als je iets voor jezelf deed (hobby, met
             iemand afspreken). Typ 4 als je aan het eten of drinken was. Typ 5 als je net alcohol of
             koffie hebt gedronken. Typ 6 als je net wakker bent. Type 7 als je iets deed wat niet in
             het lijstje staat.
             "
-  utter_smoke_lapse_13:
-    - text: "Kun je vertellen hoe je je voelde toen je rookte?"
-  utter_smoke_lapse_14:
-    - text: "Je mag meerdere antwoorden geven. Typ 1 als je je schuldig voelde. Typ 2 als je je
+  utter_ask_how_feel_smoke:
+    - text: "Kun je vertellen hoe je je voelde toen je rookte? Je mag meerdere antwoorden geven met
+            een spatie ertussen. Typ 1 als je je schuldig voelde. Typ 2 als je je
             vervelend voelde. Typ 3 als je je verdrietig voelde. Typ 4 als je je het gevoel had dat
-            het niet zou lukken om te stoppen met roken. Typ 5 als je je opgelucht voelde.
+            het niet zou lukken om te stoppen met roken. Typ 5 als je je opgelucht voelde. 
+            Typ 6 als je met andere rokers was. 
             "
-  utter_smoke_lapse_15:
+  utter_smoke_lapse_11:
     - text: "Goed dat je je gevoelens kan benoemen. "
-  utter_smoke_lapse_16:
+  utter_smoke_lapse_12:
     - text: "Met wie was je toen je rookte?"
   utter_smoke_lapse_17:
     - text: "Je mag meerdere antwoorden geven. Typ 1 als je met je partner was. Typ 2 als je alleen
@@ -197,6 +213,7 @@ actions:
   - validate_crave_lapse_relapse_form
   - validate_ehbo_me_self_form
   - validate_type_and_number_smoke_form
+  - validate_what_doing_how_feel_smoke_form
 
 forms:
   crave_lapse_relapse_form:
@@ -214,3 +231,7 @@ forms:
       - type_smoke_confirm
       - number_smoke
       - number_smoke_confirm
+  what_doing_how_feel_smoke_form:
+    required_slots:
+      - what_doing_smoke
+      - how_feel_smoke

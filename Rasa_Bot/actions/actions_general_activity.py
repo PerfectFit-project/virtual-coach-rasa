@@ -1,4 +1,8 @@
-from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed, FirstAidKit
+import logging
+
+from sqlalchemy import update
+from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, FirstAidKit,
+                                              InterventionActivity)
 from virtual_coach_db.helper import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import TIMEZONE, DATABASE_URL
@@ -18,15 +22,13 @@ class GeneralActivityCheckRating(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        # at the moment we see only if it's higher
-        # or lower then 5
-        # TODO: check old scoring and determine if it's in top 5
-
         rating_value = int(tracker.get_slot('activity_useful_rating'))
+        activity_id = int(tracker.get_slot('last_activity_id_slot'))
 
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
 
+        # get the highest scored activities
         top_five_activities = (
             session.query(
                 FirstAidKit
@@ -40,23 +42,58 @@ class GeneralActivityCheckRating(Action):
         lowest_score = top_five_activities[-1].activity_rating
         highest_score = top_five_activities[0].activity_rating
 
-        if lowest_score < rating_value <= highest_score:
+        print('highest score ', highest_score)
+        print('lowest score ', lowest_score)
+
+        print('rate ', rating_value)
+
+        # if less than 5 items in the FAK, add the new one
+        if len(top_five_activities) < 5:
+
+            print('activities less then 5')
+
+            save_activity_to_fak(user_id, activity_id, rating_value)
+
+            session.commit()
+
+            return [SlotSet("general_activity_low_high_rating", 'high')]
+
+        elif lowest_score < rating_value:
+            # update the row containing the activity with the lowest rate
+            # with the current activity and the rate
+
+            print('in between ', rating_value)
+
+            session.execute(
+                update(FirstAidKit)
+                .where(FirstAidKit.first_aid_kit_id == top_five_activities[-1].first_aid_kit_id)
+                .values(
+                    intervention_activity_id=activity_id, activity_rating=rating_value)
+            )
+
+            session.commit()
+
             return [SlotSet("general_activity_low_high_rating", 'high')]
         else:
+            print('final else ')
             return [SlotSet("general_activity_low_high_rating", 'low')]
 
 
 class GetActivityUserInput(Action):
-    """Check if the activity has been already done by the user"""
+    """Get the user input and save it in the slot"""
 
     def name(self):
         return "get_activity_user_input"
 
     async def run(self, dispatcher, tracker, domain):
-        # for testing purposes, uses a random name
-        # TODO: get the name of the activity chosen from DB
 
-        return [SlotSet("activity_user_input", "This is a random input")]
+        activity_id = tracker.get_slot('last_activity_id_slot')
+        user_id = tracker.current_state()['sender_id']
+
+        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
+        last_input = user_inputs[-1].user_input
+
+        return [SlotSet("activity_user_input", last_input)]
 
 
 class CheckUserInputRequired(Action):
@@ -67,29 +104,41 @@ class CheckUserInputRequired(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        # for testing purposes, activities 6 and 7 will require input
-        # activities 8, 9, 10 will not require input
-        # TODO: implement input needed logic
+        activity_id = tracker.get_slot('last_activity_id_slot')
+        session = get_db_session(db_url=DATABASE_URL)
 
-        rating_value = tracker.get_slot('activity_useful_rating')
+        is_input_required = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id == activity_id
+            ).all()
+        )
 
-        if int(rating_value) <= 7:
-            return [SlotSet("is_user_input_required", True)]
-        else:
-            return [SlotSet("is_user_input_required", False)]
+        return [SlotSet("is_user_input_required", is_input_required)]
 
 
 class CheckActivityDone(Action):
-    """Check if the activity has been already done by the user"""
+    """Check if an input for the activity has been
+    already provided by the user"""
 
     def name(self):
         return "check_activity_done"
 
     async def run(self, dispatcher, tracker, domain):
-        # for testing purposes, returns false
-        # TODO: implement logic
 
-        return [SlotSet("is_activity_done", True)]
+        activity_id = tracker.get_slot('last_activity_id_slot')
+        user_id = tracker.current_state()['sender_id']
+
+        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
+
+        if user_inputs[-1].user_input is None:
+            activity_done = False
+        else:
+            activity_done = True
+
+        return [SlotSet("is_activity_done", activity_done)]
 
 
 class ValidateActivityUsefulnessForm(FormValidationAction):
@@ -101,21 +150,20 @@ class ValidateActivityUsefulnessForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate activity_useful_rating input."""
-
         last_utterance = get_latest_bot_utterance(tracker.events)
 
         if last_utterance != 'utter_ask_activity_useful_rating':
             return {"activity_useful_rating": None}
 
         if not self._validate_activity_useful_rating_response(value):
-            dispatcher.utter_message(response="utter_please_answer_1_to_10")
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
             return {"activity_useful_rating": None}
 
         return {"activity_useful_rating": value}
 
     @staticmethod
     def _validate_activity_useful_rating_response(value):
-        if 1 <= int(value) <= 10:
+        if 0 <= int(value) <= 10:
             return True
         return False
 
@@ -183,7 +231,26 @@ class SaveDescriptionInDb(Action):
     async def run(self, dispatcher, tracker, domain):
         # pylint: disable=unused-argument
         """Save the provided description inf the DB."""
+
         description = tracker.get_slot('general_activity_description_slot')
+
+        activity_id = tracker.get_slot('last_activity_id_slot')
+        user_id = tracker.current_state()['sender_id']
+
+        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
+        row_id = user_inputs[-1].intervention_activities_performed_id
+
+        session = get_db_session(db_url=DATABASE_URL)
+
+        session.execute(
+            update(InterventionActivitiesPerformed)
+            .where(InterventionActivitiesPerformed.intervention_activities_performed_id == row_id)
+            .values(
+                user_input=description
+            )
+        )
+
+        session.commit()
 
         return []
 
@@ -273,10 +340,13 @@ class GetLastPerformedActivity(Action):
         )
 
         if last_activity is not None:
-            activity_title = last_activity.intervention_activity.intervention_activity_title
-            return [SlotSet("last_activity_slot", activity_title)]
+            activity_title = last_activity[0].intervention_activity.intervention_activity_title
+            activity_id = last_activity[0].intervention_activity.intervention_activity_id
+            return [SlotSet("last_activity_slot", activity_title),
+                    SlotSet("last_activity_id_slot", activity_id)]
         else:
-            return [SlotSet("last_activity_slot", None)]
+            return [SlotSet("last_activity_slot", None),
+                    SlotSet("last_activity_id_slot", None)]
 
 
 class StoreActivityToFak(Action):
@@ -286,8 +356,12 @@ class StoreActivityToFak(Action):
         return "store_activity_to_fak"
 
     async def run(self, dispatcher, tracker, domain):
-        # for testing purposes, returns false
-        # TODO: implement logic
+
+        rating_value = int(tracker.get_slot('activity_useful_rating'))
+        activity_id = int(tracker.get_slot('last_activity_id_slot'))
+        user_id = tracker.current_state()['sender_id']
+
+        save_activity_to_fak(user_id, activity_id, rating_value)
 
         return []
 
@@ -328,3 +402,29 @@ class SetSlotGeneralActivity(Action):
         return [SlotSet("current_intervention_component",
                         ExecutionInterventionComponents.GENERAL_ACTIVITY)]
 
+
+def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
+    session = get_db_session(db_url=DATABASE_URL)
+
+    session.add(
+        FirstAidKit(users_nicedayuid=user_id,
+                    intervention_activity_id=activity_id,
+                    activity_rating=rating_value)
+    )
+    session.commit()
+
+
+def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
+    session = get_db_session(db_url=DATABASE_URL)
+
+    user_inputs = (
+        session.query(
+            InterventionActivitiesPerformed
+        )
+        .filter(
+            InterventionActivitiesPerformed.users_nicedayuid == user_id,
+            InterventionActivity.intervention_activity_id == activity_id
+        ).all()
+    )
+
+    return user_inputs

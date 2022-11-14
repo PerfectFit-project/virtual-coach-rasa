@@ -70,6 +70,13 @@ slots:
     mappings:
       - type: custom
 
+  # ID of last performed activity as stored in the DB
+  last_activity_id_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
   # name of first proposed next activity
   activity1_name:
     type: text

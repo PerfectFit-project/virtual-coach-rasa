@@ -305,3 +305,40 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
                 return False
             else:
                 return value
+
+class ValidateWithWhomEventSmokeForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_with_whom_event_smoke_form'
+
+    def validate_with_whom_smoke(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate with whom smoke """
+        max_val = 6
+        logging.info("Validate with whom smoke")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_with_whom_smoke':
+            return {"with_whom_smoke": None}
+
+        value = self._input_to_list(value, max_val)
+
+        if value is False:
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_numbers")
+            return {"with_whom_smoke": None}
+
+        return {"with_whom_smoke": value}
+
+    @staticmethod
+    def _input_to_list(value, max_val):
+        try:
+            value = list(map(int, value.split()))
+        except ValueError:
+            return False
+        else:
+            if min(value) < 0 or max(value) > max_val:
+                return False
+            else:
+                return value

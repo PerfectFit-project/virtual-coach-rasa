@@ -92,10 +92,26 @@ slots:
           - active_loop: what_doing_how_feel_smoke_form
             requested_slot: how_feel_smoke
 
+  with_whom_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: with_whom_event_smoke_form
+            requested_slot: with_whom_smoke
+
+  event_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: with_whom_event_smoke_form
+            requested_slot: event_smoke
+
 responses:
 # General
-  utter_debug_ab:
-    - text: "De waarde van smoke or pa form is: {smoke_or_pa}"
   utter_relapse_intro_codeword:
     - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
   utter_relapse_intro_offer_help:
@@ -181,19 +197,18 @@ responses:
             Typ 6 als je met andere rokers was. 
             "
   utter_smoke_lapse_11:
-    - text: "Goed dat je je gevoelens kan benoemen. "
-  utter_smoke_lapse_12:
-    - text: "Met wie was je toen je rookte?"
-  utter_smoke_lapse_17:
-    - text: "Je mag meerdere antwoorden geven. Typ 1 als je met je partner was. Typ 2 als je alleen
-            was. Typ 3 als je met vrienden en/of familie was. Typ 4 als was je met kennissen was.
-            Typ 5 als je met collega's was. Typ 6 als je met andere rokers was.
-            "
-  utter_smoke_lapse_18:
+    - text: "Goed dat je je gevoelens kan benoemen."
+  utter_ask_with_whom_smoke:
+    - text: "Met wie was je toen je rookte? Je mag meerdere antwoorden geven. Typ 1 als je met je
+             partner was. Typ 2 als je alleen was. Typ 3 als je met vrienden en/of familie was. Typ
+             4 als was je met kennissen was. Typ 5 als je met collega's was. Typ 6 als je met andere
+             rokers was.
+             "
+  utter_ask_event_smoke:
     - text: "Gebeurde er iets bijzonders?"
-  utter_smoke_lapse_19:
+  utter_smoke_lapse_12:
     - text: "Dankjewel voor het delen."
-  utter_smoke_lapse_20:
+  utter_smoke_lapse_13:
     - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren
             patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende
             keer dat je in die situatie zit.
@@ -214,6 +229,7 @@ actions:
   - validate_ehbo_me_self_form
   - validate_type_and_number_smoke_form
   - validate_what_doing_how_feel_smoke_form
+  - validate_with_whom_event_smoke_form
 
 forms:
   crave_lapse_relapse_form:
@@ -235,3 +251,7 @@ forms:
     required_slots:
       - what_doing_smoke
       - how_feel_smoke
+  with_whom_event_smoke_form:
+    required_slots:
+      - with_whom_smoke
+      - event_smoke

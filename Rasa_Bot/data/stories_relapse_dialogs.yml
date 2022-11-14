@@ -37,7 +37,6 @@ stories:
 - story: smoking parent crave
   steps:
   - checkpoint: smoke_parent
-  - action: utter_debug_ab
   - action: utter_specify_smoke
   - action: crave_lapse_relapse_form
   - active_loop: crave_lapse_relapse_form
@@ -62,7 +61,6 @@ stories:
 - story: smoking parent relapse
   steps:
   - checkpoint: smoke_parent
-  - action: utter_debug_ab
   - action: utter_specify_smoke
   - action: crave_lapse_relapse_form
   - active_loop: crave_lapse_relapse_form
@@ -168,7 +166,13 @@ stories:
   - active_loop: null
   - action: utter_smoke_lapse_12
   - action: utter_smoke_lapse_13
-
+  - action: utter_smoke_lapse_14  # TODO: send bar diagram moeilijke situaties
+  - action: reflect_bar_chart_form
+  - active_loop: reflect_bar_chart_form
+  - slot_was_set:
+    - requested_slot: reflect_bar_chart
+  - active_loop: null
+  - action: utter_smoke_lapse_15
 
 ## Stories for PA
 ## 2d Parent for PA - HRS

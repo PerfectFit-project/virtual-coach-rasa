@@ -1,6 +1,7 @@
 """
 Contains custom actions related to the relapse dialogs
 """
+import string
 from .helper import get_latest_bot_utterance
 import logging
 from typing import Any, Dict, Text
@@ -13,6 +14,17 @@ from rasa_sdk.forms import FormValidationAction
 from .definitions import REDIS_URL
 
 celery = Celery(broker=REDIS_URL)
+
+
+def validate_long_enough_response(response):
+    if response is None:
+        return False
+    return len(simple_sanitize_input(response).split()) > 5
+
+
+def simple_sanitize_input(value):
+    return value.translate({c: "" for c in string.punctuation})
+
 
 # Trigger relapse phase through celery
 class TriggerRelapseDialog(Action):
@@ -109,7 +121,6 @@ class ValidateEhboMeSelfForm(FormValidationAction):
 
         logging.info("Validate ehbo me self form")  # Debug message
 
-
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_ehbo_me_self':
             return {"ehbo_me_self": None}
@@ -155,7 +166,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
 
         return {"type_smoke": value}
 
-
     def validate_type_smoke_confirm(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -178,7 +188,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         else:
             return {"type_smoke_confirm": value}
 
-
     def validate_number_smoke(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -197,7 +206,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             return {"number_smoke": None}
 
         return {"number_smoke": value}
-
 
     def validate_number_smoke_confirm(
             self, value: Text, dispatcher: CollectingDispatcher,
@@ -272,7 +280,6 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
 
         return {"what_doing_smoke": value}
 
-
     def validate_how_feel_smoke(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -305,6 +312,7 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
                 return False
             else:
                 return value
+
 
 class ValidateWithWhomEventSmokeForm(FormValidationAction):
     def name(self) -> Text:
@@ -342,3 +350,26 @@ class ValidateWithWhomEventSmokeForm(FormValidationAction):
                 return False
             else:
                 return value
+
+
+class ValidateReflectBarChartForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_reflect_bar_chart_form'
+
+    def validate_reflect_bar_chart(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate reflect bar chart"""
+        logging.info("Validate with whom smoke")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_reflect_bar_chart':
+            return {"reflect_bar_chart": None}
+
+        long_enough_response = validate_long_enough_response(value)
+        if not long_enough_response:
+            dispatcher.utter_message(response="utter_please_answer_more_words")
+            return {"reflect_bar_chart": None}
+
+        return {"reflect_bar_chart": value}

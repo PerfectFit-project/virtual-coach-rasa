@@ -110,6 +110,15 @@ slots:
           - active_loop: with_whom_event_smoke_form
             requested_slot: event_smoke
 
+  reflect_bar_chart:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: reflect_bar_chart_form
+            requested_slot: reflect_bar_chart
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -213,7 +222,20 @@ responses:
             patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende
             keer dat je in die situatie zit.
             "
-
+  utter_smoke_lapse_14:
+    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je kreeg zin om te roken in de
+            volgende situaties:"
+  utter_ask_reflect_bar_chart:
+    - text: "Hoe vind je het om dit zo te zien?"
+  utter_smoke_lapse_15:
+    - text: "Mooi dat dit zo kan benoemen."
+  utter_smoke_lapse_16:
+    - text: "Op dit moment kun je ervoor kiezen om door te zetten en opnieuw te stoppen met roken."
+  utter_smoke_lapse_17:
+    - text: "Ik raad je aan om meteen weer te stoppen. Wat kan helpen is om meteen de rest van de
+            sigaretten, e-sigaret navullingen, tabak etc. weg te gooien. Het kan ook helpen om te
+            praten met bijvoorbeeld een vriend of familielid over hoe het is gegaan en je plan om
+            opnieuw te stoppen."
 # PA
   utter_pa_define_1:
     - text: "Kun je mij vertellen wat er aan de hand is?"
@@ -230,6 +252,7 @@ actions:
   - validate_type_and_number_smoke_form
   - validate_what_doing_how_feel_smoke_form
   - validate_with_whom_event_smoke_form
+  - validate_reflect_bar_chart_form
 
 forms:
   crave_lapse_relapse_form:
@@ -255,3 +278,6 @@ forms:
     required_slots:
       - with_whom_smoke
       - event_smoke
+  reflect_bar_chart_form:
+    required_slots:
+      - reflect_bar_chart

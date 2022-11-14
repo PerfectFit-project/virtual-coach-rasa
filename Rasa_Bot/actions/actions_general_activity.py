@@ -1,4 +1,5 @@
 import logging
+import random
 
 from sqlalchemy import update
 from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, FirstAidKit,
@@ -263,17 +264,25 @@ class GetThreeRandomActivities(Action):
         # pylint: disable=unused-argument
         """pick three random activities and sets the slots"""
         # TODO: implement resource getting and random assignment
-        seed(1)
-        value1 = randint(0, 10)
-        value2 = randint(0, 10)
-        value3 = randint(0, 10)
-        activity_one = "activity " + str(value1)
-        activity_two = "activity " + str(value2)
-        activity_three = "activity " + str(value3)
 
-        return [SlotSet("activity1_name", activity_one),
-                SlotSet("activity2_name", activity_two),
-                SlotSet("activity3_name", activity_three)]
+        session = get_db_session(db_url=DATABASE_URL)
+        activity_id = tracker.get_slot('last_activity_id_slot')
+
+        available_activities = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id != activity_id
+            )
+            .all()
+        )
+
+        rnd_activities = random.sample(available_activities, 3)
+
+        return [SlotSet("activity1_name", rnd_activities[0].intervention_activity_title),
+                SlotSet("activity2_name", rnd_activities[1].intervention_activity_title),
+                SlotSet("activity3_name", rnd_activities[2].intervention_activity_title)]
 
 
 class ValidateGeneralActivityNextActivityForm(FormValidationAction):

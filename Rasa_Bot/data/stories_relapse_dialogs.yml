@@ -192,6 +192,36 @@ stories:
     - requested_slot: type_smoke_relapse_confirm
   - active_loop: null
   - action: utter_smoke_lapse_5
+  - action: utter_smoke_relapse_1
+  - action: utter_smoke_relapse_2
+  - action: utter_smoke_relapse_3
+  - action: utter_smoke_relapse_4  # TODO: Check with kristell that this question indicates it is about today!
+  - action: what_doing_how_feel_smoke_form  # Note: reuse the form from the lapse dialog
+  - active_loop: what_doing_how_feel_smoke_form
+  - slot_was_set:
+    - requested_slot: what_doing_smoke  # TODO: store in DB
+  - slot_was_set:
+    - requested_slot: how_feel_smoke   # TODO: store to DB
+  - active_loop: null
+  - action: utter_smoke_lapse_11
+  - action: with_whom_event_smoke_form
+  - active_loop: with_whom_event_smoke_form
+  - slot_was_set:
+    - requested_slot: with_whom_smoke   # TODO: store to DB
+  - slot_was_set:
+    - requested_slot: event_smoke  # TODO: store to DB. These parameters can all be stored in one go
+  - active_loop: null
+  - action: utter_smoke_lapse_12
+  - action: utter_smoke_lapse_13
+  - action: utter_smoke_lapse_14  # TODO: Show bar diagram
+  - action: reflect_bar_chart_form
+  - active_loop: reflect_bar_chart_form
+  - slot_was_set:
+    - requested_slot: reflect_bar_chart
+  - active_loop: null
+  - action: utter_smoke_lapse_15
+  - action: utter_smoke_lapse_16
+
 
 ## Stories for PA
 ## 2d Parent for PA - HRS

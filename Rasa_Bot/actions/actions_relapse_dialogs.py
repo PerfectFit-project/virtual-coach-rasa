@@ -285,7 +285,7 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate type of smoke input confirmation"""
-        max_val = 6
+        max_val = 5
         logging.info("Validate how feel smoke")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)

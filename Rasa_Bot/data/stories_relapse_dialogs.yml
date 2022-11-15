@@ -173,6 +173,25 @@ stories:
     - requested_slot: reflect_bar_chart
   - active_loop: null
   - action: utter_smoke_lapse_15
+  - action: utter_smoke_lapse_16
+  - action: utter_smoke_lapse_17
+  - action: utter_smoke_lapse_18  # NOte: not finished
+
+## 3c smoking - Relapse
+  - checkpoint: smoke_relapse
+  - action: utter_smoke_lapse_1
+  - action: type_and_number_smoke_relapse_form
+  - active_loop: type_and_number_smoke_relapse_form
+  - slot_was_set:
+    - requested_slot: number_smoke_relapse  # TODO: store number in DB.
+  - slot_was_set:
+    - requested_slot: number_smoke_relapse_confirm  # TODO: maybe later substitue number for actual type
+  - slot_was_set:
+    - requested_slot: type_smoke_relapse
+  - slot_was_set:
+    - requested_slot: type_smoke_relapse_confirm
+  - active_loop: null
+  - action: utter_smoke_lapse_5
 
 ## Stories for PA
 ## 2d Parent for PA - HRS

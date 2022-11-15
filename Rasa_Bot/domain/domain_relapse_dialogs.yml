@@ -119,6 +119,42 @@ slots:
           - active_loop: reflect_bar_chart_form
             requested_slot: reflect_bar_chart
 
+  type_smoke_relapse:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_relapse_form
+            requested_slot: type_smoke_relapse
+
+  number_smoke_relapse:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_relapse_form
+            requested_slot: number_smoke_relapse
+
+  number_smoke_relapse_confirm:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_relapse_form
+            requested_slot: number_smoke_relapse_confirm
+
+  type_smoke_relapse_confirm:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_relapse_form
+            requested_slot: type_smoke_relapse_confirm
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -236,6 +272,21 @@ responses:
             sigaretten, e-sigaret navullingen, tabak etc. weg te gooien. Het kan ook helpen om te
             praten met bijvoorbeeld een vriend of familielid over hoe het is gegaan en je plan om
             opnieuw te stoppen."
+  utter_smoke_lapse_18:
+    - text: "Het kan ook helpen om te praten met bijvoorbeeld een vriend of familielid over hoe het 
+             is gegaan en je plan om opnieuw te stoppen."
+
+# 3c smoking - relapse
+  utter_ask_number_smoke_relapse:
+    - text: "Kun je aangeven hoeveel je de afgelopen twee weken ongeveer hebt gerookt?"
+  utter_ask_type_smoke_relapse:
+    - text: "Kun je aangeven wat je hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor e-sigaretten.
+             Typ 3 voor andere producten."
+  utter_ask_type_smoke_relapse_confirm:
+    - text: "Je hebt aangegeven dat je {type_smoke_relapse} hebt gerookt. Klopt dat? Typ ja of nee."
+  utter_ask_number_smoke_relapse_confirm:
+    - text: "Je hebt aangegeven dat je daar {number_smoke_relapse} van hebt gerookt. Klopt dat?"
+
 # PA
   utter_pa_define_1:
     - text: "Kun je mij vertellen wat er aan de hand is?"
@@ -253,6 +304,7 @@ actions:
   - validate_what_doing_how_feel_smoke_form
   - validate_with_whom_event_smoke_form
   - validate_reflect_bar_chart_form
+  - validate_type_and_number_smoke_relapse_form
 
 forms:
   crave_lapse_relapse_form:
@@ -281,3 +333,9 @@ forms:
   reflect_bar_chart_form:
     required_slots:
       - reflect_bar_chart
+  type_and_number_smoke_relapse_form:
+    required_slots:
+      - type_smoke_relapse
+      - type_smoke_relapse_confirm
+      - number_smoke_relapse
+      - number_smoke_relapse_confirm

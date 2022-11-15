@@ -373,3 +373,115 @@ class ValidateReflectBarChartForm(FormValidationAction):
             return {"reflect_bar_chart": None}
 
         return {"reflect_bar_chart": value}
+
+
+class ValidateTypeAndNumberSmokeRelapseForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_type_and_number_smoke_relapse_form'
+
+    def validate_type_smoke_relapse(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate type of smoke input relapse"""
+
+        logging.info("Validate type smoke relapse form")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_type_smoke_relapse':
+            return {"type_smoke_relapse": None}
+
+        if not self._is_valid_input_type(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            return {"type_smoke_relapse": None}
+
+        return {"type_smoke_relapse": value}
+
+    def validate_type_smoke_relapse_confirm(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate type of smoke input relapse confirmation"""
+
+        logging.info("Validate type smoke form relapse confirmation")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_type_smoke_relapse_confirm':
+            return {"type_smoke_relapse_confirm": None}
+
+        if not self._is_valid_input_yes_no(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_yes_no")
+            return {"type_smoke_relapse_confirm": None}
+
+        if value.lower() in ['Nee', 'nee', "nee."]:
+            return {"type_smoke_relapse": None, "type_smoke_relapse_confirm": None}
+        else:
+            return {"type_smoke_relapse_confirm": value}
+
+    def validate_number_smoke_relapse(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate number of relapse smokes"""
+
+        logging.info("Validate type number relapse smoke")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_number_smoke_relapse':
+            return {"number_smoke_relapse": None}
+
+        if not self._is_valid_input_number(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_number")
+            return {"number_smoke_relapse": None}
+
+        return {"number_smoke_relapse": value}
+
+    def validate_number_smoke_relapse_confirm(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate number of smoke input relapse confirmation"""
+
+        logging.info("Validate number smoke form relapse confirmation")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_number_smoke_relapse_confirm':
+            return {"number_smoke_relapse_confirm": None}
+
+        if not self._is_valid_input_yes_no(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_yes_no")
+            return {"number_smoke_relapse_confirm": None}
+
+        if value.lower() in ['Nee', 'nee', "nee."]:
+            return {"number_smoke_relapse": None, "number_smoke_relapse_confirm": None}
+        else:
+            return {"number_smoke_relapse_confirm": value}
+
+    @staticmethod
+    def _is_valid_input_number(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        return True
+
+    @staticmethod
+    def _is_valid_input_type(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 3):
+            return False
+        return True
+
+    @staticmethod
+    def _is_valid_input_yes_no(value):
+        if value.lower() in ['Ja', 'ja', 'ja.', 'Nee', 'nee', "nee."]:
+            return True
+        else:
+            return False

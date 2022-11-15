@@ -339,6 +339,19 @@ class ValidateWithWhomEventSmokeForm(FormValidationAction):
 
         return {"with_whom_smoke": value}
 
+    def validate_event_smoke(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate event smoke"""
+        logging.info("Validate event smoke")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_event_smoke':
+            return {"with_whom_smoke": None}
+
+        return {"with_whom_smoke": value}
+
     @staticmethod
     def _input_to_list(value, max_val):
         try:
@@ -485,3 +498,82 @@ class ValidateTypeAndNumberSmokeRelapseForm(FormValidationAction):
             return True
         else:
             return False
+
+
+class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_pa_type_together_why_fail_form'
+
+    def validate_pa_type(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa_type"""
+        logging.info("Validate type smoke relapse form")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_pa_type':
+            return {"pa_type": None}
+
+        return {"pa_type": value}
+
+    def validate_pa_together(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa_ together"""
+        logging.info("Validate type pa together")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_pa_together':
+            return {"pa_together": None}
+
+        if not self._is_valid_input(value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"pa_together": None}
+
+        return {"pa_together": value}
+
+    def validate_pa_why_fail(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa why fail"""
+        max_val = 7
+        logging.info("Validate pa why fail")  # Debug message
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_pa_why_fail':
+            return {"pa_why_fail": None}
+
+        value = self._input_to_list(value, max_val)
+
+        if value is False:
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_numbers")
+            return {"pa_why_fail": None}
+
+        return {"pa_why_fail": value}
+
+    @staticmethod
+    def _input_to_list(value, max_val):
+        try:
+            value = list(map(int, value.split()))
+        except ValueError:
+            return False
+        else:
+            if min(value) < 0 or max(value) > max_val:
+                return False
+            else:
+                return value
+
+    @staticmethod
+    def _is_valid_input(value):
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        if (value < 1) or (value > 2):
+            return False
+        return True

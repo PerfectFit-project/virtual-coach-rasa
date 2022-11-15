@@ -224,16 +224,21 @@ stories:
 
 
 ## Stories for PA
-## 2d Parent for PA - HRS
+## 2d/2e (identical) Parent for PA - HRS
 - story: pa parent hrs
   steps:
   - checkpoint: pa_parent
-  - action: utter_pa_define_1
-  - action: utter_pa_define_2
-
-## 2e Parent for PA - Relapse
-- story: pa parent
-  steps:
-  - checkpoint: pa_parent
-  - action: utter_pa_define_1
-  - action: utter_pa_define_2
+  - action: utter_pa_define_1  # Ask Kristell if this is needed.
+  - action: utter_pa_lapse_1
+  - action: utter_pa_lapse_2
+  - action: utter_pa_lapse_3
+  - action: pa_type_together_why_fail_form
+  - active_loop: pa_type_together_why_fail_form
+  - slot_was_set:
+    - requested_slot: pa_type   # TODO: store to DB
+  - slot_was_set:
+    - requested_slot: pa_together
+  - slot_was_set:
+    - requested_slot: pa_why_fail  # TODO: if answer is 7 ask Kristell
+  - active_loop: null
+  - action: utter_pa_lapse_4

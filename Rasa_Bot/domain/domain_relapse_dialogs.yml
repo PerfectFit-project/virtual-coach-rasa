@@ -155,6 +155,31 @@ slots:
           - active_loop: type_and_number_smoke_relapse_form
             requested_slot: type_smoke_relapse_confirm
 
+  pa_type:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_type_together_why_fail_form
+            requested_slot: pa_type
+  pa_together:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_type_together_why_fail_form
+            requested_slot: pa_together
+  pa_why_fail:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_type_together_why_fail_form
+            requested_slot: pa_why_fail
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -306,10 +331,34 @@ responses:
 # PA
   utter_pa_define_1:
     - text: "Kun je mij vertellen wat er aan de hand is?"
-  utter_pa_define_2:
+  utter_ask_specify_pa:
     - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt. Typ '2' als je merkt
              dat het bewegen over het algemeen niet zo goed gaat als je zou willen.
              "
+  utter_pa_lapse_1:
+    - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan
+             lastig zijn. Hoe vervelend ook, het kan dus gebeuren dat het even niet lukt. Wees dus
+             niet te hard voor jezelf. Daardoor kun je je rot voelen en dan krijg je minder zin om
+             te gaan. 
+             "
+  utter_pa_lapse_2:
+    - text: "En je kunt het ook positief bekijken: er zijn momenten geweest dat je wel in beweging
+             kwam. Dat is heel goed!"
+  utter_pa_lapse_3:
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen
+             zin hebt om in beweging te komen. Daarom wil ik je wat vragen stellen over de situatie
+             waarin je zit. "
+  utter_ask_pa_type:
+    - text: "Kun je mij vertellen wat voor lichamelijke activiteit had je gepland om nu te doen?"
+  utter_ask_pa_together:
+    - text: "Zou je dit met iemand samen doen? Typ 1 voor ja, typ 2 voor nee."
+  utter_ask_pa_why_fail:
+    - text: "Kun je aangeven wat de reden is dat dat je nu niet lukt? Je mag meerdere
+             antwoorden geven. Typ 1 als je geen zin hebt. Typ 2 als je moe bent en geen energie
+             hebt. Typ 3 als je geen tijd hebt. Typ 4 als er iets tussen is gekomen. Typ 5 als het
+             ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
+  utter_pa_lapse_4:
+    - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
 
 actions:
   - action_trigger_relapse
@@ -321,6 +370,7 @@ actions:
   - validate_with_whom_event_smoke_form
   - validate_reflect_bar_chart_form
   - validate_type_and_number_smoke_relapse_form
+  - validate_pa_type_together_why_fail_form
 
 forms:
   crave_lapse_relapse_form:
@@ -355,3 +405,8 @@ forms:
       - type_smoke_relapse_confirm
       - number_smoke_relapse
       - number_smoke_relapse_confirm
+  pa_type_together_why_fail_form:
+    required_slots:
+      - pa_type
+      - pa_together
+      - pa_why_fail

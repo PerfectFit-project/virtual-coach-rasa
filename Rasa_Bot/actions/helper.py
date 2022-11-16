@@ -55,7 +55,7 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
     return intervention_component_id
 
 
-def get_latest_bot_utterance(events) -> str:
+def get_latest_bot_utterance(events):
     events_bot = []
 
     for event in events:

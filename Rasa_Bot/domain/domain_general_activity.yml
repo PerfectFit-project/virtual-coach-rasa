@@ -95,6 +95,12 @@ slots:
     influence_conversation: false
     mappings:
       - type: custom
+  # ids of the three random activities
+  rnd_activities_ids:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
   # name of chosen activity
   chosen_activity_slot:
     type: text
@@ -142,7 +148,7 @@ forms:
 
 responses:
   utter_ask_activity_useful_rating: #6
-    - text: "Laten we eerst terugkijken op je vorige oefening. Hoe nuttig vond je de oefening {last_activity_slot}? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
+    - text: "Laten we eerst terugkijken op je vorige oefening. Hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
   utter_general_activity_look_back:
@@ -164,8 +170,10 @@ responses:
     - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
   utter_ask_general_activity_description_slot:
     - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos. "
+  utter_general_activity_choose_next_activity:
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit drie oefeningen."
   utter_ask_general_activity_next_activity_slot:
-    - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit drie oefeningen. Welke oefening wil je doen? Typ 1 als je {activity1_name} wilt doen. Typ 2 als je {activity2_name} wilt doen. Typ 3 als je {activity3_name} wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
+    - text: "Welke oefening wil je doen? Typ 1 als je '{activity1_name}' wilt doen. Typ 2 als je '{activity2_name}' wilt doen. Typ 3 als je '{activity3_name}' wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
   utter_general_activity_next_user:
     - text: "Oké, goede keuze! Veel succes met de oefening."
   utter_general_activity_next_coach:
@@ -187,3 +195,4 @@ actions:
   - validate_activity_usefulness_form # validate the slot activity_useful_rating
   - check_who_decides # determines if the user can decide or if the coach decides
   - action_set_slot_general_activity # set the slot to the current running dialog
+  - load_activity # load the activity instructions

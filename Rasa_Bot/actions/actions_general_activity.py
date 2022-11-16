@@ -117,7 +117,7 @@ class CheckUserInputRequired(Action):
             ).all()
         )
 
-        return [SlotSet("is_user_input_required", is_input_required)]
+        return [SlotSet("is_user_input_required", is_input_required[0].user_input_required)]
 
 
 class CheckActivityDone(Action):
@@ -263,26 +263,16 @@ class GetThreeRandomActivities(Action):
     async def run(self, dispatcher, tracker, domain):
         # pylint: disable=unused-argument
         """pick three random activities and sets the slots"""
-        # TODO: implement resource getting and random assignment
 
-        session = get_db_session(db_url=DATABASE_URL)
         activity_id = tracker.get_slot('last_activity_id_slot')
 
-        available_activities = (
-            session.query(
-                InterventionActivity
-            )
-            .filter(
-                InterventionActivity.intervention_activity_id != activity_id
-            )
-            .all()
-        )
-
-        rnd_activities = random.sample(available_activities, 3)
+        rnd_activities = get_random_activities(activity_id, 3)
+        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
 
         return [SlotSet("activity1_name", rnd_activities[0].intervention_activity_title),
                 SlotSet("activity2_name", rnd_activities[1].intervention_activity_title),
-                SlotSet("activity3_name", rnd_activities[2].intervention_activity_title)]
+                SlotSet("activity3_name", rnd_activities[2].intervention_activity_title),
+                SlotSet("rnd_activities_ids", rnd_activities_ids)]
 
 
 class ValidateGeneralActivityNextActivityForm(FormValidationAction):
@@ -294,7 +284,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate general_activity_next_activity_slot input."""
-
+        print("ECCOMI")
         last_utterance = get_latest_bot_utterance(tracker.events)
 
         if last_utterance != 'utter_ask_general_activity_next_activity_slot':
@@ -305,18 +295,16 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
             return {"general_activity_next_activity_slot": None}
 
         if value == '4':
-            seed(1)
-            value1 = randint(0, 10)
-            value2 = randint(0, 10)
-            value3 = randint(0, 10)
-            activity_one = "activity " + str(value1)
-            activity_two = "activity " + str(value2)
-            activity_three = "activity " + str(value3)
+            activity_id = tracker.get_slot('last_activity_id_slot')
 
-            SlotSet("activity1_name", activity_one)
-            SlotSet("activity2_name", activity_two)
-            SlotSet("activity3_name", activity_three)
-            return {"general_activity_next_activity_slot": None}
+            rnd_activities = get_random_activities(activity_id, 3)
+            rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
+
+            return {"general_activity_next_activity_slot": None,
+                    "activity1_name": rnd_activities[0].intervention_activity_title,
+                    "activity2_name": rnd_activities[1].intervention_activity_title,
+                    "activity3_name": rnd_activities[2].intervention_activity_title,
+                    "rnd_activities_ids": rnd_activities_ids}
 
         return {"general_activity_next_activity_slot": value}
 
@@ -389,7 +377,7 @@ class GetActivityCoachChoice(Action):
 
 
 class CheckWhoDecides(Action):
-    """TCheck if the user or the coach decides the next activity"""
+    """Check if the user or the coach decides the next activity"""
 
     def name(self):
         return "check_who_decides"
@@ -401,6 +389,46 @@ class CheckWhoDecides(Action):
         decider = 'user'
 
         return [SlotSet("who_decides_slot", decider)]
+
+
+class LoadActivity(Action):
+    """load the activity instructions"""
+
+    def name(self):
+        return "load_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        chosen_option = int(tracker.current_state()['general_activity_next_activity_slot'])
+        activities_slot = tracker.current_state()['rnd_activities_ids']
+        user_id = tracker.current_state()['sender_id']
+
+        activity_id = activities_slot[chosen_option + 1].intervention_activity_id
+
+        session = get_db_session(db_url=DATABASE_URL)
+
+        # save the activity to the DB
+
+        session.add(
+            InterventionActivitiesPerformed(users_nicedayuid=user_id,
+                                            intervention_activity_id=activity_id)
+        )
+
+        session.commit()
+
+        # get the instructions
+        instructions = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id == activity_id
+            ).all()
+        )
+
+        # prompt the message
+        dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
+        return []
 
 
 class SetSlotGeneralActivity(Action):
@@ -437,3 +465,21 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
     )
 
     return user_inputs
+
+
+def get_random_activities(avoid_activity_id: int, number_of_activities: int):
+    session = get_db_session(db_url=DATABASE_URL)
+
+    available_activities = (
+        session.query(
+            InterventionActivity
+        )
+        .filter(
+            InterventionActivity.intervention_activity_id != avoid_activity_id
+        )
+        .all()
+    )
+
+    rnd_activities = random.sample(available_activities, number_of_activities)
+
+    return rnd_activities

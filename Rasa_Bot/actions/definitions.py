@@ -19,6 +19,9 @@ MORNING = (6, 12)
 AFTERNOON = (12, 18)
 EVENING = (18, 24)
 
+# number of activities displayed by the first aid kit
+NUM_TOP_ACTIVITIES = 5
+
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
     FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?

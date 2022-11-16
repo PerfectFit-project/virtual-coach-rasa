@@ -3,7 +3,8 @@ from rasa_sdk.events import SlotSet
 from virtual_coach_db.dbschema.models import FirstAidKit
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-from .definitions import DATABASE_URL
+from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
+
 
 
 class ActionGetFirstAidKit(Action):
@@ -34,8 +35,8 @@ class ActionGetFirstAidKit(Action):
 
             kit_exists = True
 
-            # get up to the first 5 highest rated activities
-            sorted_activities = sorted(selected, key=lambda x: x.activity_rating)[:5]
+            # get up to the highest rated activities
+            sorted_activities = sorted(selected, key=lambda x: x.activity_rating)[:NUM_TOP_ACTIVITIES]
 
             for activity_idx, activity in enumerate(sorted_activities):
                 kit_text += str(activity_idx + 1) + ") "

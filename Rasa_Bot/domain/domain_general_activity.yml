@@ -3,6 +3,12 @@ intents:
 
 
 slots:
+  # Check if it is the first time the dialog is performed
+  general_activity_first_execution:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
   # The user's rating of previous activity
   activity_useful_rating:
     type: float
@@ -180,6 +186,7 @@ responses:
     - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen. Veel succes! "
 
 actions:
+  - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
   - check_user_input_required   # check if the selected activity requires the input of the user
   - check_activity_done # check if the activity selected has been already done

@@ -14,9 +14,20 @@ stories:
   - checkpoint: rescheduling_query_dialog
 
 
-- story: continue after rescheduling
+- story: continue after rescheduling first execution
   steps:
   - checkpoint: continue_with_general_activity
+  - action: check_if_first_execution_ga
+  - slot_was_set:
+    - general_activity_first_execution: true
+  - checkpoint: choose_activity_checkpoint
+
+- story: continue after rescheduling not first time
+  steps:
+  - checkpoint: continue_with_general_activity
+  - action: check_if_first_execution_ga
+  - slot_was_set:
+      - general_activity_first_execution: false
   - action: get_last_performed_activity
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form

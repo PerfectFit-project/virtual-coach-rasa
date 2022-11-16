@@ -15,6 +15,35 @@ from typing import Text, Dict, Any
 from random import randint, seed
 
 
+class CheckIfFirstExecutionGA(Action):
+    """Check if it is the first execution"""
+
+    def name(self):
+        return "check_if_first_execution_ga"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        user_id = tracker.current_state()['sender_id']
+        session = get_db_session(db_url=DATABASE_URL)
+
+        performed_activity = (
+            session.query(
+                InterventionActivitiesPerformed
+            )
+            .filter(
+                InterventionActivitiesPerformed.users_nicedayuid == user_id
+            )
+            .first()
+        )
+
+        if performed_activity is None:
+            first_execution = True
+        else:
+            first_execution = False
+
+        return [SlotSet("general_activity_first_execution", first_execution)]
+
+
 class GeneralActivityCheckRating(Action):
     """Check if the activity rating is in top five or not"""
 

@@ -413,14 +413,20 @@ class LoadActivity(Action):
         user_id = tracker.current_state()['sender_id']
 
         activity_id = activities_slot[chosen_option - 1]
-
         session = get_db_session(db_url=DATABASE_URL)
 
-        # save the activity to the DB
+        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
 
+        if user_inputs:
+            previous_input = user_inputs[-1].user_input
+        else:
+            previous_input = None
+
+        # save the activity to the DB
         session.add(
             InterventionActivitiesPerformed(users_nicedayuid=user_id,
-                                            intervention_activity_id=activity_id)
+                                            intervention_activity_id=activity_id,
+                                            user_input=previous_input)
         )
 
         session.commit()
@@ -469,7 +475,7 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
         )
         .filter(
             InterventionActivitiesPerformed.users_nicedayuid == user_id,
-            InterventionActivity.intervention_activity_id == activity_id
+            InterventionActivitiesPerformed.intervention_activity_id == activity_id
         ).all()
     )
 

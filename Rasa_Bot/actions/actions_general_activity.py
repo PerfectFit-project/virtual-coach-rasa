@@ -31,10 +31,11 @@ class CheckIfFirstExecutionGA(Action):
             .filter(
                 InterventionActivitiesPerformed.users_nicedayuid == user_id
             )
-            .first()
+            .all()
         )
 
-        first_execution = bool(performed_activity)
+        # if the query result is empty, no activity has been performed yet
+        first_execution = not bool(performed_activity)
 
         return [SlotSet("general_activity_first_execution", first_execution)]
 

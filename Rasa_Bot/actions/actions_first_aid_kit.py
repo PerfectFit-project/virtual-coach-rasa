@@ -36,7 +36,10 @@ class ActionGetFirstAidKit(Action):
             kit_exists = True
 
             # get up to the highest rated activities
-            sorted_activities = sorted(selected, key=lambda x: x.activity_rating)[:NUM_TOP_ACTIVITIES]
+            sorted_activities = sorted(
+                selected,
+                key=lambda x: x.activity_rating
+                )[:NUM_TOP_ACTIVITIES]
 
             for activity_idx, activity in enumerate(sorted_activities):
                 kit_text += str(activity_idx + 1) + ") "

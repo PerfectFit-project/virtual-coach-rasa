@@ -43,15 +43,9 @@ class GeneralActivityCheckRating(Action):
         lowest_score = top_five_activities[-1].activity_rating
         highest_score = top_five_activities[0].activity_rating
 
-        print('highest score ', highest_score)
-        print('lowest score ', lowest_score)
-
-        print('rate ', rating_value)
 
         # if less than 5 items in the FAK, add the new one
         if len(top_five_activities) < 5:
-
-            print('activities less then 5')
 
             save_activity_to_fak(user_id, activity_id, rating_value)
 
@@ -62,9 +56,6 @@ class GeneralActivityCheckRating(Action):
         elif lowest_score < rating_value:
             # update the row containing the activity with the lowest rate
             # with the current activity and the rate
-
-            print('in between ', rating_value)
-
             session.execute(
                 update(FirstAidKit)
                 .where(FirstAidKit.first_aid_kit_id == top_five_activities[-1].first_aid_kit_id)
@@ -76,7 +67,6 @@ class GeneralActivityCheckRating(Action):
 
             return [SlotSet("general_activity_low_high_rating", 'high')]
         else:
-            print('final else ')
             return [SlotSet("general_activity_low_high_rating", 'low')]
 
 
@@ -284,7 +274,6 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate general_activity_next_activity_slot input."""
-        print("ECCOMI")
         last_utterance = get_latest_bot_utterance(tracker.events)
 
         if last_utterance != 'utter_ask_general_activity_next_activity_slot':
@@ -305,7 +294,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
                     "activity2_name": rnd_activities[1].intervention_activity_title,
                     "activity3_name": rnd_activities[2].intervention_activity_title,
                     "rnd_activities_ids": rnd_activities_ids}
-
+        print('CHOSEN OPTION: ', value)
         return {"general_activity_next_activity_slot": value}
 
     @staticmethod
@@ -399,11 +388,11 @@ class LoadActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        chosen_option = int(tracker.current_state()['general_activity_next_activity_slot'])
-        activities_slot = tracker.current_state()['rnd_activities_ids']
+        chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
+        activities_slot = tracker.get_slot('rnd_activities_ids')
         user_id = tracker.current_state()['sender_id']
 
-        activity_id = activities_slot[chosen_option + 1].intervention_activity_id
+        activity_id = activities_slot[chosen_option - 1]
 
         session = get_db_session(db_url=DATABASE_URL)
 

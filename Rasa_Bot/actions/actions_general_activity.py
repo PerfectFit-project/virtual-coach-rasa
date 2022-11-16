@@ -1,4 +1,3 @@
-import logging
 import random
 
 from sqlalchemy import update
@@ -12,7 +11,6 @@ from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from typing import Text, Dict, Any
-from random import randint, seed
 
 
 class CheckIfFirstExecutionGA(Action):
@@ -36,10 +34,7 @@ class CheckIfFirstExecutionGA(Action):
             .first()
         )
 
-        if performed_activity is None:
-            first_execution = True
-        else:
-            first_execution = False
+        first_execution = bool(performed_activity)
 
         return [SlotSet("general_activity_first_execution", first_execution)]
 
@@ -91,20 +86,19 @@ class GeneralActivityCheckRating(Action):
 
             return [SlotSet("general_activity_low_high_rating", 'high')]
 
-        else:
-            # update the row containing the activity with the new rating
-            session.execute(
-                update(FirstAidKit)
-                .where(FirstAidKit.first_aid_kit_id == current_record[0].first_aid_kit_id)
-                .values(activity_rating=rating_value)
-            )
+        # update the row containing the activity with the new rating
+        session.execute(
+            update(FirstAidKit)
+            .where(FirstAidKit.first_aid_kit_id == current_record[0].first_aid_kit_id)
+            .values(activity_rating=rating_value)
+        )
 
-            session.commit()
+        session.commit()
 
         if rating_value > lowest_score:
             return [SlotSet("general_activity_low_high_rating", 'high')]
-        else:
-            return [SlotSet("general_activity_low_high_rating", 'low')]
+
+        return [SlotSet("general_activity_low_high_rating", 'low')]
 
 
 class GetActivityUserInput(Action):
@@ -219,7 +213,7 @@ class ValidateSaveOrEditForm(FormValidationAction):
 
     @staticmethod
     def _validate_save_or_edit_response(value):
-        if value == '1' or value == '2':
+        if value in ('1', '2'):
             return True
         return False
 
@@ -257,7 +251,6 @@ class SaveDescriptionInDb(Action):
         return 'save_description_in_db'
 
     async def run(self, dispatcher, tracker, domain):
-        # pylint: disable=unused-argument
         """Save the provided description inf the DB."""
 
         description = tracker.get_slot('general_activity_description_slot')
@@ -288,7 +281,6 @@ class GetThreeRandomActivities(Action):
         return 'get_three_random_activities'
 
     async def run(self, dispatcher, tracker, domain):
-        # pylint: disable=unused-argument
         """pick three random activities and sets the slots"""
 
         activity_id = tracker.get_slot('last_activity_id_slot')
@@ -367,9 +359,9 @@ class GetLastPerformedActivity(Action):
             activity_id = last_activity[0].intervention_activity.intervention_activity_id
             return [SlotSet("last_activity_slot", activity_title),
                     SlotSet("last_activity_id_slot", activity_id)]
-        else:
-            return [SlotSet("last_activity_slot", None),
-                    SlotSet("last_activity_id_slot", None)]
+
+        return [SlotSet("last_activity_slot", None),
+                SlotSet("last_activity_id_slot", None)]
 
 
 class GetActivityCoachChoice(Action):
@@ -379,7 +371,7 @@ class GetActivityCoachChoice(Action):
         return "get_activity_coach_choice"
 
     async def run(self, dispatcher, tracker, domain):
-        # for testing purposes, returns false
+        # for testing purposes, returns a random title
         # TODO: implement logic
 
         return [SlotSet("chosen_activity_slot", "this is the chosen activity")]

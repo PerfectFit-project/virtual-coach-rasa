@@ -9,7 +9,6 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from virtual_coach_db.helper import ExecutionInterventionComponents
 
 from .definitions import REDIS_URL
 from .definitions import TIMEZONE

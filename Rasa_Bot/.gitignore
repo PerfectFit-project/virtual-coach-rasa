@@ -5,4 +5,3 @@ events.db-shm
 events.db-wal
 events.db
 rasa.db
-/models/

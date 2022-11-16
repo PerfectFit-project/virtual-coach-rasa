@@ -43,7 +43,6 @@ stories:
   - slot_was_set:
     - is_user_input_required: false
   - action: utter_general_activity_look_back
-  - action: store_activity_to_fak
   - checkpoint: choose_activity_checkpoint
 
 ## 3c: The input of the user is required and already given

@@ -6,7 +6,7 @@ from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, F
                                               InterventionActivity)
 from virtual_coach_db.helper import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
-from .definitions import TIMEZONE, DATABASE_URL
+from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
 from .helper import get_latest_bot_utterance
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
@@ -37,15 +37,24 @@ class GeneralActivityCheckRating(Action):
             .filter(
                 FirstAidKit.users_nicedayuid == user_id
             )
-            .limit(5).all()
+            .limit(NUM_TOP_ACTIVITIES).all()
+        )
+
+        current_record = (
+            session.query(
+                FirstAidKit
+            )
+            .filter(
+                FirstAidKit.users_nicedayuid == user_id,
+                FirstAidKit.intervention_activity_id == activity_id
+            )
+            .all()
         )
 
         lowest_score = top_five_activities[-1].activity_rating
-        highest_score = top_five_activities[0].activity_rating
 
-
-        # if less than 5 items in the FAK, add the new one
-        if len(top_five_activities) < 5:
+        # if the activity is not in the FAK, add it
+        if not current_record:
 
             save_activity_to_fak(user_id, activity_id, rating_value)
 
@@ -53,18 +62,17 @@ class GeneralActivityCheckRating(Action):
 
             return [SlotSet("general_activity_low_high_rating", 'high')]
 
-        elif lowest_score < rating_value:
-            # update the row containing the activity with the lowest rate
-            # with the current activity and the rate
+        else:
+            # update the row containing the activity with the new rating
             session.execute(
                 update(FirstAidKit)
-                .where(FirstAidKit.first_aid_kit_id == top_five_activities[-1].first_aid_kit_id)
-                .values(
-                    intervention_activity_id=activity_id, activity_rating=rating_value)
+                .where(FirstAidKit.first_aid_kit_id == current_record[0].first_aid_kit_id)
+                .values(activity_rating=rating_value)
             )
 
             session.commit()
 
+        if rating_value > lowest_score:
             return [SlotSet("general_activity_low_high_rating", 'high')]
         else:
             return [SlotSet("general_activity_low_high_rating", 'low')]
@@ -294,7 +302,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
                     "activity2_name": rnd_activities[1].intervention_activity_title,
                     "activity3_name": rnd_activities[2].intervention_activity_title,
                     "rnd_activities_ids": rnd_activities_ids}
-        print('CHOSEN OPTION: ', value)
+
         return {"general_activity_next_activity_slot": value}
 
     @staticmethod
@@ -333,23 +341,6 @@ class GetLastPerformedActivity(Action):
         else:
             return [SlotSet("last_activity_slot", None),
                     SlotSet("last_activity_id_slot", None)]
-
-
-class StoreActivityToFak(Action):
-    """Check if the activity has been already done by the user"""
-
-    def name(self):
-        return "store_activity_to_fak"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        rating_value = int(tracker.get_slot('activity_useful_rating'))
-        activity_id = int(tracker.get_slot('last_activity_id_slot'))
-        user_id = tracker.current_state()['sender_id']
-
-        save_activity_to_fak(user_id, activity_id, rating_value)
-
-        return []
 
 
 class GetActivityCoachChoice(Action):

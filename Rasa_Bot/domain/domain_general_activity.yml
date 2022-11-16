@@ -182,7 +182,6 @@ responses:
 actions:
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
   - check_user_input_required   # check if the selected activity requires the input of the user
-  - store_activity_to_fak # store the activity chosen by the user in the first aid kit
   - check_activity_done # check if the activity selected has been already done
   - get_activity_user_input # write to the activity_user_input slot the iput for the chosen activity
   - validate_save_or_edit_form # validate the slot save_or_edit_slot

@@ -268,7 +268,8 @@ responses:
   utter_smoke_lapse_11:
     - text: "Goed dat je je gevoelens kan benoemen."
   utter_ask_with_whom_smoke:
-    - text: "Met wie was je toen je rookte? Je mag meerdere antwoorden geven. Typ 1 als je met je
+    - text: "Met wie was je toen je rookte? Je mag meerdere antwoorden geven met een spatie er
+             tussen. Typ 1 als je met je
              partner was. Typ 2 als je alleen was. Typ 3 als je met vrienden en/of familie was. Typ
              4 als was je met kennissen was. Typ 5 als je met collega's was. Typ 6 als je met andere
              rokers was.

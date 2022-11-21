@@ -94,8 +94,25 @@ nlu:
     - "Relapse"
     - "help"
 
+- intent: submit_user_preferences
+  examples: |
+    - "I would like to submit my user preferences"
+    - "User preferences"
+
 - intent: oke
   examples: |
     - "Oke"
     - "Ok"
 
+- intent: request_metadata
+  examples: |
+    - "Metadata"
+    - "Ik wil metadata"
+    - "metadata"
+    - "Dit is metadata"
+
+- intent: user_shares_image
+  examples: |
+    - "file"
+    - "File"
+    - "Start file"

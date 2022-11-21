@@ -61,3 +61,14 @@ stories:
     - intent: deny
     - action: utter_be_careful_for_hrs
     - action: action_end_dialog
+
+# Example to get user file
+- story: example get file
+  steps:
+    - intent: user_shares_image
+    - action: utter_send_me_a_file
+    - action: activity_get_file_form
+    - active_loop: activity_get_file_form
+    - active_loop: null
+    - action: utter_file_received
+    - action: action_end_dialog

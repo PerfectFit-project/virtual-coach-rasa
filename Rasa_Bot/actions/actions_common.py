@@ -1,10 +1,10 @@
 import logging
 
 from celery import Celery
+from niceday_client import NicedayClient
 from rasa_sdk import Action
-from rasa_sdk.events import FollowupAction
-from .definitions import REDIS_URL
-
+from rasa_sdk.events import FollowupAction, SlotSet
+from .definitions import REDIS_URL, NICEDAY_API_ENDPOINT
 
 celery = Celery(broker=REDIS_URL)
 
@@ -37,3 +37,60 @@ class MarkDialogAsCompleted(Action):
         logging.info("no celery error")
 
         return []
+
+
+class SendMetadata(Action):
+    def name(self):
+        return "action_send_metadata"
+
+    async def run(self, dispatcher, tracker, domain):
+        """
+        Sends the text message specified in the 'text' value of the json_message,
+        and sends the image identified by the id_file under the 'attachmentIds' key.
+
+        The id_file is obtained in the action_upload_file as a result of
+        a file uploaded to the NiceDay server. The id is stored in the
+        uploaded_file_id slot.
+
+        The uploaded file is a local one, and is uses the file indicated
+        by the action_set_file_path
+        """
+        id_file = tracker.get_slot("uploaded_file_id")
+        dispatcher.utter_message(
+            json_message={"text": "image",
+                          "attachmentIds": [id_file]},
+        )
+        return[]
+
+
+class UploadFile(Action):
+    def name(self):
+        return "action_upload_file"
+
+    async def run(self, dispatcher, tracker, domain):
+        client = NicedayClient(NICEDAY_API_ENDPOINT)
+        user_id = int(tracker.current_state()['sender_id'])
+
+        filepath = tracker.get_slot('upload_file_path')
+        with open(filepath, 'rb') as content:
+            file = content.read()
+
+        response = client.upload_file(user_id, filepath, file)
+        file_id = response['id']
+        logging.info(response)
+        logging.info(file_id)
+
+        return[SlotSet("uploaded_file_id", file_id)]
+
+
+class SetFilePath(Action):
+    def name(self):
+        return "action_set_file_path"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        # TODO: This is hardcoded for testing. Needs to be set according to the use case
+
+        filepath = '/app/tst.PNG'
+
+        return[SlotSet("upload_file_path", filepath)]

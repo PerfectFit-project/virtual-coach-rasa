@@ -6,7 +6,44 @@ intents:
 - EXTERNAL_trigger_plan_quit_start
 - EXTERNAL_trigger_mental_contrasting
 - EXTERNAL_trigger_goal_setting
+- submit_user_preferences
 - oke
+
+slots:
+  recursive_reminder:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_text
+      not_intent: submit_user_preferences
+      conditions:
+      - active_loop: user_preferences_form
+        requested_slot: recursive_reminder
+  week_days:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_text
+      not_intent: submit_user_preferences
+      conditions:
+      - active_loop: user_preferences_form
+        requested_slot: week_days
+  time_stamp:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_text
+      not_intent: submit_user_preferences
+      conditions:
+      - active_loop: user_preferences_form
+        requested_slot: time_stamp
+
+forms:
+  user_preferences_form:
+    required_slots:
+      - recursive_reminder
+      - week_days
+      - time_stamp
 
 
 responses:
@@ -23,6 +60,16 @@ responses:
    - text: "Conducting mental contrasting talk..."
   utter_goal_setting:
    - text: "Setting goals..."
+  utter_ask_recursive_reminder:
+   - text: "Do you want us to give you daily reminders?"
+  utter_ask_week_days:
+    - text: "On what days would you want to be reminded?"
+  utter_ask_time_stamp:
+    - text: "What time would you want your reminders?"
+  utter_confirm:
+   - text: "Confirmed."
+  utter_user_preferences:
+   - text: "Your selected preferences are..."
 
 actions:
 ### Preparation Phase actions
@@ -32,3 +79,5 @@ actions:
 - action_set_slot_plan_quit_start_date
 - action_set_slot_mental_contrasting
 - action_set_slot_goal_setting
+- action_store_user_preferences_to_db
+- validate_user_preferences_form

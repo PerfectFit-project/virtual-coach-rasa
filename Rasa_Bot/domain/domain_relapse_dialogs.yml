@@ -360,6 +360,8 @@ responses:
              ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
+  utter_test_utterance:
+    - text: "This is a test utterance"
 
 actions:
   - action_trigger_relapse
@@ -372,6 +374,7 @@ actions:
   - validate_reflect_bar_chart_form
   - validate_type_and_number_smoke_relapse_form
   - validate_pa_type_together_why_fail_form
+  - action_set_slot_relapse_dialog
 
 forms:
   crave_lapse_relapse_form:

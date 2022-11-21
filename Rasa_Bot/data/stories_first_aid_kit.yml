@@ -3,22 +3,45 @@ version: "3.1"
 
 stories:
 ## Get first aid kit - kit exists
-- story: Get first aid kit exists
+- story: start through intent
   steps:
     - intent: CENTRAL_get_first_aid_kit
+    - checkpoint: open_fak
+
+- story: Get first aid kit exists
+  steps:
+    - checkpoint: open_fak
     - action: action_get_first_aid_kit
     - slot_was_set:
       - first_aid_kit_exists: true
     - action: utter_first_aid_kit
-    - action: action_end_dialog
+    - action: action_set_continuation
+    - checkpoint: continue_fak_checkpoint
 
 
 ## Get first aid kit - kit does not exist yet
 - story: Get first aid kit does not exist
   steps:
-    - intent: CENTRAL_get_first_aid_kit
+    - checkpoint: open_fak
     - action: action_get_first_aid_kit
     - slot_was_set:
       - first_aid_kit_exists: false
     - action: utter_first_aid_kit_empty
+    - action: action_set_continuation
+    - checkpoint: continue_fak_checkpoint
+
+
+- story: end fak dialog
+  steps:
+    - checkpoint: continue_fak_checkpoint
+    - slot_was_set:
+      - dialog_to_continue: none
     - action: action_end_dialog
+
+
+- story: get to relapse dialog
+  steps:
+    - checkpoint: continue_fak_checkpoint
+    - slot_was_set:
+      - dialog_to_continue: relapse_dialog
+    - checkpoint: continue_with_relapse_dialog

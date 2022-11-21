@@ -2,6 +2,7 @@
 Contains custom actions related to the relapse dialogs
 """
 import string
+import requests
 from .helper import get_latest_bot_utterance
 import logging
 from typing import Any, Dict, Text
@@ -11,9 +12,20 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
+from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
 from .definitions import REDIS_URL
 
 celery = Celery(broker=REDIS_URL)
+
+
+class SetSlotRelapseDialog(Action):
+    def name(self):
+        return "action_set_slot_relapse_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        print(ExecutionInterventionComponents.RELAPSE_DIALOG)
+        return [SlotSet("current_intervention_component",
+                        ExecutionInterventionComponents.RELAPSE_DIALOG)]
 
 
 def validate_long_enough_response(response):

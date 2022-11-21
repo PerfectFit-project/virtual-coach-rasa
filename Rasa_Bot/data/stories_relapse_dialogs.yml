@@ -7,6 +7,7 @@ stories:
 - story: Relapse phase triggered smoke
   steps:
     - intent: relapse_dialog
+    - action: action_set_slot_relapse_dialog
     - action: utter_relapse_intro_codeword
     - action: utter_relapse_intro_offer_help
     - action: utter_relapse_smoke_or_pa
@@ -22,6 +23,7 @@ stories:
 - story: Relapse phase triggered PA
   steps:
     - intent: relapse_dialog
+    - action: action_set_slot_relapse_dialog
     - action: utter_relapse_intro_codeword
     - action: utter_relapse_intro_offer_help
     - action: utter_relapse_smoke_or_pa
@@ -86,7 +88,13 @@ stories:
   - slot_was_set:
     - ehbo_me_self: 1
   - active_loop: null
-  - checkpoint: smoke_hrs_ehbo
+  - checkpoint: open_fak
+
+## 4a smoking - HRS - EHBO
+- story: smoke hrs after fak
+  steps:
+  - checkpoint: continue_with_relapse_dialog
+  - action: utter_test_utterance
 
 ## 3a smoking - HRS - self activity
 - story: smoke hrs

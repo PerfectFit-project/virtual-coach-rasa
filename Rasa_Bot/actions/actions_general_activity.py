@@ -490,7 +490,7 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int):
 
     rnd_activities = []
 
-    for i in range(number_of_activities):
+    for _ in range(number_of_activities):
         random_choice = secrets.choice(available_activities)
         rnd_activities.append(random_choice)
         available_activities.remove(random_choice)

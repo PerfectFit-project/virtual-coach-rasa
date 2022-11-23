@@ -6,7 +6,6 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
 
 
-
 class ActionGetFirstAidKit(Action):
     """To get the first aid kit from the database."""
 

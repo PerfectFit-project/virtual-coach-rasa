@@ -45,6 +45,14 @@ stories:
   - slot_was_set:
     - crave_lapse_relapse: 1
   - active_loop: null
+  - action: utter_smoke_crave_1
+  - action: utter_smoke_crave_2
+  - action: utter_smoke_crave_3
+  - action: utter_smoke_crave_4
+  - action: utter_smoke_crave_5
+  - action: utter_smoke_crave_6
+  - action: utter_smoke_crave_7
+  - action: utter_smoke_crave_8
   - checkpoint: smoke_hrs
 
 ## 2b: Parent for Smoking - lapse
@@ -75,39 +83,47 @@ stories:
 - story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
   steps:
   - checkpoint: smoke_hrs
-  - action: utter_smoke_crave_1
-  - action: utter_smoke_crave_2
-  - action: utter_smoke_crave_3
-  - action: utter_smoke_crave_4
-  - action: utter_smoke_crave_5
-  - action: utter_smoke_crave_6
-  - action: utter_smoke_crave_7
-  - action: utter_smoke_crave_8
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   - slot_was_set:
     - ehbo_me_self: 1
   - active_loop: null
-  - checkpoint: open_fak
+  - checkpoint: continue_with_relapse_dialog #open_fak
 
 ## 4a smoking - HRS - EHBO
 - story: smoke hrs after fak
   steps:
   - checkpoint: continue_with_relapse_dialog
+  - action: hrs_new_activity_form
+  - active_loop: hrs_new_activity_form
+  - slot_was_set:
+    - hrs_new_activity_slot: 2
+  - active_loop: null
+  - checkpoint: smoke_hrs
+
+## 4a smoking - HRS - EHBO
+- story: smoke hrs after fak
+  steps:
+  - checkpoint: continue_with_relapse_dialog
+  - action: hrs_new_activity_form
+  - active_loop: hrs_new_activity_form
+  - slot_was_set:
+    - hrs_new_activity_slot: 1
+  - active_loop: null
+  - action: utter_hrs_reasons_1
+  - action: utter_hrs_reasons_2
+  - action: utter_hrs_reasons_3
+  - action: utter_hrs_reasons_4
+  - action: hrs_situation_form
+  - active_loop: hrs_situation_form
+  - active_loop: null
   - action: utter_test_utterance
+
 
 ## 3a smoking - HRS - self activity
 - story: smoke hrs
   steps:
   - checkpoint: smoke_hrs
-  - action: utter_smoke_crave_1
-  - action: utter_smoke_crave_2
-  - action: utter_smoke_crave_3
-  - action: utter_smoke_crave_4
-  - action: utter_smoke_crave_5
-  - action: utter_smoke_crave_6
-  - action: utter_smoke_crave_7
-  - action: utter_smoke_crave_8
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   - slot_was_set:
@@ -119,14 +135,6 @@ stories:
 - story: smoke hrs
   steps:
   - checkpoint: smoke_hrs
-  - action: utter_smoke_crave_1
-  - action: utter_smoke_crave_2
-  - action: utter_smoke_crave_3
-  - action: utter_smoke_crave_4
-  - action: utter_smoke_crave_5
-  - action: utter_smoke_crave_6
-  - action: utter_smoke_crave_7
-  - action: utter_smoke_crave_8
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   - slot_was_set:

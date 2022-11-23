@@ -180,6 +180,33 @@ slots:
           - active_loop: pa_type_together_why_fail_form
             requested_slot: pa_why_fail
 
+  hrs_new_activity_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_new_activity_form
+
+  hrs_situation_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_situation_form
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -360,6 +387,29 @@ responses:
              ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
+
+# 4a
+  utter_ask_hrs_new_activity_slot:
+    - text: "Is de trek weg of wil je nog een oefening doen? 
+            Typ 1 als de trek weg is. 
+            Typ 2 als de trek nog niet weg is en je nog een oefening wil doen."
+  utter_hrs_reasons_1:
+    - text: "Je kan trots zijn op jezelf dat je deze trek hebt weerstaan. Goed bezig!"
+  utter_hrs_reasons_2:
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je net zin kreeg om te roken."
+  utter_hrs_reasons_3:
+    - text: "Daarom wil ik je wat vragen stellen over de situatie waarin je was toen je zin kreeg om te roken."
+  utter_hrs_reasons_4:
+    - text: "Wat was je aan het doen toen je zin kreeg?"
+  utter_ask_hrs_situation_slot:
+    - text: "Je mag meerdere antwoorden geven. 💘
+            Typ 1 als je aan het werk was. 
+            Typ 2 als je thuis bezig was met klusjes of huishouden. 
+            Typ 3 als je iets voor jezelf deed (hobby, met iemand afspreken). 
+            Typ 4 als je aan het eten of drinken was. 
+            Typ 5 als je net alcohol of koffie hebt gedronken. 
+            Typ 6 als je net wakker bent. 
+            Type 7 als je iets deed wat niet in het lijstje staat."
   utter_test_utterance:
     - text: "This is a test utterance"
 
@@ -374,6 +424,8 @@ actions:
   - validate_reflect_bar_chart_form
   - validate_type_and_number_smoke_relapse_form
   - validate_pa_type_together_why_fail_form
+  - validate_hrs_new_activity_form
+  - validate_hrs_situation_form
   - action_set_slot_relapse_dialog
 
 forms:
@@ -414,3 +466,11 @@ forms:
       - pa_type
       - pa_together
       - pa_why_fail
+
+  hrs_new_activity_form:
+    required_slots:
+      - hrs_new_activity_slot
+
+  hrs_situation_form:
+    required_slots:
+      - hrs_situation_slot

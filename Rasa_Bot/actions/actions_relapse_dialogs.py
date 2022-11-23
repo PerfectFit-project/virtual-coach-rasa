@@ -18,14 +18,14 @@ from .definitions import REDIS_URL
 celery = Celery(broker=REDIS_URL)
 
 
-class SetSlotRelapseDialog(Action):
-    def name(self):
-        return "action_set_slot_relapse_dialog"
-
-    async def run(self, dispatcher, tracker, domain):
-        print(ExecutionInterventionComponents.RELAPSE_DIALOG)
-        return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.RELAPSE_DIALOG)]
+def validate_number_in_range_response(n_min: int, n_max: int, response: str) -> bool:
+    try:
+        value = int(response)
+    except ValueError:
+        return False
+    if (value < 1) or (value > 2):
+        return False
+    return True
 
 
 def validate_long_enough_response(response):
@@ -589,3 +589,47 @@ class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
         if (value < 1) or (value > 2):
             return False
         return True
+
+
+class ValidateHrsNewActivityForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_new_activity_form'
+
+    def validate_hrs_new_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate hrs_new_activity_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_new_activity_slot':
+            return {"hrs_new_activity_slot": None}
+
+        is_valid = validate_number_in_range_response(1, 2, value)
+        if not is_valid:
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"hrs_new_activity_slot": None}
+
+        return {"hrs_new_activity_slot": value}
+
+
+class ValidateHrsSituationForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_situation_form'
+
+    def validate_hrs_situation_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate hrs_situation_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_situation_slot':
+            return {"hrs_situation_slot": None}
+
+        is_valid = validate_number_in_range_response(1, 7, value)
+        if not is_valid:
+            dispatcher.utter_message(response="utter_please_answer_1_to_7")
+            return {"hrs_situation_slot": None}
+
+        return {"hrs_situation_slot": value}

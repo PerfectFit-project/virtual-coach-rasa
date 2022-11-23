@@ -92,7 +92,7 @@ nlu:
   examples: |
     - "relapse"
     - "Relapse"
-    - "help"
+    - "Having a relapse"
 
 - intent: submit_user_preferences
   examples: |

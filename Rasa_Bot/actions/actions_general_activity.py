@@ -1,4 +1,4 @@
-import random
+import secrets
 
 from sqlalchemy import update
 from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, FirstAidKit,
@@ -488,6 +488,11 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int):
         .all()
     )
 
-    rnd_activities = random.sample(available_activities, number_of_activities)
+    rnd_activities = []
+
+    for i in range(number_of_activities):
+        random_choice = secrets.choice(available_activities)
+        rnd_activities.append(random_choice)
+        available_activities.remove(random_choice)
 
     return rnd_activities

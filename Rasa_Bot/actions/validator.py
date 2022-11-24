@@ -21,10 +21,16 @@ def validate_list(response: str, min_val: int, max_val: int) -> bool:
             return True
 
 
-def validate_long_enough_response(response: str, min_length: int) -> bool:
+def validate_long_enough_response_words(response: str, min_length: int) -> bool:
     if response is None:
         return False
     return len(simple_sanitize_input(response).split()) > min_length
+
+
+def validate_long_enough_response_chars(response: str, min_length: int) -> bool:
+    if len(response) >= min_length:
+        return True
+    return False
 
 
 def validate_number_in_range_response(n_min: int, n_max: int, response: str) -> bool:

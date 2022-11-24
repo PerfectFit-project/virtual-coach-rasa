@@ -3,7 +3,8 @@ Contains custom actions related to the relapse dialogs
 """
 import string
 import requests
-import validator
+from . import validator
+
 from .helper import get_latest_bot_utterance
 import logging
 from typing import Any, Dict, Text
@@ -43,12 +44,65 @@ class StoreHrsSituation(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
-        choice = tracker.get_slot('hrs_situation')
+        choice = tracker.get_slot('hrs_situation_slot')
 
         # TODO: save on DB
 
         return []
 
+
+class StoreHrsFeeling(Action):
+    def name(self):
+        return "store_hrs_feeling"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('hrs_feeling_slot')
+
+        # TODO: save on DB
+
+        return []
+
+
+class StoreHrsWhoWith(Action):
+    def name(self):
+        return "store_hrs_who_with"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('hrs_who_with_slot')
+
+        # TODO: save on DB
+
+        return []
+
+
+class StoreHrsWhatHappened(Action):
+    def name(self):
+        return "store_hrs_what_happened"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('hrs_what_happened_slot')
+
+        # TODO: save on DB
+
+        return []
+
+
+class ShowBarchartDifficultSituations(Action):
+    def name(self):
+        return "show_barchart_difficult_situations"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # TODO: plot barchart, save and send
+
+        return []
 
 class ValidateSmokeOrPaForm(FormValidationAction):
     def name(self) -> Text:
@@ -307,7 +361,7 @@ class ValidateReflectBarChartForm(FormValidationAction):
         if last_utterance != 'utter_ask_reflect_bar_chart':
             return {"reflect_bar_chart": None}
 
-        long_enough_response = validator.validate_long_enough_response(value, 5)
+        long_enough_response = validator.validate_long_enough_response_words(value, 5)
         if not long_enough_response:
             dispatcher.utter_message(response="utter_please_answer_more_words")
             return {"reflect_bar_chart": None}
@@ -495,7 +549,7 @@ class ValidateHrsSituationForm(FormValidationAction):
         if last_utterance != 'utter_ask_hrs_situation_slot':
             return {"hrs_situation_slot": None}
 
-        is_valid = validator.validate_number_in_range_response(1, 7, value)
+        is_valid = validator.validate_list(value, 1, 7)
         if not is_valid:
             dispatcher.utter_message(response="utter_please_answer_1_to_7")
             return {"hrs_situation_slot": None}
@@ -517,9 +571,106 @@ class ValidateHrsFeelingForm(FormValidationAction):
         if last_utterance != 'utter_ask_hrs_feeling_slot':
             return {"hrs_feeling_slot": None}
 
-        is_valid = validator.validate_number_in_range_response(1, 8, value)
+        is_valid = validator.validate_list(value, 1, 8)
         if not is_valid:
             dispatcher.utter_message(response="utter_please_answer_1_to_8")
             return {"hrs_feeling_slot": None}
 
         return {"hrs_feeling_slot": value}
+
+
+class ValidateHrsWhoWithForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_who_with_form'
+
+    def validate_hrs_who_with_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate hrs_who_with_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_who_with_slot':
+            return {"hrs_who_with_slot": None}
+
+        is_valid = validator.validate_list(value, 1, 6)
+        if not is_valid:
+            dispatcher.utter_message(response="utter_please_answer_1_to_6")
+            return {"hrs_who_with_slot": None}
+
+        return {"hrs_who_with_slot": value}
+
+
+class ValidateHrsWhatHappenedForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_what_happened_form'
+
+    def validate_hrs_what_happened_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate hrs_what_happened_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_what_happened_slot':
+            return {"hrs_what_happened_slot": None}
+
+        return {"hrs_what_happened_slot": value}
+
+
+class ValidateHrsLikeFeedbackForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_like_feedback_form'
+
+    def validate_hrs_like_feedback_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate hrs_like_feedback_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_like_feedback_slot':
+            return {"hrs_like_feedback_slot": None}
+        if not validator.validate_long_enough_response_chars(value, 50):
+            dispatcher.utter_message(response="utter_please_answer_more_words")
+            return {"hrs_like_feedback_slot": None}
+
+        return {"hrs_like_feedback_slot": value}
+
+
+class ValidateHrsEnoughMotivationForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_enough_motivation_form'
+
+    def validate_hrs_enough_motivation_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate hrs_enough_motivation_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_enough_motivation_slot':
+            return {"hrs_enough_motivation_slot": None}
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"hrs_enough_motivation_slot": None}
+
+        return {"hrs_enough_motivation_slot": value}
+
+
+class ValidateHrsActivityForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_activity_form'
+
+    def validate_hrs_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate validate_hrs_activity_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_activity_slot':
+            return {"hrs_activity_slot": None}
+        if value in ['Activiteit', 'activiteit']:
+            return {"hrs_activity_slot": True}
+        return {"hrs_activity_slot": False}

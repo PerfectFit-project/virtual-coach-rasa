@@ -192,20 +192,60 @@ slots:
           - active_loop: hrs_new_activity_form
 
   hrs_situation_slot:
-    type: categorical
-    values:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
+    type: text
     influence_conversation: false
     mappings:
       - type: from_text
         conditions:
           - active_loop: hrs_situation_form
+
+  hrs_feeling_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_feeling_form
+
+  hrs_who_with_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_who_with_form
+
+  hrs_what_happened_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_what_happened_form
+
+  hrs_like_feedback_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_like_feedback_form
+
+  hrs_enough_motivation_slot:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_enough_motivation_form
+
+  hrs_activity_slot:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_activity_form
 
 responses:
 # General
@@ -402,7 +442,7 @@ responses:
   utter_hrs_reasons_4:
     - text: "Wat was je aan het doen toen je zin kreeg?"
   utter_ask_hrs_situation_slot:
-    - text: "Je mag meerdere antwoorden geven. 💘
+    - text: "Je mag meerdere antwoorden geven.
             Typ 1 als je aan het werk was. 
             Typ 2 als je thuis bezig was met klusjes of huishouden. 
             Typ 3 als je iets voor jezelf deed (hobby, met iemand afspreken). 
@@ -410,6 +450,57 @@ responses:
             Typ 5 als je net alcohol of koffie hebt gedronken. 
             Typ 6 als je net wakker bent. 
             Type 7 als je iets deed wat niet in het lijstje staat."
+  utter_hrs_how_did_you_feel_1:
+    - text: "Kun je mij vertellen hoe je je voelde toen je zin kreeg om te roken?"
+  utter_ask_hrs_feeling_slot:
+    - text: "Je mag meerdere antwoorden geven. 
+            Typ 1 als je stress had. 
+            Typ 2 als je verdrietig was. 
+            Typ 3 als je boos was. 
+            Typ 4 als je verveeld was. 
+            Typ 5 als je honger had. 
+            Typ 6 als je bang of angstig was. 
+            Typ 7 als je blij was. 
+            Typ 8 als je je anders voelde. "
+  utter_hrs_how_did_you_feel_2:
+    - text: "Goed dat je je gevoelens kan benoemen. "
+  utter_hrs_who_you_with:
+    - text: "Met wie was je toen je zin kreeg?"
+  utter_ask_hrs_who_with_slot:
+    - text: "Je mag meerdere antwoorden geven. 
+            Typ 1 als je met je partner was. 
+            Typ 2 als je alleen was. 
+            Typ 3 als je met vrienden en/of familie was. 
+            Typ 4 als was je met kennissen was. 
+            Typ 5 als je met collega's was. 
+            Typ 6 als je met andere rokers was."
+  utter_ask_hrs_what_happened_slot:
+    - text: "Gebeurde er iets bijzonders?"
+  utter_hrs_look_back_1:
+    - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren patronen te herkennen. 
+            Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
+  utter_hrs_look_back_2:
+    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je kreeg zin om te roken in de volgende situaties:"
+  utter_ask_hrs_like_feedback_slot:
+    - text: "Hoe vind je het om dit zo te zien?"
+  utter_hrs_look_back_3:
+    - text: "Mooi dat je dit zo kan benoemen."
+  utter_ask_hrs_enough_motivation_slot:
+    - text: "Heb je weer genoeg motivatie en vertrouwen om verder te gaan? Typ 1 voor ja, typ 2 voor nee."
+  utter_good_to_hear_1:
+    - text: "Wat goed om te horen!"
+  utter_good_to_hear_2:
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het! :)"
+  utter_bad_to_hear_1:
+    - text: "Dat vind ik vervelend om te horen."
+  utter_bad_to_hear_2:
+    - text: "Ik ben er voor je! Waar heb je behoefte aan?"
+  utter_ask_hrs_activity_slot:
+    - text: "Nog een oefening doen? Typ dan 'Activiteit'."
+  utter_hrs_call_help:
+    - text: "Misschien heb je behoefte om iemand te spreken? Je kunt misschien praten met een vriend of familielid. 
+            Of bellen met de gratis Stoplijn (0800-1995). De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. 
+            Je kunt ook altijd een afspraak maken met je huisarts. Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt."
   utter_test_utterance:
     - text: "This is a test utterance"
 
@@ -426,7 +517,18 @@ actions:
   - validate_pa_type_together_why_fail_form
   - validate_hrs_new_activity_form
   - validate_hrs_situation_form
+  - validate_hrs_feeling_form
+  - validate_hrs_who_with_form
+  - validate_hrs_what_happened_form
+  - validate_hrs_like_feedback_form
+  - validate_hrs_enough_motivation_form
+  - validate_hrs_activity_form
   - action_set_slot_relapse_dialog
+  - store_hrs_situation
+  - store_hrs_feeling
+  - store_hrs_who_with
+  - store_hrs_what_happened
+  - show_barchart_difficult_situations
 
 forms:
   crave_lapse_relapse_form:
@@ -474,3 +576,27 @@ forms:
   hrs_situation_form:
     required_slots:
       - hrs_situation_slot
+
+  hrs_feeling_form:
+    required_slots:
+      - hrs_feeling_slot
+
+  hrs_who_with_form:
+    required_slots:
+      - hrs_who_with_slot
+
+  hrs_what_happened_form:
+    required_slots:
+      - hrs_what_happened_slot
+
+  hrs_like_feedback_form:
+    required_slots:
+      - hrs_like_feedback_slot
+
+  hrs_enough_motivation_form:
+    required_slots:
+      - hrs_enough_motivation_slot
+
+  hrs_activity_form:
+    required_slots:
+      - hrs_activity_slot

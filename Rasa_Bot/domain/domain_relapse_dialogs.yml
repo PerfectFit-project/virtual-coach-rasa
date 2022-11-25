@@ -232,7 +232,10 @@ slots:
           - active_loop: hrs_like_feedback_form
 
   hrs_enough_motivation_slot:
-    type: text
+    type: categorical
+    values:
+      - 1
+      - 2
     influence_conversation: true
     mappings:
       - type: from_text
@@ -240,7 +243,10 @@ slots:
           - active_loop: hrs_enough_motivation_form
 
   hrs_activity_slot:
-    type: bool
+    type: categorical
+    values:
+      - 1
+      - 2
     influence_conversation: true
     mappings:
       - type: from_text

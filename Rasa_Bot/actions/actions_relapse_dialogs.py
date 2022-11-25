@@ -671,6 +671,8 @@ class ValidateHrsActivityForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_hrs_activity_slot':
             return {"hrs_activity_slot": None}
-        if value in ['Activiteit', 'activiteit']:
-            return {"hrs_activity_slot": True}
-        return {"hrs_activity_slot": False}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"hrs_activity_slot": None}
+        return {"hrs_activity_slot": value}

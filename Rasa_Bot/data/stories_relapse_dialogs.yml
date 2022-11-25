@@ -141,48 +141,54 @@ stories:
   - active_loop: hrs_like_feedback_form
   - active_loop: null
   - action: utter_hrs_look_back_3
-  - action: hrs_enough_motivation_form
-  - active_loop: hrs_enough_motivation_form
-  - active_loop: null
   - checkpoint: hrs_enough_motivation_checkpoint
 
 - story: smoke hrs after fak end dialog
   steps:
   - checkpoint: hrs_enough_motivation_checkpoint
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
   - slot_was_set:
       - hrs_enough_motivation_slot: 1
+  - active_loop: null
   - action: utter_good_to_hear_1
   - action: utter_good_to_hear_2
   - action: action_end_dialog
 
-#- story: smoke hrs after fak no activity
-#  steps:
-#  - checkpoint: hrs_enough_motivation_checkpoint
-#  - slot_was_set:
-#      - hrs_enough_motivation_slot: 2
-#  - action: utter_bad_to_hear_1
-#  - action: utter_bad_to_hear_2
-#  - action: hrs_activity_form
-#  - active_loop: hrs_activity_form
-#  - active_loop: null
-#  - slot_was_set:
-#      - hrs_activity_slot: true
-#  - action: utter_test_utterance # TODO: this needs to go back to line 38 with a checkpoint
+- story: smoke hrs after fak no activity
+  steps:
+  - checkpoint: hrs_enough_motivation_checkpoint
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+      - hrs_enough_motivation_slot: 2
+  - active_loop: null
+  - action: utter_bad_to_hear_1
+  - action: utter_bad_to_hear_2
+  - action: hrs_activity_form
+  - active_loop: hrs_activity_form
+  - slot_was_set:
+      - hrs_activity_slot: 1
+  - active_loop: null
+  - action: utter_test_utterance # TODO: this needs to go back to line 38 with a checkpoint
 
-#- story: smoke hrs after fak activity
-#  steps:
-#  - checkpoint: hrs_enough_motivation_checkpoint
-#  - slot_was_set:
-#      - hrs_enough_motivation_slot: 2
-#  - action: utter_bad_to_hear_1
-#  - action: utter_bad_to_hear_2
-#  - action: hrs_activity_form
-#  - active_loop: hrs_activity_form
-#  - active_loop: null
-#  - slot_was_set:
-#      - hrs_activity_slot: false
-#  - action: utter_hrs_call_help
-#  - action: action_end_dialog
+- story: smoke hrs after fak activity
+  steps:
+  - checkpoint: hrs_enough_motivation_checkpoint
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+      - hrs_enough_motivation_slot: 2
+  - active_loop: null
+  - action: utter_bad_to_hear_1
+  - action: utter_bad_to_hear_2
+  - action: hrs_activity_form
+  - active_loop: hrs_activity_form
+  - slot_was_set:
+      - hrs_activity_slot: 2
+  - active_loop: null
+  - action: utter_hrs_call_help
+  - action: action_end_dialog
 
 ## 3a smoking - HRS - self activity
 - story: smoke hrs

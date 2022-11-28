@@ -7,7 +7,7 @@ from . import validator
 
 from .helper import get_latest_bot_utterance
 import logging
-from typing import Any, Dict, Text
+from typing import Any, Dict, Text, List
 
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -18,6 +18,33 @@ from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
 from .definitions import REDIS_URL
 
 celery = Celery(broker=REDIS_URL)
+
+
+def get_coping_activities_list() -> List[str]:
+    # TODO: implement actual retrieval of activities
+
+    activities_list = [
+        "Activity 1",
+        "Activity 2",
+        "Activity 3",
+        "Activity 4",
+    ]
+
+    return activities_list
+
+
+class PopulateCopingActivitiesList(Action):
+    def name(self):
+        return "populate_coping_activities_list"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        activities_list = get_coping_activities_list()
+
+        return [SlotSet('coping_activities_ids', activities_list),
+                SlotSet('coping_activity1_name', activities_list[0]),
+                SlotSet('coping_activity2_name', activities_list[1]),
+                SlotSet('coping_activity3_name', activities_list[2])]
 
 
 # Trigger relapse phase through celery
@@ -35,6 +62,34 @@ class TriggerRelapseDialog(Action):
         logging.info("no celery error")
 
         return []
+
+
+class ShowBarchartDifficultSituations(Action):
+    def name(self):
+        return "show_barchart_difficult_situations"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # TODO: plot barchart, save and send
+
+        return []
+
+
+class ShowFirstCopingActivity(Action):
+    def name(self):
+        return "show_first_coping_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        activities_list = get_coping_activities_list()
+
+        iteration_number = tracker.get_slot('hrs_coping_activities_performed')
+
+        activity = activities_list[iteration_number]
+        dispatcher.utter_message(activity)
+
+        return [SlotSet('hrs_coping_activities_performed', iteration_number+1)]
 
 
 class StoreHrsSituation(Action):
@@ -92,17 +147,6 @@ class StoreHrsWhatHappened(Action):
 
         return []
 
-
-class ShowBarchartDifficultSituations(Action):
-    def name(self):
-        return "show_barchart_difficult_situations"
-
-    async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        # TODO: plot barchart, save and send
-
-        return []
 
 class ValidateSmokeOrPaForm(FormValidationAction):
     def name(self) -> Text:
@@ -676,3 +720,33 @@ class ValidateHrsActivityForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"hrs_activity_slot": None}
         return {"hrs_activity_slot": value}
+
+
+class ValidateHrsChooseCopingActivityForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_choose_coping_activity_form'
+
+    def validate_hrs_choose_coping_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate hrs_choose_coping_activity_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_hrs_choose_coping_activity_slot':
+            return {"hrs_choose_coping_activity_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 4, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"hrs_choose_coping_activity_slot": None}
+
+        if value == '4':
+            activities = get_coping_activities_list()
+
+            return {"hrs_choose_coping_activity_slot": None,
+                    "coping_activity1_name": activities[0],
+                    "coping_activity2_name": activities[1],
+                    "coping_activity3_name": activities[2],
+                    "coping_activities_ids": activities}
+
+        return {"hrs_choose_coping_activity_slot": value}

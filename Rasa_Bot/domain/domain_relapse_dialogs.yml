@@ -253,6 +253,52 @@ slots:
         conditions:
           - active_loop: hrs_activity_form
 
+  # keeps track of how many times a coping activity has been proposed to go through the list
+  hrs_coping_activities_performed:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  hrs_choose_coping_activity_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_choose_coping_activity_form
+
+ # name of first proposed coping activity
+  coping_activity1_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of second proposed coping activity
+  coping_activity2_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of third proposed coping activity
+  coping_activity3_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # ids of the three coping activities
+  coping_activities_ids:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -502,11 +548,21 @@ responses:
   utter_bad_to_hear_2:
     - text: "Ik ben er voor je! Waar heb je behoefte aan?"
   utter_ask_hrs_activity_slot:
-    - text: "Nog een oefening doen? Typ dan 'Activiteit'."
+    - text: "Nog een oefening doen? Typ dan 1. Typ 2 als je verder wilt gaan met het gesprek."
   utter_hrs_call_help:
     - text: "Misschien heb je behoefte om iemand te spreken? Je kunt misschien praten met een vriend of familielid. 
             Of bellen met de gratis Stoplijn (0800-1995). De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. 
             Je kunt ook altijd een afspraak maken met je huisarts. Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt."
+  utter_hrs_list_activities_intro:
+    - text: "De volgende oefeningen kunnen jou op dit moment helpen met de trek."
+
+  utter_ask_hrs_choose_coping_activity_slot:
+    - text: "Welke van deze oefeningen wil je nu doen?
+            Typ 1 als je '{coping_activity1_name}' wilt doen.
+            Typ 2 als je '{coping_activity2_name}' wilt doen.
+            Typ 3 als je '{coping_activity3_name}' wilt doen.
+            Typ 4 als je wilt kiezen uit drie andere activiteiten."
+
   utter_test_utterance:
     - text: "This is a test utterance"
 
@@ -529,12 +585,15 @@ actions:
   - validate_hrs_like_feedback_form
   - validate_hrs_enough_motivation_form
   - validate_hrs_activity_form
+  - validate_hrs_choose_coping_activity_form
   - action_set_slot_relapse_dialog
+  - populate_coping_activities_list
   - store_hrs_situation
   - store_hrs_feeling
   - store_hrs_who_with
   - store_hrs_what_happened
   - show_barchart_difficult_situations
+  - show_first_coping_activity
 
 forms:
   crave_lapse_relapse_form:
@@ -606,3 +665,7 @@ forms:
   hrs_activity_form:
     required_slots:
       - hrs_activity_slot
+
+  hrs_choose_coping_activity_form:
+    required_slots:
+      - hrs_choose_coping_activity_slot

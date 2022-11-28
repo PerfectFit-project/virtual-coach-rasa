@@ -170,7 +170,7 @@ stories:
   - slot_was_set:
       - hrs_activity_slot: 1
   - active_loop: null
-  - action: utter_test_utterance # TODO: this needs to go back to line 38 with a checkpoint
+  - checkpoint: smoke_hrs
 
 - story: smoke hrs after fak activity
   steps:
@@ -190,7 +190,7 @@ stories:
   - action: utter_hrs_call_help
   - action: action_end_dialog
 
-## 3a smoking - HRS - self activity
+## 3a smoking - HRS - system suggest activity
 - story: smoke hrs
   steps:
   - checkpoint: smoke_hrs
@@ -199,9 +199,10 @@ stories:
   - slot_was_set:
     - ehbo_me_self: 2
   - active_loop: null
-  - checkpoint: smoke_hrs_self
+  - action: show_first_coping_activity
+  - checkpoint: continue_with_relapse_dialog
 
-## 3a smoking - HRS - system suggest activity
+## 3a smoking - HRS - self activity
 - story: smoke hrs
   steps:
   - checkpoint: smoke_hrs
@@ -210,7 +211,11 @@ stories:
   - slot_was_set:
     - ehbo_me_self: 3
   - active_loop: null
-  - checkpoint: smoke_hrs_me
+  - action: populate_coping_activities_list
+  - action: hrs_choose_coping_activity_form
+  - active_loop: hrs_choose_coping_activity_form
+  - active_loop: null
+  - checkpoint: continue_with_relapse_dialog
 
 
   ## 3b smoking - lapse

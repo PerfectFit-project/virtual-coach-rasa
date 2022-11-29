@@ -54,6 +54,22 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
     intervention_component_id = selected[0].intervention_component_id
     return intervention_component_id
 
+
+def get_latest_bot_utterance(events):
+    events_bot = []
+
+    for event in events:
+        if event['event'] == 'bot':
+            events_bot.append(event)
+
+    if len(events_bot) != 0:
+        last_utterance = events_bot[-1]['metadata']['utter_action']
+    else:
+        last_utterance = None
+
+    return last_utterance
+
+
 def week_day_to_numerical_form(week_day):
     if week_day.lower() == "monday":
         return 1

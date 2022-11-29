@@ -29,6 +29,16 @@ slots:
     influence_conversation: false
     mappings:
       - type: custom
+
+  # Set the dialog to be resumed
+  dialog_to_continue:
+    type: categorical
+    values:
+      - general_activity
+      - future_self_preparation
+    influence_conversation: true
+    mappings:
+      - type: custom
 responses:
 
   ### General rescheduling query dialog
@@ -55,6 +65,7 @@ actions:
   - validate_rescheduling_options_form
   - action_reset_rescheduling_option_slot
   - action_reschedule_dialog
+  - action_set_continuation
 
 forms:
   rescheduling_now_or_later_form:

@@ -39,12 +39,16 @@ responses:
     - text: "Je kunt deze woorden gebruiken om met mij te praten: 1) EHBO doos, 2) ..., ... ."
 
   ### Re-prompts in forms
+  utter_please_answer_1_2:
+     - text: "Antwoord alsjeblieft met '1,' of '2.'"
   utter_please_answer_1_2_3:
      - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
   utter_please_answer_1_2_3_4:
      - text: "Antwoord alsjeblieft met '1,' '2,' '3,' of '4.'"
   utter_please_answer_1_to_5:
      - text: "Kun je een geheel getal tussen 1 en 5 opgeven? ..."
+  utter_please_answer_0_to_10:
+     - text: "Kun je een geheel getal tussen 0 en 10 opgeven? ..."
   utter_please_answer_yes_no:
      - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
   utter_please_answer_now_or_later:
@@ -53,3 +57,7 @@ responses:
      - text: "Zou je dat in meer woorden kunnen omschrijven?"
   utter_did_not_understand:
      - text: "Hmm ik heb dat niet begrepen."
+  utter_greeting:
+     - text: "Hoi!"
+  utter_give_more_details:
+    - text: "Kun je dat wat uitgebreider uitleggen?"

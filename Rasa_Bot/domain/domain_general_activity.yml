@@ -1,0 +1,204 @@
+intents:
+- review_last_activity
+
+
+slots:
+  # Check if it is the first time the dialog is performed
+  general_activity_first_execution:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
+  # The user's rating of previous activity
+  activity_useful_rating:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: activity_usefulness_form
+
+  general_activity_low_high_rating:
+    type: categorical
+    values:
+      - low
+      - high
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+ # to check if the user's input is required
+  is_user_input_required:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+ # to check if the user had done the activity before
+  is_activity_done:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+ # name of the selected activity
+  activity_user_input:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+ # save (true) or edit (false) the text
+  save_or_edit_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: save_or_edit_form
+
+ # content of the description
+  general_activity_description_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: general_activity_description_form
+
+  # name of last performed activity
+  last_activity_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  # ID of last performed activity as stored in the DB
+  last_activity_id_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  # name of first proposed next activity
+  activity1_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of second proposed next activity
+  activity2_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of third proposed next activity
+  activity3_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # ids of the three random activities
+  rnd_activities_ids:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of chosen activity
+  chosen_activity_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+ # options for choosing the next activity
+  general_activity_next_activity_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: general_activity_next_activity_form
+
+  who_decides_slot:
+    type: categorical
+    values:
+      - user
+      - coach
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+forms:
+  # this form is for rating the most recent activity
+  activity_usefulness_form:
+    required_slots:
+      - activity_useful_rating
+    ignored_intents:
+      - review_last_activity
+  # ask if the user wants to save or edit the text
+  save_or_edit_form:
+    required_slots:
+      - save_or_edit_slot
+  # ask the user to input the description for the EHBO
+  general_activity_description_form:
+    required_slots:
+      - general_activity_description_slot
+  general_activity_next_activity_form:
+    required_slots:
+      - general_activity_next_activity_slot
+
+
+responses:
+  utter_ask_activity_useful_rating: #6
+    - text: "Laten we eerst terugkijken op je vorige oefening. Hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
+  utter_general_activity_thanks:
+    - text: "Bedankt voor je feedback."
+  utter_general_activity_look_back:
+    - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+  utter_general_activity_thanks_top_5_1:
+  - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+#  utter_what_you_learned_from_activity:
+  utter_general_activity_thanks_top_5_2:
+    - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
+  utter_ask_save_or_edit_slot:
+    - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor 'Bewaren', Typ 2 voor 'Aanpassen'. "
+  utter_general_activity_save:
+    - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. . "
+  utter_general_activity_edit_1:
+    - text: "Prima! "
+  utter_general_activity_edit_2:
+    - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. "
+  utter_general_activity_edit_3:
+    - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
+  utter_ask_general_activity_description_slot:
+    - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos. "
+  utter_general_activity_choose_next_activity:
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit drie oefeningen."
+  utter_ask_general_activity_next_activity_slot:
+    - text: "Welke oefening wil je doen? Typ 1 als je '{activity1_name}' wilt doen. Typ 2 als je '{activity2_name}' wilt doen. Typ 3 als je '{activity3_name}' wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
+  utter_general_activity_next_user:
+    - text: "Oké, goede keuze! Veel succes met de oefening."
+  utter_general_activity_next_coach:
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen. Veel succes! "
+
+actions:
+  - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
+  - general_activity_check_rating # sets general_activity_low_high_rating to high or low
+  - check_user_input_required   # check if the selected activity requires the input of the user
+  - check_activity_done # check if the activity selected has been already done
+  - get_activity_user_input # write to the activity_user_input slot the iput for the chosen activity
+  - validate_save_or_edit_form # validate the slot save_or_edit_slot
+  - validate_general_activity_description_form # check if the description has at least 50 characters
+  - save_description_in_db # saves the provided activity description in DB
+  - get_three_random_activities # get three random activities from the resources sets activity1_name -  activity3_name
+  - validate_general_activity_next_activity_form
+  - get_last_performed_activity # get the last performed activity
+  - get_activity_coach_choice # the coach chooses the next activity
+  - validate_activity_usefulness_form # validate the slot activity_useful_rating
+  - check_who_decides # determines if the user can decide or if the coach decides
+  - action_set_slot_general_activity # set the slot to the current running dialog
+  - load_activity # load the activity instructions

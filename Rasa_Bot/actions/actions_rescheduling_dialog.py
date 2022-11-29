@@ -13,6 +13,7 @@ from rasa_sdk.forms import FormValidationAction
 from .definitions import REDIS_URL
 from .definitions import TIMEZONE
 from .definitions import MORNING, AFTERNOON, EVENING
+from .helper import get_latest_bot_utterance
 
 celery = Celery(broker=REDIS_URL)
 
@@ -36,6 +37,10 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate rescheduling_now input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_rescheduling_now_or_later_form_rescheduling_now':
+            return {"rescheduling_now": None}
 
         now_or_later = self._validate_now_or_later_response(value)
         if now_or_later is None:
@@ -203,3 +208,15 @@ def get_reschedule_date(timestamp: float, choice: int) -> datetime.datetime:
                 reschedule_time = evening_time
 
     return reschedule_time
+
+
+class ActionSetContinuation(Action):
+    """Set the dialog_to_continue slot"""
+
+    def name(self):
+        return "action_set_continuation"
+
+    async def run(self, dispatcher, tracker, domain):
+        current_intervention = tracker.get_slot('current_intervention_component')
+
+        return [SlotSet("dialog_to_continue", current_intervention)]

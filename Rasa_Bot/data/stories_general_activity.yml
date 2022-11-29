@@ -1,0 +1,163 @@
+## Activities dialog stories
+# Purpose: Reflecting previous (=last) activity that the user has done
+# and picking the next activity.
+version: "3.1"
+
+## 1a: Trigger general activity dialog
+
+stories:
+- story: start dialog
+  steps:
+  - intent: review_last_activity
+  - action: action_set_slot_general_activity
+  - action: utter_greeting #4
+  - checkpoint: rescheduling_query_dialog
+
+
+- story: continue after rescheduling first execution
+  steps:
+  - checkpoint: continue_with_general_activity
+  - action: check_if_first_execution_ga
+  - slot_was_set:
+    - general_activity_first_execution: true
+  - checkpoint: choose_activity_checkpoint
+
+- story: continue after rescheduling not first time
+  steps:
+  - checkpoint: continue_with_general_activity
+  - action: check_if_first_execution_ga
+  - slot_was_set:
+      - general_activity_first_execution: false
+  - action: get_last_performed_activity
+  - action: activity_usefulness_form
+  - active_loop: activity_usefulness_form
+  - active_loop: null
+  - action: general_activity_check_rating
+  - checkpoint: low_or_high_rating
+
+## 2a: The rating of the activity is in the top 5
+
+- story: if rating high then check if this activity requires text input
+  steps:
+  - checkpoint: low_or_high_rating
+  - slot_was_set:
+    - general_activity_low_high_rating: high
+  - action: utter_general_activity_thanks_top_5_1
+  - action: check_user_input_required
+  - checkpoint: input_required_check
+
+## 3b: The rating of the activity is in the top 5 and input of the user is not required
+
+- story: if input is not required
+  steps:
+  - checkpoint: input_required_check
+  - slot_was_set:
+    - is_user_input_required: false
+  - action: utter_general_activity_look_back
+  - checkpoint: choose_activity_checkpoint
+
+## 3c: The input of the user is required and already given
+
+- story: if input is required and previously given
+  steps:
+  - checkpoint: input_required_check
+  - slot_was_set:
+    - is_user_input_required: true
+  - action: check_activity_done
+  - checkpoint: has_activity_already_done
+
+## 3a: the activity has not been done before
+
+- story: if input is required and previously given
+  steps:
+  - checkpoint: has_activity_already_done
+  - slot_was_set:
+    - is_activity_done: false
+  - checkpoint: input_activity_description
+
+## 3c: the activity has been already done before
+
+- story: if input is required and previously given
+  steps:
+  - checkpoint: has_activity_already_done
+  - slot_was_set:
+    - is_activity_done: true
+  - action: get_activity_user_input
+  - action: utter_general_activity_thanks_top_5_2
+  - action: save_or_edit_form
+  - active_loop: save_or_edit_form
+  - active_loop: null
+  - checkpoint: save_or_edit_checkpoint
+
+## 4b: save option selected
+
+- story: if the user decides to save the previous content
+  steps:
+  - checkpoint: save_or_edit_checkpoint
+  - slot_was_set:
+    - save_or_edit_slot: 1
+  - action: utter_general_activity_save
+  - checkpoint: choose_activity_checkpoint
+
+## 4a: edit option selected
+
+- story: if the user decides to edit the previous content
+  steps:
+  - checkpoint: save_or_edit_checkpoint
+  - slot_was_set:
+    - save_or_edit_slot: 2
+  - action: utter_general_activity_edit_1
+  - checkpoint: input_activity_description
+
+## 4a: input the description
+
+- story: if the user decides to edit the previous content
+  steps:
+  - checkpoint: input_activity_description
+  - action: utter_general_activity_edit_2
+  - action: general_activity_description_form
+  - active_loop: general_activity_description_form
+  - active_loop: null
+  - action: save_description_in_db
+  - action: utter_general_activity_edit_3
+  - checkpoint: choose_activity_checkpoint
+
+## 2b: The rating of the activity is not in the top 5
+  
+- story: if rating is low then just thanks
+  steps:
+  - checkpoint: low_or_high_rating
+  - slot_was_set:
+    - general_activity_low_high_rating: low
+  - action: utter_general_activity_thanks #9
+  - checkpoint: choose_activity_checkpoint
+
+## 6a: the user chooses the activity
+
+- story: new activities are randomly proposed to the user
+  steps:
+  - checkpoint: choose_activity_checkpoint
+  - action: check_who_decides
+  - slot_was_set:
+    - who_decides_slot: user
+  - action: get_three_random_activities
+  - action: utter_general_activity_choose_next_activity
+  - action: general_activity_next_activity_form
+  - active_loop: general_activity_next_activity_form
+  - active_loop: null
+  - action: utter_general_activity_next_user
+  - action: load_activity
+  - action: action_end_dialog
+
+## 7a: the coach chooses the activity
+
+- story: new activities are randomly proposed to the user
+  steps:
+  - checkpoint: choose_activity_checkpoint
+  - action: check_who_decides
+  - slot_was_set:
+    - who_decides_slot: coach
+  - action: get_activity_coach_choice
+  - action: utter_general_activity_next_coach
+  - action: load_activity
+  - action: action_end_dialog

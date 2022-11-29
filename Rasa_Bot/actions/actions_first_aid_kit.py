@@ -51,15 +51,3 @@ class ActionGetFirstAidKit(Action):
 
         return [SlotSet("first_aid_kit_text", kit_text),
                 SlotSet("first_aid_kit_exists", kit_exists)]
-
-
-class ActionSetContinuation(Action):
-    """Set the dialog_to_continue slot"""
-
-    def name(self):
-        return "action_set_continuation"
-
-    async def run(self, dispatcher, tracker, domain):
-        current_intervention = tracker.get_slot('current_intervention_component')
-
-        return [SlotSet("dialog_to_continue", current_intervention)]

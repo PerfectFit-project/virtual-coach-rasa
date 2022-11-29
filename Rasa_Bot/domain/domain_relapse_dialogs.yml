@@ -38,6 +38,19 @@ slots:
         conditions:
           - active_loop: ehbo_me_self_form
 
+  ehbo_me_self_lapse:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: ehbo_me_self_lapse_form
+
   type_smoke:
     type: float
     influence_conversation: false
@@ -253,10 +266,10 @@ slots:
         conditions:
           - active_loop: hrs_activity_form
 
-  # keeps track of how many times a coping activity has been proposed to go through the list
+  # keeps track of which activity has been performed
   hrs_coping_activities_performed:
-    type: float
-    initial_value: 0
+    type: text
+    initial_value: '-1'
     influence_conversation: false
     mappings:
       - type: custom
@@ -337,6 +350,8 @@ responses:
     - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ 1 als je een
              oefening uit je EHBO-doos wilt doen. ,Typ 2 als ik een oefening mag voorstellen. Typ 3
              als je zelf een activiteit wilt kiezen."
+
+# smoke lapse
 
   utter_smoke_lapse_1:
     - text: "Goed dat je dit aangeeft"
@@ -420,6 +435,16 @@ responses:
     - text: "Het kan ook helpen om te praten met bijvoorbeeld een vriend of familielid over hoe het 
              is gegaan en je plan om opnieuw te stoppen."
 
+
+  utter_ask_ehbo_me_self_lapse:
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten.
+            Typ 1 als je een
+            oefening uit je EHBO-doos wilt doen. 
+            Typ 2 als ik een oefening mag voorstellen. 
+            Typ 3 als je zelf een activiteit wilt kiezen.
+            Typ 4 als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt afsluiten."
+
+
 # 3c smoking - relapse
   utter_ask_number_smoke_relapse:
     - text: "Kun je aangeven hoeveel je de afgelopen twee weken ongeveer hebt gerookt?"
@@ -447,38 +472,6 @@ responses:
              patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende
              keer dat je in die situatie zit. Daarom wil ik je daar wat vragen over stellen. De
              vragen gaan over de laatste keer dat je rookte"
-
-# PA
-  utter_pa_define_1:
-    - text: "Kun je mij vertellen wat er aan de hand is?"
-  utter_ask_specify_pa:
-    - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt. Typ '2' als je merkt
-             dat het bewegen over het algemeen niet zo goed gaat als je zou willen.
-             "
-  utter_pa_lapse_1:
-    - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan
-             lastig zijn. Hoe vervelend ook, het kan dus gebeuren dat het even niet lukt. Wees dus
-             niet te hard voor jezelf. Daardoor kun je je rot voelen en dan krijg je minder zin om
-             te gaan. 
-             "
-  utter_pa_lapse_2:
-    - text: "En je kunt het ook positief bekijken: er zijn momenten geweest dat je wel in beweging
-             kwam. Dat is heel goed!"
-  utter_pa_lapse_3:
-    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen
-             zin hebt om in beweging te komen. Daarom wil ik je wat vragen stellen over de situatie
-             waarin je zit. "
-  utter_ask_pa_type:
-    - text: "Kun je mij vertellen wat voor lichamelijke activiteit had je gepland om nu te doen?"
-  utter_ask_pa_together:
-    - text: "Zou je dit met iemand samen doen? Typ 1 voor ja, typ 2 voor nee."
-  utter_ask_pa_why_fail:
-    - text: "Kun je aangeven wat de reden is dat dat je nu niet lukt? Je mag meerdere
-             antwoorden geven. Typ 1 als je geen zin hebt. Typ 2 als je moe bent en geen energie
-             hebt. Typ 3 als je geen tijd hebt. Typ 4 als er iets tussen is gekomen. Typ 5 als het
-             ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
-  utter_pa_lapse_4:
-    - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
 
 # 4a
   utter_ask_hrs_new_activity_slot:
@@ -543,6 +536,10 @@ responses:
     - text: "Wat goed om te horen!"
   utter_good_to_hear_2:
     - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het! :)"
+  utter_good_to_hear_3:
+    - text: "Heb je nog een vraag? Of wil je een extra steuntje in de rug? 
+            Je kunt dan altijd de gratis Stoplijn bellen: 0800-1995. 
+            De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Succes, je kan het!"
   utter_bad_to_hear_1:
     - text: "Dat vind ik vervelend om te horen."
   utter_bad_to_hear_2:
@@ -563,6 +560,38 @@ responses:
             Typ 3 als je '{coping_activity3_name}' wilt doen.
             Typ 4 als je wilt kiezen uit drie andere activiteiten."
 
+
+# PA
+  utter_pa_define_1:
+    - text: "Kun je mij vertellen wat er aan de hand is?"
+  utter_ask_specify_pa:
+    - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt. Typ '2' als je merkt
+             dat het bewegen over het algemeen niet zo goed gaat als je zou willen.
+             "
+  utter_pa_lapse_1:
+    - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan
+             lastig zijn. Hoe vervelend ook, het kan dus gebeuren dat het even niet lukt. Wees dus
+             niet te hard voor jezelf. Daardoor kun je je rot voelen en dan krijg je minder zin om
+             te gaan. 
+             "
+  utter_pa_lapse_2:
+    - text: "En je kunt het ook positief bekijken: er zijn momenten geweest dat je wel in beweging
+             kwam. Dat is heel goed!"
+  utter_pa_lapse_3:
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen
+             zin hebt om in beweging te komen. Daarom wil ik je wat vragen stellen over de situatie
+             waarin je zit. "
+  utter_ask_pa_type:
+    - text: "Kun je mij vertellen wat voor lichamelijke activiteit had je gepland om nu te doen?"
+  utter_ask_pa_together:
+    - text: "Zou je dit met iemand samen doen? Typ 1 voor ja, typ 2 voor nee."
+  utter_ask_pa_why_fail:
+    - text: "Kun je aangeven wat de reden is dat dat je nu niet lukt? Je mag meerdere
+             antwoorden geven. Typ 1 als je geen zin hebt. Typ 2 als je moe bent en geen energie
+             hebt. Typ 3 als je geen tijd hebt. Typ 4 als er iets tussen is gekomen. Typ 5 als het
+             ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
+  utter_pa_lapse_4:
+    - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_test_utterance:
     - text: "This is a test utterance"
 
@@ -586,14 +615,17 @@ actions:
   - validate_hrs_enough_motivation_form
   - validate_hrs_activity_form
   - validate_hrs_choose_coping_activity_form
+  - validate_ehbo_me_self_lapse_form
   - action_set_slot_relapse_dialog
+  - action_set_slot_relapse_dialog_lapse
   - populate_coping_activities_list
-  - store_hrs_situation
-  - store_hrs_feeling
-  - store_hrs_who_with
-  - store_hrs_what_happened
   - show_barchart_difficult_situations
+  - show_chosen_coping_activity
   - show_first_coping_activity
+  - store_hrs_feeling
+  - store_hrs_situation
+  - store_hrs_what_happened
+  - store_hrs_who_with
 
 forms:
   crave_lapse_relapse_form:
@@ -605,6 +637,9 @@ forms:
   ehbo_me_self_form:
     required_slots:
       - ehbo_me_self
+  ehbo_me_self_lapse_form:
+    required_slots:
+      - ehbo_me_self_lapse
   type_and_number_smoke_form:
     required_slots:
       - type_smoke

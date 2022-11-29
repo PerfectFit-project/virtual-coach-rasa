@@ -1,12 +1,10 @@
-import secrets
-
 from sqlalchemy import update
 from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, FirstAidKit,
                                               InterventionActivity)
 from virtual_coach_db.helper import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
-from .helper import get_latest_bot_utterance
+from .helper import get_latest_bot_utterance, get_random_activities
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
@@ -473,26 +471,3 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
     )
 
     return user_inputs
-
-
-def get_random_activities(avoid_activity_id: int, number_of_activities: int):
-    session = get_db_session(db_url=DATABASE_URL)
-
-    available_activities = (
-        session.query(
-            InterventionActivity
-        )
-        .filter(
-            InterventionActivity.intervention_activity_id != avoid_activity_id
-        )
-        .all()
-    )
-
-    rnd_activities = []
-
-    for _ in range(number_of_activities):
-        random_choice = secrets.choice(available_activities)
-        rnd_activities.append(random_choice)
-        available_activities.remove(random_choice)
-
-    return rnd_activities

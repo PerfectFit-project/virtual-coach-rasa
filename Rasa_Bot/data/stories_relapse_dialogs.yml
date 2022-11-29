@@ -215,6 +215,7 @@ stories:
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
   - active_loop: null
+  - action: show_chosen_coping_activity
   - checkpoint: continue_with_relapse_dialog
 
 
@@ -266,7 +267,89 @@ stories:
   - action: utter_smoke_lapse_15
   - action: utter_smoke_lapse_16
   - action: utter_smoke_lapse_17
-  - action: utter_smoke_lapse_18  # NOte: not finished
+  - action: utter_smoke_lapse_18
+  - checkpoint: ehbo_me_self_lapse_checkpoint
+
+- story: smoke lapse open ehbo
+  steps:
+  - checkpoint: ehbo_me_self_lapse_checkpoint
+  - action: ehbo_me_self_lapse_form
+  - active_loop: ehbo_me_self_lapse_form
+  - slot_was_set:
+    - requested_slot: 1
+  - active_loop: null
+  - checkpoint: open_fak
+
+- story: smoke lapse system suggests activity
+  steps:
+  - checkpoint: ehbo_me_self_lapse_checkpoint
+  - action: ehbo_me_self_lapse_form
+  - active_loop: ehbo_me_self_lapse_form
+  - slot_was_set:
+    - requested_slot: 2
+  - active_loop: null
+  - action: show_first_coping_activity
+  - checkpoint: continue_relapse_dialog_smoke_lapse
+
+- story: smoke lapse user chooses activity
+  steps:
+  - checkpoint: ehbo_me_self_lapse_checkpoint
+  - action: ehbo_me_self_lapse_form
+  - active_loop: ehbo_me_self_lapse_form
+  - slot_was_set:
+    - requested_slot: 3
+  - active_loop: null
+  - action: show_first_coping_activity
+  # - checkpoint: open_fak : TODO implement
+
+- story: continue smoke lapse enough motivation
+  steps:
+  - checkpoint: continue_relapse_dialog_smoke_lapse
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+    - requested_slot: 1
+  - active_loop: null
+  - action: utter_good_to_hear_1
+  - action: utter_good_to_hear_2
+  - action: utter_good_to_hear_3
+  - action: action_end_dialog
+
+- story: continue smoke lapse not enough motivation 1
+  steps:
+  - checkpoint: continue_relapse_dialog_smoke_lapse
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+    - requested_slot: 2
+  - active_loop: null
+  - action: utter_bad_to_hear_1
+  - action: utter_bad_to_hear_2
+  - action: hrs_activity_form
+  - active_loop: hrs_activity_form
+  - slot_was_set:
+      - hrs_activity_slot: 1
+  - active_loop: null
+  - checkpoint: ehbo_me_self_lapse_checkpoint
+
+- story: continue smoke lapse not enough motivation 2
+  steps:
+  - checkpoint: continue_relapse_dialog_smoke_lapse
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+    - requested_slot: 2
+  - active_loop: null
+  - action: utter_bad_to_hear_1
+  - action: utter_bad_to_hear_2
+  - action: hrs_activity_form
+  - active_loop: hrs_activity_form
+  - slot_was_set:
+      - hrs_activity_slot: 2
+  - active_loop: null
+  - action: utter_hrs_call_help
+  - action: action_end_dialog
+
 
 ## 3c smoking - Relapse
   - checkpoint: smoke_relapse

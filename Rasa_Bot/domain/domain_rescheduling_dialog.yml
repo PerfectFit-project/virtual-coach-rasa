@@ -36,6 +36,8 @@ slots:
     values:
       - general_activity
       - future_self_preparation
+      - relapse_dialog
+      - relapse_dialog_lapse
     influence_conversation: true
     mappings:
       - type: custom

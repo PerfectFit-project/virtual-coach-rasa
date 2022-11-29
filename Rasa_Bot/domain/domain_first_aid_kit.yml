@@ -2,16 +2,6 @@ intents:
   - CENTRAL_get_first_aid_kit
 slots:
   ### First aid kit
-  # Set the dialog to be resumed
-  dialog_to_continue:
-    type: categorical
-    values:
-      - relapse_dialog
-    influence_conversation: true
-    initial_value: none
-    mappings:
-      - type: custom
-
   # Text of first aid kit to present to user
   first_aid_kit_text:
     type: text
@@ -34,4 +24,3 @@ responses:
 
 actions:
   - action_get_first_aid_kit
-  - action_set_continuation

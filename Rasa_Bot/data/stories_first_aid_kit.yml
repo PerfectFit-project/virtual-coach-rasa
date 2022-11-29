@@ -27,7 +27,6 @@ stories:
     - slot_was_set:
       - first_aid_kit_exists: false
     - action: utter_first_aid_kit_empty
-    - action: action_set_continuation
     - checkpoint: continue_fak_checkpoint
 
 
@@ -45,3 +44,11 @@ stories:
     - slot_was_set:
       - dialog_to_continue: relapse_dialog
     - checkpoint: continue_with_relapse_dialog
+
+
+- story: get to relapse dialog
+  steps:
+    - checkpoint: continue_fak_checkpoint
+    - slot_was_set:
+      - dialog_to_continue: relapse_dialog_lapse
+    - checkpoint: continue_relapse_dialog_smoke_lapse

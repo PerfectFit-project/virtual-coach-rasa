@@ -1,36 +1,42 @@
 """
 Contains custom actions related to the relapse dialogs
 """
-import string
-import requests
-from . import validator
 
-from .helper import get_latest_bot_utterance
 import logging
-from typing import Any, Dict, Text, List
 
+from virtual_coach_db.dbschema.models import InterventionActivity
+
+from . import validator
+from .definitions import DATABASE_URL, REDIS_URL
+from .helper import get_latest_bot_utterance, get_random_activities
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
-from .definitions import REDIS_URL
+from typing import Any, Dict, Text, List
+
+from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
 
 
-def get_coping_activities_list() -> List[str]:
-    # TODO: implement actual retrieval of activities
+class ActionSetSlotRelapseDialog(Action):
+    def name(self):
+        return "action_set_slot_relapse_dialog"
 
-    activities_list = [
-        "Activity 1",
-        "Activity 2",
-        "Activity 3",
-        "Activity 4",
-    ]
+    async def run(self, dispatcher, tracker, domain):
 
-    return activities_list
+        return []
+
+
+class ActionSetSlotRelapseDialogLapse(Action):
+    def name(self):
+        return "action_set_slot_relapse_dialog_lapse"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [SlotSet('dialog_to_continue', 'relapse_dialog_lapse')]
 
 
 class PopulateCopingActivitiesList(Action):
@@ -38,13 +44,15 @@ class PopulateCopingActivitiesList(Action):
         return "populate_coping_activities_list"
 
     async def run(self, dispatcher, tracker, domain):
+        # TODO: instead of querying the whole list of activities, use only the selected ones
+        # list of activities to be provided by content team
+        rnd_activities = get_random_activities(-1, 3)
+        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
 
-        activities_list = get_coping_activities_list()
-
-        return [SlotSet('coping_activities_ids', activities_list),
-                SlotSet('coping_activity1_name', activities_list[0]),
-                SlotSet('coping_activity2_name', activities_list[1]),
-                SlotSet('coping_activity3_name', activities_list[2])]
+        return [SlotSet('coping_activities_ids', rnd_activities_ids),
+                SlotSet('coping_activity1_name', rnd_activities[0].intervention_activity_title),
+                SlotSet('coping_activity2_name', rnd_activities[1].intervention_activity_title),
+                SlotSet('coping_activity3_name', rnd_activities[2].intervention_activity_title)]
 
 
 # Trigger relapse phase through celery
@@ -60,6 +68,34 @@ class TriggerRelapseDialog(Action):
 
         celery.send_task('celery_tasks.relapse_dialog', (user_id, slot))
         logging.info("no celery error")
+
+        return []
+
+
+class ShowChosenCopingActivity(Action):
+    def name(self):
+        return "show_chosen_coping_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        chosen_option = int(tracker.get_slot('hrs_choose_coping_activity_slot'))
+        activities_slot = tracker.get_slot('coping_activities_ids')
+
+        activity_id = activities_slot[chosen_option - 1]
+
+        session = get_db_session(db_url=DATABASE_URL)
+
+        instructions = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id == activity_id
+            ).all()
+        )
+
+        # prompt the message
+        dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
 
         return []
 
@@ -82,14 +118,13 @@ class ShowFirstCopingActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        activities_list = get_coping_activities_list()
+        activity_id = tracker.get_slot('hrs_coping_activities_performed')
 
-        iteration_number = tracker.get_slot('hrs_coping_activities_performed')
+        activities_list = get_random_activities(int(activity_id), 1)
 
-        activity = activities_list[iteration_number]
-        dispatcher.utter_message(activity)
+        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
 
-        return [SlotSet('hrs_coping_activities_performed', iteration_number+1)]
+        return [SlotSet('hrs_coping_activities_performed', activity_id)]
 
 
 class StoreHrsSituation(Action):
@@ -321,9 +356,9 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
         if last_utterance != 'utter_ask_what_doing_smoke':
             return {"what_doing_smoke": None}
 
-        value = self._input_to_list(value, max_val)
+        is_valid = validator.validate_number_in_range_response(1, max_val, value)
 
-        if value is False:
+        if is_valid is False:
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_numbers")
             return {"what_doing_smoke": None}
@@ -741,12 +776,35 @@ class ValidateHrsChooseCopingActivityForm(FormValidationAction):
             return {"hrs_choose_coping_activity_slot": None}
 
         if value == '4':
-            activities = get_coping_activities_list()
+            rnd_activities = get_random_activities(-1, 3)
+            rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
 
             return {"hrs_choose_coping_activity_slot": None,
-                    "coping_activity1_name": activities[0],
-                    "coping_activity2_name": activities[1],
-                    "coping_activity3_name": activities[2],
-                    "coping_activities_ids": activities}
+                    "coping_activities_ids": rnd_activities_ids,
+                    "coping_activity1_name": rnd_activities[0].intervention_activity_title,
+                    "coping_activity2_name": rnd_activities[1].intervention_activity_title,
+                    "coping_activity3_name": rnd_activities[2].intervention_activity_title}
 
         return {"hrs_choose_coping_activity_slot": value}
+
+
+class ValidateEhboMeSelfLapseForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_ehbo_me_self_lapse_form'
+
+    def validate_ehbo_me_self_lapse(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate ehbo, me or self input"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_ehbo_me_self_lapse':
+            return {"ehbo_me_self_lapse": None}
+
+        if not validator.validate_number_in_range_response(1, 4, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"ehbo_me_self_lapse": None}
+
+        return {"ehbo_me_self_lapse": value}

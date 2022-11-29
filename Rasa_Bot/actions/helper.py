@@ -2,10 +2,11 @@
 Helper functions for rasa actions
 """
 import datetime
+import secrets
 
 from .definitions import DialogQuestions, DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogAnswers, InterventionComponents,
-                                              UserPreferences)
+                                              UserPreferences, InterventionActivity)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -68,6 +69,29 @@ def get_latest_bot_utterance(events) -> str:
         last_utterance = None
 
     return last_utterance
+
+
+def get_random_activities(avoid_activity_id: int, number_of_activities: int):
+    session = get_db_session(db_url=DATABASE_URL)
+
+    available_activities = (
+        session.query(
+            InterventionActivity
+        )
+        .filter(
+            InterventionActivity.intervention_activity_id != avoid_activity_id
+        )
+        .all()
+    )
+
+    rnd_activities = []
+
+    for _ in range(number_of_activities):
+        random_choice = secrets.choice(available_activities)
+        rnd_activities.append(random_choice)
+        available_activities.remove(random_choice)
+
+    return rnd_activities
 
 
 def week_day_to_numerical_form(week_day):

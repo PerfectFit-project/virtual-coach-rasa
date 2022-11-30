@@ -582,7 +582,7 @@ responses:
              zin hebt om in beweging te komen. Daarom wil ik je wat vragen stellen over de situatie
              waarin je zit. "
   utter_ask_pa_type:
-    - text: "Kun je mij vertellen wat voor lichamelijke activiteit had je gepland om nu te doen?"
+    - text: "Kun je mij vertellen wat voor lichamelijke activiteit je had gepland om te doen?"
   utter_ask_pa_together:
     - text: "Zou je dit met iemand samen doen? Typ 1 voor ja, typ 2 voor nee."
   utter_ask_pa_why_fail:

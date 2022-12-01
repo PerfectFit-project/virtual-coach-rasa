@@ -27,7 +27,7 @@ class ActionSetSlotRelapseDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        return []
+        return [SlotSet('current_intervention_component', 'relapse_dialog')]
 
 
 class ActionSetSlotRelapseDialogLapse(Action):
@@ -36,7 +36,7 @@ class ActionSetSlotRelapseDialogLapse(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        return [SlotSet('dialog_to_continue', 'relapse_dialog_lapse')]
+        return [SlotSet('current_intervention_component', 'relapse_dialog_lapse')]
 
 
 class PopulateCopingActivitiesList(Action):
@@ -356,7 +356,7 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
         if last_utterance != 'utter_ask_what_doing_smoke':
             return {"what_doing_smoke": None}
 
-        is_valid = validator.validate_number_in_range_response(1, max_val, value)
+        is_valid = validator.validate_list(value, 1, max_val)
 
         if is_valid is False:
             dispatcher.utter_message(response="utter_did_not_understand")

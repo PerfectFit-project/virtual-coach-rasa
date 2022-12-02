@@ -14,7 +14,7 @@ stories:
     - action: smoke_or_pa_form
     - active_loop: smoke_or_pa_form
     - slot_was_set:
-      - smoke_or_pa: 1
+      - one_or_two_slot: 1
     - active_loop: null
     - checkpoint: smoke_parent
 
@@ -30,7 +30,7 @@ stories:
     - action: smoke_or_pa_form
     - active_loop: smoke_or_pa_form
     - slot_was_set:
-      - smoke_or_pa: 2
+      - one_or_two_slot: 2
     - active_loop: null
     - checkpoint: pa_parent
 
@@ -258,7 +258,8 @@ stories:
   - active_loop: null
   - action: utter_smoke_lapse_12
   - action: utter_smoke_lapse_13
-  - action: utter_smoke_lapse_14  # TODO: send bar diagram moeilijke situaties
+  - action: utter_smoke_lapse_14
+  - action: show_barchart_difficult_situations # TODO: send bar diagram moeilijke situaties
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   - slot_was_set:
@@ -406,7 +407,8 @@ stories:
   - active_loop: null
   - action: utter_smoke_lapse_12
   - action: utter_smoke_lapse_13
-  - action: utter_smoke_lapse_14  # TODO: Show bar diagram
+  - action: utter_smoke_lapse_14
+  - action: show_barchart_difficult_situations # TODO: Show bar diagram
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   - slot_was_set:
@@ -414,6 +416,30 @@ stories:
   - active_loop: null
   - action: utter_smoke_lapse_15
   - action: utter_smoke_lapse_16
+  - action: utter_smoke_relapse_5
+  - checkpoint: stop_now_or_later_checkpoint
+
+- story: decide to stop now
+  steps:
+  - checkpoint: stop_now_or_later_checkpoint
+  - action: relapse_stop_now_later_from
+  - active_loop: relapse_stop_now_later_from
+  - slot_was_set:
+    - one_or_two_slot: 1
+  - active_loop: null
+  - action: utter_smoke_relapse_6
+  - action: utter_smoke_relapse_7
+  - action: utter_smoke_relapse_8
+
+- story: decide to stop later
+  steps:
+  - checkpoint: stop_now_or_later_checkpoint
+  - action: relapse_stop_now_later_from
+  - active_loop: relapse_stop_now_later_from
+  - slot_was_set:
+    - one_or_two_slot: 2
+  - active_loop: null
+  - action: utter_test_utterance
 
 
 ## Stories for PA

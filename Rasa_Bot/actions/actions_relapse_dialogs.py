@@ -187,23 +187,23 @@ class ValidateSmokeOrPaForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_smoke_or_pa_form'
 
-    def validate_smoke_or_pa(
+    def validate_one_or_two_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate smoke or pa input."""
 
         last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_smoke_or_pa':
-            return {"smoke_or_pa": None}
+        if last_utterance != 'utter_ask_smoke_or_pa_form_one_or_two_slot':
+            return {"one_or_two_slot": None}
 
         logging.info("Performing the action to validate smoke_or_pa_form")  # Debug message
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
-            return {"smoke_or_pa": None}
+            return {"one_or_two_slot": None}
 
-        return {"smoke_or_pa": value}
+        return {"one_or_two_slot": value}
 
 
 class ValidateCraveLapseRelapseForm(FormValidationAction):
@@ -808,3 +808,26 @@ class ValidateEhboMeSelfLapseForm(FormValidationAction):
             return {"ehbo_me_self_lapse": None}
 
         return {"ehbo_me_self_lapse": value}
+
+
+class ValidateRelapseStopNowLaterForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_relapse_stop_now_later_from'
+
+    def validate_one_or_two_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate one_or_two_slot"""
+        print("validating one or two")
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_relapse_stop_now_later_from_one_or_two_slot':
+            return {"one_or_two_slot": None}
+
+        print("validating one or two correct utterance")
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"one_or_two_slot": None}
+
+        return {"one_or_two_slot": value}

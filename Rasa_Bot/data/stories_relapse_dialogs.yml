@@ -327,7 +327,7 @@ stories:
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
   - slot_was_set:
-    - requested_slot: 1
+    - hrs_enough_motivation_slot: 1
   - active_loop: null
   - action: utter_good_to_hear_1
   - action: utter_good_to_hear_2
@@ -340,7 +340,7 @@ stories:
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
   - slot_was_set:
-    - requested_slot: 2
+    - hrs_enough_motivation_slot: 2
   - active_loop: null
   - action: utter_bad_to_hear_1
   - action: utter_bad_to_hear_2
@@ -357,7 +357,7 @@ stories:
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
   - slot_was_set:
-    - requested_slot: 2
+    - hrs_enough_motivation_slot: 2
   - active_loop: null
   - action: utter_bad_to_hear_1
   - action: utter_bad_to_hear_2

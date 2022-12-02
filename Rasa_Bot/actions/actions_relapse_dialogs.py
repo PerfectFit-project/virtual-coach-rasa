@@ -21,12 +21,27 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 celery = Celery(broker=REDIS_URL)
 
 
+class ActionResetOneFourSlot(Action):
+    def name(self):
+        return "action_reset_one_four_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('one_four_slot', None)]
+
+
+class ActionResetOneOrTwoSlot(Action):
+    def name(self):
+        return "action_reset_one_or_two_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('one_or_two_slot', None)]
+
+
 class ActionSetSlotRelapseDialog(Action):
     def name(self):
         return "action_set_slot_relapse_dialog"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [SlotSet('current_intervention_component', 'relapse_dialog')]
 
 
@@ -35,8 +50,15 @@ class ActionSetSlotRelapseDialogLapse(Action):
         return "action_set_slot_relapse_dialog_lapse"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [SlotSet('current_intervention_component', 'relapse_dialog_lapse')]
+
+
+class ActionSetSlotRelapseDialogReapse(Action):
+    def name(self):
+        return "action_set_slot_relapse_dialog_lapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('current_intervention_component', 'relapse_dialog_relapse')]
 
 
 class PopulateCopingActivitiesList(Action):
@@ -77,7 +99,6 @@ class ShowChosenCopingActivity(Action):
         return "show_chosen_coping_activity"
 
     async def run(self, dispatcher, tracker, domain):
-
         chosen_option = int(tracker.get_slot('hrs_choose_coping_activity_slot'))
         activities_slot = tracker.get_slot('coping_activities_ids')
 
@@ -117,7 +138,6 @@ class ShowFirstCopingActivity(Action):
         return "show_first_coping_activity"
 
     async def run(self, dispatcher, tracker, domain):
-
         activity_id = tracker.get_slot('hrs_coping_activities_performed')
 
         activities_list = get_random_activities(int(activity_id), 1)
@@ -812,22 +832,66 @@ class ValidateEhboMeSelfLapseForm(FormValidationAction):
 
 class ValidateRelapseStopNowLaterForm(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_relapse_stop_now_later_from'
+        return 'validate_relapse_stop_now_later_form'
 
     def validate_one_or_two_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate one_or_two_slot"""
-        print("validating one or two")
         last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_relapse_stop_now_later_from_one_or_two_slot':
+        if last_utterance != 'utter_ask_relapse_stop_now_later_form_one_or_two_slot':
             return {"one_or_two_slot": None}
 
-        print("validating one or two correct utterance")
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"one_or_two_slot": None}
 
         return {"one_or_two_slot": value}
+
+
+class ValidateRelapseMedicationInfoForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_relapse_medication_info_form'
+
+    def validate_one_or_two_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate one_or_two_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_relapse_medication_info_form_one_or_two_slot':
+            return {"one_or_two_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"one_or_two_slot": None}
+
+        return {"one_or_two_slot": value}
+
+
+class ValidateLapseEhboForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_lapse_ehbo_form'
+
+    def validate_one_four_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate one_four_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_lapse_ehbo_form_one_four_slot':
+            return {"one_four_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"one_four_slot": None}
+
+        return {"one_four_slot": value}

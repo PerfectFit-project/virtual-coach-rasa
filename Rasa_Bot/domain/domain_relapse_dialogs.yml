@@ -13,8 +13,21 @@ slots:
       - type: from_text
         conditions:
           - active_loop: smoke_or_pa_form
-          - active_loop: relapse_stop_now_later_from
+          - active_loop: relapse_stop_now_later_form
+          - active_loop: relapse_medication_info_form
 
+  one_four_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: lapse_ehbo_form
 
   crave_lapse_relapse:
     type: categorical
@@ -440,8 +453,7 @@ responses:
 
   utter_ask_ehbo_me_self_lapse:
     - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten.
-            Typ 1 als je een
-            oefening uit je EHBO-doos wilt doen. 
+            Typ 1 als je een oefening uit je EHBO-doos wilt doen. 
             Typ 2 als ik een oefening mag voorstellen. 
             Typ 3 als je zelf een activiteit wilt kiezen.
             Typ 4 als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt afsluiten."
@@ -563,7 +575,7 @@ responses:
              vragen gaan over de laatste keer dat je rookte"
   utter_smoke_relapse_5:
     - text: "Je kan ervoor kiezen om meteen te stoppen of een nieuwe stopdatum te plannen."
-  utter_ask_relapse_stop_now_later_from_one_or_two_slot:
+  utter_ask_relapse_stop_now_later_form_one_or_two_slot:
     - text: "Hoe wil je nu verder? 
             Typ 1 als je meteen weer wil stoppen. 
             Typ 2 als je een nieuwe stopdatum wil inplannen."
@@ -575,7 +587,17 @@ responses:
             Wat helpt is om deze meteen weg te gooien. "
   utter_smoke_relapse_8:
     - text: "Wat ook helpt is om te kijken of je genoeg hulp hebt om te stoppen en gestopt te blijven."
+  utter_ask_relapse_medication_info_form_one_or_two_slot:
+    - text: "Met hulpmiddelen of medicatie vergroot je de kans om gestopt te blijven. 
+            Wil je hier meer informatie over? 
+            Typ 1 voor ja, typ 2 voor nee."
 
+  utter_ask_lapse_ehbo_form_one_four_slot:
+    - text: "Je hebt in de EHBO doos ook oefeningen voor op moeilijke momenten.
+            Typ 1 als je een oefening uit je EHBO-doos wilt doen 
+            Typ 2 als ik zomaar een oefening voor jou mag kiezen.   
+            Typ 3 als je zelf een activiteit wil kiezen.
+            Typ 4 als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt afsluiten."
 # PA
   utter_pa_define_1:
     - text: "Kun je mij vertellen wat er aan de hand is?"
@@ -609,31 +631,16 @@ responses:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_test_utterance:
     - text: "This is a test utterance"
+  utter_test_utterance2:
+    - text: "This is a second test utterance"
 
 actions:
-  - action_trigger_relapse
-  - validate_smoke_or_pa_form
-  - validate_crave_lapse_relapse_form
-  - validate_ehbo_me_self_form
-  - validate_type_and_number_smoke_form
-  - validate_what_doing_how_feel_smoke_form
-  - validate_with_whom_event_smoke_form
-  - validate_reflect_bar_chart_form
-  - validate_type_and_number_smoke_relapse_form
-  - validate_pa_type_together_why_fail_form
-  - validate_hrs_new_activity_form
-  - validate_hrs_situation_form
-  - validate_hrs_feeling_form
-  - validate_hrs_who_with_form
-  - validate_hrs_what_happened_form
-  - validate_hrs_like_feedback_form
-  - validate_hrs_enough_motivation_form
-  - validate_hrs_activity_form
-  - validate_hrs_choose_coping_activity_form
-  - validate_ehbo_me_self_lapse_form
-  - validate_relapse_stop_now_later_from
+  - action_reset_one_four_slot
+  - action_reset_one_or_two_slot
   - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_lapse
+  - action_set_slot_relapse_dialog_relapse
+  - action_trigger_relapse
   - populate_coping_activities_list
   - show_barchart_difficult_situations
   - show_chosen_coping_activity
@@ -642,6 +649,28 @@ actions:
   - store_hrs_situation
   - store_hrs_what_happened
   - store_hrs_who_with
+  - validate_crave_lapse_relapse_form
+  - validate_ehbo_me_self_form
+  - validate_ehbo_me_self_lapse_form
+  - validate_hrs_activity_form
+  - validate_hrs_choose_coping_activity_form
+  - validate_hrs_enough_motivation_form
+  - validate_hrs_feeling_form
+  - validate_hrs_like_feedback_form
+  - validate_hrs_new_activity_form
+  - validate_hrs_situation_form
+  - validate_hrs_what_happened_form
+  - validate_hrs_who_with_form
+  - validate_lapse_ehbo_form
+  - validate_pa_type_together_why_fail_form
+  - validate_reflect_bar_chart_form
+  - validate_relapse_medication_info_form
+  - validate_relapse_stop_now_later_form
+  - validate_smoke_or_pa_form
+  - validate_type_and_number_smoke_form
+  - validate_type_and_number_smoke_relapse_form
+  - validate_what_doing_how_feel_smoke_form
+  - validate_with_whom_event_smoke_form
 
 forms:
   crave_lapse_relapse_form:
@@ -721,6 +750,14 @@ forms:
     required_slots:
       - hrs_choose_coping_activity_slot
 
-  relapse_stop_now_later_from:
+  relapse_stop_now_later_form:
     required_slots:
       - one_or_two_slot
+
+  relapse_medication_info_form:
+    required_slots:
+      - one_or_two_slot
+
+  lapse_ehbo_form:
+    required_slots:
+      - one_four_slot

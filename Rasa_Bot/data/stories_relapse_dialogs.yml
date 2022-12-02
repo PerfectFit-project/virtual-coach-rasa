@@ -309,7 +309,7 @@ stories:
   - action: show_chosen_coping_activity
   - checkpoint: continue_relapse_dialog_smoke_lapse
 
-- story: smoke lapse user chooses activity
+- story: smoke lapse user has motivation
   steps:
   - checkpoint: ehbo_me_self_lapse_checkpoint
   - action: ehbo_me_self_lapse_form
@@ -422,25 +422,153 @@ stories:
 - story: decide to stop now
   steps:
   - checkpoint: stop_now_or_later_checkpoint
-  - action: relapse_stop_now_later_from
-  - active_loop: relapse_stop_now_later_from
+  - action: action_reset_one_or_two_slot
+  - action: relapse_stop_now_later_form
+  - active_loop: relapse_stop_now_later_form
   - slot_was_set:
     - one_or_two_slot: 1
   - active_loop: null
   - action: utter_smoke_relapse_6
   - action: utter_smoke_relapse_7
   - action: utter_smoke_relapse_8
+  - checkpoint: relapse_medication_info_checkpoint
 
 - story: decide to stop later
   steps:
   - checkpoint: stop_now_or_later_checkpoint
-  - action: relapse_stop_now_later_from
-  - active_loop: relapse_stop_now_later_from
+  - action: action_reset_one_or_two_slot
+  - action: relapse_stop_now_later_form
+  - active_loop: relapse_stop_now_later_form
   - slot_was_set:
     - one_or_two_slot: 2
   - active_loop: null
-  - action: utter_test_utterance
+  - action: utter_test_utterance # TODO: implement goal setting for new quit date (row 178)
+  - checkpoint: relapse_medication_info_checkpoint
 
+- story: decide to get medication info
+  steps:
+  - checkpoint: relapse_medication_info_checkpoint
+  - action: action_reset_one_or_two_slot
+  - action: relapse_medication_info_form
+  - active_loop: relapse_medication_info_form
+  - slot_was_set:
+    - one_or_two_slot: 1
+  - active_loop: null
+  - action: utter_test_utterance # TODO: implement medication dialog (row 186)
+  - checkpoint: relapse_ehbo_checkpoint
+
+- story: decide not to get medication info
+  steps:
+  - checkpoint: relapse_medication_info_checkpoint
+  - action: action_reset_one_or_two_slot
+  - action: relapse_medication_info_form
+  - active_loop: relapse_medication_info_form
+  - slot_was_set:
+    - one_or_two_slot: 2
+  - active_loop: null
+  - action: utter_test_utterance2 # TODO: go to form
+  - checkpoint: relapse_ehbo_checkpoint
+
+- story: relapse choose ehbo or activity
+  steps:
+  - checkpoint: relapse_ehbo_checkpoint
+  - action: action_reset_one_four_slot
+  - action: ehbo_form_one_four_slot
+  - active_loop: ehbo_form_one_four_slot
+  - slot_was_set:
+    - one_four_slot: 1
+  - active_loop: null
+  - action: action_set_slot_relapse_dialog_relapse
+  - checkpoint: open_fak
+
+- story: smoke relapse system suggests activity
+  steps:
+  - checkpoint: relapse_ehbo_checkpoint
+  - action: action_reset_one_four_slot
+  - action: ehbo_form_one_four_slot
+  - active_loop: ehbo_form_one_four_slot
+  - slot_was_set:
+    - one_four_slot: 2
+  - active_loop: null
+  - action: show_first_coping_activity
+  - checkpoint: continue_relapse_dialog_smoke_relapse
+
+- story: smoke relapse user chooses activity
+  steps:
+  - checkpoint: relapse_ehbo_checkpoint
+  - action: action_reset_one_four_slot
+  - action: ehbo_form_one_four_slot
+  - active_loop: ehbo_form_one_four_slot
+  - slot_was_set:
+    - one_four_slot: 3
+  - active_loop: null
+  - action: utter_hrs_list_activities_intro
+  - action: populate_coping_activities_list
+  - action: hrs_choose_coping_activity_form
+  - active_loop: hrs_choose_coping_activity_form
+  - active_loop: null
+  - action: show_chosen_coping_activity
+  - checkpoint: continue_relapse_dialog_smoke_relapse
+
+- story: smoke relapse user has motivation
+  steps:
+  - checkpoint: relapse_ehbo_checkpoint
+  - action: action_reset_one_four_slot
+  - action: ehbo_form_one_four_slot
+  - active_loop: ehbo_form_one_four_slot
+  - slot_was_set:
+    - one_four_slot: 4
+  - active_loop: null
+  - action: utter_good_to_hear_1
+  - action: utter_good_to_hear_2
+  - action: action_end_dialog
+
+- story: continue smoke lapse enough motivation
+  steps:
+  - checkpoint: continue_relapse_dialog_smoke_relapse
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+    - hrs_enough_motivation_slot: 1
+  - active_loop: null
+  - action: utter_good_to_hear_1
+  - action: utter_good_to_hear_2
+  - action: action_end_dialog
+
+- story: continue smoke relapse not enough motivation 1
+  steps:
+  - checkpoint: continue_relapse_dialog_smoke_relapse
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+    - hrs_enough_motivation_slot: 2
+  - active_loop: null
+  - action: utter_bad_to_hear_1
+  - action: utter_bad_to_hear_2
+  - action: hrs_activity_form
+  - active_loop: hrs_activity_form
+  - slot_was_set:
+      - hrs_activity_slot: 1
+  - active_loop: null
+  - checkpoint: relapse_ehbo_checkpoint
+
+- story: continue smoke relapse not enough motivation 2
+  steps:
+  - checkpoint: continue_relapse_dialog_smoke_relapse
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  - slot_was_set:
+    - hrs_enough_motivation_slot: 2
+  - active_loop: null
+  - action: utter_bad_to_hear_1
+  - action: utter_bad_to_hear_2
+  - action: hrs_activity_form
+  - active_loop: hrs_activity_form
+  - slot_was_set:
+      - hrs_activity_slot: 2
+  - active_loop: null
+  - action: utter_hrs_call_help
+  - action: action_end_dialog
 
 ## Stories for PA
 ## 2d/2e (identical) Parent for PA - HRS

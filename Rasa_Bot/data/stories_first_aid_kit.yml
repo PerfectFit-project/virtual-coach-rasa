@@ -47,9 +47,17 @@ stories:
     - checkpoint: continue_with_relapse_dialog
 
 
-- story: get to relapse dialog
+- story: get to relapse dialog lapse
   steps:
     - checkpoint: continue_fak_checkpoint
     - slot_was_set:
       - dialog_to_continue: relapse_dialog_lapse
     - checkpoint: continue_relapse_dialog_smoke_lapse
+
+
+- story: get to relapse dialog relapse
+  steps:
+    - checkpoint: continue_fak_checkpoint
+    - slot_was_set:
+      - dialog_to_continue: relapse_dialog_relapse
+    - checkpoint: continue_relapse_dialog_smoke_relapse

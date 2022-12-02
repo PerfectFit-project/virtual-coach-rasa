@@ -38,6 +38,7 @@ slots:
       - future_self_preparation
       - relapse_dialog
       - relapse_dialog_lapse
+      - relapse_dialog_relapse
     influence_conversation: true
     mappings:
       - type: custom

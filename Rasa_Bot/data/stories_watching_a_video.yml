@@ -1,0 +1,12 @@
+version: "3.1"
+
+stories:
+## Watching a video story
+- story: Video story
+  steps:
+    - intent: test_intent
+    - action: utter_watch_video_announcement
+    - action: utter_click_video_link
+    - action: utter_leaving_app_announcement
+    - action: utter_video_link
+    

@@ -6,7 +6,8 @@ name = "pypi"
 [packages]
 
 [dev-packages]
-black = "*"
+black = "~=22.10.0"
+pytest-asyncio = "~=0.18"
 
 [requires]
 python_version = "3.8"

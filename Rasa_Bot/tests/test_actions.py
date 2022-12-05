@@ -1,6 +1,7 @@
 """Unit tests for the custom actions"""
 import pytest
 from pytest_mock import MockerFixture
+from unittest.mock import MagicMock
 from contextlib import contextmanager
 from typing import Text, Union
 from rasa_sdk.events import SlotSet
@@ -28,6 +29,16 @@ def tracker() -> Tracker:
     yield EMPTY_TRACKER
 
 
+@pytest.fixture
+def mocker_db_session(mocker) -> MagicMock:
+    mocker_get_db_session = mocker.patch("Rasa_Bot.actions.actions_general_activity.get_db_session")
+    mocker_db_session = mocker.MagicMock(
+        query=mocker.MagicMock(return_value=mocker.MagicMock(filter=mocker.MagicMock(return_value=mocker.MagicMock())))
+    )
+    mocker_get_db_session.return_value = mocker_db_session
+    yield mocker_db_session
+
+
 @pytest.mark.asyncio
 async def test_run_action_save_plan_week_calendar(dispatcher: CollectingDispatcher, domain: DomainDict):
     tracker = EMPTY_TRACKER
@@ -42,45 +53,46 @@ async def test_run_action_save_plan_week_calendar(dispatcher: CollectingDispatch
 
 @pytest.mark.asyncio
 async def test_run_action_check_if_first_execution_ga__first_time(
-    mocker: MockerFixture, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
 ) -> None:
     action = CheckIfFirstExecutionGA()
-    mocker_get_db_session = mocker.patch("virtual_coach_db.helper.helper_functions.get_db_session")
-    mocker_db_session = mocker.MagicMock()
-    mocker_get_db_session.return_value = mocker_db_session
-    mocker_filter = mocker.MagicMock()
-    mocker_query = mocker.MagicMock(return_value=mocker_filter)
-    mocker_db_session.query = mocker_query
 
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(return_value=[])
     events = await action.run(dispatcher, tracker, domain)
 
-    mocker_query.assert_called_once_with(InterventionActivitiesPerformed)
-    mocker_filter.assert_called_once_with(InterventionActivitiesPerformed.users_nicedayuid == tracker.sender_id)
-    mocker_filter.all = mocker.MagicMock(return_value=[InterventionActivitiesPerformed()])
-    assert events == [SlotSet("general_activity_first_execution"), True]
+    mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
+    expected_events = [SlotSet("general_activity_first_execution", True)]
+    assert expected_events == events
 
 
 @pytest.mark.asyncio
 async def test_run_action_check_if_first_execution_ga__not_first_time(
-    mocker: MockerFixture, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
 ) -> None:
     action = CheckIfFirstExecutionGA()
-    mocker_get_db_session = mocker.patch("virtual_coach_db.helper.helper_functions.get_db_session")
-    mocker_db_session = mocker.MagicMock()
-    mocker_get_db_session.return_value = mocker_db_session
-    mocker_filter = mocker.MagicMock()
-    mocker_query = mocker.MagicMock(return_value=mocker_filter)
-    mocker_db_session.query = mocker_query
 
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
+        return_value=[InterventionActivitiesPerformed()]
+    )
     events = await action.run(dispatcher, tracker, domain)
 
-    mocker_query.assert_called_once_with(InterventionActivitiesPerformed)
-    mocker_filter.assert_called_once_with(InterventionActivitiesPerformed.users_nicedayuid == tracker.sender_id)
-    mocker_filter.all = mocker.MagicMock(
-        return_value=[InterventionActivitiesPerformed(), InterventionActivitiesPerformed()]
-    )
-    assert events == [SlotSet("general_activity_first_execution"), False]
+    mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
 
+    assert events == [SlotSet("general_activity_first_execution", False)]
+
+
+# @pytest.mark.asyncio
+# async def test_get_activity_user_input__first_time(
+#     mocker: MockerFixture, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict
+# ) -> None:
 
 # TODO: If this is a recurring pattern, this can be turned into a fixture
 @contextmanager

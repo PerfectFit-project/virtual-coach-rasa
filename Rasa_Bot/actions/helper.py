@@ -5,20 +5,31 @@ import datetime
 import secrets
 
 from .definitions import DialogQuestions, DATABASE_URL, TIMEZONE
-from virtual_coach_db.dbschema.models import (Users, DialogAnswers, InterventionComponents,
+from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers, InterventionComponents,
                                               UserPreferences, InterventionActivity)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
-def store_dialog_answer_to_db(user_id, answer, question: DialogQuestions):
+def store_dialog_closed_answer_to_db(user_id, answer_id):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
-    entry = DialogAnswers(answer=answer,
-                          question_id=question.value,
-                          datetime=datetime.datetime.now().astimezone(TIMEZONE))
-    selected.dialog_answers.append(entry)
+    entry = DialogClosedAnswers(closed_answers_id=answer_id,
+                                datetime=datetime.datetime.now().astimezone(TIMEZONE))
+    selected.dialog_closed_answers.append(entry)
     session.commit()  # Update database
+
+
+def store_dialog_open_answer_to_db(user_id, question_id, answer_value):
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    entry = DialogClosedAnswers(question_id=question_id,
+                                answer_value=answer_value,
+                                datetime=datetime.datetime.now().astimezone(TIMEZONE))
+    selected.dialog_closed_answers.append(entry)
+    session.commit()  # Update database
+
 
 def store_user_preferences_to_db(user_id, intervention_component, recursive, week_days,
                                  preferred_time):

@@ -42,6 +42,7 @@ class ActionGetFirstAidKit(Action):
         kit_text = ""
         kit_exists = False
 
+        # the kit exists
         if selected is not None:
 
             kit_exists = True
@@ -61,8 +62,13 @@ class ActionGetFirstAidKit(Action):
                 if not activity_idx == len(selected) - 1:
                     kit_text += "\n"
 
-        return [SlotSet("first_aid_kit_text", kit_text),
-                SlotSet("first_aid_kit_exists", kit_exists)]
+            dispatcher.utter_message(template="utter_first_aid_kit",
+                                     first_aid_kit_text=kit_text)
+        # the kit doesn't exist
+        else:
+            dispatcher.utter_message(template="utter_first_aid_kit_empty")
+
+        return []
 
 
 

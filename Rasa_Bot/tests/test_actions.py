@@ -65,6 +65,11 @@ async def test_run_action_check_if_first_execution_ga__first_time(
     events = await action.run(dispatcher, tracker, domain)
 
     mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivitiesPerformed.users_nicedayuid == tracker.current_state()["sender_id"]
+    )
+
     expected_events = [SlotSet("general_activity_first_execution", True)]
     assert expected_events == events
 
@@ -85,6 +90,10 @@ async def test_run_action_check_if_first_execution_ga__not_first_time(
     events = await action.run(dispatcher, tracker, domain)
 
     mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivitiesPerformed.users_nicedayuid == tracker.current_state()["sender_id"]
+    )
 
     assert events == [SlotSet("general_activity_first_execution", False)]
 

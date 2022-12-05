@@ -1,6 +1,12 @@
 version: "3.1"
 
 nlu:
+- intent: test_intent
+  examples: |
+    -"test"
+    -"Can I test this?"
+    -"Does it work?"
+
 - intent: review_last_activity
   examples: |
     - "Mijn activiteit"

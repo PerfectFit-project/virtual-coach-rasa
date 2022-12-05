@@ -89,11 +89,6 @@ async def test_run_action_check_if_first_execution_ga__not_first_time(
     assert events == [SlotSet("general_activity_first_execution", False)]
 
 
-# @pytest.mark.asyncio
-# async def test_get_activity_user_input__first_time(
-#     mocker: MockerFixture, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict
-# ) -> None:
-
 # TODO: If this is a recurring pattern, this can be turned into a fixture
 @contextmanager
 def latest_message(tracker, message):

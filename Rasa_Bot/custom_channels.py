@@ -78,7 +78,7 @@ class NicedayInputChannel(InputChannel):
     a callback as soon as the rasa response is ready.
     """
     def __init__(self):
-        self.output_channel = NicedayTriggerOutputChannel()
+        self.output_channel = NicedayOutputChannel()
 
     @classmethod
     def name(cls) -> Text:
@@ -108,6 +108,51 @@ class NicedayInputChannel(InputChannel):
                             metadata=metadata)
             )
             return response.json(collector.messages)
+
+        return custom_webhook
+
+    def get_output_channel(self) -> CollectingOutputChannel:
+        """
+        Register output channel. This is the output channel that is used when calling the
+        'trigger_intent' endpoint.
+        """
+        return NicedayOutputChannel()
+
+
+class NicedayTriggerInputChannel(InputChannel):
+    """
+    Custom input channel for communication with Niceday server. Instead of directly returning the
+    bot messages to the HTTP request that sends the message, it will use NicedayOutputChannel as
+    a callback as soon as the rasa response is ready.
+    """
+
+    def __init__(self):
+        self.output_channel = NicedayTriggerOutputChannel()
+
+    @classmethod
+    def name(cls) -> Text:
+        return "niceday_trigger_input_channel"
+
+    def blueprint(self, on_new_message: Callable[[UserMessage], Awaitable[None]]) -> Blueprint:
+        custom_webhook = Blueprint(
+            f"custom_webhook_{type(self).__name__}",
+            inspect.getmodule(self).__name__,
+        )
+
+        @custom_webhook.route("/", methods=["GET"])
+        async def health(request: Request) -> HTTPResponse:  # pylint: disable=unused-argument
+            return response.json({"status": "ok"})
+
+        @custom_webhook.route("/webhook", methods=["POST"])
+        async def receive(request: Request) -> HTTPResponse:
+            sender_id = request.json.get("sender")  # method to get sender_id
+            text = request.json.get("message")  # method to fetch text
+
+            collector = self.get_output_channel()
+            await on_new_message(
+                UserMessage(text, collector, sender_id, input_channel=self.name())
+            )
+            return response.text("success")
 
         return custom_webhook
 

@@ -8,7 +8,8 @@ from virtual_coach_db.dbschema.models import InterventionActivity
 
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
-from .helper import get_latest_bot_utterance, get_random_activities
+from .helper import (get_latest_bot_utterance, get_random_activities, store_dialog_closed_answer_to_db,
+                     store_dialog_open_answer_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
@@ -17,6 +18,7 @@ from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text, List
 
 from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.definitions import DialogQuestionsEnum
 
 celery = Celery(broker=REDIS_URL)
 
@@ -357,6 +359,15 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         if value.lower() in ['Nee', 'nee', "nee."]:
             return {"number_smoke": None, "number_smoke_confirm": None}
         else:
+            # Store data to db
+            answer_number = tracker.get_slot("number_smoke")
+            answer_type = tracker.get_slot("type_smoke")
+            answer_type_id = int(answer_type) + DialogQuestionsEnum.RELAPSE_LAPSE_TYPE_SMOKE.value * 100
+            user_id = int(tracker.current_state()['sender_id'])
+            store_dialog_closed_answer_to_db(user_id, answer_type_id)
+            store_dialog_open_answer_to_db(user_id, DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES, answer_number)
+
+            # Return slot
             return {"number_smoke_confirm": value}
 
 

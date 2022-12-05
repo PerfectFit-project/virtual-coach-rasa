@@ -13,12 +13,12 @@ from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import PreparationInterventionComponents
-from virtual_coach_db.dbschema.models import (Users, DialogAnswers, UserInterventionState,
-                                              InterventionComponents)
+# from virtual_coach_db.dbschema.models import (Users, DialogAnswers, UserInterventionState,
+#                                               InterventionComponents)
 
 from .definitions import DialogQuestions, TIMEZONE, DATABASE_URL
-from .helper import (store_dialog_answer_to_db,
-                                    get_intervention_component_id)
+# from .helper import (store_dialog_answer_to_db,
+#                                     get_intervention_component_id)
 
 
 class SetSlotFutureSelfDialog(Action):

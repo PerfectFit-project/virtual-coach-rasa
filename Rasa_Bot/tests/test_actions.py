@@ -12,6 +12,7 @@ from Rasa_Bot.actions.actions_general_activity import (
     CheckIfFirstExecutionGA,
     GetActivityUserInput,
     CheckUserInputRequired,
+    CheckActivityDone,
 )
 
 from Rasa_Bot.actions.actions_future_self_dialog import (
@@ -133,7 +134,7 @@ async def test_run_action_get_activity_user_input(
 
 
 @pytest.mark.asyncio
-async def test_run_action_check_user_input_required(
+async def test_run_action_check_user_input_required__required(
     mocker: MockerFixture,
     dispatcher: CollectingDispatcher,
     tracker: Tracker,
@@ -157,6 +158,95 @@ async def test_run_action_check_user_input_required(
     )
 
     assert events == [SlotSet("is_user_input_required", False)]
+
+
+@pytest.mark.asyncio
+async def test_run_action_check_user_input_required__not_required(
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
+) -> None:
+    last_activity_id_slot = 11
+    tracker.add_slots([SlotSet("last_activity_id_slot", last_activity_id_slot)])
+    action = CheckUserInputRequired()
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
+        return_value=[
+            InterventionActivity(user_input_required=True),
+            InterventionActivity(user_input_required=True),
+        ]
+    )
+    events = await action.run(dispatcher, tracker, domain)
+    mocker_db_session.query.assert_called_once_with(InterventionActivity)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivity.intervention_activity_id == last_activity_id_slot
+    )
+
+    assert events == [SlotSet("is_user_input_required", True)]
+
+
+@pytest.mark.asyncio
+async def test_run_action_check_activity_done__not_done(
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
+) -> None:
+    last_activity_id_slot = 11
+    tracker.add_slots([SlotSet("last_activity_id_slot", last_activity_id_slot)])
+    action = CheckActivityDone()
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
+        return_value=[
+            InterventionActivitiesPerformed(user_input="user_input1"),
+            InterventionActivitiesPerformed(user_input=None),
+        ]
+    )
+    events = await action.run(dispatcher, tracker, domain)
+
+    mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivitiesPerformed.users_nicedayuid == tracker.current_state()["sender_id"]
+    )
+    assert mocker_db_session.query.return_value.filter.call_args.args[1].compare(
+        InterventionActivitiesPerformed.intervention_activity_id == last_activity_id_slot
+    )
+
+    assert events == [SlotSet("is_activity_done", False)]
+
+
+@pytest.mark.asyncio
+async def test_run_action_check_activity_done__done(
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
+) -> None:
+    last_activity_id_slot = 11
+    tracker.add_slots([SlotSet("last_activity_id_slot", last_activity_id_slot)])
+    action = CheckActivityDone()
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
+        return_value=[
+            InterventionActivitiesPerformed(user_input="user_input1"),
+            InterventionActivitiesPerformed(user_input="user_input2"),
+        ]
+    )
+    events = await action.run(dispatcher, tracker, domain)
+
+    mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivitiesPerformed.users_nicedayuid == tracker.current_state()["sender_id"]
+    )
+    assert mocker_db_session.query.return_value.filter.call_args.args[1].compare(
+        InterventionActivitiesPerformed.intervention_activity_id == last_activity_id_slot
+    )
+
+    assert events == [SlotSet("is_activity_done", True)]
 
 
 # TODO: If this is a recurring pattern, this can be turned into a fixture

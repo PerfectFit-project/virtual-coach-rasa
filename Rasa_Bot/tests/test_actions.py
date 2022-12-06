@@ -17,7 +17,6 @@ from Rasa_Bot.actions.actions_minimum_functional_product import SavePlanWeekCale
 
 from Rasa_Bot.tests.conftest import EMPTY_TRACKER
 from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed
-from sqlalchemy import and_
 
 # NB: This is just an example test. The custom action tested here
 # is currently just a placeholder function. Update once the
@@ -99,14 +98,14 @@ async def test_run_action_check_if_first_execution_ga__not_first_time(
 
 
 @pytest.mark.asyncio
-async def test_get_activity_user_input(
+async def test_run_action_check_activity_done__done(
     mocker: MockerFixture,
     dispatcher: CollectingDispatcher,
     tracker: Tracker,
     domain: DomainDict,
     mocker_db_session: MagicMock,
 ) -> None:
-    last_activity_id_slot = 11.0
+    last_activity_id_slot = 11
     tracker.add_slots([SlotSet("last_activity_id_slot", last_activity_id_slot)])
     action = GetActivityUserInput()
     mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
@@ -119,6 +118,13 @@ async def test_get_activity_user_input(
 
     mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
     mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivitiesPerformed.users_nicedayuid == tracker.current_state()["sender_id"]
+    )
+    assert mocker_db_session.query.return_value.filter.call_args.args[1].compare(
+        InterventionActivitiesPerformed.intervention_activity_id == last_activity_id_slot
+    )
+
     assert events == [SlotSet("activity_user_input", "user_input2")]
 
 

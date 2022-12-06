@@ -1,5 +1,5 @@
 {
-  "sender_id": "unit_test_user",
+  "sender_id": 123,
   "slots": {
     "name": "",
     "plan_week": ""

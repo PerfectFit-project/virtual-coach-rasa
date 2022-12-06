@@ -98,7 +98,7 @@ async def test_run_action_check_if_first_execution_ga__not_first_time(
 
 
 @pytest.mark.asyncio
-async def test_run_action_check_activity_done__done(
+async def test_run_action_get_activity_user_input(
     mocker: MockerFixture,
     dispatcher: CollectingDispatcher,
     tracker: Tracker,

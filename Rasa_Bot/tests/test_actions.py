@@ -13,6 +13,7 @@ from Rasa_Bot.actions.actions_general_activity import (
     GetActivityUserInput,
     CheckUserInputRequired,
     CheckActivityDone,
+    SaveDescriptionInDb,
 )
 
 from Rasa_Bot.actions.actions_future_self_dialog import (
@@ -22,10 +23,7 @@ from Rasa_Bot.actions.actions_minimum_functional_product import SavePlanWeekCale
 
 from Rasa_Bot.tests.conftest import EMPTY_TRACKER
 from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed, InterventionActivity
-
-# NB: This is just an example test. The custom action tested here
-# is currently just a placeholder function. Update once the
-# function tested here works correctly.
+from sqlalchemy import update
 
 
 @pytest.fixture
@@ -37,22 +35,16 @@ def tracker() -> Tracker:
 def mocker_db_session(mocker) -> MagicMock:
     mocker_get_db_session = mocker.patch("Rasa_Bot.actions.actions_general_activity.get_db_session")
     mocker_db_session = mocker.MagicMock(
-        query=mocker.MagicMock(return_value=mocker.MagicMock(filter=mocker.MagicMock(return_value=mocker.MagicMock())))
+        **{
+            "query": mocker.MagicMock(
+                return_value=mocker.MagicMock(**{"filter": mocker.MagicMock(return_value=mocker.MagicMock())})
+            ),
+            "execute": mocker.MagicMock(),
+            "commit": mocker.MagicMock(),
+        }
     )
     mocker_get_db_session.return_value = mocker_db_session
     yield mocker_db_session
-
-
-@pytest.mark.asyncio
-async def test_run_action_save_plan_week_calendar(dispatcher: CollectingDispatcher, domain: DomainDict):
-    tracker = EMPTY_TRACKER
-    action = SavePlanWeekCalendar()
-
-    events = await action.run(dispatcher, tracker, domain)
-    expected_events = [
-        SlotSet("success_save_calendar_plan_week", True),
-    ]
-    assert events == expected_events
 
 
 @pytest.mark.asyncio
@@ -247,6 +239,52 @@ async def test_run_action_check_activity_done__done(
     )
 
     assert events == [SlotSet("is_activity_done", True)]
+
+
+@pytest.mark.asyncio
+async def test_run_action_save_description_in_db(
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
+) -> None:
+    description = "This is a description"
+    last_activity_id_slot = 11
+    tracker.add_slots(
+        [
+            SlotSet("last_activity_id_slot", last_activity_id_slot),
+            SlotSet("general_activity_description_slot", description),
+        ]
+    )
+    action = SaveDescriptionInDb()
+
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
+        return_value=[
+            InterventionActivitiesPerformed(intervention_activities_performed_id=1),
+            InterventionActivitiesPerformed(intervention_activities_performed_id=2),
+        ]
+    )
+
+    events = await action.run(dispatcher, tracker, domain)
+
+    mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivitiesPerformed.users_nicedayuid == tracker.current_state()["sender_id"]
+    )
+    assert mocker_db_session.query.return_value.filter.call_args.args[1].compare(
+        InterventionActivitiesPerformed.intervention_activity_id == last_activity_id_slot
+    )
+    statement = (
+        update(InterventionActivitiesPerformed)
+        .where(InterventionActivitiesPerformed.intervention_activities_performed_id == 2)
+        .values(user_input=description)
+    )
+    mocker_db_session.execute.assert_called_once()
+    mocker_db_session.execute.call_args.args[0].compare(statement)
+    mocker_db_session.commit.assert_called_once()
+    assert events == []
 
 
 # TODO: If this is a recurring pattern, this can be turned into a fixture

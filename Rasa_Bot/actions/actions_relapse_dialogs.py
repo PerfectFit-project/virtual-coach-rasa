@@ -365,7 +365,8 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             answer_type_id = int(answer_type) + DialogQuestionsEnum.RELAPSE_LAPSE_TYPE_SMOKE.value * 100
             user_id = int(tracker.current_state()['sender_id'])
             store_dialog_closed_answer_to_db(user_id, answer_type_id)
-            store_dialog_open_answer_to_db(user_id, DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES, answer_number)
+            store_dialog_open_answer_to_db(user_id, DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value,
+                                           answer_number)
 
             # Return slot
             return {"number_smoke_confirm": value}

@@ -24,10 +24,10 @@ def store_dialog_open_answer_to_db(user_id, question_id, answer_value):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
-    entry = DialogClosedAnswers(question_id=question_id,
-                                answer_value=answer_value,
-                                datetime=datetime.datetime.now().astimezone(TIMEZONE))
-    selected.dialog_closed_answers.append(entry)
+    entry = DialogOpenAnswers(question_id=question_id,
+                              answer_value=answer_value,
+                              datetime=datetime.datetime.now().astimezone(TIMEZONE))
+    selected.dialog_open_answers.append(entry)
     session.commit()  # Update database
 
 

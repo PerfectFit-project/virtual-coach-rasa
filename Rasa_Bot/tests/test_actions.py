@@ -8,7 +8,7 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.interfaces import Tracker
-from Rasa_Bot.actions.actions_general_activity import CheckIfFirstExecutionGA
+from Rasa_Bot.actions.actions_general_activity import CheckIfFirstExecutionGA, GetActivityUserInput
 
 from Rasa_Bot.actions.actions_future_self_dialog import (
     ValidateWhyPickedMoverWordsForm,
@@ -16,8 +16,8 @@ from Rasa_Bot.actions.actions_future_self_dialog import (
 from Rasa_Bot.actions.actions_minimum_functional_product import SavePlanWeekCalendar
 
 from Rasa_Bot.tests.conftest import EMPTY_TRACKER
-from sqlalchemy.orm import Session
-from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed, FirstAidKit, InterventionActivity
+from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed
+from sqlalchemy import and_
 
 # NB: This is just an example test. The custom action tested here
 # is currently just a placeholder function. Update once the
@@ -96,6 +96,30 @@ async def test_run_action_check_if_first_execution_ga__not_first_time(
     )
 
     assert events == [SlotSet("general_activity_first_execution", False)]
+
+
+@pytest.mark.asyncio
+async def test_get_activity_user_input(
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
+) -> None:
+    last_activity_id_slot = 11.0
+    tracker.add_slots([SlotSet("last_activity_id_slot", last_activity_id_slot)])
+    action = GetActivityUserInput()
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
+        return_value=[
+            InterventionActivitiesPerformed(user_input="user_input1"),
+            InterventionActivitiesPerformed(user_input="user_input2"),
+        ]
+    )
+    events = await action.run(dispatcher, tracker, domain)
+
+    mocker_db_session.query.assert_called_once_with(InterventionActivitiesPerformed)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert events == [SlotSet("activity_user_input", "user_input2")]
 
 
 # TODO: If this is a recurring pattern, this can be turned into a fixture

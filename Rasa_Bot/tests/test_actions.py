@@ -8,7 +8,11 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.interfaces import Tracker
-from Rasa_Bot.actions.actions_general_activity import CheckIfFirstExecutionGA, GetActivityUserInput
+from Rasa_Bot.actions.actions_general_activity import (
+    CheckIfFirstExecutionGA,
+    GetActivityUserInput,
+    CheckUserInputRequired,
+)
 
 from Rasa_Bot.actions.actions_future_self_dialog import (
     ValidateWhyPickedMoverWordsForm,
@@ -16,7 +20,7 @@ from Rasa_Bot.actions.actions_future_self_dialog import (
 from Rasa_Bot.actions.actions_minimum_functional_product import SavePlanWeekCalendar
 
 from Rasa_Bot.tests.conftest import EMPTY_TRACKER
-from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed
+from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed, InterventionActivity
 
 # NB: This is just an example test. The custom action tested here
 # is currently just a placeholder function. Update once the
@@ -126,6 +130,33 @@ async def test_run_action_get_activity_user_input(
     )
 
     assert events == [SlotSet("activity_user_input", "user_input2")]
+
+
+@pytest.mark.asyncio
+async def test_run_action_check_user_input_required(
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
+) -> None:
+    last_activity_id_slot = 11
+    tracker.add_slots([SlotSet("last_activity_id_slot", last_activity_id_slot)])
+    action = CheckUserInputRequired()
+    mocker_db_session.query.return_value.filter.return_value.all = mocker.MagicMock(
+        return_value=[
+            InterventionActivity(user_input_required=False),
+            InterventionActivity(user_input_required=True),
+        ]
+    )
+    events = await action.run(dispatcher, tracker, domain)
+    mocker_db_session.query.assert_called_once_with(InterventionActivity)
+    mocker_db_session.query.return_value.filter.assert_called_once()
+    assert mocker_db_session.query.return_value.filter.call_args.args[0].compare(
+        InterventionActivity.intervention_activity_id == last_activity_id_slot
+    )
+
+    assert events == [SlotSet("is_user_input_required", False)]
 
 
 # TODO: If this is a recurring pattern, this can be turned into a fixture

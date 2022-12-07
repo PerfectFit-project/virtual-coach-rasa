@@ -3,10 +3,11 @@ from rasa_sdk.events import ReminderScheduled
 from rasa_sdk import Action
 from typing import Text
 
+
 class DelayedMessage(Action):
     """Schedules a reminder"""
 
-    def name(self) -> Text:
+    def name(self):
         return "action_delayed_message_after_video"
 
     async def run(self, dispatcher, tracker, domain):
@@ -27,7 +28,7 @@ class DelayedMessage(Action):
 
 class ActionReactToReminder(Action):
     """Will ask user about the video after watching"""
-    def name(self) -> Text:
+    def name(self):
         return "action_thanks_for_watching"
 
     async def run(self, dispatcher, tracker, domain):

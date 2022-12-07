@@ -14,6 +14,7 @@ from Rasa_Bot.actions.actions_general_activity import (
     CheckUserInputRequired,
     CheckActivityDone,
     SaveDescriptionInDb,
+    SetSlotGeneralActivity,
 )
 
 from Rasa_Bot.actions.actions_future_self_dialog import (
@@ -22,8 +23,12 @@ from Rasa_Bot.actions.actions_future_self_dialog import (
 from Rasa_Bot.actions.actions_minimum_functional_product import SavePlanWeekCalendar
 
 from Rasa_Bot.tests.conftest import EMPTY_TRACKER
-from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed, InterventionActivity
+from virtual_coach_db.dbschema.models import (
+    InterventionActivitiesPerformed,
+    InterventionActivity,
+)
 from sqlalchemy import update
+from virtual_coach_db.helper import ExecutionInterventionComponents
 
 
 @pytest.fixture
@@ -285,6 +290,20 @@ async def test_run_action_save_description_in_db(
     mocker_db_session.execute.call_args.args[0].compare(statement)
     mocker_db_session.commit.assert_called_once()
     assert events == []
+
+
+@pytest.mark.asyncio
+async def test_run_action_set_slot_general_activity(
+    mocker: MockerFixture,
+    dispatcher: CollectingDispatcher,
+    tracker: Tracker,
+    domain: DomainDict,
+    mocker_db_session: MagicMock,
+) -> None:
+    action = SetSlotGeneralActivity()
+
+    events = await action.run(dispatcher, tracker, domain)
+    assert events == [SlotSet("current_intervention_component", ExecutionInterventionComponents.GENERAL_ACTIVITY)]
 
 
 # TODO: If this is a recurring pattern, this can be turned into a fixture

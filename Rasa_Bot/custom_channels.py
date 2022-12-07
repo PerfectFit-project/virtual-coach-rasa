@@ -2,7 +2,6 @@ import inspect
 import os
 import typing
 from typing import Text, Callable, Awaitable, Any, Dict, List
-import logging
 
 from rasa.core.channels.channel import InputChannel, UserMessage, CollectingOutputChannel, OutputChannel
 from sanic import Blueprint, response
@@ -34,7 +33,6 @@ class NicedayOutputChannel(CollectingOutputChannel):
                  custom: typing.Optional[Dict[str, Any]] = None
                  ) -> Dict:
         msg_metadata = None
-        logging.info("sending message in method _message")
         if custom is not None:
             text = custom["text"]
             msg_metadata = custom["attachmentIds"]
@@ -67,7 +65,6 @@ class NicedayTriggerOutputChannel(OutputChannel):
         self, recipient_id: Text, text: Text, **kwargs: Any
     ) -> None:
         """Send a message through this channel."""
-        logging.info("sending a message")
         for message_part in text.strip().split("\n\n"):
             self.niceday_client.post_message(int(recipient_id), message_part)
 

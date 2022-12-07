@@ -1,7 +1,10 @@
 import datetime
 from rasa_sdk.events import ReminderScheduled
-from rasa_sdk import Action
-from typing import Text
+from rasa_sdk import Action, Tracker
+from typing import Text, Dict, Any
+from rasa_sdk.forms import FormValidationAction
+from rasa_sdk.executor import CollectingDispatcher
+from .helper import get_latest_bot_utterance
 
 
 class DelayedMessage(Action):
@@ -26,6 +29,7 @@ class DelayedMessage(Action):
 
         return [reminder]
 
+
 class ActionReactToReminder(Action):
     """Will ask user about the video after watching"""
     def name(self):
@@ -34,3 +38,22 @@ class ActionReactToReminder(Action):
     async def run(self, dispatcher, tracker, domain):
         dispatcher.utter_message(response="utter_thanks_for_watching")
         return []
+
+
+class ValidateVideoClearForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_video_clear_form'
+
+    def validate_video_clear(
+            self, value: Text, dispatcher: CollectingDispatcher) -> Dict[Text, Any]:
+        """Validate video clear input."""
+
+        if value == 1:
+            dispatcher.utter_message(response="utter_clear_confirmation")
+            dispatcher.utter_message(response="utter_finish_video_dialog")
+        if value == 2:
+            dispatcher.utter_message(response="utter_video_link")
+        else:
+            dispatcher.utter_message(response="utter_please_answer_video_clear")
+
+        return {}

@@ -1,21 +1,46 @@
+from celery import Celery
 from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
 from virtual_coach_db.dbschema.models import FirstAidKit
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
+from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES, REDIS_URL
+
+celery = Celery(broker=REDIS_URL)
 
 
-class ActionSetContinuation(Action):
-    """Set the dialog_to_continue slot"""
+class ActionStartFak(Action):
+    """Action to run the First Aid Kit from external trigger"""
 
     def name(self):
-        return "action_set_continuation"
+        return "action_start_fak"
 
     async def run(self, dispatcher, tracker, domain):
-        current_intervention = tracker.get_slot('current_intervention_component')
 
-        return [SlotSet("dialog_to_continue", current_intervention)]
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, 'CENTRAL_get_first_aid_kit'))
+
+        return []
+
+
+class ActionResumeAfterFak(Action):
+    """Action to run the First Aid Kit from external trigger"""
+
+    def name(self):
+        return "action_resume_after_fak"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        current_intervention = tracker.get_slot('current_intervention_component')
+        new_intent = 'EXTERNAL_' + current_intervention
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, new_intent))
+
+        return []
 
 
 class ActionGetFirstAidKit(Action):
@@ -69,7 +94,6 @@ class ActionGetFirstAidKit(Action):
             dispatcher.utter_message(template="utter_first_aid_kit_empty")
 
         return []
-
 
 
 class ActionSetContinuation(Action):

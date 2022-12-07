@@ -1,9 +1,12 @@
 intents:
   - relapse_dialog
   - EXTERNAL_trigger_relapse_phase
+  - EXTERNAL_relapse_dialog_hrs
+  - EXTERNAL_relapse_dialog_relapse
+  - EXTERNAL_relapse_dialog_lapse
 
 slots:
-  one_or_two_slot:
+  smoke_or_pa:
     type: categorical
     values:
       - 1
@@ -13,6 +16,16 @@ slots:
       - type: from_text
         conditions:
           - active_loop: smoke_or_pa_form
+
+  one_or_two_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
           - active_loop: relapse_stop_now_later_form
           - active_loop: relapse_medication_info_form
 
@@ -335,7 +348,7 @@ responses:
     - text: "Goed dat je hulp vraagt. Ik ga je helpen."
   utter_relapse_smoke_or_pa:
     - text: "Gaat het om roken of lichamelijke beweging?"
-  utter_ask_smoke_or_pa_form_one_or_two_slot:
+  utter_ask_smoke_or_pa_form_smoke_or_pa:
     - text: "Typ '1' als je het gaat om roken. Typ '2' als het gaat om lichamelijke beweging."
 
  # Smoke
@@ -638,6 +651,7 @@ actions:
   - action_reset_one_four_slot
   - action_reset_one_or_two_slot
   - action_set_slot_relapse_dialog
+  - action_set_slot_relapse_dialog_hrs
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_relapse
   - action_trigger_relapse
@@ -678,7 +692,7 @@ forms:
       - crave_lapse_relapse
   smoke_or_pa_form:
     required_slots:
-      - one_or_two_slot
+      - smoke_or_pa
   ehbo_me_self_form:
     required_slots:
       - ehbo_me_self

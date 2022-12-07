@@ -10,6 +10,13 @@ stories:
     - action: action_set_continuation
     - checkpoint: continue_fak_checkpoint
 
+- story: Get first aid kit
+  steps:
+    - checkpoint: open_fak
+    - action: action_get_first_aid_kit
+    - action: action_set_continuation
+    - checkpoint: continue_fak_checkpoint
+
 
 - story: end fak dialog
   steps:
@@ -24,7 +31,7 @@ stories:
     - checkpoint: continue_fak_checkpoint
     - slot_was_set:
       - dialog_to_continue: relapse_dialog
-    - checkpoint: continue_with_relapse_dialog
+    - checkpoint: action_resume_after_fak
 
 
 - story: get to relapse dialog lapse
@@ -32,7 +39,7 @@ stories:
     - checkpoint: continue_fak_checkpoint
     - slot_was_set:
       - dialog_to_continue: relapse_dialog_lapse
-    - checkpoint: continue_relapse_dialog_smoke_lapse
+    - action: action_resume_after_fak
 
 
 - story: get to relapse dialog relapse
@@ -40,4 +47,4 @@ stories:
     - checkpoint: continue_fak_checkpoint
     - slot_was_set:
       - dialog_to_continue: relapse_dialog_relapse
-    - checkpoint: continue_relapse_dialog_smoke_relapse
+    - checkpoint: action_resume_after_fak

@@ -74,7 +74,7 @@ def get_latest_bot_utterance(events) -> str:
         if event['event'] == 'bot':
             events_bot.append(event)
 
-    if len(events_bot) != 0:
+    if len(events_bot) != 0 and 'utter_action' in events_bot[-1]['metadata']:
         last_utterance = events_bot[-1]['metadata']['utter_action']
     else:
         last_utterance = None

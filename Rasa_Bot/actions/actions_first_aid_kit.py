@@ -1,6 +1,6 @@
 from celery import Celery
 from rasa_sdk import Action
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, FollowupAction
 from virtual_coach_db.dbschema.models import FirstAidKit
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -36,6 +36,11 @@ class ActionResumeAfterFak(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         current_intervention = tracker.get_slot('current_intervention_component')
+        print(current_intervention)
+
+        if current_intervention is None:
+            return[FollowupAction('action_end_dialog')]
+
         new_intent = 'EXTERNAL_' + current_intervention
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent))

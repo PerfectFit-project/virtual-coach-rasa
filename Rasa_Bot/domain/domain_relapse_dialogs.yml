@@ -29,19 +29,6 @@ slots:
           - active_loop: relapse_stop_now_later_form
           - active_loop: relapse_medication_info_form
 
-  one_four_slot:
-    type: categorical
-    values:
-      - 1
-      - 2
-      - 3
-      - 4
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: lapse_ehbo_form
-
   crave_lapse_relapse:
     type: categorical
     values:
@@ -159,42 +146,6 @@ slots:
         conditions:
           - active_loop: reflect_bar_chart_form
             requested_slot: reflect_bar_chart
-
-  type_smoke_relapse:
-    type: float
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: type_and_number_smoke_relapse_form
-            requested_slot: type_smoke_relapse
-
-  number_smoke_relapse:
-    type: float
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: type_and_number_smoke_relapse_form
-            requested_slot: number_smoke_relapse
-
-  number_smoke_relapse_confirm:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: type_and_number_smoke_relapse_form
-            requested_slot: number_smoke_relapse_confirm
-
-  type_smoke_relapse_confirm:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: type_and_number_smoke_relapse_form
-            requested_slot: type_smoke_relapse_confirm
 
   pa_type:
     type: text
@@ -560,15 +511,6 @@ responses:
             Typ 4 als je wilt kiezen uit drie andere activiteiten."
 
 # 3c smoking - relapse
-  utter_ask_number_smoke_relapse:
-    - text: "Kun je aangeven hoeveel je de afgelopen twee weken ongeveer hebt gerookt?"
-  utter_ask_type_smoke_relapse:
-    - text: "Kun je aangeven wat je hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor e-sigaretten.
-             Typ 3 voor andere producten."
-  utter_ask_type_smoke_relapse_confirm:
-    - text: "Je hebt aangegeven dat je {type_smoke_relapse} hebt gerookt. Klopt dat? Typ ja of nee."
-  utter_ask_number_smoke_relapse_confirm:
-    - text: "Je hebt aangegeven dat je daar {number_smoke_relapse} van hebt gerookt. Klopt dat?"
   utter_smoke_relapse_1:
     - text: "Je hebt meerdere dagen weer gerookt, maar dat betekent gelukkig niet dat het stoppen
              met roken helemaal mislukt is."
@@ -605,7 +547,7 @@ responses:
             Wil je hier meer informatie over? 
             Typ 1 voor ja, typ 2 voor nee."
 
-  utter_ask_lapse_ehbo_form_one_four_slot:
+  utter_ask_lapse_ehbo_form_lapse_ehbo_slot:
     - text: "Je hebt in de EHBO doos ook oefeningen voor op moeilijke momenten.
             Typ 1 als je een oefening uit je EHBO-doos wilt doen 
             Typ 2 als ik zomaar een oefening voor jou mag kiezen.   
@@ -648,7 +590,6 @@ responses:
     - text: "This is a second test utterance"
 
 actions:
-  - action_reset_one_four_slot
   - action_reset_one_or_two_slot
   - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs
@@ -682,7 +623,6 @@ actions:
   - validate_relapse_stop_now_later_form
   - validate_smoke_or_pa_form
   - validate_type_and_number_smoke_form
-  - validate_type_and_number_smoke_relapse_form
   - validate_what_doing_how_feel_smoke_form
   - validate_with_whom_event_smoke_form
 
@@ -716,12 +656,6 @@ forms:
   reflect_bar_chart_form:
     required_slots:
       - reflect_bar_chart
-  type_and_number_smoke_relapse_form:
-    required_slots:
-      - type_smoke_relapse
-      - type_smoke_relapse_confirm
-      - number_smoke_relapse
-      - number_smoke_relapse_confirm
   pa_type_together_why_fail_form:
     required_slots:
       - pa_type
@@ -771,7 +705,3 @@ forms:
   relapse_medication_info_form:
     required_slots:
       - one_or_two_slot
-
-  lapse_ehbo_form:
-    required_slots:
-      - one_four_slot

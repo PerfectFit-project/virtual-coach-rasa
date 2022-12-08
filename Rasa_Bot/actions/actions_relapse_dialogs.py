@@ -466,93 +466,6 @@ class ValidateReflectBarChartForm(FormValidationAction):
         return {"reflect_bar_chart": value}
 
 
-class ValidateTypeAndNumberSmokeRelapseForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_type_and_number_smoke_relapse_form'
-
-    def validate_type_smoke_relapse(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate type of smoke input relapse"""
-
-        logging.info("Validate type smoke relapse form")  # Debug message
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_type_smoke_relapse':
-            return {"type_smoke_relapse": None}
-
-        if not validator.validate_number_in_range_response(1, 3, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
-            return {"type_smoke_relapse": None}
-
-        return {"type_smoke_relapse": value}
-
-    def validate_type_smoke_relapse_confirm(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate type of smoke input relapse confirmation"""
-
-        logging.info("Validate type smoke form relapse confirmation")  # Debug message
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_type_smoke_relapse_confirm':
-            return {"type_smoke_relapse_confirm": None}
-
-        if not validator.validate_yes_no_answer(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_yes_no")
-            return {"type_smoke_relapse": None, "type_smoke_relapse_confirm": None}
-
-        if value.lower() in ['Nee', 'nee', "nee."]:
-            return {"type_smoke_relapse": None, "type_smoke_relapse_confirm": None}
-        else:
-            return {"type_smoke_relapse_confirm": value}
-
-    def validate_number_smoke_relapse(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate number of relapse smokes"""
-
-        logging.info("Validate type number relapse smoke")  # Debug message
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_number_smoke_relapse':
-            return {"number_smoke_relapse": None}
-
-        if not validator.validate_int_type(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_number")
-            return {"number_smoke_relapse": None}
-
-        return {"number_smoke_relapse": value}
-
-    def validate_number_smoke_relapse_confirm(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate number of smoke input relapse confirmation"""
-
-        logging.info("Validate number smoke form relapse confirmation")  # Debug message
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_number_smoke_relapse_confirm':
-            return {"number_smoke_relapse_confirm": None}
-
-        if not validator.validate_yes_no_answer(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_yes_no")
-            return {"number_smoke_relapse_confirm": None}
-
-        if value.lower() in ['Nee', 'nee', "nee."]:
-            return {"number_smoke_relapse": None, "number_smoke_relapse_confirm": None}
-        else:
-            return {"number_smoke_relapse_confirm": value}
-
-
 class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_pa_type_together_why_fail_form'
@@ -748,6 +661,7 @@ class ValidateHrsEnoughMotivationForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_hrs_enough_motivation_slot':
             return {"hrs_enough_motivation_slot": None}
+        print("VALID MOTIVATION SLOT")
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"hrs_enough_motivation_slot": None}
@@ -876,20 +790,20 @@ class ValidateLapseEhboForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_lapse_ehbo_form'
 
-    def validate_one_four_slot(
+    def validate_lapse_ehbo_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate one_four_slot"""
+        """Validate lapse_ehbo_slot"""
 
         last_utterance = get_latest_bot_utterance(tracker.events)
 
-        if last_utterance != 'utter_ask_lapse_ehbo_form_one_four_slot':
-            return {"one_four_slot": None}
+        if last_utterance != 'utter_ask_lapse_ehbo_form_lapse_ehbo_slot':
+            return {"lapse_ehbo_slot": None}
 
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2")
-            return {"one_four_slot": None}
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"lapse_ehbo_slot": None}
 
-        return {"one_four_slot": value}
+        return {"lapse_ehbo_slot": value}

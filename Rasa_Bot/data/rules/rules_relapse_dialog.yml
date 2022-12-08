@@ -74,9 +74,7 @@ rules:
   - slot_was_set:
     - ehbo_me_self: 1
   - action: action_set_slot_relapse_dialog_hrs
-  - action: hrs_new_activity_form # action: action_start_fak
-  - active_loop: hrs_new_activity_form
-  wait_for_user_input: false
+  - action: action_start_fak
 
 - rule: smoke hrs after fak from intent  # checkpoint: continue_with_relapse_dialog
   steps:
@@ -185,8 +183,11 @@ rules:
   steps:
   - action: hrs_enough_motivation_form
   - active_loop: null
-  - slot_was_set:
-      - crave_lapse_relapse: 1
+  - or:
+    - slot_was_set:
+        - crave_lapse_relapse: 1
+    - slot_was_set:
+        - crave_lapse_relapse: 3
   - slot_was_set:
       - hrs_enough_motivation_slot: 1
   - action: utter_good_to_hear_1
@@ -199,8 +200,11 @@ rules:
   steps:
   - action: hrs_enough_motivation_form
   - active_loop: null
-  - slot_was_set:
-      - crave_lapse_relapse: 1
+  - or:
+    - slot_was_set:
+        - crave_lapse_relapse: 1
+    - slot_was_set:
+        - crave_lapse_relapse: 3
   - slot_was_set:
       - hrs_enough_motivation_slot: 2
   - active_loop: null
@@ -238,6 +242,8 @@ rules:
         - crave_lapse_relapse: 1
     - slot_was_set:
         - crave_lapse_relapse: 2
+    - slot_was_set:
+        - crave_lapse_relapse: 3
   - active_loop: null
   - action: utter_hrs_call_help
   - action: action_end_dialog
@@ -307,6 +313,8 @@ rules:
   steps:
   - action: type_and_number_smoke_form
   - active_loop: null
+  - slot_was_set: # to distinguish the lapse branch from the relapse
+    - crave_lapse_relapse: 2
   - action: utter_smoke_lapse_5
   - action: utter_smoke_lapse_6
   - action: utter_smoke_lapse_7
@@ -348,6 +356,8 @@ rules:
   steps:
   - action: reflect_bar_chart_form
   - active_loop: null
+  - slot_was_set: # to distinguish the lapse branch from the relapse
+    - crave_lapse_relapse: 2
   - action: utter_smoke_lapse_15
   - action: utter_smoke_lapse_16
   - action: utter_smoke_lapse_17
@@ -365,18 +375,17 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self_lapse: 1
+  - slot_was_set:
+    - crave_lapse_relapse: 2
   - action: action_set_slot_relapse_dialog_lapse
-#  - action: hrs_enough_motivation_form
-#  - active_loop: hrs_enough_motivation_form #
   - action: action_start_fak
-  wait_for_user_input: false
   # checkpoint: open_fak checkpoint: continue_relapse_dialog_smoke_lapse
 
 - rule: resume lapse branch after fak
   steps:
   - intent: EXTERNAL_relapse_dialog_lapse
-  - action: ehbo_me_self_lapse_form
-  - active_loop: ehbo_me_self_lapse_form
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
   wait_for_user_input: false
 
 - rule: smoke lapse system suggests activity # checkpoint: ehbo_me_self_lapse_checkpoint
@@ -387,6 +396,11 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self_lapse: 2
+  - or:
+      - slot_was_set:
+          - crave_lapse_relapse: 2
+      - slot_was_set:
+          - crave_lapse_relapse: 3
   - action: show_first_coping_activity
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
@@ -401,7 +415,11 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self_lapse: 3
-  - active_loop: null
+  - or: # executed for lapse and relapse
+      - slot_was_set:
+          - crave_lapse_relapse: 2
+      - slot_was_set:
+          - crave_lapse_relapse: 3
   - action: utter_hrs_list_activities_intro
   - action: populate_coping_activities_list
   - action: hrs_choose_coping_activity_form
@@ -428,7 +446,11 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self_lapse: 4
-  - active_loop: null
+  - or: # executed for the lapse and the relapse
+      - slot_was_set:
+          - crave_lapse_relapse: 2
+      - slot_was_set:
+          - crave_lapse_relapse: 3
   - action: utter_good_to_hear_1
   - action: utter_good_to_hear_2
   - action: utter_good_to_hear_3
@@ -473,11 +495,135 @@ rules:
   steps:
   - action: hrs_activity_form
   - active_loop: null
-  - slot_was_set:
-    - crave_lapse_relapse: 2
+  - or:
+    - slot_was_set:
+      - crave_lapse_relapse: 2
+    - slot_was_set:
+      - crave_lapse_relapse: 3
   - slot_was_set:
     - hrs_activity_slot: 1
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false
 #  checkpoint: ehbo_me_self_lapse_checkpoint
+
+- rule: smoking parent relapse # checkpoint: smoke_relapse
+  condition:
+    - active_loop: crave_lapse_relapse_form
+  steps:
+  - action: crave_lapse_relapse_form
+  - active_loop: null
+  - slot_was_set:
+    - crave_lapse_relapse: 3
+  - action: utter_smoke_lapse_1
+  - action: type_and_number_smoke_form
+  - active_loop: type_and_number_smoke_form
+  wait_for_user_input: false
+
+  ## 3c smoking - relapse
+- rule: smoke relapse 1 # TODO: store in database the number of times this story is executed (create issue)
+  condition:
+    - active_loop: type_and_number_smoke_form
+  steps:
+  - action: type_and_number_smoke_form
+  - active_loop: null
+  - slot_was_set: # to distinguish the lapse branch from the relapse
+    - crave_lapse_relapse: 3
+  - action: utter_smoke_lapse_5
+  - action: utter_smoke_relapse_1
+  - action: utter_smoke_relapse_2
+  - action: utter_smoke_relapse_3
+  - action: utter_smoke_relapse_4  # TODO: Check with kristell that this question indicates it is about today!
+  - action: what_doing_how_feel_smoke_form  # Note: reuse the form from the lapse dialog
+  - active_loop: what_doing_how_feel_smoke_form
+  wait_for_user_input: false  # from here we have the same forms of the lapse.
+
+- rule: smoke relapse 4
+  condition:
+    - active_loop: reflect_bar_chart_form
+  steps:
+  - action: reflect_bar_chart_form
+  - active_loop: null
+  - slot_was_set: # to distinguish the lapse branch from the relapse
+    - crave_lapse_relapse: 3
+  - action: utter_smoke_lapse_15
+  - action: utter_smoke_lapse_16
+  - action: utter_smoke_relapse_5
+  - action: relapse_stop_now_later_form
+  - active_loop: relapse_stop_now_later_form
+  wait_for_user_input: false  # checkpoint: stop_now_or_later_checkpoint.
+
+- rule: smoke relapse decide to stop now # checkpoint: stop_now_or_later_checkpoint.
+  condition:
+    - active_loop: relapse_stop_now_later_form
+  steps:
+  - action: relapse_stop_now_later_form
+  - active_loop: null
+  - slot_was_set:
+    - one_or_two_slot: 1
+  - active_loop: null
+  - action: utter_smoke_relapse_6
+  - action: utter_smoke_relapse_7
+  - action: utter_smoke_relapse_8
+  - action: relapse_medication_info_form
+  - active_loop: relapse_medication_info_form
+  wait_for_user_input: false  # checkpoint: relapse_medication_info_checkpoint.
+
+- rule: smoke relapse decide to stop later # checkpoint: stop_now_or_later_checkpoint.
+  condition:
+    - active_loop: relapse_stop_now_later_form
+  steps:
+  - action: relapse_stop_now_later_form
+  - active_loop: null
+  - slot_was_set:
+    - one_or_two_slot: 2
+  - active_loop: null
+  - action: utter_test_utterance # TODO: implement goal setting for new quit date (row 178)
+  - action: relapse_medication_info_form
+  - active_loop: relapse_medication_info_form
+  wait_for_user_input: false  # checkpoint: relapse_medication_info_checkpoint.
+
+- rule: smoke relapse decide to get medication info # checkpoint: relapse_medication_info_checkpoint.
+  condition:
+    - active_loop: relapse_medication_info_form
+  steps:
+  - action: relapse_medication_info_form
+  - active_loop: null
+  - slot_was_set:
+    - one_or_two_slot: 1
+  - action: utter_test_utterance # TODO: implement medication dialog (row 186)
+  - action: ehbo_me_self_lapse_form
+  - active_loop: ehbo_me_self_lapse_form
+  wait_for_user_input: false # checkpoint: relapse_ehbo_checkpoint
+
+- rule: smoke relapse decide not to get medication info # checkpoint: relapse_medication_info_checkpoint.
+  condition:
+    - active_loop: relapse_medication_info_form
+  steps:
+  - action: relapse_medication_info_form
+  - active_loop: null
+  - slot_was_set:
+    - one_or_two_slot: 2
+  - action: ehbo_me_self_lapse_form
+  - active_loop: ehbo_me_self_lapse_form
+  wait_for_user_input: false # checkpoint: relapse_ehbo_checkpoint
+
+- rule: smoke lapse open ehbo #  checkpoint: ehbo_me_self_lapse_checkpoint
+  condition:
+    - active_loop: ehbo_me_self_lapse_form
+  steps:
+  - action: ehbo_me_self_lapse_form
+  - active_loop: null
+  - slot_was_set:
+    - ehbo_me_self_lapse: 1
+  - slot_was_set:
+    - crave_lapse_relapse: 3
+  - action: action_set_slot_relapse_dialog_relapse
+  - action: action_start_fak
+
+- rule: resume lapse branch after fak # after resuming, the paths are covered by the hrs and lapse cases
+  steps:
+  - intent: EXTERNAL_relapse_dialog_relapse
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
+  wait_for_user_input: false

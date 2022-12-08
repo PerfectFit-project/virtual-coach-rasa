@@ -59,28 +59,28 @@ stories:
 #  - checkpoint: smoke_hrs
 
 ## 2b: Parent for Smoking - lapse
-- story: smoking parent lapse
-  steps:
-  - checkpoint: smoke_parent
-  - action: utter_specify_smoke
-  - action: crave_lapse_relapse_form
-  - active_loop: crave_lapse_relapse_form
-  - active_loop: null
-  - slot_was_set:
-    - crave_lapse_relapse: 2
-  - checkpoint: smoke_lapse
-
-## 2c Parent for Smoking - relapse
-- story: smoking parent relapse
-  steps:
-  - checkpoint: smoke_parent
-  - action: utter_specify_smoke
-  - action: crave_lapse_relapse_form
-  - active_loop: crave_lapse_relapse_form
-  - active_loop: null
-  - slot_was_set:
-    - crave_lapse_relapse: 3
-  - checkpoint: smoke_relapse
+#- story: smoking parent lapse
+#  steps:
+#  - checkpoint: smoke_parent
+#  - action: utter_specify_smoke
+#  - action: crave_lapse_relapse_form
+#  - active_loop: crave_lapse_relapse_form
+#  - active_loop: null
+#  - slot_was_set:
+#    - crave_lapse_relapse: 2
+#  - checkpoint: smoke_lapse
+#
+### 2c Parent for Smoking - relapse
+#- story: smoking parent relapse
+#  steps:
+#  - checkpoint: smoke_parent
+#  - action: utter_specify_smoke
+#  - action: crave_lapse_relapse_form
+#  - active_loop: crave_lapse_relapse_form
+#  - active_loop: null
+#  - slot_was_set:
+#    - crave_lapse_relapse: 3
+#  - checkpoint: smoke_relapse
 
 ### 3a smoking - HRS - EHBO
 #- story: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
@@ -375,203 +375,203 @@ stories:
 
 
 # 3c smoking - Relapse
-  - checkpoint: smoke_relapse
-  - action: utter_smoke_lapse_1
-  - action: type_and_number_smoke_relapse_form
-  - active_loop: type_and_number_smoke_relapse_form
-  - slot_was_set:
-    - requested_slot: number_smoke_relapse  # TODO: store number in DB.
-  - slot_was_set:
-    - requested_slot: number_smoke_relapse_confirm  # TODO: maybe later substitue number for actual type
-  - slot_was_set:
-    - requested_slot: type_smoke_relapse
-  - slot_was_set:
-    - requested_slot: type_smoke_relapse_confirm
-  - active_loop: null
-  - action: utter_smoke_lapse_5
-  - action: utter_smoke_relapse_1
-  - action: utter_smoke_relapse_2
-  - action: utter_smoke_relapse_3
-  - action: utter_smoke_relapse_4  # TODO: Check with kristell that this question indicates it is about today!
-  - action: what_doing_how_feel_smoke_form  # Note: reuse the form from the lapse dialog
-  - active_loop: what_doing_how_feel_smoke_form
-  - slot_was_set:
-    - requested_slot: what_doing_smoke  # TODO: store in DB
-  - slot_was_set:
-    - requested_slot: how_feel_smoke   # TODO: store to DB
-  - active_loop: null
-  - action: utter_smoke_lapse_11
-  - action: with_whom_event_smoke_form
-  - active_loop: with_whom_event_smoke_form
-  - slot_was_set:
-    - requested_slot: with_whom_smoke   # TODO: store to DB
-  - slot_was_set:
-    - requested_slot: event_smoke  # TODO: store to DB. These parameters can all be stored in one go
-  - active_loop: null
-  - action: utter_smoke_lapse_12
-  - action: utter_smoke_lapse_13
-  - action: utter_smoke_lapse_14
-  - action: show_barchart_difficult_situations # TODO: Show bar diagram
-  - action: reflect_bar_chart_form
-  - active_loop: reflect_bar_chart_form
-  - slot_was_set:
-    - requested_slot: reflect_bar_chart
-  - active_loop: null
-  - action: utter_smoke_lapse_15
-  - action: utter_smoke_lapse_16
-  - action: utter_smoke_relapse_5
-  - checkpoint: stop_now_or_later_checkpoint
+#  - checkpoint: smoke_relapse
+#  - action: utter_smoke_lapse_1
+#  - action: type_and_number_smoke_relapse_form
+#  - active_loop: type_and_number_smoke_relapse_form
+#  - slot_was_set:
+#    - requested_slot: number_smoke_relapse  # TODO: store number in DB.
+#  - slot_was_set:
+#    - requested_slot: number_smoke_relapse_confirm  # TODO: maybe later substitue number for actual type
+#  - slot_was_set:
+#    - requested_slot: type_smoke_relapse
+#  - slot_was_set:
+#    - requested_slot: type_smoke_relapse_confirm
+#  - active_loop: null
+#  - action: utter_smoke_lapse_5
+#  - action: utter_smoke_relapse_1
+#  - action: utter_smoke_relapse_2
+#  - action: utter_smoke_relapse_3
+#  - action: utter_smoke_relapse_4  # TODO: Check with kristell that this question indicates it is about today!
+#  - action: what_doing_how_feel_smoke_form  # Note: reuse the form from the lapse dialog
+#  - active_loop: what_doing_how_feel_smoke_form
+#  - slot_was_set:
+#    - requested_slot: what_doing_smoke  # TODO: store in DB
+#  - slot_was_set:
+#    - requested_slot: how_feel_smoke   # TODO: store to DB
+#  - active_loop: null
+#  - action: utter_smoke_lapse_11
+#  - action: with_whom_event_smoke_form
+#  - active_loop: with_whom_event_smoke_form
+#  - slot_was_set:
+#    - requested_slot: with_whom_smoke   # TODO: store to DB
+#  - slot_was_set:
+#    - requested_slot: event_smoke  # TODO: store to DB. These parameters can all be stored in one go
+#  - active_loop: null
+#  - action: utter_smoke_lapse_12
+#  - action: utter_smoke_lapse_13
+#  - action: utter_smoke_lapse_14
+#  - action: show_barchart_difficult_situations # TODO: Show bar diagram
+#  - action: reflect_bar_chart_form
+#  - active_loop: reflect_bar_chart_form
+#  - slot_was_set:
+#    - requested_slot: reflect_bar_chart
+#  - active_loop: null
+#  - action: utter_smoke_lapse_15
+#  - action: utter_smoke_lapse_16
+#  - action: utter_smoke_relapse_5
+#  - checkpoint: stop_now_or_later_checkpoint
 
-- story: decide to stop now
-  steps:
-  - checkpoint: stop_now_or_later_checkpoint
-  - action: action_reset_one_or_two_slot
-  - action: relapse_stop_now_later_form
-  - active_loop: relapse_stop_now_later_form
-  - slot_was_set:
-    - one_or_two_slot: 1
-  - active_loop: null
-  - action: utter_smoke_relapse_6
-  - action: utter_smoke_relapse_7
-  - action: utter_smoke_relapse_8
-  - checkpoint: relapse_medication_info_checkpoint
+#- story: decide to stop now
+#  steps:
+#  - checkpoint: stop_now_or_later_checkpoint
+#  - action: action_reset_one_or_two_slot
+#  - action: relapse_stop_now_later_form
+#  - active_loop: relapse_stop_now_later_form
+#  - slot_was_set:
+#    - one_or_two_slot: 1
+#  - active_loop: null
+#  - action: utter_smoke_relapse_6
+#  - action: utter_smoke_relapse_7
+#  - action: utter_smoke_relapse_8
+#  - checkpoint: relapse_medication_info_checkpoint
 
-- story: decide to stop later
-  steps:
-  - checkpoint: stop_now_or_later_checkpoint
-  - action: action_reset_one_or_two_slot
-  - action: relapse_stop_now_later_form
-  - active_loop: relapse_stop_now_later_form
-  - slot_was_set:
-    - one_or_two_slot: 2
-  - active_loop: null
-  - action: utter_test_utterance # TODO: implement goal setting for new quit date (row 178)
-  - checkpoint: relapse_medication_info_checkpoint
+#- story: decide to stop later
+#  steps:
+#  - checkpoint: stop_now_or_later_checkpoint
+#  - action: action_reset_one_or_two_slot
+#  - action: relapse_stop_now_later_form
+#  - active_loop: relapse_stop_now_later_form
+#  - slot_was_set:
+#    - one_or_two_slot: 2
+#  - active_loop: null
+#  - action: utter_test_utterance # TODO: implement goal setting for new quit date (row 178)
+#  - checkpoint: relapse_medication_info_checkpoint
 
-- story: decide to get medication info
-  steps:
-  - checkpoint: relapse_medication_info_checkpoint
-  - action: action_reset_one_or_two_slot
-  - action: relapse_medication_info_form
-  - active_loop: relapse_medication_info_form
-  - slot_was_set:
-    - one_or_two_slot: 1
-  - active_loop: null
-  - action: utter_test_utterance # TODO: implement medication dialog (row 186)
-  - checkpoint: relapse_ehbo_checkpoint
+#- story: decide to get medication info
+#  steps:
+#  - checkpoint: relapse_medication_info_checkpoint
+#  - action: action_reset_one_or_two_slot
+#  - action: relapse_medication_info_form
+#  - active_loop: relapse_medication_info_form
+#  - slot_was_set:
+#    - one_or_two_slot: 1
+#  - active_loop: null
+#  - action: utter_test_utterance # TODO: implement medication dialog (row 186)
+#  - checkpoint: relapse_ehbo_checkpoint
 
-- story: decide not to get medication info
-  steps:
-  - checkpoint: relapse_medication_info_checkpoint
-  - action: action_reset_one_or_two_slot
-  - action: relapse_medication_info_form
-  - active_loop: relapse_medication_info_form
-  - slot_was_set:
-    - one_or_two_slot: 2
-  - active_loop: null
-  - action: utter_test_utterance2 # TODO: go to form
-  - checkpoint: relapse_ehbo_checkpoint
+#- story: decide not to get medication info
+#  steps:
+#  - checkpoint: relapse_medication_info_checkpoint
+#  - action: action_reset_one_or_two_slot
+#  - action: relapse_medication_info_form
+#  - active_loop: relapse_medication_info_form
+#  - slot_was_set:
+#    - one_or_two_slot: 2
+#  - active_loop: null
+#  - action: utter_test_utterance2 # TODO: go to form
+#  - checkpoint: relapse_ehbo_checkpoint
 
-- story: relapse choose ehbo or activity
-  steps:
-  - checkpoint: relapse_ehbo_checkpoint
-  - action: action_reset_one_four_slot
-  - action: ehbo_form_one_four_slot
-  - active_loop: ehbo_form_one_four_slot
-  - slot_was_set:
-    - one_four_slot: 1
-  - active_loop: null
-  - action: action_set_slot_relapse_dialog_relapse
-  - checkpoint: open_fak
-
-- story: smoke relapse system suggests activity
-  steps:
-  - checkpoint: relapse_ehbo_checkpoint
-  - action: action_reset_one_four_slot
-  - action: ehbo_form_one_four_slot
-  - active_loop: ehbo_form_one_four_slot
-  - slot_was_set:
-    - one_four_slot: 2
-  - active_loop: null
-  - action: show_first_coping_activity
-  - checkpoint: continue_relapse_dialog_smoke_relapse
-
-- story: smoke relapse user chooses activity
-  steps:
-  - checkpoint: relapse_ehbo_checkpoint
-  - action: action_reset_one_four_slot
-  - action: ehbo_form_one_four_slot
-  - active_loop: ehbo_form_one_four_slot
-  - slot_was_set:
-    - one_four_slot: 3
-  - active_loop: null
-  - action: utter_hrs_list_activities_intro
-  - action: populate_coping_activities_list
-  - action: hrs_choose_coping_activity_form
-  - active_loop: hrs_choose_coping_activity_form
-  - active_loop: null
-  - action: show_chosen_coping_activity
-  - checkpoint: continue_relapse_dialog_smoke_relapse
-
-- story: smoke relapse user has motivation
-  steps:
-  - checkpoint: relapse_ehbo_checkpoint
-  - action: action_reset_one_four_slot
-  - action: ehbo_form_one_four_slot
-  - active_loop: ehbo_form_one_four_slot
-  - slot_was_set:
-    - one_four_slot: 4
-  - active_loop: null
-  - action: utter_good_to_hear_1
-  - action: utter_good_to_hear_2
-  - action: action_end_dialog
-
-- story: continue smoke lapse enough motivation
-  steps:
-  - checkpoint: continue_relapse_dialog_smoke_relapse
-  - action: hrs_enough_motivation_form
-  - active_loop: hrs_enough_motivation_form
-  - slot_was_set:
-    - hrs_enough_motivation_slot: 1
-  - active_loop: null
-  - action: utter_good_to_hear_1
-  - action: utter_good_to_hear_2
-  - action: action_end_dialog
-
-- story: continue smoke relapse not enough motivation 1
-  steps:
-  - checkpoint: continue_relapse_dialog_smoke_relapse
-  - action: hrs_enough_motivation_form
-  - active_loop: hrs_enough_motivation_form
-  - slot_was_set:
-    - hrs_enough_motivation_slot: 2
-  - active_loop: null
-  - action: utter_bad_to_hear_1
-  - action: utter_bad_to_hear_2
-  - action: hrs_activity_form
-  - active_loop: hrs_activity_form
-  - slot_was_set:
-      - hrs_activity_slot: 1
-  - active_loop: null
-  - checkpoint: relapse_ehbo_checkpoint
-
-- story: continue smoke relapse not enough motivation 2
-  steps:
-  - checkpoint: continue_relapse_dialog_smoke_relapse
-  - action: hrs_enough_motivation_form
-  - active_loop: hrs_enough_motivation_form
-  - slot_was_set:
-    - hrs_enough_motivation_slot: 2
-  - active_loop: null
-  - action: utter_bad_to_hear_1
-  - action: utter_bad_to_hear_2
-  - action: hrs_activity_form
-  - active_loop: hrs_activity_form
-  - slot_was_set:
-      - hrs_activity_slot: 2
-  - active_loop: null
-  - action: utter_hrs_call_help
-  - action: action_end_dialog
+#- story: relapse choose ehbo or activity
+#  steps:
+#  - checkpoint: relapse_ehbo_checkpoint
+#  - action: action_reset_one_four_slot
+#  - action: ehbo_form_one_four_slot
+#  - active_loop: ehbo_form_one_four_slot
+#  - slot_was_set:
+#    - one_four_slot: 1
+#  - active_loop: null
+#  - action: action_set_slot_relapse_dialog_relapse
+#  - checkpoint: open_fak
+#
+#- story: smoke relapse system suggests activity
+#  steps:
+#  - checkpoint: relapse_ehbo_checkpoint
+#  - action: action_reset_one_four_slot
+#  - action: ehbo_form_one_four_slot
+#  - active_loop: ehbo_form_one_four_slot
+#  - slot_was_set:
+#    - one_four_slot: 2
+#  - active_loop: null
+#  - action: show_first_coping_activity
+#  - checkpoint: continue_relapse_dialog_smoke_relapse
+#
+#- story: smoke relapse user chooses activity
+#  steps:
+#  - checkpoint: relapse_ehbo_checkpoint
+#  - action: action_reset_one_four_slot
+#  - action: ehbo_form_one_four_slot
+#  - active_loop: ehbo_form_one_four_slot
+#  - slot_was_set:
+#    - one_four_slot: 3
+#  - active_loop: null
+#  - action: utter_hrs_list_activities_intro
+#  - action: populate_coping_activities_list
+#  - action: hrs_choose_coping_activity_form
+#  - active_loop: hrs_choose_coping_activity_form
+#  - active_loop: null
+#  - action: show_chosen_coping_activity
+#  - checkpoint: continue_relapse_dialog_smoke_relapse
+#
+#- story: smoke relapse user has motivation
+#  steps:
+#  - checkpoint: relapse_ehbo_checkpoint
+#  - action: action_reset_one_four_slot
+#  - action: ehbo_form_one_four_slot
+#  - active_loop: ehbo_form_one_four_slot
+#  - slot_was_set:
+#    - one_four_slot: 4
+#  - active_loop: null
+#  - action: utter_good_to_hear_1
+#  - action: utter_good_to_hear_2
+#  - action: action_end_dialog
+#
+#- story: continue smoke lapse enough motivation
+#  steps:
+#  - checkpoint: continue_relapse_dialog_smoke_relapse
+#  - action: hrs_enough_motivation_form
+#  - active_loop: hrs_enough_motivation_form
+#  - slot_was_set:
+#    - hrs_enough_motivation_slot: 1
+#  - active_loop: null
+#  - action: utter_good_to_hear_1
+#  - action: utter_good_to_hear_2
+#  - action: action_end_dialog
+#
+#- story: continue smoke relapse not enough motivation 1
+#  steps:
+#  - checkpoint: continue_relapse_dialog_smoke_relapse
+#  - action: hrs_enough_motivation_form
+#  - active_loop: hrs_enough_motivation_form
+#  - slot_was_set:
+#    - hrs_enough_motivation_slot: 2
+#  - active_loop: null
+#  - action: utter_bad_to_hear_1
+#  - action: utter_bad_to_hear_2
+#  - action: hrs_activity_form
+#  - active_loop: hrs_activity_form
+#  - slot_was_set:
+#      - hrs_activity_slot: 1
+#  - active_loop: null
+#  - checkpoint: relapse_ehbo_checkpoint
+#
+#- story: continue smoke relapse not enough motivation 2
+#  steps:
+#  - checkpoint: continue_relapse_dialog_smoke_relapse
+#  - action: hrs_enough_motivation_form
+#  - active_loop: hrs_enough_motivation_form
+#  - slot_was_set:
+#    - hrs_enough_motivation_slot: 2
+#  - active_loop: null
+#  - action: utter_bad_to_hear_1
+#  - action: utter_bad_to_hear_2
+#  - action: hrs_activity_form
+#  - active_loop: hrs_activity_form
+#  - slot_was_set:
+#      - hrs_activity_slot: 2
+#  - active_loop: null
+#  - action: utter_hrs_call_help
+#  - action: action_end_dialog
 
 ## Stories for PA
 ## 2d/2e (identical) Parent for PA - HRS

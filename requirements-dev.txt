@@ -1,4 +1,4 @@
-prospector[with_pyroma]
+prospector[with_pyroma]==1.7.7
 pytest
 pytest-cov
 pytest-asyncio

@@ -6,15 +6,17 @@ import logging
 
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
-from .helper import get_latest_bot_utterance, get_random_activities
+from .helper import (get_latest_bot_utterance, get_random_activities, store_dialog_closed_answer_to_db,
+                     store_dialog_open_answer_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, FollowupAction, ActionExecuted, UserUttered, ReminderScheduled
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from typing import Any, Dict, Text, List
-from virtual_coach_db.dbschema.models import InterventionActivity
+from typing import Any, Dict, Text
+from virtual_coach_db.helper import DialogQuestionsEnum
 from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.dbschema.models import InterventionActivity
 
 celery = Celery(broker=REDIS_URL)
 
@@ -84,10 +86,8 @@ class TriggerRelapseDialog(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         slot = tracker.get_slot("current_intervention_component")
-        logging.info(slot)
 
         celery.send_task('celery_tasks.relapse_dialog', (user_id, slot))
-        logging.info("no celery error")
 
         return []
 
@@ -215,7 +215,6 @@ class ValidateSmokeOrPaForm(FormValidationAction):
         if last_utterance != 'utter_ask_smoke_or_pa_form_smoke_or_pa':
             return {"smoke_or_pa": None}
 
-        logging.info("Performing the action to validate smoke_or_pa_form")  # Debug message
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
@@ -233,7 +232,6 @@ class ValidateCraveLapseRelapseForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate crave, lapse or relapse input."""
-        logging.info("Performing the action to validate crave lapse relapse form")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_crave_lapse_relapse':
@@ -257,8 +255,6 @@ class ValidateEhboMeSelfForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate ehbo, me or self input"""
 
-        logging.info("Validate ehbo me self form")  # Debug message
-
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_ehbo_me_self':
             return {"ehbo_me_self": None}
@@ -281,8 +277,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate type of smoke input"""
 
-        logging.info("Validate type smoke form")  # Debug message
-
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_type_smoke':
             return {"type_smoke": None}
@@ -299,8 +293,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate type of smoke input confirmation"""
-
-        logging.info("Validate type smoke form confirmation")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_type_smoke_confirm':
@@ -322,8 +314,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate number of smokes"""
 
-        logging.info("Validate type number smoke")  # Debug message
-
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_number_smoke':
             return {"number_smoke": None}
@@ -341,8 +331,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate number of smoke input confirmation"""
 
-        logging.info("Validate number smoke form confirmation")  # Debug message
-
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_number_smoke_confirm':
             return {"number_smoke_confirm": None}
@@ -355,19 +343,17 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         if value.lower() in ['Nee', 'nee', "nee."]:
             return {"number_smoke": None, "number_smoke_confirm": None}
         else:
-<<<<<<< HEAD
             # Store data to db
             answer_number = tracker.get_slot("number_smoke")
             answer_type = tracker.get_slot("type_smoke")
             answer_type_id = int(answer_type) + DialogQuestionsEnum.RELAPSE_LAPSE_TYPE_SMOKE.value * 100
             user_id = int(tracker.current_state()['sender_id'])
             store_dialog_closed_answer_to_db(user_id, answer_type_id)
-            store_dialog_open_answer_to_db(user_id, DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value,
+            store_dialog_open_answer_to_db(user_id,
+                                           DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value,
                                            answer_number)
 
             # Return slot
-=======
->>>>>>> relapse-dialog-rules
             return {"number_smoke_confirm": value}
 
 
@@ -381,7 +367,6 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate what doing while smoking"""
         max_val = 7
-        logging.info("Validate what doing smoke")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_what_doing_smoke':
@@ -401,7 +386,6 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate type of smoke input confirmation"""
-        logging.info("Validate how feel smoke")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_how_feel_smoke':
@@ -427,13 +411,12 @@ class ValidateWithWhomEventSmokeForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate with whom smoke """
         max_val = 6
-        logging.info("Validate with whom smoke")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_with_whom_smoke':
             return {"with_whom_smoke": None}
 
-        valid = validator.validate_list(value, 0, 6)
+        valid = validator.validate_list(value, 0, max_val)
 
         if not valid:
             dispatcher.utter_message(response="utter_did_not_understand")
@@ -447,7 +430,6 @@ class ValidateWithWhomEventSmokeForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate event smoke"""
-        logging.info("Validate event smoke")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_event_smoke':
@@ -465,7 +447,6 @@ class ValidateReflectBarChartForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate reflect bar chart"""
-        logging.info("Validate with whom smoke")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_reflect_bar_chart':
@@ -488,7 +469,6 @@ class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate pa_type"""
-        logging.info("Validate type smoke relapse form")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_pa_type':
@@ -501,7 +481,6 @@ class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate pa_ together"""
-        logging.info("Validate type pa together")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_pa_together':
@@ -520,13 +499,10 @@ class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate pa why fail"""
         max_val = 7
-        logging.info("Validate pa why fail")  # Debug message
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_pa_why_fail':
             return {"pa_why_fail": None}
-
-        value = self._input_to_list(value, max_val)
 
         if not validator.validate_list(value, 0, max_val):
             dispatcher.utter_message(response="utter_did_not_understand")
@@ -674,7 +650,7 @@ class ValidateHrsEnoughMotivationForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_hrs_enough_motivation_slot':
             return {"hrs_enough_motivation_slot": None}
-        print("VALID MOTIVATION SLOT")
+
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"hrs_enough_motivation_slot": None}

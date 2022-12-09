@@ -511,18 +511,6 @@ responses:
             Typ 4 als je wilt kiezen uit drie andere activiteiten."
 
 # 3c smoking - relapse
-<<<<<<< HEAD
-  utter_ask_number_smoke_relapse:
-    - text: "Kun je aangeven hoeveel je de afgelopen twee weken ongeveer hebt gerookt?"
-  utter_ask_type_smoke_relapse:
-    - text: "Kun je aangeven wat je hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor e-sigaretten.
-             Typ 3 voor shags. Typ 4 voor andere producten."
-  utter_ask_type_smoke_relapse_confirm:
-    - text: "Je hebt aangegeven dat je {type_smoke_relapse} hebt gerookt. Klopt dat? Typ ja of nee."
-  utter_ask_number_smoke_relapse_confirm:
-    - text: "Je hebt aangegeven dat je daar {number_smoke_relapse} van hebt gerookt. Klopt dat?"
-=======
->>>>>>> relapse-dialog-rules
   utter_smoke_relapse_1:
     - text: "Je hebt meerdere dagen weer gerookt, maar dat betekent gelukkig niet dat het stoppen
              met roken helemaal mislukt is."

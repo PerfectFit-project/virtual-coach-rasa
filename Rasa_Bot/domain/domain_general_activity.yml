@@ -150,6 +150,18 @@ forms:
   general_activity_next_activity_form:
     required_slots:
       - general_activity_next_activity_slot
+  # ask user if they have sth that prompts/reminds them to do the activity
+  persuasion_prompts_form:
+    required_slots:
+      - persuasion_prompts_slot
+  # ask user if they feel like they want to do the activity
+  persuasion_want_form:
+    required_slots:
+      - persuasion_want_slot 
+  # ask user if they feel like they need to do the activity
+  persuasion_need_form:
+    required_slots:
+      - persuasion_need_slot
 
 
 responses:
@@ -181,10 +193,20 @@ responses:
   utter_ask_general_activity_next_activity_slot:
     - text: "Welke oefening wil je doen? Typ 1 als je '{activity1_name}' wilt doen. Typ 2 als je '{activity2_name}' wilt doen. Typ 3 als je '{activity3_name}' wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
   utter_general_activity_next_user:
-    - text: "Oké, goede keuze! Veel succes met de oefening."
+    - text: "Oké, goede keuze!"
   utter_general_activity_next_coach:
     - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen. Veel succes! "
-
+  utter_persuasion_questions_intro:
+    - text: "Now, let me ask you a few questions about how you think about this activity. Please rate the following 3 statements:"
+    - text: "Then I'd like to ask you some questions about your thoughts on this activity now. Please rate the following 3 statements:"
+  utter_ask_persuasion_prompts_slot:
+    - text: "1) I have things that prompt/remind me to do the activity. Typ 1) Helemaal mee oneens, 2) Mee oneens, 3) Niet mee eens, niet mee oneens, 4) Mee eens, 5) Helemaal mee eens."
+  utter_ask_persuasion_want_slot:
+    - text: "2) I feel that I want to do the activity. Typ 1) Helemaal mee oneens, 2) Mee oneens, 3) Niet mee eens, niet mee oneens, 4) Mee eens, 5) Helemaal mee eens."
+  utter_ask_persuasion_need_slot:
+    - text: "3) I feel that I need to do the activity. Typ 1) Helemaal mee oneens, 2) Mee oneens, 3) Niet mee eens, niet mee oneens, 4) Mee eens, 5) Helemaal mee eens."
+  
+    
 actions:
   - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
@@ -202,3 +224,7 @@ actions:
   - check_who_decides # determines if the user can decide or if the coach decides
   - action_set_slot_general_activity # set the slot to the current running dialog
   - load_activity # load the activity instructions
+  - validate_persuasion_want_form  # validate value is between 1 and 5
+  - validate_persuasion_need_form   # validate value is between 1 and 5
+  - validate_persuasion_prompts_form  # validate value is between 1 and 5
+  - choose_persuasion_activity  # choose persuasion to persuade user to do activity

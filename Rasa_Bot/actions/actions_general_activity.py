@@ -1,3 +1,4 @@
+import random
 import secrets
 
 from sqlalchemy import update
@@ -496,3 +497,156 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int):
         available_activities.remove(random_choice)
 
     return rnd_activities
+
+
+class ChoosePersuasionActivity(Action):
+    """load the activity instructions"""
+
+    def name(self):
+        return "choose_persuasion_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        
+        chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
+        activities_slot = tracker.get_slot('rnd_activities_ids')
+        user_id = tracker.current_state()['sender_id']
+
+        activity_id = activities_slot[chosen_option - 1]
+        session = get_db_session(db_url=DATABASE_URL)
+
+        # get the activity benefit
+        activities = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id == activity_id
+            ).all()
+        )
+        benefit = activities[0].intervention_activity_benefit
+        
+        # Opt policy for [want][prompts][need]
+        opt_policy = [[[0, 1], [2, 1]],[[0, 0], [2, 0]]]
+        # Feature means to map features to binary ones
+        feat_means = [2.96, 2.74, 2.88]  # want, prompts, need
+        commitment = ["Remember: You have decided to quit smoking. You will feel good if you keep your promise to yourself.",
+                      "Remember: You have decided to quit smoking. You will feel bad if you break your promise to yourself.",
+                      "Remember: You've committed to quit smoking. I hope you'll be sticking to it.",
+                      "Remember: You've committed to quit smoking. I hope you'll not break your commitment.",
+                      "Remember: You've committed to become somebody who has quit smoking. Doing this activity may help you to become this person.",
+                      "Remember: You've decided to become somebody who has quit smoking. If you do NOT %, it may be more difficult to become this person."],
+        consensus = ["Most people think that doing this activity may help",
+                     "Most people believe that NOT doing this activity may make it more difficult",
+                     "The majority of people believe that doing this activity may help",
+                     "The majority of people think that NOT doing this activity may make it more difficult"]
+        
+        # Get answers to state feature questions
+        want = tracker.get_slot('persuasion_want_slot')
+        prompts = tracker.get_slot('persuasion_prompts_slot')
+        need = tracker.get_slot('persuasion_need_slot')
+        
+        # Make state binary
+        binary_state = [want >= feat_means[0], prompts >= feat_means[1], 
+                        need >= feat_means[2]]
+        
+        # Get optimal persuasion type
+        pers_type = opt_policy[binary_state[0]][binary_state[1]][binary_state[2]]
+        
+        if pers_type == 0:
+            message_idx = random.choice([i for i in range(len(commitment))])
+            message = commitment[message_idx]
+        elif pers_type == 1:
+            message_idx = random.choice([i for i in range(len(consensus))])
+            message = consensus[message_idx] + benefit
+        else:
+            a = 2
+
+        
+        
+        
+
+        return []
+    
+    
+
+
+class ValidatePersuasionWantForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_want_form'
+
+    def validate_persuasion_want_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_want_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_want_slot':
+            return {"persuasion_want_slot": None}
+
+        if not self._validate_response_value(value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"persuasion_want_slot": None}
+
+        return {"persuasion_want_slot": value}
+
+    @staticmethod
+    def _validate_response_value(value):
+        if 1 <= int(value) <= 5:
+            return True
+        return False
+    
+    
+class ValidatePersuasionNeedForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_need_form'
+
+    def validate_persuasion_need_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_need_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_need_slot':
+            return {"persuasion_need_slot": None}
+
+        if not self._validate_response_value(value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"persuasion_need_slot": None}
+
+        return {"persuasion_need_slot": value}
+
+    @staticmethod
+    def _validate_response_value(value):
+        if 1 <= int(value) <= 5:
+            return True
+        return False
+    
+
+class ValidatePersuasionPromptsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_prompts_form'
+
+    def validate_persuasion_prompts_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_prompts_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_prompts_slot':
+            return {"persuasion_prompts_slot": None}
+
+        if not self._validate_response_value(value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"persuasion_prompts_slot": None}
+
+        return {"persuasion_prompts_slot": value}
+
+    @staticmethod
+    def _validate_response_value(value):
+        if 1 <= int(value) <= 5:
+            return True
+        return False

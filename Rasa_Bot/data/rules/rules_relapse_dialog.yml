@@ -826,7 +826,22 @@ rules:
   - active_loop: hrs_activity_form
   wait_for_user_input: false
 
-# in case the user types 1, it is already covered by previous rules
+- rule: pa the user has not enough motivation 1
+  condition:
+    - active_loop: hrs_activity_form
+  steps:
+  - action: hrs_activity_form
+  - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 2 # pa branch
+  - slot_was_set:
+    - crave_lapse_relapse: null # crave slot is null in this branch
+  - slot_was_set:
+    - hrs_activity_slot: 1
+  - action: ehbo_me_self_lapse_form
+  - active_loop: ehbo_me_self_lapse_form
+  wait_for_user_input: false
+
 - rule: pa the user has not enough motivation no activity
   condition:
     - active_loop: hrs_activity_form

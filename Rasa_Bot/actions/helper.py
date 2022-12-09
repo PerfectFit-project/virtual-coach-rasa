@@ -10,9 +10,11 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, Dialog
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
-def store_dialog_closed_answer_to_db(user_id, answer_id):
+def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_value: int):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    answer_id = answer_value + question_id * 100
 
     entry = DialogClosedAnswers(closed_answers_id=answer_id,
                                 datetime=datetime.datetime.now().astimezone(TIMEZONE))
@@ -20,7 +22,7 @@ def store_dialog_closed_answer_to_db(user_id, answer_id):
     session.commit()  # Update database
 
 
-def store_dialog_open_answer_to_db(user_id, question_id, answer_value):
+def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value: int):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 

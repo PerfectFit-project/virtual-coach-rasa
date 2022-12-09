@@ -652,12 +652,16 @@ responses:
   utter_pa_call_help_2:
     - text: "Wil je wat meer steun om in beweging te komen? Je kunt een afspraak maken met je huisarts. 
             Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt. "
+  utter_pa_sick:
+    - text: "Wat vervelend voor je, ik hoop dat je je snel weer beter voelt. 
+            Typ '...' [command] in de chat wanneer je weer beter bent en klaar om weer in beweging te komen" # TODO: add command
   utter_test_utterance:
     - text: "This is a test utterance"
   utter_test_utterance2:
     - text: "This is a second test utterance"
 
 actions:
+  - action_check_reasons
   - action_reset_one_or_two_slot
   - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs

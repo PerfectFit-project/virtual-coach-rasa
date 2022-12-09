@@ -669,6 +669,7 @@ rules:
   - action: store_pa_type
   - action: store_pa_together
   - action: store_pa_why_fail
+  - action: action_check_reasons
   - action: utter_pa_lapse_4
   - action: utter_pa_lapse_5
   - action: pa_doing_today_happened_special_form

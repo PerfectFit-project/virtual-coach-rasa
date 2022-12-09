@@ -10,7 +10,7 @@ from .helper import (get_latest_bot_utterance, get_random_activities, store_dial
                      store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
@@ -21,6 +21,21 @@ from virtual_coach_db.dbschema.models import InterventionActivity
 
 
 celery = Celery(broker=REDIS_URL)
+
+
+class ActionCheckReasons(Action):
+    def name(self):
+        return "action_check_reasons"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        reasons = tracker.get_slot('pa_why_fail')
+
+        if '6' in reasons:
+            dispatcher.utter_message(response="utter_pa_sick")
+            return [FollowupAction("action_end_dialog")]
+
+        return []
 
 
 class ActionResetOneFourSlot(Action):
@@ -310,7 +325,7 @@ class StorePaWhyFail(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
         choice = tracker.get_slot('pa_why_fail')  # this is a list already validated
-        
+
         store_dialog_closed_answer_list_to_db(user_id,
                                               DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value,
                                               choice)

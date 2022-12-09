@@ -30,17 +30,6 @@ rules:
   wait_for_user_input: false
 #  - checkpoint: smoke_parent
 
-## 1b: Trigger relapse dialog - PA
-- rule: Relapse phase triggered PA
-  condition:
-  - active_loop: smoke_or_pa_form
-  steps:
-  - action: smoke_or_pa_form
-  - active_loop: null
-  - slot_was_set:
-    - smoke_or_pa: 2
-  - action: utter_pa_define_1
-
 ## Stories for smoking
 ## 2a: Parent for Smoking - crave
 - rule: smoking parent crave # checkpoint: smoke_parent
@@ -627,3 +616,29 @@ rules:
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
   wait_for_user_input: false
+
+
+## 1b: Trigger relapse dialog - PA
+- rule: Relapse phase triggered PA
+  condition:
+  - active_loop: smoke_or_pa_form
+  steps:
+  - action: smoke_or_pa_form
+  - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 2
+  - action: utter_pa_define_1
+  - action: utter_pa_lapse_1
+  - action: utter_pa_lapse_2
+  - action: utter_pa_lapse_3
+  - action: pa_type_together_why_fail_form
+  - active_loop: pa_type_together_why_fail_form
+  wait_for_user_input: false
+
+- rule: Relapse phase triggered PA 2
+  condition:
+  - active_loop: pa_type_together_why_fail_form
+  steps:
+  - action: pa_type_together_why_fail_form
+  - active_loop: null
+  - action: utter_pa_lapse_4

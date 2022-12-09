@@ -107,6 +107,10 @@ nlu:
   examples: |
     - "EXTERNAL_relapse_dialog_relapse"
 
+- intent: EXTERNAL_relapse_dialog_pa
+  examples: |
+    - "EXTERNAL_relapse_dialog_pa"
+
 
 - intent: relapse_dialog
   examples: |

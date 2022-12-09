@@ -1,9 +1,10 @@
 intents:
   - relapse_dialog
-  - EXTERNAL_trigger_relapse_phase
+  - EXTERNAL_relapse_dialog
   - EXTERNAL_relapse_dialog_hrs
   - EXTERNAL_relapse_dialog_relapse
   - EXTERNAL_relapse_dialog_lapse
+  - EXTERNAL_relapse_dialog_pa
 
 slots:
   smoke_or_pa:
@@ -155,6 +156,7 @@ slots:
         conditions:
           - active_loop: pa_type_together_why_fail_form
             requested_slot: pa_type
+
   pa_together:
     type: float
     influence_conversation: false
@@ -164,13 +166,31 @@ slots:
           - active_loop: pa_type_together_why_fail_form
             requested_slot: pa_together
   pa_why_fail:
-    type: float
+    type: text
     influence_conversation: false
     mappings:
       - type: from_text
         conditions:
           - active_loop: pa_type_together_why_fail_form
             requested_slot: pa_why_fail
+
+  pa_doing_today_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_doing_today_happened_special_form
+            requested_slot: pa_doing_today_slot
+
+  pa_happened_special_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_doing_today_happened_special_form
+            requested_slot: pa_happened_special_slot
 
   hrs_new_activity_slot:
     type: categorical
@@ -215,14 +235,6 @@ slots:
         conditions:
           - active_loop: hrs_what_happened_form
 
-  hrs_like_feedback_slot:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: hrs_like_feedback_form
-
   hrs_enough_motivation_slot:
     type: categorical
     values:
@@ -234,6 +246,17 @@ slots:
         conditions:
           - active_loop: hrs_enough_motivation_form
 
+  pa_enough_motivation_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_enough_motivation_form
+
   hrs_activity_slot:
     type: categorical
     values:
@@ -244,6 +267,14 @@ slots:
       - type: from_text
         conditions:
           - active_loop: hrs_activity_form
+
+  pa_specify_pa_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_specify_pa_form
 
   # keeps track of which activity has been performed
   hrs_coping_activities_performed:
@@ -476,8 +507,6 @@ responses:
             Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
   utter_hrs_look_back_2:
     - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je kreeg zin om te roken in de volgende situaties:"
-  utter_ask_hrs_like_feedback_slot:
-    - text: "Hoe vind je het om dit zo te zien?"
   utter_hrs_look_back_3:
     - text: "Mooi dat je dit zo kan benoemen."
   utter_ask_hrs_enough_motivation_slot:
@@ -546,17 +575,10 @@ responses:
     - text: "Met hulpmiddelen of medicatie vergroot je de kans om gestopt te blijven. 
             Wil je hier meer informatie over? 
             Typ 1 voor ja, typ 2 voor nee."
-
-  utter_ask_lapse_ehbo_form_lapse_ehbo_slot:
-    - text: "Je hebt in de EHBO doos ook oefeningen voor op moeilijke momenten.
-            Typ 1 als je een oefening uit je EHBO-doos wilt doen 
-            Typ 2 als ik zomaar een oefening voor jou mag kiezen.   
-            Typ 3 als je zelf een activiteit wil kiezen.
-            Typ 4 als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt afsluiten."
 # PA
   utter_pa_define_1:
     - text: "Kun je mij vertellen wat er aan de hand is?"
-  utter_ask_specify_pa:
+  utter_ask_pa_specify_pa_slot:
     - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt. Typ '2' als je merkt
              dat het bewegen over het algemeen niet zo goed gaat als je zou willen.
              "
@@ -582,8 +604,54 @@ responses:
              antwoorden geven. Typ 1 als je geen zin hebt. Typ 2 als je moe bent en geen energie
              hebt. Typ 3 als je geen tijd hebt. Typ 4 als er iets tussen is gekomen. Typ 5 als het
              ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
+  utter_ask_pa_doing_today_slot:
+    - text: "Je mag meerdere antwoorden geven. 
+            Typ 1 als je aan het werk was. 
+            Typ 2 als je thuis bezig was met klusjes of huishouden. 
+            Typ 3 als je iets voor jezelf deed (hobby, met iemand afspreken). 
+            Typ 4 als je al lichamelijk actief bent geweest. 
+            Typ 5 als je iets deed wat niet in het lijstje staat. "
+  utter_ask_pa_happened_special_slot:
+    - text: "Gebeurde er vandaag iets bijzonders?"
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
+  utter_pa_lapse_5:
+    - text: "Wat heb je vandaag verder gedaan?"
+  utter_pa_lapse_6:
+    - text: "Door vaker te kijken naar situaties waarin je geen zin hebt om in beweging te komen, kun je leren patronen te herkennen. 
+            Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
+  utter_pa_lapse_7:
+    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je vond het in de volgende situaties lastig om in beweging te komen:"
+  utter_pa_lapse_8:
+    - text: "Op dit moment heb je de keuze om door te zetten en alsnog in beweging te komen."
+  utter_pa_lapse_9:
+    - text: "Als je dat gedaan hebt, ben je een stapje dichterbij het halen van je beweegdoel. En waarschijnlijk ben je blij met jezelf. "
+  utter_pa_lapse_10:
+    - text: "Het kan als een hobbel voelen, maar soms is het beste om gewoon te gaan of gewoon door te zetten. 
+            Omkleden of spullen pakken en gaan. Eenmaal bezig gaat het vaak makkelijker."
+  utter_pa_lapse_11:
+    - text: "Soms past een andere manier van bewegen beter en lukt het je wel om dat te doen. 
+            Je kunt bijvoorbeeld een stuk gaan wandelen, gaan tuinieren, iets doen aan het huishouden of thuis sporten. 
+            Neem nu even de tijd om na te denken hoe je op een andere manier kunt bewegen."
+  utter_pa_lapse_12:
+    - text: "Wat ook kan helpen is om met iemand in beweging te komen. Zo maak je het meteen ook gezellig. 
+            Bel dus gerust iemand uit je omgeving om te vragen of zij mee willen doen. "
+  utter_pa_lapse_13:
+    - text: "Je kunt ook plannen wanneer je alsnog gaat. 
+            Door het in je agenda te zetten spreek je met jezelf af dat je op een later moment in beweging komt."
+  utter_ask_pa_enough_motivation_slot:
+    - text: "Heb je weer voldoende motivatie om in beweging te komen of wil je nog een oefening doen?
+            Typ 1 als het je nu lukt om in beweging te komen. 
+            Typ 2 om te kijken wat de opties zijn om verder te gaan."
+  utter_pa_list_activities_intro:
+    - text: "De volgende oefeningen kunnen jou op dit moment helpen om je te motiveren."
+  utter_good_to_hear_pa_1:
+    - text: "Wat goed dat je weer gemotiveerd bent om het bewegen op te pakken!."
+  utter_pa_call_help_1:
+    - text: "Heb je behoefte om iemand te spreken? Je kunt misschien praten met een vriend of familielid."
+  utter_pa_call_help_2:
+    - text: "Wil je wat meer steun om in beweging te komen? Je kunt een afspraak maken met je huisarts. 
+            Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt. "
   utter_test_utterance:
     - text: "This is a test utterance"
   utter_test_utterance2:
@@ -594,16 +662,27 @@ actions:
   - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs
   - action_set_slot_relapse_dialog_lapse
+  - action_set_slot_relapse_dialog_pa
   - action_set_slot_relapse_dialog_relapse
   - action_trigger_relapse
   - populate_coping_activities_list
+  - populate_coping_activities_list_pa
   - show_barchart_difficult_situations
+  - show_barchart_difficult_situations_pa
   - show_chosen_coping_activity
   - show_first_coping_activity
+  - show_first_coping_activity_pa
   - store_hrs_feeling
   - store_hrs_situation
   - store_hrs_what_happened
   - store_hrs_who_with
+  - store_pa_specify_pa
+  - store_pa_type
+  - store_pa_together
+  - store_pa_why_fail
+  - store_pa_doing_today
+  - store_pa_happened_special
+  - store_pa_reflect_barchart
   - validate_crave_lapse_relapse_form
   - validate_ehbo_me_self_form
   - validate_ehbo_me_self_lapse_form
@@ -611,12 +690,14 @@ actions:
   - validate_hrs_choose_coping_activity_form
   - validate_hrs_enough_motivation_form
   - validate_hrs_feeling_form
-  - validate_hrs_like_feedback_form
   - validate_hrs_new_activity_form
   - validate_hrs_situation_form
   - validate_hrs_what_happened_form
   - validate_hrs_who_with_form
   - validate_lapse_ehbo_form
+  - validate_pa_doing_today_happened_special_form
+  - validate_pa_enough_motivation_form
+  - validate_pa_specify_pa_form
   - validate_pa_type_together_why_fail_form
   - validate_reflect_bar_chart_form
   - validate_relapse_medication_info_form
@@ -656,11 +737,6 @@ forms:
   reflect_bar_chart_form:
     required_slots:
       - reflect_bar_chart
-  pa_type_together_why_fail_form:
-    required_slots:
-      - pa_type
-      - pa_together
-      - pa_why_fail
 
   hrs_new_activity_form:
     required_slots:
@@ -682,10 +758,6 @@ forms:
     required_slots:
       - hrs_what_happened_slot
 
-  hrs_like_feedback_form:
-    required_slots:
-      - hrs_like_feedback_slot
-
   hrs_enough_motivation_form:
     required_slots:
       - hrs_enough_motivation_slot
@@ -705,3 +777,22 @@ forms:
   relapse_medication_info_form:
     required_slots:
       - one_or_two_slot
+
+  pa_specify_pa_form:
+    required_slots:
+      - pa_specify_pa_slot
+
+  pa_type_together_why_fail_form:
+    required_slots:
+      - pa_type
+      - pa_together
+      - pa_why_fail
+
+  pa_doing_today_happened_special_form:
+    required_slots:
+      - pa_doing_today_slot
+      - pa_happened_special_slot
+
+  pa_enough_motivation_form:
+    required_slots:
+      - pa_enough_motivation_slot

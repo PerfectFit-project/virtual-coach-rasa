@@ -7,7 +7,7 @@ import logging
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities, store_dialog_closed_answer_to_db,
-                     store_dialog_open_answer_to_db)
+                     store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
@@ -15,8 +15,10 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.helper import DialogQuestionsEnum
+from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
+
 
 celery = Celery(broker=REDIS_URL)
 
@@ -42,7 +44,8 @@ class ActionSetSlotRelapseDialog(Action):
         return "action_set_slot_relapse_dialog_hrs"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet('current_intervention_component', 'relapse_dialog_hrs')]
+        return [SlotSet('current_intervention_component',
+                        ExecutionInterventionComponents.RELAPSE_DIALOG_HRS)]
 
 
 class ActionSetSlotRelapseDialogLapse(Action):
@@ -50,7 +53,17 @@ class ActionSetSlotRelapseDialogLapse(Action):
         return "action_set_slot_relapse_dialog_lapse"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet('current_intervention_component', 'relapse_dialog_lapse')]
+        return [SlotSet('current_intervention_component',
+                        ExecutionInterventionComponents.RELAPSE_DIALOG_LAPSE)]
+
+
+class ActionSetSlotRelapseDialogPa(Action):
+    def name(self):
+        return "action_set_slot_relapse_dialog_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('current_intervention_component',
+                        ExecutionInterventionComponents.RELAPSE_DIALOG_PA)]
 
 
 class ActionSetSlotRelapseDialogRelapse(Action):
@@ -58,7 +71,8 @@ class ActionSetSlotRelapseDialogRelapse(Action):
         return "action_set_slot_relapse_dialog_relapse"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet('current_intervention_component', 'relapse_dialog_relapse')]
+        return [SlotSet('current_intervention_component',
+                        ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE)]
 
 
 class PopulateCopingActivitiesList(Action):
@@ -66,7 +80,23 @@ class PopulateCopingActivitiesList(Action):
         return "populate_coping_activities_list"
 
     async def run(self, dispatcher, tracker, domain):
-        # TODO: instead of querying the whole list of activities, use only the selected ones
+        # TODO: instead of querying the whole list of activities, use only the selected ones for smoking
+        # list of activities to be provided by content team
+        rnd_activities = get_random_activities(-1, 3)
+        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
+
+        return [SlotSet('coping_activities_ids', rnd_activities_ids),
+                SlotSet('coping_activity1_name', rnd_activities[0].intervention_activity_title),
+                SlotSet('coping_activity2_name', rnd_activities[1].intervention_activity_title),
+                SlotSet('coping_activity3_name', rnd_activities[2].intervention_activity_title)]
+
+
+class PopulateCopingActivitiesListPa(Action):
+    def name(self):
+        return "populate_coping_activities_list_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+        # TODO: instead of querying the whole list of activities, use only the selected ones for pa
         # list of activities to be provided by content team
         rnd_activities = get_random_activities(-1, 3)
         rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
@@ -131,13 +161,39 @@ class ShowBarchartDifficultSituations(Action):
         return []
 
 
+class ShowBarchartDifficultSituationsPa(Action):
+    def name(self):
+        return "show_barchart_difficult_situations_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # TODO: plot barchart, save and send
+
+        return []
+
+
 class ShowFirstCopingActivity(Action):
     def name(self):
         return "show_first_coping_activity"
 
     async def run(self, dispatcher, tracker, domain):
         activity_id = tracker.get_slot('hrs_coping_activities_performed')
+        # TODO: choose activities in list of advised list for smoking
+        activities_list = get_random_activities(int(activity_id), 1)
 
+        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
+
+        return [SlotSet('hrs_coping_activities_performed', activity_id)]
+
+
+class ShowFirstCopingActivityPa(Action):
+    def name(self):
+        return "show_first_coping_activity_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+        activity_id = tracker.get_slot('hrs_coping_activities_performed')
+        # TODO: choose activities in list of advised list for pa
         activities_list = get_random_activities(int(activity_id), 1)
 
         dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
@@ -198,6 +254,111 @@ class StoreHrsWhatHappened(Action):
 
         # TODO: save on DB
 
+        return []
+
+
+class StorePaSpecifyPa(Action):
+    def name(self):
+        return "store_pa_specify_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = int(tracker.get_slot('pa_specify_pa_slot'))
+
+        store_dialog_closed_answer_to_db(user_id,
+                                         DialogQuestionsEnum.RELAPSE_PA_SPECIFY_PA.value,
+                                         choice)
+        return []
+
+
+class StorePaType(Action):
+    def name(self):
+        return "store_pa_type"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('pa_type')
+
+        store_dialog_open_answer_to_db(user_id,
+                                       DialogQuestionsEnum.RELAPSE_PA_TYPE.value,
+                                       choice)
+        return []
+
+
+class StorePaTogether(Action):
+    def name(self):
+        return "store_pa_together"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = int(tracker.get_slot('pa_together'))
+
+        store_dialog_closed_answer_to_db(user_id,
+                                         DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value,
+                                         choice)
+        return []
+
+
+class StorePaWhyFail(Action):
+    def name(self):
+        return "store_pa_why_fail"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('pa_why_fail')  # this is a list already validated
+        
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value,
+                                              choice)
+        return []
+
+
+class StorePaDoingToday(Action):
+    def name(self):
+        return "store_pa_doing_today"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('pa_doing_today_slot')  # this is a list already validated
+
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value,
+                                              choice)
+        return []
+
+
+class StorePaHappenedSpecial(Action):
+    def name(self):
+        return "store_pa_happened_special"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('pa_happened_special_slot')
+
+        store_dialog_open_answer_to_db(user_id,
+                                       DialogQuestionsEnum.RELAPSE_PA_HAPPENED_SPECIAL.value,
+                                       choice)
+        return []
+
+
+class StorePaReflectBarchart(Action):
+    def name(self):
+        return "store_pa_reflect_barchart"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('reflect_bar_chart')
+
+        store_dialog_open_answer_to_db(user_id,
+                                       DialogQuestionsEnum.RELAPSE_PA_REFLECT_BARCHART.value,
+                                       choice)
         return []
 
 
@@ -345,10 +506,11 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         else:
             # Store data to db
             answer_number = tracker.get_slot("number_smoke")
-            answer_type = tracker.get_slot("type_smoke")
-            answer_type_id = int(answer_type) + DialogQuestionsEnum.RELAPSE_LAPSE_TYPE_SMOKE.value * 100
+            answer_type = int(tracker.get_slot("type_smoke"))
             user_id = int(tracker.current_state()['sender_id'])
-            store_dialog_closed_answer_to_db(user_id, answer_type_id)
+            store_dialog_closed_answer_to_db(user_id,
+                                             DialogQuestionsEnum.RELAPSE_LAPSE_TYPE_SMOKE.value,
+                                             answer_type)
             store_dialog_open_answer_to_db(user_id,
                                            DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value,
                                            answer_number)
@@ -617,26 +779,6 @@ class ValidateHrsWhatHappenedForm(FormValidationAction):
         return {"hrs_what_happened_slot": value}
 
 
-class ValidateHrsLikeFeedbackForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_hrs_like_feedback_form'
-
-    def validate_hrs_like_feedback_slot(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate hrs_like_feedback_slot"""
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_hrs_like_feedback_slot':
-            return {"hrs_like_feedback_slot": None}
-        if not validator.validate_long_enough_response_chars(value, 50):
-            dispatcher.utter_message(response="utter_please_answer_more_words")
-            return {"hrs_like_feedback_slot": None}
-
-        return {"hrs_like_feedback_slot": value}
-
-
 class ValidateHrsEnoughMotivationForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_hrs_enough_motivation_form'
@@ -796,3 +938,84 @@ class ValidateLapseEhboForm(FormValidationAction):
             return {"lapse_ehbo_slot": None}
 
         return {"lapse_ehbo_slot": value}
+
+
+class ValidatePaSpecifyPaForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_pa_specify_pa_form'
+
+    def validate_pa_specify_pa_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa_specify_pa_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_pa_specify_pa_slot':
+            return {"pa_specify_pa_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"pa_specify_pa_slot": None}
+
+        return {"pa_specify_pa_slot": value}
+
+
+class ValidatePaContextEventsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_pa_doing_today_happened_special_form'
+
+    def validate_pa_doing_today_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa_doing_today_slot"""
+        max_value = 5
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_pa_doing_today_slot':
+            return {"pa_doing_today_slot": None}
+
+        if not validator.validate_list(value, 1, max_value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_to_5")
+            return {"pa_doing_today_slot": None}
+
+        return {"pa_doing_today_slot": value}
+
+    def validate_pa_happened_special_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa_happened_special_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_pa_happened_special_slot':
+            return {"pa_happened_special_slot": None}
+
+        return {"pa_happened_special_slot": value}
+
+
+class ValidatePaEnoughMotivationForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_pa_enough_motivation_form'
+
+    def validate_pa_enough_motivation_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa_enough_motivation_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_pa_enough_motivation_slot':
+            return {"pa_enough_motivation_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"pa_enough_motivation_slot": None}
+
+        return {"pa_enough_motivation_slot": value}

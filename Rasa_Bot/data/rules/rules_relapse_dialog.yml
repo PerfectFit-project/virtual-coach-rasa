@@ -151,16 +151,20 @@ rules:
   - action: utter_hrs_look_back_1
   - action: utter_hrs_look_back_2
   - action: show_barchart_difficult_situations
-  - action: hrs_like_feedback_form
-  - active_loop: hrs_like_feedback_form
+  - action: reflect_bar_chart_form
+  - active_loop: reflect_bar_chart_form
   wait_for_user_input: false
 
 - rule: smoke hrs after fak 6
   condition:
-    - active_loop: hrs_like_feedback_form
+    - active_loop: reflect_bar_chart_form
   steps:
-  - action: hrs_like_feedback_form
+  - action: reflect_bar_chart_form
   - active_loop: null
+  - slot_was_set: # smoke branch
+    - smoke_or_pa: 1
+  - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
+    - crave_lapse_relapse: 1
   - action: utter_hrs_look_back_3
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
@@ -196,7 +200,6 @@ rules:
         - crave_lapse_relapse: 3
   - slot_was_set:
       - hrs_enough_motivation_slot: 2
-  - active_loop: null
   - action: utter_bad_to_hear_1
   - action: utter_bad_to_hear_2
   - action: hrs_activity_form
@@ -210,7 +213,9 @@ rules:
   - action: hrs_activity_form
   - active_loop: null
   - slot_was_set:
-      - crave_lapse_relapse: 1
+    - smoke_or_pa: 1 # smoke branch
+  - slot_was_set:
+      - crave_lapse_relapse: 1 # hrs
   - slot_was_set:
       - hrs_activity_slot: 1
   - action: ehbo_me_self_form
@@ -226,6 +231,8 @@ rules:
   - active_loop: null
   - slot_was_set:
       - hrs_activity_slot: 2
+  - slot_was_set:
+    - smoke_or_pa: 1 # smoke branch
   - or:
     - slot_was_set:
         - crave_lapse_relapse: 1
@@ -274,6 +281,8 @@ rules:
   steps:
   - action: hrs_choose_coping_activity_form
   - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 1 # smoke branch
   - action: show_chosen_coping_activity
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
@@ -345,7 +354,9 @@ rules:
   steps:
   - action: reflect_bar_chart_form
   - active_loop: null
-  - slot_was_set: # to distinguish the lapse branch from the relapse
+  - slot_was_set: # smoke branch
+    - smoke_or_pa: 1
+  - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
     - crave_lapse_relapse: 2
   - action: utter_smoke_lapse_15
   - action: utter_smoke_lapse_16
@@ -365,7 +376,9 @@ rules:
   - slot_was_set:
     - ehbo_me_self_lapse: 1
   - slot_was_set:
-    - crave_lapse_relapse: 2
+    - smoke_or_pa: 1  # smoke branch
+  - slot_was_set:
+    - crave_lapse_relapse: 2  # lapse
   - action: action_set_slot_relapse_dialog_lapse
   - action: action_start_fak
   # checkpoint: open_fak checkpoint: continue_relapse_dialog_smoke_lapse
@@ -385,6 +398,8 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self_lapse: 2
+  - slot_was_set:
+    - smoke_or_pa: 1  # smoke branch
   - or:
       - slot_was_set:
           - crave_lapse_relapse: 2
@@ -404,6 +419,8 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self_lapse: 3
+  - slot_was_set:
+    - smoke_or_pa: 1  # smoke branch
   - or: # executed for lapse and relapse
       - slot_was_set:
           - crave_lapse_relapse: 2
@@ -415,18 +432,6 @@ rules:
   - active_loop: hrs_choose_coping_activity_form
   wait_for_user_input: false
 
-- rule: smoke lapse user chooses activity 2
-  condition:
-    - active_loop: hrs_choose_coping_activity_form
-  steps:
-  - action: hrs_choose_coping_activity_form
-  - active_loop: null
-  - action: show_chosen_coping_activity
-  - action: hrs_choose_coping_activity_form
-  - active_loop: hrs_choose_coping_activity_form
-  wait_for_user_input: false
-  # checkpoint: continue_relapse_dialog_smoke_lapse
-
 - rule: smoke lapse user has motivation # checkpoint: ehbo_me_self_lapse_checkpoint
   condition:
     - active_loop: ehbo_me_self_lapse_form
@@ -435,6 +440,8 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self_lapse: 4
+  - slot_was_set:
+    - smoke_or_pa: 1  # smoke branch
   - or: # executed for the lapse and the relapse
       - slot_was_set:
           - crave_lapse_relapse: 2
@@ -484,11 +491,13 @@ rules:
   steps:
   - action: hrs_activity_form
   - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 1 # smoke branch
   - or:
     - slot_was_set:
-      - crave_lapse_relapse: 2
+      - crave_lapse_relapse: 2 # lapse
     - slot_was_set:
-      - crave_lapse_relapse: 3
+      - crave_lapse_relapse: 3 # relapse
   - slot_was_set:
     - hrs_activity_slot: 1
   - action: ehbo_me_self_lapse_form
@@ -533,7 +542,9 @@ rules:
   steps:
   - action: reflect_bar_chart_form
   - active_loop: null
-  - slot_was_set: # to distinguish the lapse branch from the relapse
+  - slot_was_set: # smoke branch
+    - smoke_or_pa: 1
+  - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
     - crave_lapse_relapse: 3
   - action: utter_smoke_lapse_15
   - action: utter_smoke_lapse_16
@@ -606,7 +617,9 @@ rules:
   - slot_was_set:
     - ehbo_me_self_lapse: 1
   - slot_was_set:
-    - crave_lapse_relapse: 3
+    - smoke_or_pa: 1  # smoke branch
+  - slot_was_set:
+    - crave_lapse_relapse: 3 # relapse
   - action: action_set_slot_relapse_dialog_relapse
   - action: action_start_fak
 
@@ -628,6 +641,18 @@ rules:
   - slot_was_set:
     - smoke_or_pa: 2
   - action: utter_pa_define_1
+  - action: pa_specify_pa_form
+  - active_loop: pa_specify_pa_form
+  wait_for_user_input: false
+
+- rule: Relapse phase triggered PA 2
+  condition:
+  - active_loop: pa_specify_pa_form
+  steps:
+  - action: pa_specify_pa_form
+  - active_loop: null
+  - action: store_pa_specify_pa
+  - action: utter_smoke_lapse_1
   - action: utter_pa_lapse_1
   - action: utter_pa_lapse_2
   - action: utter_pa_lapse_3
@@ -635,10 +660,185 @@ rules:
   - active_loop: pa_type_together_why_fail_form
   wait_for_user_input: false
 
-- rule: Relapse phase triggered PA 2
+- rule: Relapse phase triggered PA 3
   condition:
   - active_loop: pa_type_together_why_fail_form
   steps:
   - action: pa_type_together_why_fail_form
   - active_loop: null
+  - action: store_pa_type
+  - action: store_pa_together
+  - action: store_pa_why_fail
   - action: utter_pa_lapse_4
+  - action: utter_pa_lapse_5
+  - action: pa_doing_today_happened_special_form
+  - active_loop: pa_doing_today_happened_special_form
+  wait_for_user_input: false
+
+- rule: Relapse phase triggered PA 4
+  condition:
+  - active_loop: pa_doing_today_happened_special_form
+  steps:
+  - action: pa_doing_today_happened_special_form
+  - active_loop: null
+  - action: store_pa_doing_today
+  - action: store_pa_happened_special
+  - action: utter_smoke_lapse_12
+  - action: utter_pa_lapse_5
+  - action: utter_pa_lapse_6
+  - action: utter_pa_lapse_7
+  - action: show_barchart_difficult_situations_pa # TODO: implement action
+  - action: reflect_bar_chart_form
+  - active_loop: reflect_bar_chart_form
+  wait_for_user_input: false
+
+- rule: Relapse phase triggered PA 5
+  condition:
+  - active_loop: reflect_bar_chart_form
+  steps:
+  - action: reflect_bar_chart_form
+  - active_loop: null
+  - slot_was_set: # PA branch
+    - smoke_or_pa: 2
+  - slot_was_set: # slot for smoke branching not set
+    - crave_lapse_relapse: null
+  - action: store_pa_reflect_barchart
+  - action: utter_hrs_look_back_3
+  - action: utter_pa_lapse_8
+  - action: utter_pa_lapse_9
+  - action: utter_pa_lapse_10
+  - action: utter_pa_lapse_11
+  - action: utter_pa_lapse_12
+  - action: utter_pa_lapse_13
+  - action: ehbo_me_self_lapse_form
+  - active_loop: ehbo_me_self_lapse_form
+  wait_for_user_input: false
+
+- rule: pa open ehbo #
+  condition:
+    - active_loop: ehbo_me_self_lapse_form
+  steps:
+  - action: ehbo_me_self_lapse_form
+  - active_loop: null
+  - slot_was_set:
+    - ehbo_me_self_lapse: 1
+  - slot_was_set:
+    - smoke_or_pa: 2 # pa branch
+  - slot_was_set:
+    - crave_lapse_relapse: null
+  - action: action_set_slot_relapse_dialog_pa
+  - action: action_start_fak
+
+- rule: resume pa branch after fak
+  steps:
+  - intent: EXTERNAL_relapse_dialog_pa
+  - action: pa_enough_motivation_form
+  - active_loop: pa_enough_motivation_form
+  wait_for_user_input: false
+
+- rule: pa VC suggest and activity #
+  condition:
+    - active_loop: ehbo_me_self_lapse_form
+  steps:
+  - action: ehbo_me_self_lapse_form
+  - active_loop: null
+  - slot_was_set: # VC chooses an activity
+    - ehbo_me_self_lapse: 2
+  - slot_was_set:
+    - smoke_or_pa: 2 # pa branch
+  - slot_was_set:
+    - crave_lapse_relapse: null
+  - action: show_first_coping_activity_pa
+  - action: pa_enough_motivation_form
+  - active_loop: pa_enough_motivation_form
+  wait_for_user_input: false
+
+- rule: pa user chooses an activity
+  condition:
+    - active_loop: ehbo_me_self_lapse_form
+  steps:
+  - action: ehbo_me_self_lapse_form
+  - active_loop: null
+  - slot_was_set: # user chooses an activity
+    - ehbo_me_self_lapse: 3
+  - slot_was_set:
+    - smoke_or_pa: 2 # pa branch
+  - slot_was_set:
+    - crave_lapse_relapse: null
+  - action: utter_hrs_list_activities_intro
+  - action: populate_coping_activities_list_pa
+  - action: hrs_choose_coping_activity_form
+  - active_loop: hrs_choose_coping_activity_form
+  wait_for_user_input: false
+
+- rule: pa open ehbo #
+  condition:
+    - active_loop: ehbo_me_self_lapse_form
+  steps:
+  - action: ehbo_me_self_lapse_form
+  - active_loop: null
+  - slot_was_set:
+    - ehbo_me_self_lapse: 4
+  - slot_was_set:
+    - smoke_or_pa: 2 # pa branch
+  - slot_was_set:
+    - crave_lapse_relapse: null
+  - action: utter_good_to_hear_pa_1
+  - action: utter_good_to_hear_2
+  - action: action_end_dialog
+
+- rule: pa user chooses an activity 2
+  condition:
+    - active_loop: hrs_choose_coping_activity_form
+  steps:
+  - action: hrs_choose_coping_activity_form
+  - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 2 # pa branch
+  - action: show_chosen_coping_activity
+  - action: pa_enough_motivation_form
+  - active_loop: pa_enough_motivation_form
+  wait_for_user_input: false
+
+- rule: pa the user has enough motivation
+  condition:
+    - active_loop: pa_enough_motivation_form
+  steps:
+  - action: pa_enough_motivation_form
+  - active_loop: null
+  - slot_was_set:
+    - pa_enough_motivation_slot: 1
+  - action: utter_good_to_hear_pa_1
+  - action: utter_good_to_hear_2
+  - action: action_end_dialog
+
+- rule: pa the user has not enough motivation
+  condition:
+    - active_loop: pa_enough_motivation_form
+  steps:
+  - action: pa_enough_motivation_form
+  - active_loop: null
+  - slot_was_set:
+    - pa_enough_motivation_slot: 2
+  - action: utter_bad_to_hear_1
+  - action: utter_bad_to_hear_2
+  - action: hrs_activity_form
+  - active_loop: hrs_activity_form
+  wait_for_user_input: false
+
+# in case the user types 1, it is already covered by previous rules
+- rule: pa the user has not enough motivation no activity
+  condition:
+    - active_loop: hrs_activity_form
+  steps:
+  - action: hrs_activity_form
+  - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 2 # pa branch
+  - slot_was_set:
+    - hrs_activity_slot: 2
+  - slot_was_set:
+    - crave_lapse_relapse: null # crave slot is null in this branch
+  - action: utter_pa_call_help_1
+  - action: utter_pa_call_help_2
+  - action: action_end_dialog

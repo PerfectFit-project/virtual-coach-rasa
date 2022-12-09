@@ -10,3 +10,5 @@ responses:
 
 actions:
   - action_get_first_aid_kit
+  - action_resume_after_fak
+  - action_start_fak

@@ -49,7 +49,7 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
         if next_intervention_component is not None:
             endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
             headers = {'Content-Type': 'application/json'}
-            params = {'output_channel': 'niceday_input_channel'}
+            params = {'output_channel': 'niceday_trigger_input_channel'}
             data = '{"name": "' + next_intervention_component + '" }'
             requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
@@ -140,7 +140,7 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
 def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=unused-argument
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
-    params = {'output_channel': 'niceday_input_channel'}
+    params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
     requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 

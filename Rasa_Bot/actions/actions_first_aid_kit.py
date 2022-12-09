@@ -1,6 +1,7 @@
 from celery import Celery
+from datetime import datetime, timedelta
 from rasa_sdk import Action
-from rasa_sdk.events import SlotSet, FollowupAction
+from rasa_sdk.events import FollowupAction
 from virtual_coach_db.dbschema.models import FirstAidKit
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -18,7 +19,7 @@ class ActionStartFak(Action):
     async def run(self, dispatcher, tracker, domain):
 
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
+        print("CELERY INTENT")
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, 'CENTRAL_get_first_aid_kit'))
 
@@ -36,14 +37,14 @@ class ActionResumeAfterFak(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         current_intervention = tracker.get_slot('current_intervention_component')
-        print(current_intervention)
 
         if current_intervention is None:
             return[FollowupAction('action_end_dialog')]
 
         new_intent = 'EXTERNAL_' + current_intervention
         celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent))
+                         (user_id, new_intent),
+                         eta=datetime.now() + timedelta(seconds=10))
 
         return []
 
@@ -99,15 +100,3 @@ class ActionGetFirstAidKit(Action):
             dispatcher.utter_message(template="utter_first_aid_kit_empty")
 
         return []
-
-
-class ActionSetContinuation(Action):
-    """Set the dialog_to_continue slot"""
-
-    def name(self):
-        return "action_set_continuation"
-
-    async def run(self, dispatcher, tracker, domain):
-        current_intervention = tracker.get_slot('current_intervention_component')
-
-        return [SlotSet("dialog_to_continue", current_intervention)]

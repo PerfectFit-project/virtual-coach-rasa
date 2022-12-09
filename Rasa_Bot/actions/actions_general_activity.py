@@ -2,12 +2,13 @@ import random
 import secrets
 
 from sqlalchemy import update
-from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, FirstAidKit,
+from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, 
+                                              FirstAidKit,
                                               InterventionActivity)
 from virtual_coach_db.helper import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
-from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
-from .helper import get_latest_bot_utterance
+from .definitions import DATABASE_URL, DialogQuestions, NUM_TOP_ACTIVITIES
+from .helper import (get_latest_bot_utterance, store_dialog_answer_to_db)
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
@@ -499,18 +500,68 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int):
     return rnd_activities
 
 
-class ChoosePersuasionActivity(Action):
-    """load the activity instructions"""
+class ValidatePersuasionReflectionForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_reflection_form'
+
+    def validate_persuasion_reflection_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_reflection_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_reflection_slot':
+            return {"persuasion_want_slot": None}
+
+        if not self._validate_response_value(value):
+            dispatcher.utter_message(response="utter_please_answer_more_words")
+            return {"persuasion_reflection_slot": None}
+
+        return {"persuasion_reflection_slot": value}
+
+    @staticmethod
+    def _validate_response_value(value):
+        if len(value) >= 10:
+            return True
+        return False
+    
+    
+class SavePersuasionToDatabase(Action):
+    """Save persuasion to database"""
 
     def name(self):
-        return "choose_persuasion_activity"
+        return "send_persuasive_message_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+    
+        user_id = tracker.current_state()['sender_id']
+        
+        # Get chosen persuasion type
+        pers_type = tracker.get_slot('persuasion_type')
+        # Get answers to state feature questions
+        want = tracker.get_slot('persuasion_want_slot')
+        prompts = tracker.get_slot('persuasion_prompts_slot')
+        need = tracker.get_slot('persuasion_need_slot')
+        
+        store_dialog_answer_to_db(user_id, want, DialogQuestions.FUTURE_SELF_MOVER_WHY)
+        
+        # todo: save to database
+        # why do we have the dialogquestions enum twice, once in db and once in actions?
+
+        return []
+
+
+class SendPersuasiveMessageActivity(Action):
+    """Choose persuasion type and send persuasive message (if any)"""
+
+    def name(self):
+        return "send_persuasive_message_activity"
 
     async def run(self, dispatcher, tracker, domain):
         
-        
         chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
         activities_slot = tracker.get_slot('rnd_activities_ids')
-        user_id = tracker.current_state()['sender_id']
 
         activity_id = activities_slot[chosen_option - 1]
         session = get_db_session(db_url=DATABASE_URL)
@@ -553,23 +604,36 @@ class ChoosePersuasionActivity(Action):
         # Get optimal persuasion type
         pers_type = opt_policy[binary_state[0]][binary_state[1]][binary_state[2]]
         
+        reflective_question = ""
+        # Commitment
         if pers_type == 0:
+            input_required = True
             message_idx = random.choice([i for i in range(len(commitment))])
             message = commitment[message_idx]
+            dispatcher.utter_message(text=message)
+            # not identity-based formulation
+            if message_idx < 4:
+                reflective_question = "Please tell me what you think: In what way does doing this activity match your decision to successfully quit smoking?"
+            # identity-based formulation
+            else:
+                reflective_question = "Please tell me what you think: In what way does doing this activity match your decision to become somebody who has successfully quit smoking?"
+        # Consensus
         elif pers_type == 1:
+            input_required = True
             message_idx = random.choice([i for i in range(len(consensus))])
             message = consensus[message_idx] + benefit
+            dispatcher.utter_message(text=message)
+            reflective_question = "Please tell me what you think: How would people like you, in a situation like yours, agree with this?"
+        # No persuasion
         else:
-            a = 2
-
+            input_required = False
+            message_idx = -1
         
-        
-        
-
-        return []
+        return [SlotSet("persuasion_type", pers_type),
+                SlotSet("persuasive_message_index", message_idx),
+                SlotSet("persuasion_requires_input", input_required),
+                SlotSet("persuasion_reflective_question", reflective_question)]
     
-    
-
 
 class ValidatePersuasionWantForm(FormValidationAction):
     def name(self) -> Text:

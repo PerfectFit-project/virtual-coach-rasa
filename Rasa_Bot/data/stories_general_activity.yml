@@ -146,18 +146,7 @@ stories:
   - active_loop: general_activity_next_activity_form
   - active_loop: null
   - action: utter_general_activity_next_user
-  - action: utter_persuasion_questions_intro
-  - action: persuasion_prompts_form
-  - active_loop: persuasion_prompts_form
-  - active_loop: null
-  - action: persuasion_want_form
-  - active_loop: persuasion_want_form
-  - active_loop: null
-  - action: persuasion_need_form
-  - active_loop: persuasion_need_form
-  - active_loop: null
-  - action: load_activity
-  - action: action_end_dialog
+  - checkpoint: persuasion
 
 ## 7a: the coach chooses the activity
 
@@ -169,5 +158,50 @@ stories:
     - who_decides_slot: coach
   - action: get_activity_coach_choice
   - action: utter_general_activity_next_coach
+  - checkpoint: persuasion
+  
+  
+- story: persuasion without input
+  steps:
+  - checkpoint: persuasion
+  - action: utter_persuasion_questions_intro
+  - action: persuasion_prompts_form
+  - active_loop: persuasion_prompts_form
+  - active_loop: null
+  - action: persuasion_want_form
+  - active_loop: persuasion_want_form
+  - active_loop: null
+  - action: persuasion_need_form
+  - active_loop: persuasion_need_form
+  - active_loop: null
+  - action: send_persuasive_message_activity
+  - slot_was_set:
+    - persuasion_requires_input: false
+  - action: save_persuasion_to_database
+  - action: load_activity
+  - action: action_end_dialog
+
+
+- story: persuasion with input
+  steps:
+  - checkpoint: persuasion
+  - action: utter_persuasion_questions_intro
+  - action: persuasion_prompts_form
+  - active_loop: persuasion_prompts_form
+  - active_loop: null
+  - action: persuasion_want_form
+  - active_loop: persuasion_want_form
+  - active_loop: null
+  - action: persuasion_need_form
+  - active_loop: persuasion_need_form
+  - active_loop: null
+  - action: send_persuasive_message_activity
+  - slot_was_set:
+    - persuasion_requires_input: true
+  - action: persuasion_reflection_form
+  - active_loop: persuasion_reflection_form
+  - active_loop: null
+  - action: utter_thank_persuasion_reflection
+  - action: save_persuasion_to_database
   - action: load_activity
   - action: action_end_dialog

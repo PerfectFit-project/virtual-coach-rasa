@@ -378,22 +378,22 @@ def get_most_recent_question_answer_from_database(session, user_id,
 
     subquery = (
         session.query(
-            func.max(DialogAnswers.datetime)
+            func.max(DialogClosedAnswers.datetime)
         )
         .filter(
-            DialogAnswers.users_nicedayuid == user_id,
-            DialogAnswers.question_id == question_id
+            DialogClosedAnswers.users_nicedayuid == user_id,
+            DialogClosedAnswers.question_id == question_id
         )
     )
 
     query = (
         session.query(
-            DialogAnswers
+            DialogClosedAnswers
         )
         .filter(
-            DialogAnswers.users_nicedayuid == user_id,
-            DialogAnswers.question_id == question_id,
-            DialogAnswers.datetime == subquery
+            DialogClosedAnswers.users_nicedayuid == user_id,
+            DialogClosedAnswers.question_id == question_id,
+            DialogClosedAnswers.datetime == subquery
         )
         .first()
     )

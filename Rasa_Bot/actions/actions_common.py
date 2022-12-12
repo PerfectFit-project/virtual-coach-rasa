@@ -91,6 +91,6 @@ class SetFilePath(Action):
 
         # TODO: This is hardcoded for testing. Needs to be set according to the use case
 
-        filepath = '/app/tst.PNG'
+        filepath = '/app/chart.PNG'
 
         return[SlotSet("upload_file_path", filepath)]

@@ -3,6 +3,7 @@ Helper functions for rasa actions
 """
 import datetime
 import secrets
+import plotly.express as px
 
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers, InterventionComponents,
@@ -155,3 +156,7 @@ def week_day_to_numerical_form(week_day):
     if week_day.lower() == "sunday":
         return 7
     return -1
+
+def make_graph(title, data, x, y):
+    fig = px.bar(x=x, y=y, title=title)
+    return fig

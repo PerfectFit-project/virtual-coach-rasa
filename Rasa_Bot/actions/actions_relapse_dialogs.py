@@ -7,7 +7,7 @@ import logging
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities, store_dialog_closed_answer_to_db,
-                     store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db)
+                     store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db, make_graph)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -18,6 +18,7 @@ from virtual_coach_db.helper import DialogQuestionsEnum
 from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
+from plotly.subplots import make_subplots
 
 
 celery = Celery(broker=REDIS_URL)
@@ -170,6 +171,13 @@ class ShowBarchartDifficultSituations(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        data = []
+        logging.info("making chart")
+
+        chart = make_graph("title", data, ["a", "b", "c"], [1, 3, 2])
+
+        chart.write_image("chart.PNG")
 
         # TODO: plot barchart, save and send
 

@@ -5,14 +5,16 @@ from sqlalchemy import update
 from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, 
                                               FirstAidKit,
                                               InterventionActivity)
-from virtual_coach_db.helper import ExecutionInterventionComponents
+from virtual_coach_db.helper import (ExecutionInterventionComponents, 
+                                     DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
-from .definitions import DATABASE_URL, DialogQuestions, NUM_TOP_ACTIVITIES
-from .helper import (get_latest_bot_utterance, store_dialog_answer_to_db)
+from .definitions import (COMMITMENT, CONSENSUS, DATABASE_URL, NUM_TOP_ACTIVITIES, 
+                          OPT_POLICY, STATE_FEATURE_MEANS)
+from .helper import get_latest_bot_utterance, store_dialog_closed_answer_to_db
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
-from typing import Text, Dict, Any
+from typing import Any, Dict, Text
 
 
 class CheckIfFirstExecutionGA(Action):
@@ -531,7 +533,7 @@ class SavePersuasionToDatabase(Action):
     """Save persuasion to database"""
 
     def name(self):
-        return "send_persuasive_message_activity"
+        return "save_persuasion_to_database"
 
     async def run(self, dispatcher, tracker, domain):
     
@@ -539,15 +541,21 @@ class SavePersuasionToDatabase(Action):
         
         # Get chosen persuasion type
         pers_type = tracker.get_slot('persuasion_type')
+        # Get index of chosen persuasive message; -1 if "no persuasion"
+        message_idx = tracker.get_slot("persuasive_message_index")
         # Get answers to state feature questions
         want = tracker.get_slot('persuasion_want_slot')
         prompts = tracker.get_slot('persuasion_prompts_slot')
         need = tracker.get_slot('persuasion_need_slot')
         
-        store_dialog_answer_to_db(user_id, want, DialogQuestions.FUTURE_SELF_MOVER_WHY)
-        
-        # todo: save to database
-        # why do we have the dialogquestions enum twice, once in db and once in actions?
+        # Store state feature values to database
+        store_dialog_closed_answer_to_db(user_id, answer_value = want, question_id = DialogQuestionsEnum.PERSUASION_WANT)
+        store_dialog_closed_answer_to_db(user_id, answer_value = need, question_id = DialogQuestionsEnum.PERSUASION_NEED)
+        store_dialog_closed_answer_to_db(user_id, answer_value = prompts, question_id = DialogQuestionsEnum.PERSUASION_PROMPTS)
+        # Answer_values must start at 1
+        store_dialog_closed_answer_to_db(user_id, answer_value = pers_type + 1, question_id = DialogQuestionsEnum.PERSUASION_TYPE)
+        # +2 since the lowest value we have is -1 in case of no persuasion
+        store_dialog_closed_answer_to_db(user_id, answer_value = message_idx + 2, question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX)
 
         return []
 
@@ -566,7 +574,7 @@ class SendPersuasiveMessageActivity(Action):
         activity_id = activities_slot[chosen_option - 1]
         session = get_db_session(db_url=DATABASE_URL)
 
-        # get the activity benefit
+        # Get the activity benefit
         activities = (
             session.query(
                 InterventionActivity
@@ -577,57 +585,40 @@ class SendPersuasiveMessageActivity(Action):
         )
         benefit = activities[0].intervention_activity_benefit
         
-        # Opt policy for [want][prompts][need]
-        opt_policy = [[[0, 1], [2, 1]],[[0, 0], [2, 0]]]
-        # Feature means to map features to binary ones
-        feat_means = [2.96, 2.74, 2.88]  # want, prompts, need
-        commitment = ["Remember: You have decided to quit smoking. You will feel good if you keep your promise to yourself.",
-                      "Remember: You have decided to quit smoking. You will feel bad if you break your promise to yourself.",
-                      "Remember: You've committed to quit smoking. I hope you'll be sticking to it.",
-                      "Remember: You've committed to quit smoking. I hope you'll not break your commitment.",
-                      "Remember: You've committed to become somebody who has quit smoking. Doing this activity may help you to become this person.",
-                      "Remember: You've decided to become somebody who has quit smoking. If you do NOT %, it may be more difficult to become this person."],
-        consensus = ["Most people think that doing this activity may help",
-                     "Most people believe that NOT doing this activity may make it more difficult",
-                     "The majority of people believe that doing this activity may help",
-                     "The majority of people think that NOT doing this activity may make it more difficult"]
-        
         # Get answers to state feature questions
         want = tracker.get_slot('persuasion_want_slot')
         prompts = tracker.get_slot('persuasion_prompts_slot')
         need = tracker.get_slot('persuasion_need_slot')
         
         # Make state binary
-        binary_state = [want >= feat_means[0], prompts >= feat_means[1], 
-                        need >= feat_means[2]]
+        binary_state = [want >= STATE_FEATURE_MEANS[0], prompts >= STATE_FEATURE_MEANS[1], 
+                        need >= STATE_FEATURE_MEANS[2]]
         
         # Get optimal persuasion type
-        pers_type = opt_policy[binary_state[0]][binary_state[1]][binary_state[2]]
+        pers_type = OPT_POLICY[binary_state[0]][binary_state[1]][binary_state[2]]
         
-        reflective_question = ""
+        reflective_question = ""  # Relfective question to ask users as part of persuasion
+        input_required = False  # Whether we will ask a reflective question to users
+        message_idx = -1  # Index of persuasive message
         # Commitment
         if pers_type == 0:
             input_required = True
-            message_idx = random.choice([i for i in range(len(commitment))])
-            message = commitment[message_idx]
+            message_idx = random.choice([i for i in range(len(COMMITMENT))])
+            message = COMMITMENT[message_idx]
             dispatcher.utter_message(text=message)
-            # not identity-based formulation
+            # Not identity-based formulation
             if message_idx < 4:
                 reflective_question = "Please tell me what you think: In what way does doing this activity match your decision to successfully quit smoking?"
-            # identity-based formulation
+            # Identity-based formulation
             else:
                 reflective_question = "Please tell me what you think: In what way does doing this activity match your decision to become somebody who has successfully quit smoking?"
         # Consensus
         elif pers_type == 1:
             input_required = True
-            message_idx = random.choice([i for i in range(len(consensus))])
-            message = consensus[message_idx] + benefit
+            message_idx = random.choice([i for i in range(len(CONSENSUS))])
+            message = CONSENSUS[message_idx] + benefit
             dispatcher.utter_message(text=message)
             reflective_question = "Please tell me what you think: How would people like you, in a situation like yours, agree with this?"
-        # No persuasion
-        else:
-            input_required = False
-            message_idx = -1
         
         return [SlotSet("persuasion_type", pers_type),
                 SlotSet("persuasive_message_index", message_idx),

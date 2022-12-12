@@ -22,6 +22,22 @@ EVENING = (18, 24)
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5
 
+# Opt policy for [want][prompts][need]
+OPT_POLICY = [[[0, 1], [2, 1]],[[0, 0], [2, 0]]]
+# Feature means to map features to binary ones
+STATE_FEATURE_MEANS = [2.96, 2.74, 2.88]  # want, prompts, need
+# Persuasive messages for the persuasion types of commitment and consensus
+COMMITMENT = ["Remember: You have decided to quit smoking. You will feel good if you keep your promise to yourself.",
+              "Remember: You have decided to quit smoking. You will feel bad if you break your promise to yourself.",
+              "Remember: You've committed to quit smoking. I hope you'll be sticking to it.",
+              "Remember: You've committed to quit smoking. I hope you'll not break your commitment.",
+              "Remember: You've committed to become somebody who has quit smoking. Doing this activity may help you to become this person.",
+              "Remember: You've decided to become somebody who has quit smoking. If you do NOT %, it may be more difficult to become this person."],
+CONSENSUS = ["Most people think that doing this activity may help",
+             "Most people believe that NOT doing this activity may make it more difficult",
+             "The majority of people believe that doing this activity may help",
+             "The majority of people think that NOT doing this activity may make it more difficult"]
+
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
     FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?

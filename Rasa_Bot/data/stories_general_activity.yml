@@ -29,6 +29,10 @@ stories:
   - slot_was_set:
       - general_activity_first_execution: false
   - action: get_last_performed_activity
+  - action: persuasion_effort_form
+  - active_loop: persuasion_effort_form
+  - active_loop: null
+  - action: utter_persuasion_effort_thanks
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form
   - active_loop: null
@@ -174,6 +178,7 @@ stories:
   - action: persuasion_need_form
   - active_loop: persuasion_need_form
   - active_loop: null
+  - action: utter_thank_persuasion_state_questions
   - action: send_persuasive_message_activity
   - slot_was_set:
     - persuasion_requires_input: false
@@ -195,6 +200,7 @@ stories:
   - action: persuasion_need_form
   - active_loop: persuasion_need_form
   - active_loop: null
+  - action: utter_thank_persuasion_state_questions
   - action: send_persuasive_message_activity
   - slot_was_set:
     - persuasion_requires_input: true

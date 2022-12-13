@@ -514,7 +514,7 @@ class ValidatePersuasionReflectionForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
 
         if last_utterance != 'utter_ask_persuasion_reflection_slot':
-            return {"persuasion_want_slot": None}
+            return {"persuasion_reflection_slot": None}
 
         if not self._validate_response_value(value):
             dispatcher.utter_message(response="utter_please_answer_more_words")
@@ -547,6 +547,8 @@ class SavePersuasionToDatabase(Action):
         want = tracker.get_slot('persuasion_want_slot')
         prompts = tracker.get_slot('persuasion_prompts_slot')
         need = tracker.get_slot('persuasion_need_slot')
+        # Get effort score
+        effort = tracker.get_slot('persuasion_effort_slot')
         
         # Store state feature values to database
         store_dialog_closed_answer_to_db(user_id, answer_value = want, question_id = DialogQuestionsEnum.PERSUASION_WANT)
@@ -556,6 +558,8 @@ class SavePersuasionToDatabase(Action):
         store_dialog_closed_answer_to_db(user_id, answer_value = pers_type + 1, question_id = DialogQuestionsEnum.PERSUASION_TYPE)
         # +2 since the lowest value we have is -1 in case of no persuasion
         store_dialog_closed_answer_to_db(user_id, answer_value = message_idx + 2, question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX)
+        # +1 since the lowest value is 0
+        store_dialog_closed_answer_to_db(user_id, answer_value = effort + 1, question_id = DialogQuestionsEnum.PERSUASION_EFFORT)
 
         return []
 
@@ -644,7 +648,7 @@ class ValidatePersuasionWantForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
             return {"persuasion_want_slot": None}
 
-        return {"persuasion_want_slot": value}
+        return {"persuasion_want_slot": float(value)}
 
     @staticmethod
     def _validate_response_value(value):
@@ -671,7 +675,7 @@ class ValidatePersuasionNeedForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
             return {"persuasion_need_slot": None}
 
-        return {"persuasion_need_slot": value}
+        return {"persuasion_need_slot": float(value)}
 
     @staticmethod
     def _validate_response_value(value):
@@ -698,10 +702,37 @@ class ValidatePersuasionPromptsForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
             return {"persuasion_prompts_slot": None}
 
-        return {"persuasion_prompts_slot": value}
+        return {"persuasion_prompts_slot": float(value)}
 
     @staticmethod
     def _validate_response_value(value):
         if 1 <= int(value) <= 5:
+            return True
+        return False
+    
+
+class ValidatePersuasionEffortForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_effort_form'
+
+    def validate_persuasion_effort_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_effort_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_effort_slot':
+            return {"persuasion_effort_slot": None}
+
+        if not self._validate_response_value(value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"persuasion_effort_slot": None}
+
+        return {"persuasion_effort_slot": float(value)}
+
+    @staticmethod
+    def _validate_response_value(value):
+        if 0 <= int(value) <= 10:
             return True
         return False

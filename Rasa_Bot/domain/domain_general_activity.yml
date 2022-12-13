@@ -194,6 +194,15 @@ slots:
       - type: from_text
         conditions:
           - active_loop: persuasion_reflection_form
+          
+  # User response regarding effort spent on activity
+  persuasion_effort_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: persuasion_effort_form
 
 forms:
   # this form is for rating the most recent activity
@@ -227,26 +236,34 @@ forms:
       - persuasion_need_slot
   # ask user to reflect on reflective question from persuasion type
   persuasion_reflection_form:
-    required_slot:
+    required_slots:
       - persuasion_reflection_slot
+  # ask user how much effort they spent on activity from last time
+  persuasion_effort_form:
+    required_slots:
+      - persuasion_effort_slot
 
 
 responses:
+  utter_ask_persuasion_effort_slot:
+    - text: "Laten we eerst terugkijken op je vorige oefening. Hoeveel moeite heb je gestoken in de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal geen moeite'. 10 is 'heel erg veel'. Typ nu een cijfer van 0 - 10."
+  utter_persuasion_effort_thanks:
+    - text: "Oke, bedankt om dat te delen!"
   utter_ask_activity_useful_rating: #6
-    - text: "Laten we eerst terugkijken op je vorige oefening. Hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
+    - text: "En hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
   utter_general_activity_look_back:
     - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
   utter_general_activity_thanks_top_5_1:
-  - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
 #  utter_what_you_learned_from_activity:
   utter_general_activity_thanks_top_5_2:
     - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
   utter_ask_save_or_edit_slot:
     - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor 'Bewaren', Typ 2 voor 'Aanpassen'. "
   utter_general_activity_save:
-    - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. . "
+    - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
   utter_general_activity_edit_1:
     - text: "Prima! "
   utter_general_activity_edit_2:
@@ -267,16 +284,18 @@ responses:
     - text: "Now, let me ask you a few questions about how you think about this activity. Please rate the following 3 statements:"
     - text: "Then I'd like to ask you some questions about your thoughts on this activity now. Please rate the following 3 statements:"
   utter_ask_persuasion_prompts_slot:
-    - text: "1) I have things that prompt/remind me to do the activity. Typ 1) Helemaal mee oneens, 2) Mee oneens, 3) Niet mee eens, niet mee oneens, 4) Mee eens, 5) Helemaal mee eens."
+    - text: "1) I have things that prompt/remind me to do the activity. Typ 1 voor 'Helemaal mee oneens,' 2 voor 'Mee oneens,' 3 voor 'Niet mee eens, niet mee oneens,' 4 voor 'Mee eens,' of 5 voor 'Helemaal mee eens.'"
   utter_ask_persuasion_want_slot:
-    - text: "2) I feel that I want to do the activity. Typ 1) Helemaal mee oneens, 2) Mee oneens, 3) Niet mee eens, niet mee oneens, 4) Mee eens, 5) Helemaal mee eens."
+    - text: "2) I feel that I want to do the activity. Typ 1 voor 'Helemaal mee oneens,' 2 voor 'Mee oneens,' 3 voor 'Niet mee eens, niet mee oneens,' 4 voor 'Mee eens,' of 5 voor 'Helemaal mee eens.'"
   utter_ask_persuasion_need_slot:
-    - text: "3) I feel that I need to do the activity. Typ 1) Helemaal mee oneens, 2) Mee oneens, 3) Niet mee eens, niet mee oneens, 4) Mee eens, 5) Helemaal mee eens."
+    - text: "3) I feel that I need to do the activity. Typ 1 voor 'Helemaal mee oneens,' 2 voor 'Mee oneens,' 3 voor 'Niet mee eens, niet mee oneens,' 4 voor 'Mee eens,' of 5 voor 'Helemaal mee eens.'"
   utter_thank_persuasion_reflection:
     - text: "Cool, thanks for sharing this reflection with me!"  
     - text: "Cool, thanks for sharing these thoughts with me!"
   utter_ask_persuasion_reflection_slot:
     - text: "{persuasion_reflective_question}"
+  utter_thank_persuasion_state_questions:
+    - text: "Bedankt voor het delen!"
     
 actions:
   - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
@@ -301,3 +320,5 @@ actions:
   - send_persuasive_message_activity  # choose and send persuasive message to persuade user to do activity
   - validate_persuasion_reflection_form
   - save_persuasion_to_database  # Save state features and persuasion type to database
+  - validate_persuasion_effort_form    # Validate effort score
+  

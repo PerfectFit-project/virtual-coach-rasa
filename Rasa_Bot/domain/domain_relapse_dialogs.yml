@@ -18,7 +18,7 @@ slots:
         conditions:
           - active_loop: smoke_or_pa_form
 
-  one_or_two_slot:
+  now_or_later_slot:
     type: categorical
     values:
       - 1
@@ -28,6 +28,16 @@ slots:
       - type: from_text
         conditions:
           - active_loop: relapse_stop_now_later_form
+
+  medication_info_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
           - active_loop: relapse_medication_info_form
 
   crave_lapse_relapse:
@@ -559,7 +569,7 @@ responses:
              vragen gaan over de laatste keer dat je rookte"
   utter_smoke_relapse_5:
     - text: "Je kan ervoor kiezen om meteen te stoppen of een nieuwe stopdatum te plannen."
-  utter_ask_relapse_stop_now_later_form_one_or_two_slot:
+  utter_ask_now_or_later_slot:
     - text: "Hoe wil je nu verder? 
             Typ 1 als je meteen weer wil stoppen. 
             Typ 2 als je een nieuwe stopdatum wil inplannen."
@@ -571,7 +581,7 @@ responses:
             Wat helpt is om deze meteen weg te gooien. "
   utter_smoke_relapse_8:
     - text: "Wat ook helpt is om te kijken of je genoeg hulp hebt om te stoppen en gestopt te blijven."
-  utter_ask_relapse_medication_info_form_one_or_two_slot:
+  utter_ask_medication_info_slot:
     - text: "Met hulpmiddelen of medicatie vergroot je de kans om gestopt te blijven. 
             Wil je hier meer informatie over? 
             Typ 1 voor ja, typ 2 voor nee."
@@ -662,7 +672,6 @@ responses:
 
 actions:
   - action_check_reasons
-  - action_reset_one_or_two_slot
   - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs
   - action_set_slot_relapse_dialog_lapse
@@ -676,6 +685,8 @@ actions:
   - show_chosen_coping_activity
   - show_first_coping_activity
   - show_first_coping_activity_pa
+  - store_number_smoke
+  - store_type_smoke
   - store_hrs_feeling
   - store_hrs_situation
   - store_hrs_what_happened
@@ -686,7 +697,7 @@ actions:
   - store_pa_why_fail
   - store_pa_doing_today
   - store_pa_happened_special
-  - store_pa_reflect_barchart
+  - store_reflect_barchart
   - validate_crave_lapse_relapse_form
   - validate_ehbo_me_self_form
   - validate_ehbo_me_self_lapse_form
@@ -776,11 +787,11 @@ forms:
 
   relapse_stop_now_later_form:
     required_slots:
-      - one_or_two_slot
+      - now_or_later_slot
 
   relapse_medication_info_form:
     required_slots:
-      - one_or_two_slot
+      - medication_info_slot
 
   pa_specify_pa_form:
     required_slots:

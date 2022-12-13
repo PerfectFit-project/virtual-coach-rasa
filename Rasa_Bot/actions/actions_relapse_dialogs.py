@@ -14,8 +14,8 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from virtual_coach_db.helper import DialogQuestionsEnum
-from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
+from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents,
+                                                 DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
 
@@ -223,9 +223,11 @@ class StoreHrsSituation(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
-        choice = tracker.get_slot('hrs_situation_slot')
+        choice = int(tracker.get_slot('hrs_situation_slot'))
 
-        # TODO: save on DB
+        store_dialog_closed_answer_to_db(user_id,
+                                         DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
+                                         choice)
 
         return []
 
@@ -237,9 +239,11 @@ class StoreHrsFeeling(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
-        choice = tracker.get_slot('hrs_feeling_slot')
+        choice = int(tracker.get_slot('hrs_feeling_slot'))
 
-        # TODO: save on DB
+        store_dialog_closed_answer_to_db(user_id,
+                                         DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value,
+                                         choice)
 
         return []
 
@@ -251,9 +255,11 @@ class StoreHrsWhoWith(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
-        choice = tracker.get_slot('hrs_who_with_slot')
+        choice = int(tracker.get_slot('hrs_who_with_slot'))
 
-        # TODO: save on DB
+        store_dialog_closed_answer_to_db(user_id,
+                                         DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value,
+                                         choice)
 
         return []
 
@@ -267,7 +273,9 @@ class StoreHrsWhatHappened(Action):
         # get the user choice
         choice = tracker.get_slot('hrs_what_happened_slot')
 
-        # TODO: save on DB
+        store_dialog_open_answer_to_db(user_id,
+                                       DialogQuestionsEnum.RELAPSE_CRAVING_HAPPENED_SPECIAL.value,
+                                       choice)
 
         return []
 
@@ -362,17 +370,72 @@ class StorePaHappenedSpecial(Action):
         return []
 
 
-class StorePaReflectBarchart(Action):
+class StoreReflectBarchart(Action):
     def name(self):
-        return "store_pa_reflect_barchart"
+        return "store_reflect_barchart"
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
         choice = tracker.get_slot('reflect_bar_chart')
+        # check in which branch we are
+        smoke_or_pa = int(tracker.get_slot('smoke_or_pa'))
+
+        if smoke_or_pa == 1:
+            crave_lapse_relapse = int(tracker.get_slot('crave_lapse_relapse'))
+            if crave_lapse_relapse == 1:
+                question_id = DialogQuestionsEnum.RELAPSE_CRAVING_REFLECT_BARCHART.value
+            elif crave_lapse_relapse == 2:
+                question_id = DialogQuestionsEnum.RELAPSE_LAPSE_REFLECT_BARCHART.value
+            elif crave_lapse_relapse == 3:
+                question_id = DialogQuestionsEnum.RELAPSE_RELAPSE_REFLECT_BARCHART.value
+        elif smoke_or_pa == 2:
+            question_id = DialogQuestionsEnum.RELAPSE_PA_REFLECT_BARCHART.value
 
         store_dialog_open_answer_to_db(user_id,
-                                       DialogQuestionsEnum.RELAPSE_PA_REFLECT_BARCHART.value,
+                                       question_id,
+                                       choice)
+        return []
+
+
+class StoreTypeSmoke(Action):
+    def name(self):
+        return "store_type_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = int(tracker.get_slot('type_smoke'))
+        crave_lapse_relapse = int(tracker.get_slot('crave_lapse_relapse'))
+
+        if crave_lapse_relapse == 2:  # lapse
+            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_TYPE_SMOKE.value
+        elif crave_lapse_relapse == 3:  # relapse
+            question_id = DialogQuestionsEnum.RELAPSE_RELAPSE_TYPE_SMOKE.value
+
+        store_dialog_closed_answer_to_db(user_id,
+                                         question_id,
+                                         choice)
+        return []
+
+
+class StoreNumberSmoke(Action):
+    def name(self):
+        return "store_number_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('number_smoke')
+        crave_lapse_relapse = int(tracker.get_slot('crave_lapse_relapse'))
+
+        if crave_lapse_relapse == 2:  # lapse
+            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value
+        elif crave_lapse_relapse == 3:  # relapse
+            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value
+
+        store_dialog_open_answer_to_db(user_id,
+                                       question_id,
                                        choice)
         return []
 
@@ -519,18 +582,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
         if value.lower() in ['Nee', 'nee', "nee."]:
             return {"number_smoke": None, "number_smoke_confirm": None}
         else:
-            # Store data to db
-            answer_number = tracker.get_slot("number_smoke")
-            answer_type = int(tracker.get_slot("type_smoke"))
-            user_id = int(tracker.current_state()['sender_id'])
-            store_dialog_closed_answer_to_db(user_id,
-                                             DialogQuestionsEnum.RELAPSE_LAPSE_TYPE_SMOKE.value,
-                                             answer_type)
-            store_dialog_open_answer_to_db(user_id,
-                                           DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value,
-                                           answer_number)
-
-            # Return slot
             return {"number_smoke_confirm": value}
 
 
@@ -892,44 +943,44 @@ class ValidateRelapseStopNowLaterForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_relapse_stop_now_later_form'
 
-    def validate_one_or_two_slot(
+    def validate_now_or_later_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate one_or_two_slot"""
+        """Validate now_or_later_slot"""
         last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_relapse_stop_now_later_form_one_or_two_slot':
-            return {"one_or_two_slot": None}
+        if last_utterance != 'utter_ask_now_or_later_slot':
+            return {"now_or_later_slot": None}
 
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
-            return {"one_or_two_slot": None}
+            return {"now_or_later_slot": None}
 
-        return {"one_or_two_slot": value}
+        return {"now_or_later_slot": value}
 
 
 class ValidateRelapseMedicationInfoForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_relapse_medication_info_form'
 
-    def validate_one_or_two_slot(
+    def validate_medication_info_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
-        """Validate one_or_two_slot"""
+        """Validate medication_info_slot"""
 
         last_utterance = get_latest_bot_utterance(tracker.events)
 
-        if last_utterance != 'utter_ask_relapse_medication_info_form_one_or_two_slot':
-            return {"one_or_two_slot": None}
+        if last_utterance != 'utter_ask_medication_info_slot':
+            return {"medication_info_slot": None}
 
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
-            return {"one_or_two_slot": None}
+            return {"medication_info_slot": None}
 
-        return {"one_or_two_slot": value}
+        return {"medication_info_slot": value}
 
 
 class ValidateLapseEhboForm(FormValidationAction):

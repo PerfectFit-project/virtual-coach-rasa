@@ -16,7 +16,8 @@ from virtual_coach_db.helper.definitions import PreparationInterventionComponent
 
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, UserInterventionState,
                                               InterventionComponents)
-from .definitions import DialogQuestions, TIMEZONE, DATABASE_URL
+from virtual_coach_db.helper.definitions import DialogQuestionsEnum
+from .definitions import TIMEZONE, DATABASE_URL
 from .helper import (store_dialog_closed_answer_to_db,
                      store_dialog_open_answer_to_db,
                      get_intervention_component_id)
@@ -41,7 +42,7 @@ class ActionStoreSmokerWords(Action):
         answer = tracker.get_slot("picked_words")
         user_id = tracker.current_state()['sender_id']
         store_dialog_closed_answer_to_db(user_id,
-                                         DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value,
+                                         DialogQuestionsEnum.FUTURE_SELF_SMOKER_WORDS.value,
                                          answer)
         return
 
@@ -56,7 +57,7 @@ class ActionStoreMoverWords(Action):
         answer = tracker.get_slot("picked_words")
         user_id = tracker.current_state()['sender_id']
         store_dialog_open_answer_to_db(user_id,
-                                       DialogQuestions.FUTURE_SELF_MOVER_WORDS.value,
+                                       DialogQuestionsEnum.FUTURE_SELF_MOVER_WORDS.value,
                                        answer)
         return
 
@@ -72,7 +73,7 @@ class ActionStoreWhyMoverWords(Action):
         user_id = tracker.current_state()['sender_id']
 
         store_dialog_open_answer_to_db(user_id,
-                                       DialogQuestions.FUTURE_SELF_MOVER_WHY.value,
+                                       DialogQuestionsEnum.FUTURE_SELF_MOVER_WHY.value,
                                        answer)
         return
 
@@ -88,7 +89,7 @@ class ActionStoreWhySmokerWords(Action):
         user_id = tracker.current_state()['sender_id']
 
         store_dialog_open_answer_to_db(user_id,
-                                       DialogQuestions.FUTURE_SELF_SMOKER_WHY.value,
+                                       DialogQuestionsEnum.FUTURE_SELF_SMOKER_WHY.value,
                                        answer)
         return
 
@@ -104,7 +105,7 @@ class ActionStoreSeeMyselfAsPickedSmokerWords(Action):
         user_id = tracker.current_state()['sender_id']
 
         store_dialog_closed_answer_to_db(user_id,
-                                         DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER.value,
+                                         DialogQuestionsEnum.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER.value,
                                          answer)
         return
 
@@ -120,7 +121,7 @@ class ActionStoreSeeMyselfAsPickedMoverWords(Action):
         user_id = tracker.current_state()['sender_id']
 
         store_dialog_open_answer_to_db(user_id,
-                                       DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER.value,
+                                       DialogQuestionsEnum.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER.value,
                                        answer)
         return
 
@@ -450,13 +451,13 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         # in the intervention state table
         if selected is not None:
             # Get most recent saved chosen smoker words
-            question_id = DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
+            question_id = DialogQuestionsEnum.FUTURE_SELF_SMOKER_WORDS.value
             smoker_words = get_most_recent_question_answer_from_database(session,
                                                                          user_id,
                                                                          question_id)
 
             # Same for mover
-            question_id = DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
+            question_id = DialogQuestionsEnum.FUTURE_SELF_MOVER_WORDS.value
             mover_words = get_most_recent_question_answer_from_database(session,
                                                                         user_id,
                                                                         question_id)

@@ -6,8 +6,9 @@ import logging
 
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
-from .helper import (get_latest_bot_utterance, get_random_activities, store_dialog_closed_answer_to_db,
-                     store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db)
+from .helper import (get_latest_bot_utterance, get_random_activities,
+                     store_dialog_closed_answer_to_db,
+                     store_dialog_closed_answer_list_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction

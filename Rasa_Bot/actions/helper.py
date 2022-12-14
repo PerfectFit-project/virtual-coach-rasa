@@ -4,7 +4,7 @@ Helper functions for rasa actions
 import datetime
 import logging
 import secrets
-from typing import List
+from typing import List, Optional, Any
 
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers,
@@ -92,7 +92,7 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
 
 
 def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool,
-                                 week_days: str, preferred_time: datetime):
+                                 week_days: str, preferred_time: datetime.datetime):
     """
     Updater the user_intervention_state table, adding a new row with the intervention_component
 
@@ -198,7 +198,7 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
     return intervention_component_id
 
 
-def get_latest_bot_utterance(events) -> str:
+def get_latest_bot_utterance(events) -> Optional[Any]:
     """
        Get the latest utterance sent by the VC.
         Args:

@@ -104,9 +104,11 @@ class ActionStoreSeeMyselfAsPickedSmokerWords(Action):
         answer = tracker.get_slot("see_myself_as_picked_words_smoker")
         user_id = tracker.current_state()['sender_id']
 
-        store_dialog_closed_answer_to_db(user_id,
-                                         DialogQuestionsEnum.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER.value,
-                                         answer)
+        store_dialog_closed_answer_to_db(
+            user_id,
+            DialogQuestionsEnum.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER.value,
+            answer
+        )
         return
 
 
@@ -120,9 +122,11 @@ class ActionStoreSeeMyselfAsPickedMoverWords(Action):
         answer = tracker.get_slot("see_myself_as_picked_words_mover")
         user_id = tracker.current_state()['sender_id']
 
-        store_dialog_open_answer_to_db(user_id,
-                                       DialogQuestionsEnum.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER.value,
-                                       answer)
+        store_dialog_open_answer_to_db(
+            user_id,
+            DialogQuestionsEnum.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER.value,
+            answer
+        )
         return
 
 

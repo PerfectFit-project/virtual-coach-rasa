@@ -7,8 +7,10 @@ import secrets
 from typing import List
 
 from .definitions import DATABASE_URL, TIMEZONE
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers, InterventionComponents,
-                                              UserPreferences, InterventionActivity,UserInterventionState, InterventionPhases)
+from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers,
+                                              InterventionComponents, UserPreferences,
+                                              InterventionActivity, UserInterventionState,
+                                              InterventionPhases)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -19,8 +21,8 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
 
         Args:
             user_id: niceday user id
-            question_id: the id of the question. The ids are listed in virtual_coach_db.helper.definitions
-                         in the DialogQuestionsEnum class
+            question_id: the id of the question. The ids are listed in
+            virtual_coach_db.helper.definitions in the DialogQuestionsEnum class
             answer_value: the value chosen by the user
 
         Returns:
@@ -46,8 +48,8 @@ def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answer
 
         Args:
             user_id: niceday user id
-            question_id: the id of the question. The ids are listed in virtual_coach_db.helper.definitions
-                         in the DialogQuestionsEnum class
+            question_id: the id of the question. The ids are listed in
+            virtual_coach_db.helper.definitions in the DialogQuestionsEnum class
             answers_values: the values chosen by the user
 
         Returns:
@@ -70,8 +72,8 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
 
         Args:
             user_id: niceday user id
-            question_id: the id of the question. The ids are listed in virtual_coach_db.helper.definitions
-                         in the DialogQuestionsEnum class
+            question_id: the id of the question. The ids are listed in
+            virtual_coach_db.helper.definitions in the DialogQuestionsEnum class
             answer_value: the value chosen by the user
 
         Returns:
@@ -89,8 +91,8 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
     session.commit()  # Update database
 
 
-def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool, week_days: str,
-                                 preferred_time: datetime):
+def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool,
+                                 week_days: str, preferred_time: datetime):
     """
     Updater the user_intervention_state table, adding a new row with the intervention_component
 
@@ -220,7 +222,8 @@ def get_latest_bot_utterance(events) -> str:
     return last_utterance
 
 
-def get_random_activities(avoid_activity_id: int, number_of_activities: int) -> List[InterventionActivity]:
+def get_random_activities(avoid_activity_id: int, number_of_activities: int
+                          ) -> List[InterventionActivity]:
     """
        Get a number of random activities from the resources list.
         Args:

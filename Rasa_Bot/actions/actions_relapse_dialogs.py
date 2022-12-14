@@ -125,7 +125,8 @@ class PopulateCopingActivitiesList(Action):
         return "populate_coping_activities_list"
 
     async def run(self, dispatcher, tracker, domain):
-        # TODO: instead of querying the whole list of activities, use only the selected ones for smoking
+        # TODO: instead of querying the whole list of activities,
+        #  use only the selected ones for smoking
         # list of activities to be provided by content team
         rnd_activities = get_random_activities(-1, 3)
         rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
@@ -160,8 +161,8 @@ class TriggerRelapseDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        celery.send_task('celery_tasks.relapse_dialog', (user_id,
-                                                         ExecutionInterventionComponents.RELAPSE_DIALOG))
+        celery.send_task('celery_tasks.relapse_dialog',
+                         (user_id, ExecutionInterventionComponents.RELAPSE_DIALOG))
 
         return []
 

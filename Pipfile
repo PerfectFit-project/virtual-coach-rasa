@@ -3,10 +3,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[packages]
 
 [dev-packages]
-black = "~=22.10.0"
+autopep8 = "~=2.0.0"
 pytest-asyncio = "~=0.18"
 
 [requires]

@@ -59,10 +59,9 @@ class GeneralActivityCheckRating(Action):
         )
 
         current_record = (
-            session.query(FirstAidKit)
-            .filter(FirstAidKit.users_nicedayuid == user_id, FirstAidKit.intervention_activity_id == activity_id)
-            .all()
-        )
+            session.query(FirstAidKit) .filter(
+                FirstAidKit.users_nicedayuid == user_id,
+                FirstAidKit.intervention_activity_id == activity_id) .all())
 
         # FIXME: what if the len of the top_five_activities is 0
         lowest_score = top_five_activities[-1].activity_rating
@@ -78,10 +77,9 @@ class GeneralActivityCheckRating(Action):
 
         # update the row containing the activity with the new rating
         session.execute(
-            update(FirstAidKit)
-            .where(FirstAidKit.first_aid_kit_id == current_record[0].first_aid_kit_id)
-            .values(activity_rating=rating_value)
-        )
+            update(FirstAidKit) .where(
+                FirstAidKit.first_aid_kit_id == current_record[0].first_aid_kit_id) .values(
+                activity_rating=rating_value))
 
         session.commit()
 
@@ -102,7 +100,8 @@ class GetActivityUserInput(Action):
         activity_id = int(tracker.get_slot("last_activity_id_slot"))
         user_id = int(tracker.current_state()["sender_id"])
 
-        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
+        user_inputs = get_user_intervention_activity_inputs(
+            user_id, activity_id)
         last_input = user_inputs[-1].user_input
 
         return [SlotSet("activity_user_input", last_input)]
@@ -125,7 +124,10 @@ class CheckUserInputRequired(Action):
             .all()
         )
 
-        return [SlotSet("is_user_input_required", is_input_required[0].user_input_required)]
+        return [
+            SlotSet(
+                "is_user_input_required",
+                is_input_required[0].user_input_required)]
 
 
 class CheckActivityDone(Action):
@@ -140,7 +142,8 @@ class CheckActivityDone(Action):
         activity_id = tracker.get_slot("last_activity_id_slot")
         user_id = tracker.current_state()["sender_id"]
 
-        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
+        user_inputs = get_user_intervention_activity_inputs(
+            user_id, activity_id)
 
         # FIXME: could it happen the len of user_inputs is 0?
         if user_inputs[-1].user_input is None:
@@ -155,9 +158,13 @@ class ValidateActivityUsefulnessForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_activity_usefulness_form"
 
-    def validate_activity_useful_rating(
-        self, value: Text, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
-    ) -> Dict[Text, Any]:
+    def validate_activity_useful_rating(self,
+                                        value: Text,
+                                        dispatcher: CollectingDispatcher,
+                                        tracker: Tracker,
+                                        domain: Dict[Text,
+                                                     Any]) -> Dict[Text,
+                                                                   Any]:
         # pylint: disable=unused-argument
         """Validate activity_useful_rating input."""
         last_utterance = get_latest_bot_utterance(tracker.events)
@@ -182,9 +189,13 @@ class ValidateSaveOrEditForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_save_or_edit_form"
 
-    def validate_save_or_edit_slot(
-        self, value: Text, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
-    ) -> Dict[Text, Any]:
+    def validate_save_or_edit_slot(self,
+                                   value: Text,
+                                   dispatcher: CollectingDispatcher,
+                                   tracker: Tracker,
+                                   domain: Dict[Text,
+                                                Any]) -> Dict[Text,
+                                                              Any]:
         # pylint: disable=unused-argument
         """Validate save_or_edit_slot input."""
 
@@ -246,16 +257,16 @@ class SaveDescriptionInDb(Action):
         activity_id = tracker.get_slot("last_activity_id_slot")
         user_id = tracker.current_state()["sender_id"]
 
-        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
+        user_inputs = get_user_intervention_activity_inputs(
+            user_id, activity_id)
         row_id = user_inputs[-1].intervention_activities_performed_id
 
         session = get_db_session(db_url=DATABASE_URL)
 
         session.execute(
-            update(InterventionActivitiesPerformed)
-            .where(InterventionActivitiesPerformed.intervention_activities_performed_id == row_id)
-            .values(user_input=description)
-        )
+            update(InterventionActivitiesPerformed) .where(
+                InterventionActivitiesPerformed.intervention_activities_performed_id == row_id) .values(
+                user_input=description))
 
         session.commit()
 
@@ -272,7 +283,8 @@ class GetThreeRandomActivities(Action):
         activity_id = tracker.get_slot("last_activity_id_slot")
 
         rnd_activities = get_random_activities(activity_id, 3)
-        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
+        rnd_activities_ids = [
+            activity.intervention_activity_id for activity in rnd_activities]
 
         return [
             SlotSet("activity1_name", rnd_activities[0].intervention_activity_title),
@@ -304,7 +316,8 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
             activity_id = tracker.get_slot("last_activity_id_slot")
 
             rnd_activities = get_random_activities(activity_id, 3)
-            rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
+            rnd_activities_ids = [
+                activity.intervention_activity_id for activity in rnd_activities]
 
             return {
                 "general_activity_next_activity_slot": None,
@@ -344,9 +357,15 @@ class GetLastPerformedActivity(Action):
         if last_activity is not None and len(last_activity) != 0:
             activity_title = last_activity[0].intervention_activity.intervention_activity_title
             activity_id = last_activity[0].intervention_activity.intervention_activity_id
-            return [SlotSet("last_activity_slot", activity_title), SlotSet("last_activity_id_slot", activity_id)]
+            return [
+                SlotSet(
+                    "last_activity_slot", activity_title), SlotSet(
+                    "last_activity_id_slot", activity_id)]
 
-        return [SlotSet("last_activity_slot", None), SlotSet("last_activity_id_slot", None)]
+        return [
+            SlotSet(
+                "last_activity_slot", None), SlotSet(
+                "last_activity_id_slot", None)]
 
 
 class GetActivityCoachChoice(Action):
@@ -385,14 +404,16 @@ class LoadActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        chosen_option = int(tracker.get_slot("general_activity_next_activity_slot"))
+        chosen_option = int(tracker.get_slot(
+            "general_activity_next_activity_slot"))
         activities_slot = tracker.get_slot("rnd_activities_ids")
         user_id = tracker.current_state()["sender_id"]
 
         activity_id = activities_slot[chosen_option - 1]
         session = get_db_session(db_url=DATABASE_URL)
 
-        user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
+        user_inputs = get_user_intervention_activity_inputs(
+            user_id, activity_id)
 
         if user_inputs:
             previous_input = user_inputs[-1].user_input
@@ -402,9 +423,9 @@ class LoadActivity(Action):
         # save the activity to the DB
         session.add(
             InterventionActivitiesPerformed(
-                users_nicedayuid=user_id, intervention_activity_id=activity_id, user_input=previous_input
-            )
-        )
+                users_nicedayuid=user_id,
+                intervention_activity_id=activity_id,
+                user_input=previous_input))
 
         session.commit()
 
@@ -417,7 +438,8 @@ class LoadActivity(Action):
 
         # prompt the message
         # FIXME: what if there is no instructions
-        dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
+        dispatcher.utter_message(
+            text=instructions[0].intervention_activity_full_instructions)
         return []
 
 
@@ -426,15 +448,20 @@ class SetSlotGeneralActivity(Action):
         return "action_set_slot_general_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component", ExecutionInterventionComponents.GENERAL_ACTIVITY)]
+        return [
+            SlotSet(
+                "current_intervention_component",
+                ExecutionInterventionComponents.GENERAL_ACTIVITY)]
 
 
 def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
     session = get_db_session(db_url=DATABASE_URL)
 
     session.add(
-        FirstAidKit(users_nicedayuid=user_id, intervention_activity_id=activity_id, activity_rating=rating_value)
-    )
+        FirstAidKit(
+            users_nicedayuid=user_id,
+            intervention_activity_id=activity_id,
+            activity_rating=rating_value))
     session.commit()
 
 
@@ -442,13 +469,10 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
     session = get_db_session(db_url=DATABASE_URL)
 
     user_inputs = (
-        session.query(InterventionActivitiesPerformed)
-        .filter(
+        session.query(InterventionActivitiesPerformed) .filter(
             InterventionActivitiesPerformed.users_nicedayuid == user_id,
             InterventionActivitiesPerformed.intervention_activity_id == activity_id,
-        )
-        .all()
-    )
+        ) .all())
 
     return user_inputs
 

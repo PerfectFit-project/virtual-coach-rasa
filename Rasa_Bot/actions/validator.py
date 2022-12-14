@@ -17,8 +17,7 @@ def validate_list(response: str, min_val: int, max_val: int) -> bool:
     else:
         if min(value) < min_val or max(value) > max_val:
             return False
-        else:
-            return True
+        return True
 
 
 def validate_long_enough_response_words(response: str, min_length: int) -> bool:
@@ -46,8 +45,7 @@ def validate_number_in_range_response(n_min: int, n_max: int, response: str) -> 
 def validate_yes_no_answer(response: str) -> bool:
     if response.lower() in ['Ja', 'ja', 'ja.', 'Nee', 'nee', "nee."]:
         return True
-    else:
-        return False
+    return False
 
 
 def simple_sanitize_input(value):

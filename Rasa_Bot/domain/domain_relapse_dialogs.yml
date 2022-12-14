@@ -1,3 +1,5 @@
+version: "3.1"
+
 intents:
   - relapse_dialog
   - EXTERNAL_relapse_dialog

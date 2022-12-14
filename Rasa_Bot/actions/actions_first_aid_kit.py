@@ -71,12 +71,9 @@ class ActionGetFirstAidKit(Action):
         )
 
         kit_text = ""
-        kit_exists = False
 
         # the kit exists
         if selected is not None:
-
-            kit_exists = True
 
             # get up to the highest rated activities
             sorted_activities = sorted(

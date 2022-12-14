@@ -198,7 +198,6 @@ class ShowBarchartDifficultSituations(Action):
         return "show_barchart_difficult_situations"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         # TODO: plot barchart, save and send
 
@@ -210,7 +209,6 @@ class ShowBarchartDifficultSituationsPa(Action):
         return "show_barchart_difficult_situations_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         # TODO: plot barchart, save and send
 
@@ -573,8 +571,7 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
 
         if value.lower() in ['Nee', 'nee', "nee."]:
             return {"type_smoke": None, "type_smoke_confirm": None}
-        else:
-            return {"type_smoke_confirm": value}
+        return {"type_smoke_confirm": value}
 
     def validate_number_smoke(
             self, value: Text, dispatcher: CollectingDispatcher,
@@ -610,8 +607,7 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
 
         if value.lower() in ['Nee', 'nee', "nee."]:
             return {"number_smoke": None, "number_smoke_confirm": None}
-        else:
-            return {"number_smoke_confirm": value}
+        return {"number_smoke_confirm": value}
 
 
 class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):

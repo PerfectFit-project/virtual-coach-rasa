@@ -4,6 +4,7 @@ Helper functions for rasa actions
 import datetime
 import logging
 import secrets
+from typing import List
 
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers, InterventionComponents,
@@ -15,6 +16,15 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
 
     """
        saves to the db a closed answer
+
+        Args:
+            user_id: niceday user id
+            question_id: the id of the question. The ids are listed in virtual_coach_db.helper.definitions
+                         in the DialogQuestionsEnum class
+            answer_value: the value chosen by the user
+
+        Returns:
+                nothing
 
     """
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
@@ -34,10 +44,14 @@ def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answer
        saves to the db all the closed answers provided as a string, where each answer value
        is separated from the other by a space character
 
-    """
+        Args:
+            user_id: niceday user id
+            question_id: the id of the question. The ids are listed in virtual_coach_db.helper.definitions
+                         in the DialogQuestionsEnum class
+            answers_values: the values chosen by the user
 
-    """
-       saves to the db an open answer
+        Returns:
+                nothing
 
     """
 
@@ -54,6 +68,15 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
     """
        saves to the db an open answer
 
+        Args:
+            user_id: niceday user id
+            question_id: the id of the question. The ids are listed in virtual_coach_db.helper.definitions
+                         in the DialogQuestionsEnum class
+            answer_value: the value chosen by the user
+
+        Returns:
+                nothing
+
     """
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
@@ -66,13 +89,27 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
     session.commit()  # Update database
 
 
-def store_user_preferences_to_db(user_id, intervention_component, recursive, week_days,
-                                 preferred_time):
+def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool, week_days: str,
+                                 preferred_time: datetime):
+    """
+    Updater the user_intervention_state table, adding a new row with the intervention_component
+
+    Args:
+        user_id: niceday user id
+        intervention_component_id: the id of the intervention component as store din the DB.
+        recursive: if true the activity is recursive, and will be reprogrammed after the completion
+        week_days: comma separated list of days
+        preferred_time: preferred time in the day to prompt the activity
+
+    Returns:
+            nothing
+
+    """
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
     entry = UserPreferences(users_nicedayuid=user_id,
-                            intervention_component_id=intervention_component,
+                            intervention_component_id=intervention_component_id,
                             recursive=recursive,
                             week_days=week_days,
                             preferred_time=preferred_time)
@@ -136,7 +173,12 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
     """
        Get the id of an intervention component as stored in the DB
         from the intervention's name.
+    Args:
+            intervention_component_name: Name of the intervention component, as provided
+            in the definitions
 
+        Returns:
+                The intervention_component_id stored in the DB
     """
     session = get_db_session(DATABASE_URL)
 
@@ -155,6 +197,15 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
 
 
 def get_latest_bot_utterance(events) -> str:
+    """
+       Get the latest utterance sent by the VC.
+        Args:
+                events: the events list, obtained from tracker.events
+
+            Returns:
+                    The name of the latest utterance
+
+    """
     events_bot = []
 
     for event in events:
@@ -169,7 +220,19 @@ def get_latest_bot_utterance(events) -> str:
     return last_utterance
 
 
-def get_random_activities(avoid_activity_id: int, number_of_activities: int):
+def get_random_activities(avoid_activity_id: int, number_of_activities: int) -> List[InterventionActivity]:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                avoid_activity_id: the intervention_activity_id of an activitye that
+                should not be included in the list
+
+                number_of_activities: the number of activities to be proposed
+
+            Returns:
+                    The list of number_of_activities random InterventionActivities
+
+    """
     session = get_db_session(db_url=DATABASE_URL)
 
     available_activities = (

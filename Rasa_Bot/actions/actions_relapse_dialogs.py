@@ -7,8 +7,8 @@ import logging
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
-                     store_dialog_closed_answer_to_db,
-                     store_dialog_closed_answer_list_to_db)
+                     store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -16,7 +16,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents,
-                                                 DialogQuestionsEnum)
+                                                 DialogQuestionsEnum, Phases)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
 
@@ -60,6 +60,14 @@ class ActionSetSlotRelapseDialog(Action):
         return "action_set_slot_relapse_dialog_hrs"
 
     async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # update the user_intervention_state table
+
+        store_user_intervention_state(user_id,
+                                      ExecutionInterventionComponents.RELAPSE_DIALOG_HRS,
+                                      Phases.LAPSE)
+
         return [SlotSet('current_intervention_component',
                         ExecutionInterventionComponents.RELAPSE_DIALOG_HRS)]
 
@@ -69,6 +77,13 @@ class ActionSetSlotRelapseDialogLapse(Action):
         return "action_set_slot_relapse_dialog_lapse"
 
     async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # update the user_intervention_state table
+
+        store_user_intervention_state(user_id,
+                                      ExecutionInterventionComponents.RELAPSE_DIALOG_LAPSE,
+                                      Phases.LAPSE)
         return [SlotSet('current_intervention_component',
                         ExecutionInterventionComponents.RELAPSE_DIALOG_LAPSE)]
 
@@ -78,6 +93,13 @@ class ActionSetSlotRelapseDialogPa(Action):
         return "action_set_slot_relapse_dialog_pa"
 
     async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        logging.info('set PA slot')
+        # update the user_intervention_state table
+
+        store_user_intervention_state(user_id,
+                                      ExecutionInterventionComponents.RELAPSE_DIALOG_PA,
+                                      Phases.LAPSE)
         return [SlotSet('current_intervention_component',
                         ExecutionInterventionComponents.RELAPSE_DIALOG_PA)]
 
@@ -87,6 +109,13 @@ class ActionSetSlotRelapseDialogRelapse(Action):
         return "action_set_slot_relapse_dialog_relapse"
 
     async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # update the user_intervention_state table
+
+        store_user_intervention_state(user_id,
+                                      ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE,
+                                      Phases.LAPSE)
         return [SlotSet('current_intervention_component',
                         ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE)]
 
@@ -131,9 +160,8 @@ class TriggerRelapseDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        slot = tracker.get_slot("current_intervention_component")
-
-        celery.send_task('celery_tasks.relapse_dialog', (user_id, slot))
+        celery.send_task('celery_tasks.relapse_dialog', (user_id,
+                                                         ExecutionInterventionComponents.RELAPSE_DIALOG))
 
         return []
 

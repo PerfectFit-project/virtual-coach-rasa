@@ -153,7 +153,7 @@ class NicedayTriggerInputChannel(InputChannel):
 
         return custom_webhook
 
-    def get_output_channel(self) -> CollectingOutputChannel:
+    def get_output_channel(self) -> NicedayTriggerOutputChannel:
         """
         Register output channel. This is the output channel that is used when calling the
         'trigger_intent' endpoint.

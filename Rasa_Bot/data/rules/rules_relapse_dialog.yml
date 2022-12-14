@@ -4,10 +4,15 @@ rules:
 
 ## Rules for the relapse dialog
 ## 1a: Trigger relapse dialog
-- rule: Test relapse
+- rule: Activate relapse
   steps:
   - intent: relapse_dialog
-  - action: action_set_slot_relapse_dialog
+  - action: action_trigger_relapse
+
+
+- rule: Trigger relapse dialog
+  steps:
+  - intent: EXTERNAL_relapse_dialog
   - action: utter_relapse_intro_codeword
   - action: utter_relapse_intro_offer_help
   - action: utter_relapse_smoke_or_pa
@@ -40,6 +45,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - crave_lapse_relapse: 1
+  - action: action_set_slot_relapse_dialog_hrs
   - action: utter_smoke_crave_1
   - action: utter_smoke_crave_2
   - action: utter_smoke_crave_3
@@ -62,7 +68,6 @@ rules:
   - active_loop: null
   - slot_was_set:
     - ehbo_me_self: 1
-  - action: action_set_slot_relapse_dialog_hrs
   - action: action_start_fak
 
 - rule: smoke hrs after fak from intent  # checkpoint: continue_with_relapse_dialog
@@ -186,6 +191,7 @@ rules:
       - hrs_enough_motivation_slot: 1
   - action: utter_good_to_hear_1
   - action: utter_good_to_hear_2
+  - action: mark_dialog_as_completed
   - action: action_end_dialog
 
 - rule: smoke hrs after fak no activity 1
@@ -243,6 +249,7 @@ rules:
         - crave_lapse_relapse: 3
   - active_loop: null
   - action: utter_hrs_call_help
+  - action: mark_dialog_as_completed
   - action: action_end_dialog
 
 ## 3a smoking - HRS - system suggest activity
@@ -299,6 +306,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - crave_lapse_relapse: 2
+  - action: action_set_slot_relapse_dialog_lapse
   - action: utter_smoke_lapse_1
   - action: type_and_number_smoke_form
   - active_loop: type_and_number_smoke_form
@@ -383,7 +391,6 @@ rules:
     - smoke_or_pa: 1  # smoke branch
   - slot_was_set:
     - crave_lapse_relapse: 2  # lapse
-  - action: action_set_slot_relapse_dialog_lapse
   - action: action_start_fak
   # checkpoint: open_fak checkpoint: continue_relapse_dialog_smoke_lapse
 
@@ -454,6 +461,7 @@ rules:
   - action: utter_good_to_hear_1
   - action: utter_good_to_hear_2
   - action: utter_good_to_hear_3
+  - action: mark_dialog_as_completed
   - action: action_end_dialog
 
 - rule: continue smoke lapse enough motivation # checkpoint: continue_relapse_dialog_smoke_lapse
@@ -470,6 +478,7 @@ rules:
   - action: utter_good_to_hear_1
   - action: utter_good_to_hear_2
   - action: utter_good_to_hear_3
+  - action: mark_dialog_as_completed
   - action: action_end_dialog
 
 - rule: continue smoke lapse not enough motivation # checkpoint: continue_relapse_dialog_smoke_lapse
@@ -517,6 +526,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - crave_lapse_relapse: 3
+  - action: action_set_slot_relapse_dialog_relapse
   - action: utter_smoke_lapse_1
   - action: type_and_number_smoke_form
   - active_loop: type_and_number_smoke_form
@@ -627,7 +637,6 @@ rules:
     - smoke_or_pa: 1  # smoke branch
   - slot_was_set:
     - crave_lapse_relapse: 3 # relapse
-  - action: action_set_slot_relapse_dialog_relapse
   - action: action_start_fak
 
 - rule: resume lapse branch after fak # after resuming, the paths are covered by the hrs and lapse cases
@@ -647,6 +656,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - smoke_or_pa: 2
+  - action: action_set_slot_relapse_dialog_pa
   - action: utter_pa_define_1
   - action: pa_specify_pa_form
   - active_loop: pa_specify_pa_form
@@ -734,7 +744,6 @@ rules:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
     - crave_lapse_relapse: null
-  - action: action_set_slot_relapse_dialog_pa
   - action: action_start_fak
 
 - rule: resume pa branch after fak
@@ -793,6 +802,7 @@ rules:
     - crave_lapse_relapse: null
   - action: utter_good_to_hear_pa_1
   - action: utter_good_to_hear_2
+  - action: mark_dialog_as_completed
   - action: action_end_dialog
 
 - rule: pa user chooses an activity 2
@@ -818,6 +828,7 @@ rules:
     - pa_enough_motivation_slot: 1
   - action: utter_good_to_hear_pa_1
   - action: utter_good_to_hear_2
+  - action: mark_dialog_as_completed
   - action: action_end_dialog
 
 - rule: pa the user has not enough motivation
@@ -864,4 +875,5 @@ rules:
     - crave_lapse_relapse: null # crave slot is null in this branch
   - action: utter_pa_call_help_1
   - action: utter_pa_call_help_2
+  - action: mark_dialog_as_completed
   - action: action_end_dialog

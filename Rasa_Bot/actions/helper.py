@@ -2,11 +2,12 @@
 Helper functions for rasa actions
 """
 import datetime
+import logging
 import secrets
 
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers, InterventionComponents,
-                                              UserPreferences, InterventionActivity)
+                                              UserPreferences, InterventionActivity,UserInterventionState, InterventionPhases)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -77,6 +78,58 @@ def store_user_preferences_to_db(user_id, intervention_component, recursive, wee
                             preferred_time=preferred_time)
     selected.user_preferences.append(entry)
     session.commit()  # Update database
+
+
+def store_user_intervention_state(user_id: int, intervention_component: str, phase: str):
+    """
+    Updater the user_intervention_state table, adding a new row with the intervention_component
+
+    Args:
+        user_id: niceday user id
+        intervention_component: the name of the intervention component.
+                                The names are listed in virtual_coach_db.helper.definitions
+                                in the PreparationInterventionComponents class
+        phase: the name of the phase. The names are listed in virtual_coach_db.helper.definitions
+               Phases class
+
+    Returns:
+            nothing
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    phases = (
+        session.query(
+            InterventionPhases
+        )
+        .filter(
+            InterventionPhases.phase_name == phase
+        )
+        .all()
+    )
+
+    components = (
+        session.query(
+            InterventionComponents
+        )
+        .filter(
+            InterventionComponents.intervention_component_name == intervention_component
+        )
+        .all()
+    )
+    logging.info(phases[0])
+    logging.info(components[0])
+    session.add(UserInterventionState(
+        users_nicedayuid=user_id,
+        intervention_phase_id=phases[0].phase_id,
+        intervention_component_id=components[0].intervention_component_id,
+        completed=False,
+        last_time=datetime.datetime.now().astimezone(TIMEZONE),
+        last_part=0,
+        next_planned_date=None,
+        task_uuid=None
+    )
+    )
 
 
 def get_intervention_component_id(intervention_component_name: str) -> int:

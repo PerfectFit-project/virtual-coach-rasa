@@ -64,6 +64,7 @@ class GeneralActivityCheckRating(Action):
             .all()
         )
 
+        # FIXME: what if the len of the top_five_activities is 0
         lowest_score = top_five_activities[-1].activity_rating
 
         # if the activity is not in the FAK, add it
@@ -340,7 +341,7 @@ class GetLastPerformedActivity(Action):
             .all()
         )
 
-        if last_activity is not None:
+        if last_activity is not None and len(last_activity) != 0:
             activity_title = last_activity[0].intervention_activity.intervention_activity_title
             activity_id = last_activity[0].intervention_activity.intervention_activity_id
             return [SlotSet("last_activity_slot", activity_title), SlotSet("last_activity_id_slot", activity_id)]
@@ -415,6 +416,7 @@ class LoadActivity(Action):
         )
 
         # prompt the message
+        # FIXME: what if there is no instructions
         dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
         return []
 
@@ -459,6 +461,7 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int):
         .filter(InterventionActivity.intervention_activity_id != avoid_activity_id)
         .all()
     )
+    # FIXME: what if the len(available_activities) < number_of_activities
 
     rnd_activities = []
 

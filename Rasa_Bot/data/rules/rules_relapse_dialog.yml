@@ -60,7 +60,7 @@ rules:
 #  - checkpoint: smoke_hrs
 
 ## 3a smoking - HRS - EHBO
-- rule: smoke hrs  # TODO: store in database the number of times this story is executed (create issue)
+- rule: smoke hrs
   condition:
     - active_loop: ehbo_me_self_form
   steps:
@@ -314,7 +314,7 @@ rules:
 #  checkpoint: smoke_lapse
 
   ## 3b smoking - lapse
-- rule: smoke lapse 1 # TODO: store in database the number of times this story is executed (create issue)
+- rule: smoke lapse 1
   condition:
     - active_loop: type_and_number_smoke_form
   steps:
@@ -533,7 +533,7 @@ rules:
   wait_for_user_input: false
 
   ## 3c smoking - relapse
-- rule: smoke relapse 1 # TODO: store in database the number of times this story is executed (create issue)
+- rule: smoke relapse 1
   condition:
     - active_loop: type_and_number_smoke_form
   steps:

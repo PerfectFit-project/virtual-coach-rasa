@@ -48,8 +48,8 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
             utils.get_next_preparation_intervention_component(intervention_component_name)
 
         if next_intervention_component is not None:
-            trigger_intervention_component(user_id=user_id,
-                                           trigger=next_intervention_component)
+            trigger_intervention_component.apply_async(
+                args=[user_id, next_intervention_component])
 
         else:
             logging.info("PREPARATION PHASE ENDED")
@@ -115,8 +115,8 @@ def relapse_dialog(user_id: int, intervention_component_name: str):
 
     utils.store_intervention_component_to_db(state)
 
-    trigger_intervention_component(user_id=user_id,
-                                   trigger='EXTERNAL_relapse_dialog')
+    trigger_intervention_component.apply_async(
+        args=[user_id, 'EXTERNAL_relapse_dialog'])
 
 
 @app.task

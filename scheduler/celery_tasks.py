@@ -48,11 +48,8 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
             utils.get_next_preparation_intervention_component(intervention_component_name)
 
         if next_intervention_component is not None:
-            endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
-            headers = {'Content-Type': 'application/json'}
-            params = {'output_channel': 'niceday_trigger_input_channel'}
-            data = '{"name": "' + next_intervention_component + '" }'
-            requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+            trigger_intervention_component(user_id=user_id,
+                                           trigger=next_intervention_component)
 
         else:
             logging.info("PREPARATION PHASE ENDED")
@@ -118,11 +115,8 @@ def relapse_dialog(user_id: int, intervention_component_name: str):
 
     utils.store_intervention_component_to_db(state)
 
-    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
-    headers = {'Content-Type': 'application/json'}
-    params = {'output_channel': 'niceday_trigger_input_channel'}
-    data = '{"name": "' + 'EXTERNAL_relapse_dialog' + '" }'
-    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    trigger_intervention_component(user_id=user_id,
+                                   trigger='EXTERNAL_relapse_dialog')
 
 
 @app.task

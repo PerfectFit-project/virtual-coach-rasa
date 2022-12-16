@@ -1,9 +1,9 @@
 # Stories related to the first aid kit functionality
 version: "3.1"
 
-stories:
+rules:
 ## Get first aid kit
-- story: Get first aid kit
+- rule: Get first aid kit
   steps:
     - intent: CENTRAL_get_first_aid_kit
     - action: action_get_first_aid_kit

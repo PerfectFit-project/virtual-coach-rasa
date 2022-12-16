@@ -15,7 +15,6 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 
 
 def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_value: int):
-
     """
        saves to the db a closed answer
 
@@ -41,7 +40,6 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
 
 
 def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answers_values: str):
-
     """
        saves to the db all the closed answers provided as a string, where each answer value
        is separated from the other by a space character
@@ -66,7 +64,6 @@ def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answer
 
 
 def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value: str):
-
     """
        saves to the db an open answer
 
@@ -156,8 +153,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         )
         .all()
     )
-    logging.info(phases[0])
-    logging.info(components[0])
+
     session.add(UserInterventionState(
         users_nicedayuid=user_id,
         intervention_phase_id=phases[0].phase_id,
@@ -169,6 +165,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         task_uuid=None
     )
     )
+    session.commit()  # Update database
 
 
 def get_intervention_component_id(intervention_component_name: str) -> int:

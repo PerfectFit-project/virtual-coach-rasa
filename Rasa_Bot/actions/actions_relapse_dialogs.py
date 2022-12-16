@@ -20,7 +20,6 @@ from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
 
-
 celery = Celery(broker=REDIS_URL)
 
 
@@ -29,7 +28,6 @@ class ActionCheckReasons(Action):
         return "action_check_reasons"
 
     async def run(self, dispatcher, tracker, domain):
-
         reasons = tracker.get_slot('pa_why_fail')
 
         if '6' in reasons:
@@ -199,7 +197,6 @@ class ShowBarchartDifficultSituations(Action):
         return "show_barchart_difficult_situations"
 
     async def run(self, dispatcher, tracker, domain):
-
         # TODO: plot barchart, save and send
 
         return []
@@ -210,7 +207,6 @@ class ShowBarchartDifficultSituationsPa(Action):
         return "show_barchart_difficult_situations_pa"
 
     async def run(self, dispatcher, tracker, domain):
-
         # TODO: plot barchart, save and send
 
         return []
@@ -251,11 +247,10 @@ class StoreHrsSituation(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
-        choice = int(tracker.get_slot('hrs_situation_slot'))
-
-        store_dialog_closed_answer_to_db(user_id,
-                                         DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
-                                         choice)
+        choice = tracker.get_slot('hrs_situation_slot')
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
+                                              choice)
 
         return []
 
@@ -267,11 +262,11 @@ class StoreHrsFeeling(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
-        choice = int(tracker.get_slot('hrs_feeling_slot'))
+        choice = tracker.get_slot('hrs_feeling_slot')
 
-        store_dialog_closed_answer_to_db(user_id,
-                                         DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value,
-                                         choice)
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value,
+                                              choice)
 
         return []
 
@@ -283,11 +278,11 @@ class StoreHrsWhoWith(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         # get the user choice
-        choice = int(tracker.get_slot('hrs_who_with_slot'))
+        choice = tracker.get_slot('hrs_who_with_slot')
 
-        store_dialog_closed_answer_to_db(user_id,
-                                         DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value,
-                                         choice)
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value,
+                                              choice)
 
         return []
 
@@ -775,8 +770,12 @@ class ValidateHrsNewActivityForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate hrs_new_activity_slot"""
-
+        logging.info('Validating new activity slot ')
+        print(value)
         last_utterance = get_latest_bot_utterance(tracker.events)
+
+        logging.info('Validating new activity slot get utterance ')
+        print(last_utterance)
         if last_utterance != 'utter_ask_hrs_new_activity_slot':
             return {"hrs_new_activity_slot": None}
 

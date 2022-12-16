@@ -122,6 +122,7 @@ nlu:
     - "Relapse"
     - "Having a relapse"
     - "Ik heb een relapse"
+    - "Start relapse"
 
 - intent: submit_user_preferences
   examples: |

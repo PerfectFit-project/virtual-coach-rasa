@@ -291,6 +291,8 @@ rules:
   - active_loop: null
   - slot_was_set:
     - smoke_or_pa: 1 # smoke branch
+  - slot_was_set:
+    - crave_lapse_relapse: 1 # hrs
   - action: show_chosen_coping_activity
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
@@ -340,6 +342,8 @@ rules:
   steps:
   - action: what_doing_how_feel_smoke_form
   - active_loop: null
+  - action: store_what_doing_smoke
+  - action: store_how_feel_smoke
   - action: utter_smoke_lapse_11
   - action: with_whom_event_smoke_form
   - active_loop: with_whom_event_smoke_form
@@ -351,6 +355,8 @@ rules:
   steps:
   - action: with_whom_event_smoke_form
   - active_loop: null
+  - action: store_with_whom_smoke
+  - action: store_event_smoke
   - action: utter_smoke_lapse_12
   - action: utter_smoke_lapse_13
   - action: utter_smoke_lapse_14
@@ -441,6 +447,24 @@ rules:
   - action: populate_coping_activities_list
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
+  wait_for_user_input: false
+
+- rule: smoke lapse/relapse self activity 2
+  condition:
+    - active_loop: hrs_choose_coping_activity_form
+  steps:
+  - action: hrs_choose_coping_activity_form
+  - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 1 # smoke branch
+  - or: # executed for the lapse and the relapse
+      - slot_was_set:
+          - crave_lapse_relapse: 2
+      - slot_was_set:
+          - crave_lapse_relapse: 3
+  - action: show_chosen_coping_activity
+  - action: hrs_enough_motivation_form
+  - active_loop: hrs_enough_motivation_form
   wait_for_user_input: false
 
 - rule: smoke lapse user has motivation # checkpoint: ehbo_me_self_lapse_checkpoint
@@ -813,6 +837,8 @@ rules:
   - active_loop: null
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
+  - slot_was_set:
+      - crave_lapse_relapse: null
   - action: show_chosen_coping_activity
   - action: pa_enough_motivation_form
   - active_loop: pa_enough_motivation_form

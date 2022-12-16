@@ -240,6 +240,50 @@ class ShowFirstCopingActivityPa(Action):
         return [SlotSet('hrs_coping_activities_performed', activity_id)]
 
 
+class StoreEventSmoke(Action):
+    def name(self):
+        return "store_event_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('event_smoke')
+        crave_lapse_relapse = int(tracker.get_slot('crave_lapse_relapse'))
+
+        if crave_lapse_relapse == 2:  # lapse
+            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_HAPPENED_SPECIAL.value
+        elif crave_lapse_relapse == 3:  # relapse
+            question_id = DialogQuestionsEnum.RELAPSE_RELAPSE_HAPPENED_SPECIAL.value
+
+        store_dialog_open_answer_to_db(user_id,
+                                       question_id,
+                                       choice)
+
+        return []
+
+
+class StoreHowFeelSmoke(Action):
+    def name(self):
+        return "store_how_feel_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('how_feel_smoke')
+        crave_lapse_relapse = int(tracker.get_slot('crave_lapse_relapse'))
+
+        if crave_lapse_relapse == 2:  # lapse
+            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value
+        elif crave_lapse_relapse == 3:  # relapse
+            question_id = DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value
+
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              question_id,
+                                              choice)
+
+        return []
+
+
 class StoreHrsSituation(Action):
     def name(self):
         return "store_hrs_situation"
@@ -455,11 +499,54 @@ class StoreNumberSmoke(Action):
         if crave_lapse_relapse == 2:  # lapse
             question_id = DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value
         elif crave_lapse_relapse == 3:  # relapse
-            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value
+            question_id = DialogQuestionsEnum.RELAPSE_RELAPSE_NUMBER_CIGARETTES.value
 
         store_dialog_open_answer_to_db(user_id,
                                        question_id,
                                        choice)
+        return []
+
+
+class StoreWhatDoingSmoke(Action):
+    def name(self):
+        return "store_what_doing_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('what_doing_smoke')
+        crave_lapse_relapse = int(tracker.get_slot('crave_lapse_relapse'))
+
+        if crave_lapse_relapse == 2:  # lapse
+            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value
+        elif crave_lapse_relapse == 3:  # relapse
+            question_id = DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              question_id,
+                                              choice)
+
+        return []
+
+
+class StoreWithWhomSmoke(Action):
+    def name(self):
+        return "store_with_whom_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = tracker.get_slot('with_whom_smoke')
+        crave_lapse_relapse = int(tracker.get_slot('crave_lapse_relapse'))
+
+        if crave_lapse_relapse == 2:  # lapse
+            question_id = DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value
+        elif crave_lapse_relapse == 3:  # relapse
+            question_id = DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value
+
+        store_dialog_closed_answer_list_to_db(user_id,
+                                              question_id,
+                                              choice)
+
         return []
 
 
@@ -682,9 +769,9 @@ class ValidateWithWhomEventSmokeForm(FormValidationAction):
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_event_smoke':
-            return {"with_whom_smoke": None}
+            return {"event_smoke": None}
 
-        return {"with_whom_smoke": value}
+        return {"event_smoke": value}
 
 
 class ValidateReflectBarChartForm(FormValidationAction):
@@ -770,12 +857,8 @@ class ValidateHrsNewActivityForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate hrs_new_activity_slot"""
-        logging.info('Validating new activity slot ')
-        print(value)
         last_utterance = get_latest_bot_utterance(tracker.events)
 
-        logging.info('Validating new activity slot get utterance ')
-        print(last_utterance)
         if last_utterance != 'utter_ask_hrs_new_activity_slot':
             return {"hrs_new_activity_slot": None}
 

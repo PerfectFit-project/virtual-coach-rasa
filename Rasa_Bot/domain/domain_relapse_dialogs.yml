@@ -686,12 +686,13 @@ actions:
   - show_chosen_coping_activity
   - show_first_coping_activity
   - show_first_coping_activity_pa
-  - store_number_smoke
-  - store_type_smoke
+  - store_event_smoke
+  - store_how_feel_smoke
   - store_hrs_feeling
   - store_hrs_situation
   - store_hrs_what_happened
   - store_hrs_who_with
+  - store_number_smoke
   - store_pa_specify_pa
   - store_pa_type
   - store_pa_together
@@ -699,6 +700,9 @@ actions:
   - store_pa_doing_today
   - store_pa_happened_special
   - store_reflect_barchart
+  - store_type_smoke
+  - store_what_doing_smoke
+  - store_with_whom_smoke
   - validate_crave_lapse_relapse_form
   - validate_ehbo_me_self_form
   - validate_ehbo_me_self_lapse_form

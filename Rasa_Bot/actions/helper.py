@@ -2,7 +2,6 @@
 Helper functions for rasa actions
 """
 import datetime
-import logging
 import secrets
 from typing import List, Optional, Any
 

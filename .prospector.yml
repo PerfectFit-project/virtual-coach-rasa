@@ -11,6 +11,8 @@ member-warnings: false
 
 ignore-paths:
   - docs
+  - sensor_api/tests
+  - Rasa_Bot/tests
 pyroma:
     run: true
 

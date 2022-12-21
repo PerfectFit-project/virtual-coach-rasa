@@ -35,11 +35,11 @@ jobs:
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r requirements-dev.txt
     - name: Check style against standards using prospector
-      run: prospector
+      run: prospector 
     - name: Run unit tests with coverage
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD
-        pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml -m 'not integration'
+        pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml -m 'not integration' sensor_api/tests Rasa_Bot/tests
     - name: Correct coverage paths
       run: sed -i "s+$PWD/++g" coverage.xml
     - name: Type Checking

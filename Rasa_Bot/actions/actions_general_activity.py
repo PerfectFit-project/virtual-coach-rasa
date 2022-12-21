@@ -1,7 +1,9 @@
 import secrets
 
 from sqlalchemy import update
-from virtual_coach_db.dbschema.models import InterventionActivitiesPerformed, FirstAidKit, InterventionActivity
+from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
+                                              FirstAidKit,
+                                              InterventionActivity)
 from virtual_coach_db.helper import ExecutionInterventionComponents
 from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
@@ -124,10 +126,8 @@ class CheckUserInputRequired(Action):
             .all()
         )
 
-        return [
-            SlotSet(
-                "is_user_input_required",
-                is_input_required[0].user_input_required)]
+        return [SlotSet("is_user_input_required",
+                        is_input_required[0].user_input_required)]
 
 
 class CheckActivityDone(Action):
@@ -222,7 +222,8 @@ class ValidateGeneralActivityDescriptionForm(FormValidationAction):
         return "validate_general_activity_description_form"
 
     def validate_general_activity_description_slot(
-        self, value: Text, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+        self, value: Text, dispatcher: CollectingDispatcher,
+        tracker: Tracker, domain: Dict[Text, Any]
     ) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate general_activity_description_slot input."""
@@ -264,8 +265,9 @@ class SaveDescriptionInDb(Action):
         session = get_db_session(db_url=DATABASE_URL)
 
         session.execute(
-            update(InterventionActivitiesPerformed) .where(
-                InterventionActivitiesPerformed.intervention_activities_performed_id == row_id) .values(
+            update(InterventionActivitiesPerformed).where(
+                InterventionActivitiesPerformed.intervention_activities_performed_id == row_id)
+            .values(
                 user_input=description))
 
         session.commit()
@@ -287,9 +289,12 @@ class GetThreeRandomActivities(Action):
             activity.intervention_activity_id for activity in rnd_activities]
 
         return [
-            SlotSet("activity1_name", rnd_activities[0].intervention_activity_title),
-            SlotSet("activity2_name", rnd_activities[1].intervention_activity_title),
-            SlotSet("activity3_name", rnd_activities[2].intervention_activity_title),
+            SlotSet("activity1_name",
+                    rnd_activities[0].intervention_activity_title),
+            SlotSet("activity2_name",
+                    rnd_activities[1].intervention_activity_title),
+            SlotSet("activity3_name",
+                    rnd_activities[2].intervention_activity_title),
             SlotSet("rnd_activities_ids", rnd_activities_ids),
         ]
 
@@ -299,7 +304,8 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
         return "validate_general_activity_next_activity_form"
 
     def validate_general_activity_next_activity_slot(
-        self, value: Text, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+        self, value: Text, dispatcher: CollectingDispatcher,
+        tracker: Tracker, domain: Dict[Text, Any]
     ) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate general_activity_next_activity_slot input."""
@@ -357,15 +363,11 @@ class GetLastPerformedActivity(Action):
         if last_activity is not None and len(last_activity) != 0:
             activity_title = last_activity[0].intervention_activity.intervention_activity_title
             activity_id = last_activity[0].intervention_activity.intervention_activity_id
-            return [
-                SlotSet(
-                    "last_activity_slot", activity_title), SlotSet(
-                    "last_activity_id_slot", activity_id)]
+            return [SlotSet("last_activity_slot", activity_title),
+                    SlotSet("last_activity_id_slot", activity_id)]
 
-        return [
-            SlotSet(
-                "last_activity_slot", None), SlotSet(
-                "last_activity_id_slot", None)]
+        return [SlotSet("last_activity_slot", None),
+                SlotSet("last_activity_id_slot", None)]
 
 
 class GetActivityCoachChoice(Action):
@@ -448,10 +450,8 @@ class SetSlotGeneralActivity(Action):
         return "action_set_slot_general_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        return [
-            SlotSet(
-                "current_intervention_component",
-                ExecutionInterventionComponents.GENERAL_ACTIVITY)]
+        return [SlotSet("current_intervention_component",
+                        ExecutionInterventionComponents.GENERAL_ACTIVITY)]
 
 
 def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):

@@ -15,7 +15,7 @@ class DelayedMessage(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        date = datetime.datetime.now() + datetime.timedelta(seconds=30)
+        date = datetime.datetime.now() + datetime.timedelta(seconds=2)
 
         reminder = ReminderScheduled(
             "EXTERNAL_done_with_video",
@@ -23,9 +23,6 @@ class DelayedMessage(Action):
             name="my_reminder",
             kill_on_user_message=False,
         )
-
-        #TODO remove once working
-        dispatcher.utter_message("I will remind you in 30 seconds")
 
         return [reminder]
 
@@ -44,16 +41,26 @@ class ValidateVideoClearForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_video_clear_form'
 
-    def validate_video_clear(
-            self, value: Text, dispatcher: CollectingDispatcher) -> Dict[Text, Any]:
+    def validate_video_clear_option(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
         """Validate video clear input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
 
-        if value == 1:
-            dispatcher.utter_message(response="utter_clear_confirmation")
-            dispatcher.utter_message(response="utter_finish_video_dialog")
-        if value == 2:
-            dispatcher.utter_message(response="utter_video_link")
-        else:
-            dispatcher.utter_message(response="utter_please_answer_video_clear")
+        if last_utterance != 'utter_ask_video_clear_option':
+            return {"video_clear_option": None}
 
-        return {}
+        video_clear = self._validate_video_clear_response(value)
+        if video_clear is None:
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+
+        return {"video_clear_option": video_clear}
+
+    @staticmethod
+    def _validate_video_clear_response(value):
+        if value == "1":
+            return True
+        if value == "2":
+            return False
+        return None

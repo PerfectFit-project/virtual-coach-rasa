@@ -6,13 +6,16 @@ intents:
 actions:
   - action_delayed_message_after_video
   - action_thanks_for_watching
+  - validate_video_clear_form
 
 forms:
-  - video_clear_form
+  video_clear_form:
+    required_slots:
+      - video_clear_option
 
 slots:
  video_clear_option:
-    type: boolean
+    type: bool
     influence_conversation: true
     mappings:
       - type: from_text
@@ -30,8 +33,8 @@ responses:
   utter_video_link:
     - text: "https://www.youtube.com/watch?v=59JaTljpjCk"
   utter_thanks_for_watching:
-    - text: "Bedankt voor het kijken van de video! Was alles duidelijk of wil je hem nog een keer bekijken? Typ '1' voor 'duidelijk' en '2' voor 'nog een keer bekijken'."
-  utter_please_answer_video_clear:
+    - text: "Bedankt voor het kijken van de video! Was alles duidelijk of wil je hem nog een keer bekijken?"
+  utter_ask_video_clear_option:
     - text: "Typ '1' voor 'duidelijk' en '2' voor 'nog een keer bekijken'"
   utter_clear_confirmation:
     - text: "Fijn dat de video duidelijk was."

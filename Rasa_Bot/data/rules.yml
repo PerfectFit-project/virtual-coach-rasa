@@ -63,13 +63,5 @@ rules:
   - action: action_send_metadata
   - action: action_end_dialog
 
-- rule: Delayed message after video
-  steps:
-  - action: utter_video_link
-  - action: action_delayed_message_after_video
 
-- rule: Trigger `action_thanks_for_watching` for `EXTERNAL_done_with_video`
-  steps:
-  - intent: EXTERNAL_done_with_video
-  - action: action_thanks_for_watching
-  - action: action_end_dialog
+

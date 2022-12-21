@@ -11,12 +11,33 @@ stories:
     - action: utter_video_link
     - action: action_delayed_message_after_video
 
-- story: after watching video
+- story: after watching video unclear confirmation
   steps:
     - intent: EXTERNAL_done_with_video
     - action: action_thanks_for_watching
+    - action: utter_thanks_for_watching
     - action: video_clear_form
     - active_loop: video_clear_form
     - active_loop: null
+    - slot_was_set:
+      - video_clear_option: false
+    - action: utter_leaving_app_announcement
+    - action: utter_video_link
+    - action: action_delayed_message_after_video
+
+- story: after watching video clear confirmation
+  steps:
+    - intent: EXTERNAL_done_with_video
+    - action: action_thanks_for_watching
+    - action: utter_thanks_for_watching
+    - action: video_clear_form
+    - active_loop: video_clear_form
+    - active_loop: null
+    - slot_was_set:
+      - video_clear_option: true
+    - action: utter_clear_confirmation
+    - action: utter_finish_video_dialog
+    - action: action_end_dialog
+
 
     

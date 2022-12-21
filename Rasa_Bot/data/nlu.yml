@@ -6,6 +6,7 @@ nlu:
     -"test"
     -"Can I test this?"
     -"Does it work?"
+    -"test test test"
 
 - intent: review_last_activity
   examples: |

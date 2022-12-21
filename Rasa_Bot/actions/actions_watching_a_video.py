@@ -1,10 +1,15 @@
 import datetime
+from celery import Celery
 from rasa_sdk.events import ReminderScheduled
 from rasa_sdk import Action, Tracker
 from typing import Text, Dict, Any
 from rasa_sdk.forms import FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from .helper import get_latest_bot_utterance
+
+from .definitions import REDIS_URL
+
+celery = Celery(broker=REDIS_URL)
 
 
 class DelayedMessage(Action):
@@ -14,17 +19,12 @@ class DelayedMessage(Action):
         return "action_delayed_message_after_video"
 
     async def run(self, dispatcher, tracker, domain):
-
-        date = datetime.datetime.now() + datetime.timedelta(seconds=2)
-
-        reminder = ReminderScheduled(
-            "EXTERNAL_done_with_video",
-            trigger_date_time=date,
-            name="my_reminder",
-            kill_on_user_message=False,
-        )
-
-        return [reminder]
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        new_intent = 'EXTERNAL_done_with_video'
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, new_intent),
+                         eta=datetime.datetime.now() + datetime.timedelta(seconds=20))
+        return []
 
 
 class ActionReactToReminder(Action):
@@ -59,8 +59,6 @@ class ValidateVideoClearForm(FormValidationAction):
 
     @staticmethod
     def _validate_video_clear_response(value):
-        if value == "1":
-            return True
-        if value == "2":
-            return False
+        if value in ["1", "2"]:
+            return value
         return None

@@ -15,7 +15,10 @@ forms:
 
 slots:
  video_clear_option:
-    type: bool
+    type: categorical
+    values:
+      - 1
+      - 2
     influence_conversation: true
     mappings:
       - type: from_text

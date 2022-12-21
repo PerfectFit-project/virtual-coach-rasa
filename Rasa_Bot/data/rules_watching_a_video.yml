@@ -1,0 +1,37 @@
+version: "3.1"
+
+rules:
+- rule: after watching video unclear confirmation
+  steps:
+    - intent: EXTERNAL_done_with_video
+    - action: action_thanks_for_watching
+    - action: utter_thanks_for_watching
+    - action: video_clear_form
+    - active_loop: video_clear_form
+  wait_for_user_input: false
+
+## 1a: Trigger relapse dialog  - smoking
+- rule: Relapse phase triggered smoke
+  condition:
+  - active_loop: video_clear_form
+  steps:
+  - action: video_clear_form
+  - active_loop: null
+  - slot_was_set:
+    - video_clear_option: 1
+  - action: utter_leaving_app_announcement
+  - action: utter_video_link
+  - action: action_delayed_message_after_video
+
+## 1a: Trigger relapse dialog  - smoking
+- rule: Relapse phase triggered smoke
+  condition:
+  - active_loop: video_clear_form
+  steps:
+  - action: video_clear_form
+  - active_loop: null
+  - slot_was_set:
+    - video_clear_option: 2
+  - action: utter_clear_confirmation
+  - action: utter_finish_video_dialog
+  - action: action_end_dialog

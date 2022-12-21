@@ -164,17 +164,22 @@ stories:
   - action: utter_general_activity_next_coach
   - checkpoint: persuasion
   
-  
+
+# Chosen persuasion type is to not persuade -> do not need user input
 - story: persuasion without input
   steps:
   - checkpoint: persuasion
   - action: utter_persuasion_questions_intro
+  - action: utter_persuasion_questions_intro_2
+  - action: utter_ask_persuasion_prompts_slot_intro
   - action: persuasion_prompts_form
   - active_loop: persuasion_prompts_form
   - active_loop: null
+  - action: utter_ask_persuasion_want_slot_intro
   - action: persuasion_want_form
   - active_loop: persuasion_want_form
   - active_loop: null
+  - action: utter_ask_persuasion_need_slot_intro
   - action: persuasion_need_form
   - active_loop: persuasion_need_form
   - active_loop: null
@@ -187,16 +192,21 @@ stories:
   - action: action_end_dialog
 
 
+# Chosen persuasion type is either commitment or consensus -> need user input
 - story: persuasion with input
   steps:
   - checkpoint: persuasion
   - action: utter_persuasion_questions_intro
+  - action: utter_persuasion_questions_intro_2
+  - action: utter_ask_persuasion_prompts_slot_intro
   - action: persuasion_prompts_form
   - active_loop: persuasion_prompts_form
   - active_loop: null
+  - action: utter_ask_persuasion_want_slot_intro
   - action: persuasion_want_form
   - active_loop: persuasion_want_form
   - active_loop: null
+  - action: utter_ask_persuasion_need_slot_intro
   - action: persuasion_need_form
   - active_loop: persuasion_need_form
   - active_loop: null

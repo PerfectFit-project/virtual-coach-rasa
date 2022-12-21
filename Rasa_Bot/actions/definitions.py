@@ -27,16 +27,18 @@ OPT_POLICY = [[[0, 1], [2, 1]],[[0, 0], [2, 0]]]
 # Feature means to map features to binary ones
 STATE_FEATURE_MEANS = [3.96, 3.74, 3.88]  # want, prompts, need (+1 compared to paper, because here values are from 1-5 (not 0-4))
 # Persuasive messages for the persuasion types of commitment and consensus
-COMMITMENT = ["Remember: You have decided to quit smoking. You will feel good if you keep your promise to yourself.",
+COMMITMENT = ["Vergeet niet: Je hebt besloten om te stoppen met roken. Het zal goed voelen wanneer je je aan deze belofte houdt.",
               "Remember: You have decided to quit smoking. You will feel bad if you break your promise to yourself.",
-              "Remember: You've committed to quit smoking. I hope you'll be sticking to it.",
+              "Vergeet niet: Je wilt graag stoppen met roken. Ik gun je dat dit gaat lukken.",
               "Remember: You've committed to quit smoking. I hope you'll not break your commitment.",
-              "Remember: You've committed to become somebody who has quit smoking. Doing this activity may help you to become this person.",
+              "Vergeet niet: Je hebt beloofd om iemand te worden die gestopt is met roken. Deze activiteit kan je helpen om deze persoon te worden.",
               "Remember: You've decided to become somebody who has quit smoking. If you do NOT do this activity, it may be more difficult to become this person."]
-CONSENSUS = ["Most people think that doing this activity may help",
+CONSENSUS = ["De meeste mensen denken dat deze activiteit zal helpen",
              "Most people believe that NOT doing this activity may make it more difficult",
              "The majority of people believe that doing this activity may help",
              "The majority of people think that NOT doing this activity may make it more difficult"]
+REFLECTIVE_QUESTION_COMMITMENT = "Je hebt het besluit genomen om te stoppen met roken. Hoe helpt deze activiteit jou hierbij?"
+REFLECTIVE_QUESTION_COMMITMENT_IDENTITY = "Hoe helpt deze activiteit jou bij jouw besluit om iemand te worden die succesvol gestopt is met roken?"
 
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?

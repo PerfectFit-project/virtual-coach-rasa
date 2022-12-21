@@ -9,7 +9,8 @@ from virtual_coach_db.helper import (ExecutionInterventionComponents,
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import (COMMITMENT, CONSENSUS, DATABASE_URL, NUM_TOP_ACTIVITIES, 
-                          OPT_POLICY, STATE_FEATURE_MEANS)
+                          OPT_POLICY, STATE_FEATURE_MEANS, REFLECTIVE_QUESTION_COMMITMENT,
+                          REFLECTIVE_QUESTION_COMMITMENT_IDENTITY)
 from .helper import get_latest_bot_utterance, store_dialog_closed_answer_to_db
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
@@ -612,10 +613,10 @@ class SendPersuasiveMessageActivity(Action):
             dispatcher.utter_message(text=message)
             # Not identity-based formulation
             if message_idx < 4:
-                reflective_question = "Please tell me what you think: In what way does doing this activity match your decision to successfully quit smoking?"
+                reflective_question = REFLECTIVE_QUESTION_COMMITMENT
             # Identity-based formulation
             else:
-                reflective_question = "Please tell me what you think: In what way does doing this activity match your decision to become somebody who has successfully quit smoking?"
+                reflective_question = REFLECTIVE_QUESTION_COMMITMENT_IDENTITY
         # Consensus
         elif pers_type == 1:
             input_required = True

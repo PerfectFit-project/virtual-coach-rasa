@@ -219,11 +219,18 @@ class ShowFirstCopingActivity(Action):
     async def run(self, dispatcher, tracker, domain):
         activity_id = tracker.get_slot('hrs_coping_activities_performed')
         # TODO: choose activities in list of advised list for smoking
-        activities_list = get_random_activities(int(activity_id), 1)
+        # activities_list = get_random_activities(int(activity_id), 1)
 
-        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
+        # dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
 
-        return [SlotSet('hrs_coping_activities_performed', activity_id)]
+        repetitions_counter = tracker.get_slot('repetitions_counter')
+        if repetitions_counter is None:
+            repetitions_counter = 0
+        repetitions_counter += 1
+        dispatcher.utter_message('test')
+
+        return [SlotSet('hrs_coping_activities_performed', activity_id),
+                SlotSet('repetitions_counter', repetitions_counter)]
 
 
 class ShowFirstCopingActivityPa(Action):
@@ -238,6 +245,17 @@ class ShowFirstCopingActivityPa(Action):
         dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
 
         return [SlotSet('hrs_coping_activities_performed', activity_id)]
+
+
+class ActionCheckRepetitions(Action):
+    def name(self):
+        return "action_check_repetitions"
+
+    async def run(self, dispatcher, tracker, domain):
+        # the third time the user asks for a new activity, hrs_activity_form is opened
+        repetitions_counter = int(tracker.get_slot('repetitions_counter'))
+        if repetitions_counter > 1:
+            return [FollowupAction('hrs_activity_form')]
 
 
 class StoreEventSmoke(Action):
@@ -586,9 +604,9 @@ class ValidateCraveLapseRelapseForm(FormValidationAction):
         if last_utterance != 'utter_ask_crave_lapse_relapse':
             return {"crave_lapse_relapse": None}
 
-        if not validator.validate_number_in_range_response(1, 3, value):
+        if not validator.validate_number_in_range_response(1, 4, value):
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
             return {"crave_lapse_relapse": None}
 
         return {"crave_lapse_relapse": value}

@@ -262,6 +262,7 @@ rules:
   - slot_was_set:
     - ehbo_me_self: 2
   - active_loop: null
+  - action: action_check_repetitions
   - action: show_first_coping_activity
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
@@ -422,6 +423,7 @@ rules:
           - crave_lapse_relapse: 2
       - slot_was_set:
           - crave_lapse_relapse: 3
+  - action: action_check_repetitions
   - action: show_first_coping_activity
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
@@ -542,6 +544,7 @@ rules:
   wait_for_user_input: false
 #  checkpoint: ehbo_me_self_lapse_checkpoint
 
+## 2c: Parent for Smoking - relapse
 - rule: smoking parent relapse # checkpoint: smoke_relapse
   condition:
     - active_loop: crave_lapse_relapse_form
@@ -670,6 +673,16 @@ rules:
   - active_loop: hrs_enough_motivation_form
   wait_for_user_input: false
 
+## 2d: Parent for Smoking - quit
+- rule: smoking parent relapse # checkpoint: smoke_relapse
+  condition:
+    - active_loop: crave_lapse_relapse_form
+  steps:
+  - action: crave_lapse_relapse_form
+  - active_loop: null
+  - slot_was_set:
+    - crave_lapse_relapse: 4
+  - action: action_end_dialog
 
 ## 1b: Trigger relapse dialog - PA
 - rule: Relapse phase triggered PA

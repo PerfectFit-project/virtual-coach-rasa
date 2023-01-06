@@ -622,10 +622,8 @@ rules:
   - slot_was_set:
     - now_or_later_slot: 2
   - active_loop: null
-  - action: utter_test_utterance # TODO: implement goal setting for new quit date (row 178)
-  - action: relapse_medication_info_form
-  - active_loop: relapse_medication_info_form
-  wait_for_user_input: false  # checkpoint: relapse_medication_info_checkpoint.
+  - action: action_launch_goal_setting # move to goal setting dialog (rule: Ask a new quit date)
+ # after the goal setting, resumes from rule: smoke relapse decide to get medication info.
 
 - rule: smoke relapse decide to get medication info # checkpoint: relapse_medication_info_checkpoint.
   condition:

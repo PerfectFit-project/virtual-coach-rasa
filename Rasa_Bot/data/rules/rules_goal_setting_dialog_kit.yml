@@ -1,0 +1,34 @@
+# Rules for the goal setting dialog
+version: "3.1"
+
+rules:
+- rule: Ask a new quit date
+  steps:
+  - action: action_get_first_last_date
+  - action: utter_goal_setting_choose_date_1
+  - action: utter_goal_setting_choose_date_2
+  - action: utter_goal_setting_choose_date_3
+  - action: chosen_quit_date_form
+  - active_loop: chosen_quit_date_form
+  wait_for_user_input: false
+
+- rule: Write plan
+  condition:
+  - active_loop: chosen_quit_date_form
+  steps:
+  - action: chosen_quit_date_form
+  - active_loop: null
+  - action: utter_goal_setting_choose_date_4
+  - action: utter_goal_setting_choose_date_5
+  - action: utter_goal_setting_choose_date_6
+  - action: utter_goal_setting_choose_date_7
+  - action: utter_goal_setting_choose_date_8
+  - action: utter_goal_setting_choose_date_9
+  - action: utter_goal_setting_choose_date_10
+  - action: goal_setting_plan_finished_form
+  - active_loop: goal_setting_plan_finished_form
+  - active_loop: null
+  - action: utter_goal_setting_choose_date_11
+  - action: utter_goal_setting_choose_date_12
+  - action: utter_goal_setting_choose_date_13
+  - action: goal_setting_continue_after_plan

@@ -1,0 +1,102 @@
+version: "3.1"
+
+slots:
+  # the quit date chosen by the user for quitting smoking
+  chosen_quit_date_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: chosen_quit_date_form
+
+# the first allowed quit date to stop smoking
+  first_possible_quit_date:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+# the last allowed quit date to stop smoking
+  last_possible_quit_date:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+# the user says if he has finished writing
+  goal_setting_plan_finished_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: goal_setting_plan_finished_form
+
+responses:
+  utter_goal_setting_choose_date_1:
+    - text: "Als je wilt kun je morgen al beginnen met stoppen met roken. 
+            Maar je kunt ook kiezen voor een latere stop-datum, bijvoorbeeld over een week. 
+            Dit kan handig zijn als je bijvoorbeeld gebruik maakt van hulpmiddelen of medicatie die helpen bij het stoppen met roken. 
+            Je kunt dan nog een weekje wachten tot je hieraan gewend bent. 
+            Hulpmiddelen of medicatie vergroten de kans om blijvend te stoppen."
+  utter_goal_setting_choose_date_2:
+    - text: "Ik help jou de komende weken en ik geef je tips, zodat je het niet alleen hoeft te doen!."
+  utter_goal_setting_choose_date_3:
+    - text: "Kies dus een datum tussen {first_possible_quit_date} en {last_possible_quit_date}.
+            Typ de datum op deze manier: dd/mm/jjjj. Dus eerst de dag/dan de maand/en dan het jaar. 
+            Je typt in totaal dus 8 getallen."
+  utter_goal_setting_choose_date_4:
+    - text: "Super! Je hebt nu een stop-datum. Deze is op {chosen_quit_date_slot}."
+  utter_goal_setting_choose_date_5:
+    - text: "Je weet nu wanneer je wilt stoppen met roken. 
+            Nu kunnen we gaan nadenken over hoe je gaat stoppen met roken. 
+            Laten we een plan opstellen."
+  utter_goal_setting_choose_date_6:
+    - text: "Een plan helpt om je doel te bereiken. 
+            In het plan denken we na over de stappen die je moet nemen om je doel te bereiken. "
+  utter_goal_setting_choose_date_7:
+    - text: "Hoe kun jij jezelf helpen met stoppen met roken? Het helpt om je plan in kleine stapjes op te delen."
+  utter_goal_setting_choose_date_8:
+    - text: "Ik raad je aan om je sigaretten en asbakken weg te gooien."
+  utter_goal_setting_choose_date_9:
+    - text: "Andere kleine stapjes zijn bijvoorbeeld nadenken over mensen in jouw omgeving die je kunnen helpen, 
+            activiteiten bedenken die je kunt doen in plaats van roken (zoals fruit eten, een rondje wandelen) 
+            en uitrekenen hoeveel geld je kunt besparen met stoppen-met-roken."
+  utter_goal_setting_choose_date_10:
+    - text: "Denk nu eens na over welke stappen jij kunt zetten om jezelf te helpen met stoppen met roken. 
+            Neem hier wat tijd voor. 
+            Pak pen en papier en schrijf 3 dingen op die jij komende dagen kunt doen om jezelf te helpen."
+  utter_goal_setting_choose_date_11:
+    - text: "Je kunt dit papier ook op een plek hangen waar je het vaak ziet, om jezelf hieraan te herinneren."
+  utter_goal_setting_choose_date_12:
+    - text: "Mooi! Door na te denken over een plan, heb je de eerste stappen naar het stoppen met roken gezet."
+  utter_goal_setting_choose_date_13:
+    - text: "Ik zal er de komende tijd steeds voor je zijn en je blijven helpen. 
+            Dit zal ik bijvoorbeeld doen door je meer uitleg te geven over stoppen met roken, je tips te geven en oefeningen te laten doen. 
+            Deze oefeningen helpen je om vol te blijven houden!"
+
+  utter_ask_chosen_quit_date_slot:
+    - text: "Welke datum wil je stoppen met roken?"
+  utter_ask_goal_setting_plan_finished_slot:
+    - text: "Typ 'klaar' als je hier klaar mee bent."
+  utter_goal_setting_wrong_date:
+    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13/07/2023. 
+            Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. 
+            Kun je je stop-datum nog een keer typen? "
+
+
+actions:
+  - action_get_first_last_date
+  - goal_setting_continue_after_plan
+  - validate_chosen_quit_date_form
+  - validate_goal_setting_plan_finished_form
+
+forms:
+  chosen_quit_date_form:
+    required_slots:
+      - chosen_quit_date_slot
+
+  goal_setting_plan_finished_form:
+    required_slots:
+      - goal_setting_plan_finished_slot

@@ -1,4 +1,27 @@
 import string
+from datetime import datetime
+
+
+def validate_date_format(response: str) -> bool:
+    try:
+        datetime.strptime(response, '%d-%m-%Y')
+        return True
+    except ValueError:
+        return False
+
+
+def validate_date_range(response: str, minimum_date: str, maximum_date: str) -> bool:
+    try:
+        chosen_date = datetime.strptime(response, '%d-%m-%Y')
+        start_date = datetime.strptime(minimum_date, '%d-%m-%Y')
+        stop_date = datetime.strptime(maximum_date, '%d-%m-%Y')
+    except ValueError:
+        return False
+
+    if start_date <= chosen_date <= stop_date:
+        return True
+
+    return False
 
 
 def validate_int_type(value: str) -> bool:

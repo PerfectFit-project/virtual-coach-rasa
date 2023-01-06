@@ -219,15 +219,14 @@ class ShowFirstCopingActivity(Action):
     async def run(self, dispatcher, tracker, domain):
         activity_id = tracker.get_slot('hrs_coping_activities_performed')
         # TODO: choose activities in list of advised list for smoking
-        # activities_list = get_random_activities(int(activity_id), 1)
-
-        # dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
+        activities_list = get_random_activities(int(activity_id), 1)
 
         repetitions_counter = tracker.get_slot('repetitions_counter')
         if repetitions_counter is None:
             repetitions_counter = 0
         repetitions_counter += 1
-        dispatcher.utter_message('test')
+
+        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
 
         return [SlotSet('hrs_coping_activities_performed', activity_id),
                 SlotSet('repetitions_counter', repetitions_counter)]

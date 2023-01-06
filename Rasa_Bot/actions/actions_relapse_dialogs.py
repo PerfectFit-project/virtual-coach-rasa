@@ -221,15 +221,9 @@ class ShowFirstCopingActivity(Action):
         # TODO: choose activities in list of advised list for smoking
         activities_list = get_random_activities(int(activity_id), 1)
 
-        repetitions_counter = tracker.get_slot('repetitions_counter')
-        if repetitions_counter is None:
-            repetitions_counter = 0
-        repetitions_counter += 1
-
         dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
 
-        return [SlotSet('hrs_coping_activities_performed', activity_id),
-                SlotSet('repetitions_counter', repetitions_counter)]
+        return [SlotSet('hrs_coping_activities_performed', activity_id)]
 
 
 class ShowFirstCopingActivityPa(Action):
@@ -244,17 +238,6 @@ class ShowFirstCopingActivityPa(Action):
         dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
 
         return [SlotSet('hrs_coping_activities_performed', activity_id)]
-
-
-class ActionCheckRepetitions(Action):
-    def name(self):
-        return "action_check_repetitions"
-
-    async def run(self, dispatcher, tracker, domain):
-        # the third time the user asks for a new activity, hrs_activity_form is opened
-        repetitions_counter = int(tracker.get_slot('repetitions_counter'))
-        if repetitions_counter > 1:
-            return [FollowupAction('hrs_activity_form')]
 
 
 class StoreEventSmoke(Action):

@@ -104,3 +104,25 @@ class ValidateHowDoingForm(FormValidationAction):
             return {"how_doing_slot": None}
 
         return {"how_doing_slot": value}
+
+
+class ValidateExtraExlplanationForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_extra_explanation_form'
+
+    def validate_extra_explanation(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate extra explanation form."""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_extra_explanation_quiting':
+            return {"extra_explanation": None}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"extra_explanation": None}
+
+        return {"extra_explanation": value}

@@ -87,3 +87,20 @@ class ValidateGoalSettingPlanFinishedForm(FormValidationAction):
             return {"goal_setting_plan_finished_slot": None}
 
         return {"goal_setting_plan_finished_slot": value}
+
+
+class ValidateHowDoingForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_how_doing_form'
+
+    def validate_how_doing_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate how_doing_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_how_doing_slot':
+            return {"how_doing_slot": None}
+
+        return {"how_doing_slot": value}

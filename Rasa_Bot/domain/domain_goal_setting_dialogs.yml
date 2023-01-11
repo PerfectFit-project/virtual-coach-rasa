@@ -1,6 +1,15 @@
 version: "3.1"
 
 slots:
+  # Branch 1 introduction
+  # slot required to ask the user how is he/she doing
+  how_doing_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: how_doing_form
   # the quit date chosen by the user for quitting smoking
   chosen_quit_date_slot:
     type: text
@@ -34,6 +43,12 @@ slots:
           - active_loop: goal_setting_plan_finished_form
 
 responses:
+  # Branch 1 introduction
+  utter_goal_setting_greeting:
+    - text: "Hoi, wat leuk om je weer te spreken! 👋"
+  utter_ask_how_doing_slot:
+    - text: "Hoe gaat het met je?"
+
   utter_goal_setting_choose_date_1:
     - text: "Als je wilt kun je morgen al beginnen met stoppen met roken. 
             Maar je kunt ook kiezen voor een latere stop-datum, bijvoorbeeld over een week. 
@@ -91,8 +106,15 @@ actions:
   - goal_setting_continue_after_plan
   - validate_chosen_quit_date_form
   - validate_goal_setting_plan_finished_form
+  - validate_how_doing_form
 
 forms:
+  # Branch 1 introduction
+  # form to ask the user how is he/she doing
+  how_doing_form:
+    required_slots:
+      - how_doing_slot
+
   chosen_quit_date_form:
     required_slots:
       - chosen_quit_date_slot

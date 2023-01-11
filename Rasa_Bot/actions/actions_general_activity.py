@@ -629,7 +629,7 @@ class SendPersuasiveMessageActivity(Action):
         elif pers_type == 1:
             input_required = True
             message_idx = random.choice([i for i in range(len(CONSENSUS))])
-            message = CONSENSUS[message_idx] + benefit
+            message = CONSENSUS[message_idx] + " " + benefit
             dispatcher.utter_message(text=message)
             reflective_question = REFLECTIVE_QUESTION_CONSENSUS
         

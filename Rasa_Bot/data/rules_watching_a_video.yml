@@ -32,8 +32,8 @@ rules:
   - action: utter_leaving_app_announcement
   - action: action_delayed_message_after_video
 
-## 1a: Trigger relapse dialog  - smoking
-- rule: Relapse phase triggered smoke
+- rule: User doesn't want to watch the video again
+
   condition:
   - active_loop: video_clear_form
   steps:

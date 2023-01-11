@@ -17,4 +17,4 @@ COPY . /app
 
 RUN chmod -R 777 /app
 
-CMD ["rasa", "run", "--enable-api",]
+CMD ["rasa", "run", "--enable-api"]

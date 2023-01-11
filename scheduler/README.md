@@ -18,7 +18,7 @@ So Celery periodically sends a `EXTERNAL_trigger_ask_foreseen_hrs` intent to RAS
 ## How to manually trigger RASA?
 Manually trigger RASA to start foreseen HRS conversation
 ```
-curl --location --request POST 'http://localhost:5005/conversations/38527/trigger_intent?output_channel=niceday_input_channel' \
+curl --location --request POST 'http://localhost:5005/conversations/38527/trigger_intent?output_channel=niceday_trigger_input_channel' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "name": "EXTERNAL_trigger_ask_foreseen_hrs"

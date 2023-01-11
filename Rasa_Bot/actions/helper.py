@@ -4,13 +4,14 @@ Helper functions for rasa actions
 import datetime
 import secrets
 from typing import List, Optional, Any
+import plotly.graph_objects as go
 import plotly.express as px
 
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers,
                                               InterventionComponents, UserPreferences,
                                               InterventionActivity, UserInterventionState,
-                                              InterventionPhases)
+                                              InterventionPhases, ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -254,6 +255,89 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
 
     return rnd_activities
 
+def get_closed_answers(user_id, question_id):
+    """
+       Get the closed answer responses associated with the given user and question.
+        Args:
+                user_id: the user_id of the user to retrieve the answers for
+                question_id: the question_id for which the answers should be retrieved
+
+            Returns:
+                    All the answers that the user has given for the given question
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    closed_answers = (
+        session.query(
+            ClosedAnswers
+        )
+        .join(DialogClosedAnswers)
+        .filter(
+            DialogClosedAnswers.users_nicedayuid == user_id,
+            ClosedAnswers.question_id == question_id
+        )
+        .all()
+    )
+
+    return closed_answers
+
+def get_all_closed_answers(question_id):
+    """
+       Get the closed answer responses associated with the given user and question.
+        Args:
+                user_id: the user_id of the user to retrieve the answers for
+                question_id: the question_id for which the answers should be retrieved
+
+            Returns:
+                    All the answers that the user has given for the given question
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    closed_answers = (
+        session.query(
+            ClosedAnswers
+        )
+        .filter(
+            ClosedAnswers.question_id == question_id
+        )
+        .all()
+    )
+
+    all_closed_answers = []
+
+    for i in closed_answers:
+        all_closed_answers.append(i.answer_description)
+
+    return all_closed_answers
+
+def get_open_answers(user_id, question_id):
+    """
+       Get the closed answer responses associated with the given user and question.
+        Args:
+                user_id: the user_id of the user to retrieve the answers for
+                question_id: the question_id for which the answers should be retrieved
+
+            Returns:
+                    The open answers that the user has given for the question
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    closed_answers = (
+        session.query(
+            DialogOpenAnswers
+        )
+        .filter(
+            DialogOpenAnswers.users_nicedayuid == user_id,
+            DialogOpenAnswers.question_id == question_id
+        )
+        .all()
+    )
+
+    return closed_answers
+
 
 def week_day_to_numerical_form(week_day):
     if week_day.lower() == "monday":
@@ -272,6 +356,13 @@ def week_day_to_numerical_form(week_day):
         return 7
     return -1
 
-def make_graph(title, data, x, y):
-    fig = px.bar(x=x, y=y, title=title)
+def make_graph(title, x_axis, data):
+    fig = go.Figure(data=[
+        go.Bar(name='Craving', x=x_axis, y=data[0]),
+        go.Bar(name='Lapse', x=x_axis, y=data[1]),
+        go.Bar(name='Relapse', x=x_axis, y=data[2])
+    ])
+    # Change the bar mode
+    fig.update_layout(barmode='group')
+    fig.update_layout(title_text=title)
     return fig

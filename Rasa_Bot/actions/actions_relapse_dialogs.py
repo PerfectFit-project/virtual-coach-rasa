@@ -8,7 +8,8 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, make_graph)
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, make_graph,
+                     get_closed_answers, get_open_answers, get_all_closed_answers)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -199,11 +200,55 @@ class ShowBarchartDifficultSituations(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        question_id_craving = DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value
+        question_id_lapse = DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value
+        question_id_relapse = DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value
+
+
+        answers_craving = get_closed_answers(user_id, question_id_craving)
+        answers_lapse = get_closed_answers(user_id, question_id_lapse)
+        answers_relapse = get_closed_answers(user_id, question_id_relapse)
+
+        closed_answer_options = get_all_closed_answers(question_id_craving)
+
+        logging.info(answers_craving)
+        logging.info(answers_lapse)
+        logging.info(answers_relapse)
+
+        craving = []
+        lapse = []
+        relapse = []
+
+        for i in range(len(closed_answer_options)):
+            amount_of_answers_craving = 0
+            amount_of_answers_lapse = 0
+            amount_of_answers_relapse = 0
+            closed_answer = closed_answer_options[i]
+
+            for answer in answers_craving:
+                if answer.answer_description == closed_answer:
+                    amount_of_answers_craving += 1
+            for answer in answers_lapse:
+                if answer.answer_description == closed_answer:
+                    amount_of_answers_lapse += 1
+            for answer in answers_relapse:
+                if answer.answer_description == closed_answer:
+                    amount_of_answers_relapse += 1
+            craving.append(amount_of_answers_craving)
+            lapse.append(amount_of_answers_lapse)
+            relapse.append(amount_of_answers_relapse)
+
+
+        # = DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value
+        #question_id = DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value
 
         data = []
+        data.append(craving)
+        data.append(lapse)
+        data.append(relapse)
         logging.info("making chart")
 
-        chart = make_graph("title", data, ["a", "b", "c"], [1, 3, 2])
+        chart = make_graph("Jouw Mogelijke Situaties", closed_answer_options, data)
 
         chart.write_image("chart.PNG")
 

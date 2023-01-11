@@ -6,11 +6,31 @@ from typing import Text, Dict, Any
 from rasa_sdk.forms import FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from .helper import get_latest_bot_utterance
-
+from rasa_sdk.events import SlotSet
+from virtual_coach_db.helper.definitions import VideoLinks
 from .definitions import REDIS_URL
 
 celery = Celery(broker=REDIS_URL)
 
+class SetSlotVideoLink(Action):
+    """ this is an example for setting the slot of the video link"""
+    def name(self):
+        return "action_set_slot_video_link"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("video_link",
+                        VideoLinks.TESTVIDEOLINK)]
+
+class DisplayVideoLink(Action):
+    """Display a certain video link"""
+
+    def name(self):
+        return "action_display_video_link"
+
+    async def run(self, dispatcher, tracker, domain):
+        link = tracker.get_slot('video_link')
+        dispatcher.utter_message(text=link)
+        return []
 
 class DelayedMessage(Action):
     """Schedules a reminder"""
@@ -23,9 +43,8 @@ class DelayedMessage(Action):
         new_intent = 'EXTERNAL_done_with_video'
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=20))
+                         eta=datetime.datetime.now() + datetime.timedelta(seconds=2))
         return []
-
 
 class ActionReactToReminder(Action):
     """Will ask user about the video after watching"""

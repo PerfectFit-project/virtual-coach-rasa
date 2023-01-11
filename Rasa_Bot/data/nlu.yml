@@ -1,12 +1,6 @@
 version: "3.1"
 
 nlu:
-- intent: test_intent
-  examples: |
-    -"test"
-    -"Can I test this?"
-    -"test test test"
-
 - intent: review_last_activity
   examples: |
     - "Mijn activiteit"
@@ -68,7 +62,6 @@ nlu:
   examples: |
     - "dood"
     - "Ik ben depressief"
-
 - intent: request_tracked_cigarettes
   examples: |
     - "Hoeveel sigaretten heb ik vandaag gerookt?"
@@ -76,7 +69,11 @@ nlu:
 - intent: request_tracker_reminder
   examples: |
     - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"
-    
+
+- intent: EXTERNAL_watch_video_dialog
+  examples: |
+    - EXTERNAL_watch_video_dialog
+
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
     - "EXTERNAL_trigger_profile_creation"

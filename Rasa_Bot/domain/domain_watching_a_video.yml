@@ -1,12 +1,14 @@
 ##Domain for watching a video
 intents:
-  - test_intent
+  - EXTERNAL_watch_video_dialog
   - EXTERNAL_done_with_video
 
 actions:
   - action_delayed_message_after_video
   - action_thanks_for_watching
   - validate_video_clear_form
+  - action_display_video_link
+  - action_set_slot_video_link
 
 forms:
   video_clear_form:
@@ -24,6 +26,11 @@ slots:
       - type: from_text
         conditions:
           - active_loop: video_clear_form
+ video_link:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
 
 responses:
   ### test
@@ -33,8 +40,6 @@ responses:
     - text: "Klik op onderstaande link om de video te openen."
   utter_leaving_app_announcement:
     - text: "Je verlaat daarmee even de app. Je komt daarna weer terug in de app."
-  utter_video_link:
-    - text: "https://www.youtube.com/watch?v=59JaTljpjCk"
   utter_thanks_for_watching:
     - text: "Bedankt voor het kijken van de video! Was alles duidelijk of wil je hem nog een keer bekijken?"
   utter_ask_video_clear_option:

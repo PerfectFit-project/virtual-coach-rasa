@@ -1,15 +1,6 @@
 version: "3.1"
 
 rules:
-- rule: prompt watch video
-  steps:
-  - intent: test_intent
-  - action: utter_watch_video_announcement
-  - action: utter_click_video_link
-  - action: utter_leaving_app_announcement
-  - action: utter_video_link
-  - action: action_delayed_message_after_video
-
 - rule: Give user central mode options when they send a message with low NLU confidence
   steps:
   - intent: nlu_fallback

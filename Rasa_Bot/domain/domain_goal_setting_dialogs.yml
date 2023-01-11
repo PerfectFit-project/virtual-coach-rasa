@@ -1,5 +1,9 @@
 version: "3.1"
 
+intents:
+  - goal_setting_dialog
+  - EXTERNAL_goal_setting_dialog
+
 slots:
   # Branch 1 introduction
   # slot required to ask the user how is he/she doing
@@ -42,12 +46,59 @@ slots:
         conditions:
           - active_loop: goal_setting_plan_finished_form
 
+# ask if user wants explanation on cold turkey
+  extra_explanation_quiting:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: extra_explanation_form
+
 responses:
   # Branch 1 introduction
   utter_goal_setting_greeting:
     - text: "Hoi, wat leuk om je weer te spreken! 👋"
   utter_ask_how_doing_slot:
     - text: "Hoe gaat het met je?"
+  utter_thanks_for_sharing:
+    - text: "Bedankt voor het delen."
+  utter_goal_setting_1:
+    - text: "We gaan beginnen aan het volgende onderdeel van de voorbereidingsfase: doelen stellen. 🎯"
+  utter_goal_setting_2:
+    - text: "Afgelopen dagen heb je bijgehouden hoeveel je rookte en is gemeten hoeveel stappen je elke dag hebt gezet. 
+             Ook heb je nagedacht over jezelf in de toekomst. Dat helpt bij het stellen van doelen."
+  utter_goal_setting_3:
+    - text: "Maar waarom is het belangrijk om een doel te stellen? Een doel stellen zorgt ervoor dat je weet waar je
+             naar toe wilt werken. Dit kan helpen om gemotiveerd te blijven en je te richten op wat je wilt bereiken."
+  utter_goal_setting_4:
+    - text: "Bij het stellen van doelen is een goede voorbereiding belangrijk. Hier ga ik je bij helpen! We stellen
+             eerst een doel en maken dan een plan. Dit doen we voor stoppen met roken én voor meer bewegen."
+
+  # Branch 2a explenation goal setting smoking
+  utter_goal_setting_smoke_1:
+    - text: "Laten we eerst een doel stellen voor stoppen met roken. 🚭"
+  utter_goal_setting_smoke_2:
+    - text: "Hiervoor gaan we een stop-datum kiezen. Dit wordt de datum waarop je stopt met roken. 📅"
+  utter_goal_setting_smoke_3:
+    - text: "Het kan lastig kan zijn om in 1 keer te stoppen met roken. Onderzoek laat wel zien dat in 1 keer stoppen
+             met roken beter werkt dan langzaam aan stoppen. Ik raad daarom aan om in 1 keer te stoppen. 🛑"
+  utter_ask_extra_explanation_quiting:
+    - text: "Wil je meer uitleg over waarom in 1 keer stoppen het beste werkt? Of wil je gelijk doorgaan met het kiezen
+             van een stop-datum? Typ '1' als je meer uitleg wilt of typ '2' als je gelijk een stop-datum wil kiezen."
+
+ # Branch 2a1 extra explanation on cold turkey
+  utter_goal_setting_extra_explanation_1:
+    - text: "Wanneer je gaat stoppen met roken, werkt het vaak beter om in 1 keer te stoppen dan om langzaam af te
+             bouwen (te minderen). Het risico is namelijk dat je gaat minderen maar het echte stoppen blijft uitstellen.
+             "
+  utter_goal_setting_extra_explanation_2:
+    - text: "Ook geven veel mensen aan dat meteen stoppen duidelijkheid geeft. Bij afbouwen kan het aantrekkelijk zijn
+             om toch nog een extra keer te roken. En je kunt dan weer in je oude rookpatroon terug vallen. Niet roken
+             betekent 0 sigaretten. Deze duidelijke regel maakt het makkelijker om het vol te houden."
 
   utter_goal_setting_choose_date_1:
     - text: "Als je wilt kun je morgen al beginnen met stoppen met roken. 
@@ -107,6 +158,7 @@ actions:
   - validate_chosen_quit_date_form
   - validate_goal_setting_plan_finished_form
   - validate_how_doing_form
+  - validate_extra_explanation_form
 
 forms:
   # Branch 1 introduction
@@ -122,3 +174,7 @@ forms:
   goal_setting_plan_finished_form:
     required_slots:
       - goal_setting_plan_finished_slot
+
+  extra_explanation_form:
+    required_slots:
+      - extra_explanation_quiting

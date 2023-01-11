@@ -42,7 +42,7 @@ class DelayedMessage(Action):
         new_intent = 'EXTERNAL_done_with_video'
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=2))
+                         eta=datetime.datetime.now() + datetime.timedelta(seconds=30))
         return []
 
 class ActionReactToReminder(Action):

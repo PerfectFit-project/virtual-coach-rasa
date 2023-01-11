@@ -1,12 +1,11 @@
 import datetime
 from celery import Celery
-from rasa_sdk.events import ReminderScheduled
+from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk import Action, Tracker
 from typing import Text, Dict, Any
 from rasa_sdk.forms import FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from .helper import get_latest_bot_utterance
-from rasa_sdk.events import SlotSet
 from virtual_coach_db.helper.definitions import VideoLinks
 from .definitions import REDIS_URL
 

@@ -297,11 +297,11 @@ responses:
   utter_ask_persuasion_need_slot_intro:
     - text: "3) Ik heb het gevoel dat ik de activiteit moet doen."
   utter_ask_persuasion_need_slot:
-    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee Eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
   utter_thank_persuasion_reflection:
     - text: "Oké, bedankt voor het delen!"  
     - text: "Super dat je jouw gedachten met mij wilde delen!"
-    - text: "Heel fijn dat je dit wilde delen! "
+    - text: "Heel fijn dat je dit wilde delen!"
   utter_ask_persuasion_reflection_slot:
     - text: "{persuasion_reflective_question}"
   utter_thank_persuasion_state_questions:

@@ -19,8 +19,8 @@ rules:
     - active_loop: video_clear_form
   wait_for_user_input: false
 
-## 1a: Trigger relapse dialog  - smoking
-- rule: Relapse phase triggered smoke
+- rule: User wants to replay the video
+
   condition:
   - active_loop: video_clear_form
   steps:

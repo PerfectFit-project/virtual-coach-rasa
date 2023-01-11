@@ -116,33 +116,44 @@ nlu:
     - "EXTERNAL_relapse_dialog_pa"
 
 
-- intent: relapse_dialog
-  examples: |
-    - "relapse"
-    - "Relapse"
-    - "Having a relapse"
-    - "Ik heb een relapse"
-    - "Start relapse"
+#- intent: relapse_dialog
+#  examples: |
+#    - "relapse"
+#    - "Relapse"
+#    - "Having a relapse"
+#    - "Ik heb een relapse"
+#    - "Start relapse"
+#
+#- intent: submit_user_preferences
+#  examples: |
+#    - "I would like to submit my user preferences"
+#    - "User preferences"
+#
+#- intent: oke
+#  examples: |
+#    - "Oke"
+#    - "Ok"
+#
+#- intent: request_metadata
+#  examples: |
+#    - "Metadata"
+#    - "Ik wil metadata"
+#    - "metadata"
+#    - "Dit is metadata"
+#
+#- intent: user_shares_image
+#  examples: |
+#    - "file"
+#    - "File"
+#    - "Start file"
 
-- intent: submit_user_preferences
+- intent: goal_setting_dialog
   examples: |
-    - "I would like to submit my user preferences"
-    - "User preferences"
-
-- intent: oke
-  examples: |
-    - "Oke"
-    - "Ok"
-
-- intent: request_metadata
-  examples: |
-    - "Metadata"
-    - "Ik wil metadata"
-    - "metadata"
-    - "Dit is metadata"
-
-- intent: user_shares_image
-  examples: |
-    - "file"
-    - "File"
-    - "Start file"
+    - "goal setting dialog"
+    - "goal setting"
+    - "doel stellen"
+    - "gaol seting dialoq"
+    - "gool seeting diajlog"
+    - "gaal settting dialoog"
+    - "gol seting diaalog"
+    - "gal sating dialog"

@@ -9,7 +9,7 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               DialogOpenAnswers, 
                                               InterventionActivity,
                                               InterventionComponents,
-                                              UserPreferences, )
+                                              UserPreferences)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 

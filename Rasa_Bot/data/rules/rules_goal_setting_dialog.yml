@@ -2,6 +2,52 @@
 version: "3.1"
 
 rules:
+
+
+## 1 Introduce goal setting dialog
+- rule:
+  steps:
+  - intent: goal_setting_dialog  # for testing
+  - action: utter_goal_setting_greeting
+  - action: how_doing_form
+  - active_loop: how_doing_form
+  wait_for_user_input: false
+
+## 1 + 2: introduce goal setting and ask for extra explanation
+- rule: ask if explanation is needed
+  condition:
+  - active_loop: how_doing_form
+  steps:
+  - action: how_doing_form
+  - active_loop: null
+  - slot_was_set:
+    - how_doing_slot: null
+  - action: utter_thanks_for_sharing
+  - action: utter_goal_setting_1
+#  - action: utter_goal_setting_2
+#  - action: utter_goal_setting_3
+#  - action: utter_goal_setting_4
+#  - action: utter_goal_setting_smoke_1
+  - action: utter_goal_setting_smoke_2
+  - action: utter_goal_setting_smoke_3
+  - action: extra_explanation_form
+  - active_loop: extra_explanation_form
+  wait_for_user_input: false
+
+## 2a1: Explanation cold turkey
+- rule: extra explanation on cold turkey triggered
+  condition:
+  - active_loop: extra_explanation_form
+  steps:
+  - action: extra_explanation_form
+  - active_loop: null
+  - slot_was_set:
+    - extra_explanation_quiting: 1
+  - action: utter_goal_setting_extra_explanation_1
+  - action: utter_goal_setting_extra_explanation_2
+
+
+## 2b: set new quit date
 - rule: Ask a new quit date
   steps:
   - action: action_get_first_last_date

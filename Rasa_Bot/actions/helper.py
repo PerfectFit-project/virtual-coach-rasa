@@ -14,9 +14,8 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 
 
 def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_value: int):
-
     """
-       saves to the db a closed answer
+       Saves to the db a closed answer.
     """
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -30,10 +29,9 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
 
 
 def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answers_values: str):
-
     """
-       saves to the db all the closed answers provided as a string, where each answer value
-       is separated from the other by a space character
+       Saves to the db all the closed answers provided as a string, where each answer value
+       is separated from the other by a space character.
     """
 
     values = list(map(int, answers_values.split()))
@@ -45,9 +43,8 @@ def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answer
 
 
 def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value: str):
-
     """
-       saves to the db an open answer
+       Saves to the db an open answer.
     """
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db

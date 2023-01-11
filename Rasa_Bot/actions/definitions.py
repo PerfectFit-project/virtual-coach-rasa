@@ -25,7 +25,9 @@ NUM_TOP_ACTIVITIES = 5
 # Opt policy for [want][prompts][need]
 OPT_POLICY = [[[0, 1], [2, 1]],[[0, 0], [2, 0]]]
 # Feature means to map features to binary ones
-STATE_FEATURE_MEANS = [3.96, 3.74, 3.88]  # want, prompts, need (+1 compared to paper, because here values are from 1-5 (not 0-4))
+# want, prompts, need 
+# (+1 compared to paper, because here values are from 1-5 (not 0-4))
+STATE_FEATURE_MEANS = [3.96, 3.74, 3.88]
 # Persuasive messages for the persuasion types of commitment and consensus
 COMMITMENT = ["Vergeet niet: Je hebt besloten om gezonder te gaan leven. \
                   Het zal goed voelen wanneer je je aan deze belofte houdt.",
@@ -48,6 +50,7 @@ CONSENSUS = ["De meeste mensen denken dat deze activiteit zal helpen om",
              "Het grootste deel van de mensen gelooft dat deze activiteit zal helpen om",
              "Het grootste deel van de mensen gelooft dat als je deze activiteit \
                  NIET doet, het moeilijker kan zijn om"]
+# Reflective questions for persuasion types of commitment and consensus
 REFLECTIVE_QUESTION_COMMITMENT = "Je hebt het besluit genomen om gezonder te \
     gaan leven. Hoe helpt deze activiteit jou hierbij?"
 REFLECTIVE_QUESTION_COMMITMENT_IDENTITY = "Hoe helpt deze activiteit jou bij \

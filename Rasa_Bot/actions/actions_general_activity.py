@@ -8,8 +8,10 @@ from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
 from virtual_coach_db.helper import (ExecutionInterventionComponents, 
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
-from .definitions import (COMMITMENT, CONSENSUS, DATABASE_URL, NUM_TOP_ACTIVITIES, 
-                          OPT_POLICY, STATE_FEATURE_MEANS, REFLECTIVE_QUESTION_COMMITMENT,
+from .definitions import (COMMITMENT, CONSENSUS, DATABASE_URL, 
+                          NUM_TOP_ACTIVITIES, 
+                          OPT_POLICY, STATE_FEATURE_MEANS, 
+                          REFLECTIVE_QUESTION_COMMITMENT,
                           REFLECTIVE_QUESTION_COMMITMENT_IDENTITY,
                           REFLECTIVE_QUESTION_CONSENSUS)
 from .helper import get_latest_bot_utterance, store_dialog_closed_answer_to_db
@@ -570,6 +572,27 @@ class SavePersuasionToDatabase(Action):
                                          question_id = DialogQuestionsEnum.PERSUASION_EFFORT)
 
         return []
+    
+    
+def get_opt_persuasion_type(tracker: Tracker):
+    """
+    Get optimal persuasion type for user state.
+    """
+    
+    # Get answers to state feature questions
+    want = tracker.get_slot('persuasion_want_slot')
+    prompts = tracker.get_slot('persuasion_prompts_slot')
+    need = tracker.get_slot('persuasion_need_slot')
+    
+    # Make state binary
+    binary_state = [want >= STATE_FEATURE_MEANS[0], 
+                    prompts >= STATE_FEATURE_MEANS[1], 
+                    need >= STATE_FEATURE_MEANS[2]]
+    
+    # Get optimal persuasion type
+    pers_type = OPT_POLICY[binary_state[0]][binary_state[1]][binary_state[2]]
+    
+    return pers_type
 
 
 class SendPersuasiveMessageActivity(Action):
@@ -579,7 +602,6 @@ class SendPersuasiveMessageActivity(Action):
         return "send_persuasive_message_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        # pylint: disable=unused-argument
         
         chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
         activities_slot = tracker.get_slot('rnd_activities_ids')
@@ -598,28 +620,17 @@ class SendPersuasiveMessageActivity(Action):
         )
         benefit = activities[0].intervention_activity_benefit
         
-        # Get answers to state feature questions
-        want = tracker.get_slot('persuasion_want_slot')
-        prompts = tracker.get_slot('persuasion_prompts_slot')
-        need = tracker.get_slot('persuasion_need_slot')
+        # Get optimal persuasion type for user state
+        pers_type = get_opt_persuasion_type(tracker)
         
-        # Make state binary
-        binary_state = [want >= STATE_FEATURE_MEANS[0], 
-                        prompts >= STATE_FEATURE_MEANS[1], 
-                        need >= STATE_FEATURE_MEANS[2]]
-        
-        # Get optimal persuasion type
-        pers_type = OPT_POLICY[binary_state[0]][binary_state[1]][binary_state[2]]
-        
-        reflective_question = ""  # Relfective question to ask users as part of persuasion
+        reflective_question = ""  # Reflective question to ask users as part of persuasion
         input_required = False  # Whether we will ask a reflective question to users
         message_idx = -1  # Index of persuasive message
         # Commitment
         if pers_type == 0:
             input_required = True
             message_idx = random.choice(list(range(len(COMMITMENT))))
-            message = COMMITMENT[message_idx]
-            dispatcher.utter_message(text=message)
+            dispatcher.utter_message(text=COMMITMENT[message_idx])
             # Not identity-based formulation
             if message_idx < 4:
                 reflective_question = REFLECTIVE_QUESTION_COMMITMENT
@@ -630,8 +641,7 @@ class SendPersuasiveMessageActivity(Action):
         elif pers_type == 1:
             input_required = True
             message_idx = random.choice(list(range(len(CONSENSUS))))
-            message = CONSENSUS[message_idx] + " " + benefit
-            dispatcher.utter_message(text=message)
+            dispatcher.utter_message(text=CONSENSUS[message_idx] + " " + benefit)
             reflective_question = REFLECTIVE_QUESTION_CONSENSUS
         
         return [SlotSet("persuasion_type", pers_type),

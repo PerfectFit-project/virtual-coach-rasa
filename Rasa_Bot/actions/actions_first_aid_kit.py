@@ -1,3 +1,5 @@
+import logging
+
 from celery import Celery
 from datetime import datetime, timedelta
 from rasa_sdk import Action
@@ -42,6 +44,7 @@ class ActionResumeAfterFak(Action):
             return[FollowupAction('action_end_dialog')]
 
         new_intent = 'EXTERNAL_' + current_intervention
+        logging.info(new_intent)
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent),
                          eta=datetime.now() + timedelta(seconds=10))
@@ -71,12 +74,9 @@ class ActionGetFirstAidKit(Action):
         )
 
         kit_text = ""
-        kit_exists = False
 
         # the kit exists
         if selected is not None:
-
-            kit_exists = True
 
             # get up to the highest rated activities
             sorted_activities = sorted(

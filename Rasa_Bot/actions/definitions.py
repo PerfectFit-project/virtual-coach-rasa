@@ -2,7 +2,6 @@
 Stores definitions used in rasa actions, related to database, endpoints, timezone etcetera.
 """
 import os
-from enum import Enum
 
 from dateutil import tz
 
@@ -21,11 +20,3 @@ EVENING = (18, 24)
 
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5
-
-class DialogQuestions(Enum):
-    FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
-    FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?
-    FUTURE_SELF_MOVER_WORDS = 3  # Which three words suits you as exerciser?
-    FUTURE_SELF_MOVER_WHY = 4  # Why did you pick these words for exercising?
-    FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER = 5  # I see myself as smoker, non-smoker or quitter
-    FUTURE_SELF_I_SEE_MYSELF_AS_MOVER = 6  # I see myself as active, bit active or not active

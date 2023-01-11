@@ -1,3 +1,5 @@
+version: "3.1"
+
 intents:
   - CENTRAL_get_first_aid_kit
 

@@ -23,6 +23,7 @@ app.conf.timezone = TIMEZONE
 
 @app.task
 def intervention_component_completed(user_id: int, intervention_component_name: str):
+    logging.info(intervention_component_name)
     phase = utils.get_current_phase(user_id)
     intervention_component = utils.get_intervention_component(intervention_component_name)
     intervention_id = intervention_component.intervention_component_id
@@ -47,11 +48,8 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
             utils.get_next_preparation_intervention_component(intervention_component_name)
 
         if next_intervention_component is not None:
-            endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
-            headers = {'Content-Type': 'application/json'}
-            params = {'output_channel': 'niceday_trigger_input_channel'}
-            data = '{"name": "' + next_intervention_component + '" }'
-            requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+            trigger_intervention_component.apply_async(
+                args=[user_id, next_intervention_component])
 
         else:
             logging.info("PREPARATION PHASE ENDED")
@@ -80,18 +78,34 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
         utils.store_intervention_component_to_db(state)
 
+    else:
+        state = UserInterventionState(
+            users_nicedayuid=user_id,
+            intervention_phase_id=phase.phase_id,
+            intervention_component_id=intervention_id,
+            completed=True,
+            last_time=datetime.now().astimezone(TIMEZONE),
+            last_part=0,
+            next_planned_date=None,
+            task_uuid=None
+        )
+
+        utils.store_intervention_component_to_db(state)
+
+
 @app.task
 def relapse_dialog(user_id: int, intervention_component_name: str):
     ##TODO functionality to detect relapse and return to correct component
     logging.info("celery received")
     phase = utils.get_phase_object(Phases.LAPSE.value)
+    component = utils.get_intervention_component(intervention_component_name)
 
     logging.info("celery received the message")
 
     state = UserInterventionState(
         users_nicedayuid=user_id,
         intervention_phase_id=phase.phase_id,
-        intervention_component_id=1,
+        intervention_component_id=component.intervention_component_id,
         completed=False,
         last_time=datetime.now().astimezone(TIMEZONE),
         last_part=0,
@@ -101,11 +115,8 @@ def relapse_dialog(user_id: int, intervention_component_name: str):
 
     utils.store_intervention_component_to_db(state)
 
-    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
-    headers = {'Content-Type': 'application/json'}
-    params = {'output_channel': 'niceday_input_channel'}
-    data = '{"name": "' + 'EXTERNAL_trigger_relapse_phase' + '" }'
-    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    trigger_intervention_component.apply_async(
+        args=[user_id, 'EXTERNAL_relapse_dialog'])
 
 
 @app.task

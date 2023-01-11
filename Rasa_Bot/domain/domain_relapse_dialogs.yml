@@ -1,3 +1,5 @@
+version: "3.1"
+
 intents:
   - relapse_dialog
   - EXTERNAL_relapse_dialog
@@ -18,7 +20,7 @@ slots:
         conditions:
           - active_loop: smoke_or_pa_form
 
-  one_or_two_slot:
+  now_or_later_slot:
     type: categorical
     values:
       - 1
@@ -28,6 +30,16 @@ slots:
       - type: from_text
         conditions:
           - active_loop: relapse_stop_now_later_form
+
+  medication_info_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
           - active_loop: relapse_medication_info_form
 
   crave_lapse_relapse:
@@ -322,6 +334,14 @@ slots:
     mappings:
       - type: custom
 
+  # counts the repetition of choosing HRS activity
+  repetitions_counter:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -337,8 +357,10 @@ responses:
   utter_specify_smoke:
     - text: "Kun je mij vertellen wat er aan de hand is?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken. Typ '2' als je vandaag één of meer sigaretten hebt
-             gerookt. Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.
+    - text: "Typ '1' als je zin hebt om te roken. 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt. 
+             Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.
+             Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.
              "
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid"
@@ -462,7 +484,7 @@ responses:
   utter_hrs_reasons_1:
     - text: "Je kan trots zijn op jezelf dat je deze trek hebt weerstaan. Goed bezig!"
   utter_hrs_reasons_2:
-    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je net zin kreeg om te roken."
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je zin kreeg om te roken. "
   utter_hrs_reasons_3:
     - text: "Daarom wil ik je wat vragen stellen over de situatie waarin je was toen je zin kreeg om te roken."
   utter_hrs_reasons_4:
@@ -559,7 +581,7 @@ responses:
              vragen gaan over de laatste keer dat je rookte"
   utter_smoke_relapse_5:
     - text: "Je kan ervoor kiezen om meteen te stoppen of een nieuwe stopdatum te plannen."
-  utter_ask_relapse_stop_now_later_form_one_or_two_slot:
+  utter_ask_now_or_later_slot:
     - text: "Hoe wil je nu verder? 
             Typ 1 als je meteen weer wil stoppen. 
             Typ 2 als je een nieuwe stopdatum wil inplannen."
@@ -571,7 +593,7 @@ responses:
             Wat helpt is om deze meteen weg te gooien. "
   utter_smoke_relapse_8:
     - text: "Wat ook helpt is om te kijken of je genoeg hulp hebt om te stoppen en gestopt te blijven."
-  utter_ask_relapse_medication_info_form_one_or_two_slot:
+  utter_ask_medication_info_slot:
     - text: "Met hulpmiddelen of medicatie vergroot je de kans om gestopt te blijven. 
             Wil je hier meer informatie over? 
             Typ 1 voor ja, typ 2 voor nee."
@@ -612,7 +634,7 @@ responses:
             Typ 4 als je al lichamelijk actief bent geweest. 
             Typ 5 als je iets deed wat niet in het lijstje staat. "
   utter_ask_pa_happened_special_slot:
-    - text: "Gebeurde er vandaag iets bijzonders?"
+    - text: "Gebeurde er iets bijzonders?"
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_pa_lapse_5:
@@ -662,8 +684,6 @@ responses:
 
 actions:
   - action_check_reasons
-  - action_reset_one_or_two_slot
-  - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa
@@ -676,17 +696,23 @@ actions:
   - show_chosen_coping_activity
   - show_first_coping_activity
   - show_first_coping_activity_pa
+  - store_event_smoke
+  - store_how_feel_smoke
   - store_hrs_feeling
   - store_hrs_situation
   - store_hrs_what_happened
   - store_hrs_who_with
+  - store_number_smoke
   - store_pa_specify_pa
   - store_pa_type
   - store_pa_together
   - store_pa_why_fail
   - store_pa_doing_today
   - store_pa_happened_special
-  - store_pa_reflect_barchart
+  - store_reflect_barchart
+  - store_type_smoke
+  - store_what_doing_smoke
+  - store_with_whom_smoke
   - validate_crave_lapse_relapse_form
   - validate_ehbo_me_self_form
   - validate_ehbo_me_self_lapse_form
@@ -776,11 +802,11 @@ forms:
 
   relapse_stop_now_later_form:
     required_slots:
-      - one_or_two_slot
+      - now_or_later_slot
 
   relapse_medication_info_form:
     required_slots:
-      - one_or_two_slot
+      - medication_info_slot
 
   pa_specify_pa_form:
     required_slots:

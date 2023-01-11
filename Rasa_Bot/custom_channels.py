@@ -3,7 +3,8 @@ import os
 import typing
 from typing import Text, Callable, Awaitable, Any, Dict, List
 
-from rasa.core.channels.channel import InputChannel, UserMessage, CollectingOutputChannel, OutputChannel
+from rasa.core.channels.channel import InputChannel, UserMessage, CollectingOutputChannel,\
+    OutputChannel
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
@@ -11,8 +12,7 @@ from sanic.response import HTTPResponse
 from niceday_client import NicedayClient
 
 
-#NICEDAY_API_URL = os.getenv('NICEDAY_API_ENDPOINT')
-NICEDAY_API_URL = "http://niceday_api:8080/"
+NICEDAY_API_URL = os.getenv('NICEDAY_API_ENDPOINT')
 
 
 class NicedayOutputChannel(CollectingOutputChannel):
@@ -153,7 +153,7 @@ class NicedayTriggerInputChannel(InputChannel):
 
         return custom_webhook
 
-    def get_output_channel(self) -> CollectingOutputChannel:
+    def get_output_channel(self) -> NicedayTriggerOutputChannel:
         """
         Register output channel. This is the output channel that is used when calling the
         'trigger_intent' endpoint.

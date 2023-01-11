@@ -308,6 +308,8 @@ responses:
     - text: "Super! Bedankt voor je antwoorden."
     - text: "Bedankt voor het beantwoorden van de vragen!"
     - text: "Goed! Heel fijn dat je deze vragen wilde beantwoorden."
+  utter_intro_activity_text:
+    - text: "Hier is je nieuwe oefening:"
     
 actions:
   - check_if_first_execution_ga   # Check if it is the first time the dialog is performed

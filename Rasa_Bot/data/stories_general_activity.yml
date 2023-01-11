@@ -188,6 +188,7 @@ stories:
   - slot_was_set:
     - persuasion_requires_input: false
   - action: save_persuasion_to_database
+  - action: utter_intro_activity_text
   - action: load_activity
   - action: action_end_dialog
 
@@ -219,5 +220,6 @@ stories:
   - active_loop: null
   - action: utter_thank_persuasion_reflection
   - action: save_persuasion_to_database
+  - action: utter_intro_activity_text
   - action: load_activity
   - action: action_end_dialog

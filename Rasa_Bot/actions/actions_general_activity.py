@@ -553,15 +553,21 @@ class SavePersuasionToDatabase(Action):
         effort = tracker.get_slot('persuasion_effort_slot')
         
         # Store state feature values to database
-        store_dialog_closed_answer_to_db(user_id, answer_value = want, question_id = DialogQuestionsEnum.PERSUASION_WANT)
-        store_dialog_closed_answer_to_db(user_id, answer_value = need, question_id = DialogQuestionsEnum.PERSUASION_NEED)
-        store_dialog_closed_answer_to_db(user_id, answer_value = prompts, question_id = DialogQuestionsEnum.PERSUASION_PROMPTS)
+        store_dialog_closed_answer_to_db(user_id, answer_value = want, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_WANT)
+        store_dialog_closed_answer_to_db(user_id, answer_value = need, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_NEED)
+        store_dialog_closed_answer_to_db(user_id, answer_value = prompts, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_PROMPTS)
         # Answer_values must start at 1
-        store_dialog_closed_answer_to_db(user_id, answer_value = pers_type + 1, question_id = DialogQuestionsEnum.PERSUASION_TYPE)
+        store_dialog_closed_answer_to_db(user_id, answer_value = pers_type + 1, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_TYPE)
         # +2 since the lowest value we have is -1 in case of no persuasion
-        store_dialog_closed_answer_to_db(user_id, answer_value = message_idx + 2, question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX)
+        store_dialog_closed_answer_to_db(user_id, answer_value = message_idx + 2, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX)
         # +1 since the lowest value is 0
-        store_dialog_closed_answer_to_db(user_id, answer_value = effort + 1, question_id = DialogQuestionsEnum.PERSUASION_EFFORT)
+        store_dialog_closed_answer_to_db(user_id, answer_value = effort + 1, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_EFFORT)
 
         return []
 
@@ -597,7 +603,8 @@ class SendPersuasiveMessageActivity(Action):
         need = tracker.get_slot('persuasion_need_slot')
         
         # Make state binary
-        binary_state = [want >= STATE_FEATURE_MEANS[0], prompts >= STATE_FEATURE_MEANS[1], 
+        binary_state = [want >= STATE_FEATURE_MEANS[0], 
+                        prompts >= STATE_FEATURE_MEANS[1], 
                         need >= STATE_FEATURE_MEANS[2]]
         
         # Get optimal persuasion type

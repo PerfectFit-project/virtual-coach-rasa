@@ -5,8 +5,11 @@ import datetime
 import secrets
 
 from .definitions import DATABASE_URL, TIMEZONE
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers, InterventionComponents,
-                                              UserPreferences, InterventionActivity)
+from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
+                                              DialogOpenAnswers, 
+                                              InterventionActivity,
+                                              InterventionComponents,
+                                              UserPreferences, )
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -31,10 +34,6 @@ def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answer
     """
        saves to the db all the closed answers provided as a string, where each answer value
        is separated from the other by a space character
-    """
-
-    """
-       saves to the db an open answer
     """
 
     values = list(map(int, answers_values.split()))

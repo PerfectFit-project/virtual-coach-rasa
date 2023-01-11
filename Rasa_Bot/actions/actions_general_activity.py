@@ -579,6 +579,7 @@ class SendPersuasiveMessageActivity(Action):
         return "send_persuasive_message_activity"
 
     async def run(self, dispatcher, tracker, domain):
+        # pylint: disable=unused-argument
         
         chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
         activities_slot = tracker.get_slot('rnd_activities_ids')
@@ -616,7 +617,7 @@ class SendPersuasiveMessageActivity(Action):
         # Commitment
         if pers_type == 0:
             input_required = True
-            message_idx = random.choice([i for i in range(len(COMMITMENT))])
+            message_idx = random.choice(list(range(len(COMMITMENT))))
             message = COMMITMENT[message_idx]
             dispatcher.utter_message(text=message)
             # Not identity-based formulation
@@ -628,7 +629,7 @@ class SendPersuasiveMessageActivity(Action):
         # Consensus
         elif pers_type == 1:
             input_required = True
-            message_idx = random.choice([i for i in range(len(CONSENSUS))])
+            message_idx = random.choice(list(range(len(CONSENSUS))))
             message = CONSENSUS[message_idx] + " " + benefit
             dispatcher.utter_message(text=message)
             reflective_question = REFLECTIVE_QUESTION_CONSENSUS

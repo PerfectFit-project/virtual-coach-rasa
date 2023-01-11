@@ -10,7 +10,8 @@ from virtual_coach_db.helper import (ExecutionInterventionComponents,
 from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import (COMMITMENT, CONSENSUS, DATABASE_URL, NUM_TOP_ACTIVITIES, 
                           OPT_POLICY, STATE_FEATURE_MEANS, REFLECTIVE_QUESTION_COMMITMENT,
-                          REFLECTIVE_QUESTION_COMMITMENT_IDENTITY)
+                          REFLECTIVE_QUESTION_COMMITMENT_IDENTITY,
+                          REFLECTIVE_QUESTION_CONSENSUS)
 from .helper import get_latest_bot_utterance, store_dialog_closed_answer_to_db
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
@@ -623,7 +624,7 @@ class SendPersuasiveMessageActivity(Action):
             message_idx = random.choice([i for i in range(len(CONSENSUS))])
             message = CONSENSUS[message_idx] + benefit
             dispatcher.utter_message(text=message)
-            reflective_question = "Please tell me what you think: How would people like you, in a situation like yours, agree with this?"
+            reflective_question = REFLECTIVE_QUESTION_CONSENSUS
         
         return [SlotSet("persuasion_type", pers_type),
                 SlotSet("persuasive_message_index", message_idx),

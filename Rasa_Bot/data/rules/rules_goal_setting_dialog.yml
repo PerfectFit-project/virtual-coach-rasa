@@ -90,7 +90,7 @@ rules:
   - action: utter_goal_setting_choose_date_11
   - action: utter_goal_setting_choose_date_12
   - action: utter_goal_setting_choose_date_13
-  - action: goal_setting_continue_after_plan
+  - action: action_goal_setting_continue_after_plan
 
 - rule: explanation goal setting pa
   steps:
@@ -111,15 +111,48 @@ rules:
   - action: utter_goal_setting_pa_set_4
   - action: which_sport_form
   - active_loop: which_sport_form
+  - active_loop: null  # TODO: store slot to database
+  - action: utter_goal_setting_pa_set_5
+  - action: utter_goal_setting_pa_set_6
+  - action: first_pa_goal_form
+  - active_loop: first_pa_goal_form
+  - active_loop: null  # TODO: ask if this is needed in database
+  - action: utter_goal_setting_pa_set_7
+  - action: utter_goal_setting_pa_set_8
+  - action: utter_goal_setting_pa_set_9
+  - action: testimonial_one_read_form
+  - active_loop: testimonial_one_read_form
+  - active_loop: null
+  - action: read_second_testimonial_form
+  - active_loop: read_second_testimonial_form
   wait_for_user_input: false
 
-
-- rule: set pa goal long term
+# 3b1 read second testimonial pa
+- rule: read second testimonial pa
   condition:
-  - active_loop: which_sport_form
+  - active_loop: read_second_testimonial_form
   steps:
-  - action: which_sport_form
+  - action: read_second_testimonial_form
   - active_loop: null
   - slot_was_set:
-    - which_sport: null  # TODO: store slot to database
-  - action: utter_goal_setting_pa_set_5
+    - read_second_testimonial: 1
+  - action: utter_second_testimonial_1
+  - action: utter_second_testimonial_2
+  - action: testimonial_two_read_form
+  - active_loop: testimonial_two_read_form
+  - active_loop: null
+  - action: action_continue_testimonial_evaluation
+
+- rule: skip second testimonial pa
+  condition:
+  - active_loop: read_second_testimonial_form
+  steps:
+  - action: read_second_testimonial_form
+  - active_loop: null
+  - slot_was_set:
+    - read_second_testimonial: 2
+  - action: action_continue_testimonial_evaluation
+
+- rule: evaluate testimonials
+  steps:
+  - action: utter_test_utter_1

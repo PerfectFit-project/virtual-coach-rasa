@@ -28,9 +28,9 @@ class ActionGetFirstLastDate(Action):
                 SlotSet('last_possible_quit_date', last_date)]
 
 
-class GoalSettingContinueAfterPlan(Action):
+class ActionGoalSettingContinueAfterPlan(Action):
     def name(self):
-        return "goal_setting_continue_after_plan"
+        return "action_goal_setting_continue_after_plan"
 
     async def run(self, dispatcher, tracker, domain):
         # checks in which dialog the user is, and resumes the correct flow accordingly
@@ -163,3 +163,91 @@ class ValidateWhichSportForm(FormValidationAction):
             return {"which_sport": None}
 
         return {"which_sport": value}
+
+
+class ValidateFirstPaGoalForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_first_pa_form'
+
+    def validate_which_sport(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate first pa goal form"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_first_pa_goal':
+            return {"first_pa_goal": None}
+
+        return {"first_pa_goal": value}
+
+
+class ValidateTestimonialOneReadForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_testimonial_one_read_form'
+
+    def validate_testimonial_one_read(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate testimonial_one_read_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_testimonial_one_read':
+            return {"testimonial_one_read": None}
+
+        if value not in ['Klaar', 'klaar']:
+            return {"testimonial_one_read": None}
+
+        return {"testimonial_one_read": value}
+
+
+class ValidateTestimonialTwoReadForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_testimonial_two_read_form'
+
+    def validate_testimonial_two_read(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate testimonial_two_read_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_testimonial_two_read':
+            return {"testimonial_two_read": None}
+
+        if value not in ['Klaar', 'klaar']:
+            return {"testimonial_two_read": None}
+
+        return {"testimonial_two_read": value}
+
+
+class ValidateReadSecondTestimonialForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_read_second_testimonial_form'
+
+    def validate_read_second_testimonial(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate read_second_testimonial."""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_read_second_testimonial':
+            return {"read_second_testimonial": None}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"read_second_testimonial": None}
+
+        return {"read_second_testimonial": value}
+
+
+class ActionContinueTestimonialEvaluation(Action):
+    def name(self):
+        return "action_continue_testimonial_evaluation"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('utter_test_utter_1')]

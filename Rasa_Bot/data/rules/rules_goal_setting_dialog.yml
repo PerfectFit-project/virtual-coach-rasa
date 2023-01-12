@@ -75,7 +75,7 @@ rules:
   condition:
   - active_loop: chosen_quit_date_form
   steps:
-  - action: chosen_quit_date_form
+  - action: chosen_quit_date_form  # TODO: store date to db
   - active_loop: null
   - action: utter_goal_setting_choose_date_4
   - action: utter_goal_setting_choose_date_5
@@ -105,6 +105,11 @@ rules:
   - action: utter_goal_setting_pa_expl_9
   - action: utter_goal_setting_pa_expl_10
   - action: utter_goal_setting_pa_expl_11  # TODO: extract number of steps from DB
+  - action: utter_goal_setting_pa_set_1
+  - action: utter_goal_setting_pa_set_2
+  - action: utter_goal_setting_pa_set_3
+  - action: utter_goal_setting_pa_set_4
+  - action: which_sport_form
   - active_loop: which_sport_form
   wait_for_user_input: false
 
@@ -116,5 +121,5 @@ rules:
   - action: which_sport_form
   - active_loop: null
   - slot_was_set:
-    - which_sport: null  # TODO: store to slot and database
-  - action: utter_goal_setting_pa_expl_12
+    - which_sport: null  # TODO: store slot to database
+  - action: utter_goal_setting_pa_set_5

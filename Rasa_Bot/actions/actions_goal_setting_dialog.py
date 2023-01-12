@@ -142,3 +142,24 @@ class ActionSetSlotGoalSettingDialog(Action):
 
         return [SlotSet('current_intervention_component',
                         PreparationInterventionComponents.GOAL_SETTING)]
+
+
+class ValidateWhichSportForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_which_sport_form'
+
+    def validate_which_sport(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate which sport form"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_which_sport':
+            return {"which_sport": None}
+
+        if not validator.validate_long_enough_response_chars(value, 4):
+            dispatcher.utter_message(response="utter_too_few_charachters_sport")
+            return {"which_sport": None}
+
+        return {"which_sport": value}

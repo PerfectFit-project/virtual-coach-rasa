@@ -203,7 +203,15 @@ responses:
             zijn qua beweging?"
   utter_goal_setting_pa_set_4:
     - text: "Laten we eerst nadenken over wat voor soort beweging je zou willen doen. 🚴 🚶 🏌️ 🏊 🏋️🧘"
-  utter_ask
+  utter_ask_which_sport:
+    - text: "Welke sport of soort beweging zou je graag willen doen? Typ nu de sport die je graag wilt doen.
+            Bijvoorbeeld 'wandelen', 'hardlopen', 'tennissen', 'dansen', 'yoga doen' of iets anders."
+  utter_too_few_charachters_sport:
+    - text: "Ik begrijp niet helemaal welke sport je bedoelt. Wil je nog een keer de sport typen die je graag wilt doen
+            om actiever te worden?"
+  utter_goal_setting_pa_set_5:
+    - text: "Super, je wilt dus vaker {which_sport}."
+
 
   utter_ask_chosen_quit_date_slot:
     - text: "Welke datum wil je stoppen met roken?"
@@ -223,6 +231,7 @@ actions:
   - validate_goal_setting_plan_finished_form
   - validate_how_doing_form
   - validate_extra_explanation_form
+  - validate_which_sport_form
 
 forms:
   # Branch 1 introduction
@@ -242,7 +251,6 @@ forms:
   extra_explanation_form:
     required_slots:
       - extra_explanation_quiting
-
 
   which_sport_form:
     required_slots:

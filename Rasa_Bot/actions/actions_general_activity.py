@@ -515,20 +515,21 @@ class SavePersuasionToDatabase(Action):
         
         # Store state feature values to database
         store_dialog_closed_answer_to_db(user_id, answer_value = want, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_WANT)
+                                         question_id = DialogQuestionsEnum.PERSUASION_WANT.value)
         store_dialog_closed_answer_to_db(user_id, answer_value = need, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_NEED)
+                                         question_id = DialogQuestionsEnum.PERSUASION_NEED.value)
         store_dialog_closed_answer_to_db(user_id, answer_value = prompts, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_PROMPTS)
-        # Answer_values must start at 1
-        store_dialog_closed_answer_to_db(user_id, answer_value = pers_type + 1, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_TYPE)
-        # +2 since the lowest value we have is -1 in case of no persuasion
+                                         question_id = DialogQuestionsEnum.PERSUASION_PROMPTS.value)
+        # Store used persuasion type (1 = commitment, 2 = consensus, 3 = no persuasion)
+        store_dialog_closed_answer_to_db(user_id, answer_value = pers_type, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_TYPE.value)
+        # +2 since the lowest value we have is -1 in case of no persuasion, and the 
+        # answer values must start at 1 in the database
         store_dialog_closed_answer_to_db(user_id, answer_value = message_idx + 2, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX)
+                                         question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX.value)
         # +1 since the lowest value is 0
         store_dialog_closed_answer_to_db(user_id, answer_value = effort + 1, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_EFFORT)
+                                         question_id = DialogQuestionsEnum.PERSUASION_EFFORT.value)
 
         return []
     
@@ -586,7 +587,7 @@ class SendPersuasiveMessageActivity(Action):
         input_required = False  # Whether we will ask a reflective question to users
         message_idx = -1  # Index of persuasive message
         # Commitment
-        if pers_type == 0:
+        if pers_type == 1:
             input_required = True
             message_idx = random.randrange(len(COMMITMENT))
             dispatcher.utter_message(text=COMMITMENT[message_idx])
@@ -597,7 +598,7 @@ class SendPersuasiveMessageActivity(Action):
             else:
                 reflective_question = REFLECTIVE_QUESTION_COMMITMENT_IDENTITY
         # Consensus
-        elif pers_type == 1:
+        elif pers_type == 2:
             input_required = True
             message_idx = random.randrange(len(CONSENSUS))
             dispatcher.utter_message(text=CONSENSUS[message_idx] + " " + benefit)

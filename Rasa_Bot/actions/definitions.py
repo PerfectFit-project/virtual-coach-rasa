@@ -23,7 +23,9 @@ EVENING = (18, 24)
 NUM_TOP_ACTIVITIES = 5
 
 # Opt policy for [want][prompts][need]
-OPT_POLICY = [[[0, 1], [2, 1]],[[0, 0], [2, 0]]]
+# Start at 1, since database values start at 1.
+# 1 = commitment, 2 = consensus, 3 = no persuasion
+OPT_POLICY = [[[1, 2], [3, 2]],[[1, 1], [3, 1]]]
 # Feature means to map features to binary ones
 # want, prompts, need 
 # (+1 compared to paper, because here values are from 1-5 (not 0-4))

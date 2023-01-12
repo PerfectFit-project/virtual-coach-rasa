@@ -608,7 +608,7 @@ class SendPersuasiveMessageActivity(Action):
         # Commitment
         if pers_type == 0:
             input_required = True
-            message_idx = random.choice(list(range(len(COMMITMENT))))
+            message_idx = random.randrange(len(COMMITMENT))
             dispatcher.utter_message(text=COMMITMENT[message_idx])
             # Not identity-based formulation
             if message_idx < 4:
@@ -619,7 +619,7 @@ class SendPersuasiveMessageActivity(Action):
         # Consensus
         elif pers_type == 1:
             input_required = True
-            message_idx = random.choice(list(range(len(CONSENSUS))))
+            message_idx = random.randrange(len(CONSENSUS))
             dispatcher.utter_message(text=CONSENSUS[message_idx] + " " + benefit)
             reflective_question = REFLECTIVE_QUESTION_CONSENSUS
         

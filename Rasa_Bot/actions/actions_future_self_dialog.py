@@ -13,12 +13,13 @@ from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import PreparationInterventionComponents
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, UserInterventionState,
+from virtual_coach_db.dbschema.models import (Users, DialogOpenAnswers, 
+                                              UserInterventionState,
                                               InterventionComponents)
 
 from .definitions import DialogQuestions, TIMEZONE, DATABASE_URL
-from .helper import (store_dialog_answer_to_db,
-                                    get_intervention_component_id)
+from .helper import (store_dialog_open_answer_to_db,
+                     get_intervention_component_id)
 
 
 class SetSlotFutureSelfDialog(Action):
@@ -39,7 +40,8 @@ class ActionStoreSmokerWords(Action):
     async def run(self, dispatcher, tracker, domain):
         answer = tracker.get_slot("picked_words")
         user_id = tracker.current_state()['sender_id']
-        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WORDS)
+        store_dialog_open_answer_to_db(user_id, answer_value = answer, 
+                                       question_id = DialogQuestions.FUTURE_SELF_SMOKER_WORDS)
         return
 
 
@@ -52,7 +54,8 @@ class ActionStoreMoverWords(Action):
     async def run(self, dispatcher, tracker, domain):
         answer = tracker.get_slot("picked_words")
         user_id = tracker.current_state()['sender_id']
-        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_MOVER_WORDS)
+        store_dialog_open_answer_to_db(user_id, answer_value = answer, 
+                                       question_id = DialogQuestions.FUTURE_SELF_MOVER_WORDS)
         return
 
 
@@ -65,7 +68,8 @@ class ActionStoreWhyMoverWords(Action):
     async def run(self, dispatcher, tracker, domain):
         answer = tracker.get_slot("why_picked_words")
         user_id = tracker.current_state()['sender_id']
-        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_MOVER_WHY)
+        store_dialog_open_answer_to_db(user_id, answer_value = answer, 
+                                       question_id = DialogQuestions.FUTURE_SELF_MOVER_WHY)
         return
 
 
@@ -78,7 +82,8 @@ class ActionStoreWhySmokerWords(Action):
     async def run(self, dispatcher, tracker, domain):
         answer = tracker.get_slot("why_picked_words")
         user_id = tracker.current_state()['sender_id']
-        store_dialog_answer_to_db(user_id, answer, DialogQuestions.FUTURE_SELF_SMOKER_WHY)
+        store_dialog_open_answer_to_db(user_id, answer_value = answer, 
+                                       question_id = DialogQuestions.FUTURE_SELF_SMOKER_WHY)
         return
 
 
@@ -91,8 +96,11 @@ class ActionStoreSeeMyselfAsPickedSmokerWords(Action):
     async def run(self, dispatcher, tracker, domain):
         answer = tracker.get_slot("see_myself_as_picked_words_smoker")
         user_id = tracker.current_state()['sender_id']
-        store_dialog_answer_to_db(user_id, answer,
-                                  DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER)
+        store_dialog_open_answer_to_db(user_id, answer_value = answer,
+                                       question_id = (
+                                           DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_SMOKER
+                                           )
+                                       )
         return
 
 
@@ -105,8 +113,11 @@ class ActionStoreSeeMyselfAsPickedMoverWords(Action):
     async def run(self, dispatcher, tracker, domain):
         answer = tracker.get_slot("see_myself_as_picked_words_mover")
         user_id = tracker.current_state()['sender_id']
-        store_dialog_answer_to_db(user_id, answer,
-                                  DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER)
+        store_dialog_open_answer_to_db(user_id, answer_value = answer,
+                                       question_id = (
+                                           DialogQuestions.FUTURE_SELF_I_SEE_MYSELF_AS_MOVER
+                                           )
+                                       )
         return
 
 
@@ -372,28 +383,28 @@ class ActionSetFutureSelfDialogStateStep1(Action):
         return [SlotSet("future_self_dialog_state", 1)]
 
 
-def get_most_recent_question_answer_from_database(session, user_id,
+def get_most_recent_open_question_answer_from_database(session, user_id,
                                                   question_id):
     """To get chosen words from last run of future self dialog from database"""
 
     subquery = (
         session.query(
-            func.max(DialogClosedAnswers.datetime)
+            func.max(DialogOpenAnswers.datetime)
         )
         .filter(
-            DialogClosedAnswers.users_nicedayuid == user_id,
-            DialogClosedAnswers.question_id == question_id
+            DialogOpenAnswers.users_nicedayuid == user_id,
+            DialogOpenAnswers.question_id == question_id
         )
     )
 
     query = (
         session.query(
-            DialogClosedAnswers
+            DialogOpenAnswers
         )
         .filter(
-            DialogClosedAnswers.users_nicedayuid == user_id,
-            DialogClosedAnswers.question_id == question_id,
-            DialogClosedAnswers.datetime == subquery
+            DialogOpenAnswers.users_nicedayuid == user_id,
+            DialogOpenAnswers.question_id == question_id,
+            DialogOpenAnswers.datetime == subquery
         )
         .first()
     )
@@ -436,13 +447,13 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         if selected is not None:
             # Get most recent saved chosen smoker words
             question_id = DialogQuestions.FUTURE_SELF_SMOKER_WORDS.value
-            smoker_words = get_most_recent_question_answer_from_database(session,
+            smoker_words = get_most_recent_open_question_answer_from_database(session,
                                                                          user_id,
                                                                          question_id)
 
             # Same for mover
             question_id = DialogQuestions.FUTURE_SELF_MOVER_WORDS.value
-            mover_words = get_most_recent_question_answer_from_database(session,
+            mover_words = get_most_recent_open_question_answer_from_database(session,
                                                                         user_id,
                                                                         question_id)
 

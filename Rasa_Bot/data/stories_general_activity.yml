@@ -29,6 +29,10 @@ stories:
   - slot_was_set:
       - general_activity_first_execution: false
   - action: get_last_performed_activity
+  - action: persuasion_effort_form
+  - active_loop: persuasion_effort_form
+  - active_loop: null
+  - action: utter_persuasion_effort_thanks
   - action: activity_usefulness_form
   - active_loop: activity_usefulness_form
   - active_loop: null
@@ -146,8 +150,7 @@ stories:
   - active_loop: general_activity_next_activity_form
   - active_loop: null
   - action: utter_general_activity_next_user
-  - action: load_activity
-  - action: action_end_dialog
+  - checkpoint: persuasion
 
 ## 7a: the coach chooses the activity
 
@@ -159,5 +162,64 @@ stories:
     - who_decides_slot: coach
   - action: get_activity_coach_choice
   - action: utter_general_activity_next_coach
+  - checkpoint: persuasion
+  
+
+# Chosen persuasion type is to not persuade -> do not need user input
+- story: persuasion without input
+  steps:
+  - checkpoint: persuasion
+  - action: utter_persuasion_questions_intro
+  - action: utter_persuasion_questions_intro_2
+  - action: utter_ask_persuasion_prompts_slot_intro
+  - action: persuasion_prompts_form
+  - active_loop: persuasion_prompts_form
+  - active_loop: null
+  - action: utter_ask_persuasion_want_slot_intro
+  - action: persuasion_want_form
+  - active_loop: persuasion_want_form
+  - active_loop: null
+  - action: utter_ask_persuasion_need_slot_intro
+  - action: persuasion_need_form
+  - active_loop: persuasion_need_form
+  - active_loop: null
+  - action: utter_thank_persuasion_state_questions
+  - action: send_persuasive_message_activity
+  - slot_was_set:
+    - persuasion_requires_input: false
+  - action: save_persuasion_to_database
+  - action: utter_intro_activity_text
+  - action: load_activity
+  - action: action_end_dialog
+
+
+# Chosen persuasion type is either commitment or consensus -> need user input
+- story: persuasion with input
+  steps:
+  - checkpoint: persuasion
+  - action: utter_persuasion_questions_intro
+  - action: utter_persuasion_questions_intro_2
+  - action: utter_ask_persuasion_prompts_slot_intro
+  - action: persuasion_prompts_form
+  - active_loop: persuasion_prompts_form
+  - active_loop: null
+  - action: utter_ask_persuasion_want_slot_intro
+  - action: persuasion_want_form
+  - active_loop: persuasion_want_form
+  - active_loop: null
+  - action: utter_ask_persuasion_need_slot_intro
+  - action: persuasion_need_form
+  - active_loop: persuasion_need_form
+  - active_loop: null
+  - action: utter_thank_persuasion_state_questions
+  - action: send_persuasive_message_activity
+  - slot_was_set:
+    - persuasion_requires_input: true
+  - action: persuasion_reflection_form
+  - active_loop: persuasion_reflection_form
+  - active_loop: null
+  - action: utter_thank_persuasion_reflection
+  - action: save_persuasion_to_database
+  - action: utter_intro_activity_text
   - action: load_activity
   - action: action_end_dialog

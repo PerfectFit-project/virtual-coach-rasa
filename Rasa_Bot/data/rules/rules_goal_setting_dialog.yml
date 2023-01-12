@@ -5,9 +5,10 @@ rules:
 
 
 ## 1 Introduce goal setting dialog
-- rule:
+- rule: introduce goal setting dialog
   steps:
   - intent: goal_setting_dialog  # for testing
+  - action: action_set_slot_goal_setting_dialog
   - action: utter_goal_setting_greeting
   - action: how_doing_form
   - active_loop: how_doing_form
@@ -24,10 +25,10 @@ rules:
     - how_doing_slot: null
   - action: utter_thanks_for_sharing
   - action: utter_goal_setting_1
-#  - action: utter_goal_setting_2
-#  - action: utter_goal_setting_3
-#  - action: utter_goal_setting_4
-#  - action: utter_goal_setting_smoke_1
+  - action: utter_goal_setting_2
+  - action: utter_goal_setting_3
+  - action: utter_goal_setting_4
+  - action: utter_goal_setting_smoke_1
   - action: utter_goal_setting_smoke_2
   - action: utter_goal_setting_smoke_3
   - action: extra_explanation_form
@@ -45,6 +46,18 @@ rules:
     - extra_explanation_quiting: 1
   - action: utter_goal_setting_extra_explanation_1
   - action: utter_goal_setting_extra_explanation_2
+  - action: action_launch_goal_setting
+
+## 2b: Explanation cold turkey
+- rule: extra explanation on cold turkey triggered
+  condition:
+  - active_loop: extra_explanation_form
+  steps:
+  - action: extra_explanation_form
+  - active_loop: null
+  - slot_was_set:
+    - extra_explanation_quiting: 2
+  - action: action_launch_goal_setting
 
 
 ## 2b: set new quit date
@@ -78,3 +91,30 @@ rules:
   - action: utter_goal_setting_choose_date_12
   - action: utter_goal_setting_choose_date_13
   - action: goal_setting_continue_after_plan
+
+- rule: explanation goal setting pa
+  steps:
+  - action: utter_goal_setting_pa_expl_1
+  - action: utter_goal_setting_pa_expl_2
+  - action: utter_goal_setting_pa_expl_3
+  - action: utter_goal_setting_pa_expl_4
+  - action: utter_goal_setting_pa_expl_5  # TODO: show image with levels of PA intensity
+  - action: utter_goal_setting_pa_expl_6
+  - action: utter_goal_setting_pa_expl_7
+  - action: utter_goal_setting_pa_expl_8
+  - action: utter_goal_setting_pa_expl_9
+  - action: utter_goal_setting_pa_expl_10
+  - action: utter_goal_setting_pa_expl_11  # TODO: extract number of steps from DB
+  - active_loop: which_sport_form
+  wait_for_user_input: false
+
+
+- rule: set pa goal long term
+  condition:
+  - active_loop: which_sport_form
+  steps:
+  - action: which_sport_form
+  - active_loop: null
+  - slot_was_set:
+    - which_sport: null  # TODO: store to slot and database
+  - action: utter_goal_setting_pa_expl_12

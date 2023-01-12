@@ -36,13 +36,12 @@ class GoalSettingContinueAfterPlan(Action):
         # checks in which dialog the user is, and resumes the correct flow accordingly
         current_dialog = tracker.get_slot('current_intervention_component')
 
-        if current_dialog == ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE:
+        if current_dialog == ExecutionInterventionComponents.RELAPSE_DIALOG:
             # resumes the relapse dialog from rule: smoke relapse decide to get medication info
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]
         elif current_dialog == PreparationInterventionComponents.GOAL_SETTING:
-            # TODO: change to the actual action once implemented
-            return [FollowupAction('utter_test_utterance')]
+            return [FollowupAction('utter_goal_setting_pa_expl_1')]
 
 
 class ValidateChosenQuitDateForm(FormValidationAction):
@@ -110,7 +109,7 @@ class ValidateExtraExlplanationForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_extra_explanation_form'
 
-    def validate_extra_explanation(
+    def validate_extra_explanation_quiting(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
@@ -118,11 +117,28 @@ class ValidateExtraExlplanationForm(FormValidationAction):
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_extra_explanation_quiting':
-            return {"extra_explanation": None}
+            return {"extra_explanation_quiting": None}
 
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
-            return {"extra_explanation": None}
+            return {"extra_explanation_quiting": None}
 
-        return {"extra_explanation": value}
+        return {"extra_explanation_quiting": value}
+
+
+class ActionSetSlotGoalSettingDialog(Action):
+    def name(self):
+        return "action_set_slot_goal_setting_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        # TODO: check if we need to store user_intervention_state
+        # user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # update the user_intervention_state table
+        # store_user_intervention_state(user_id,
+        #                               PreparationInterventionComponents.GOAL_SETTING,
+        #                               Phases.PREPARATION)
+
+        return [SlotSet('current_intervention_component',
+                        PreparationInterventionComponents.GOAL_SETTING)]

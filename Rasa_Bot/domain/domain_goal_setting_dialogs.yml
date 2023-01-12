@@ -58,6 +58,14 @@ slots:
         conditions:
           - active_loop: extra_explanation_form
 
+  which_sport:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: which_sport_form
+
 responses:
   # Branch 1 introduction
   utter_goal_setting_greeting:
@@ -110,7 +118,7 @@ responses:
     - text: "Ik help jou de komende weken en ik geef je tips, zodat je het niet alleen hoeft te doen!."
   utter_goal_setting_choose_date_3:
     - text: "Kies dus een datum tussen {first_possible_quit_date} en {last_possible_quit_date}.
-            Typ de datum op deze manier: dd/mm/jjjj. Dus eerst de dag/dan de maand/en dan het jaar. 
+            Typ de datum op deze manier: dd-mm-jjjj. Dus eerst de dag-dan de maand-en dan het jaar. 
             Je typt in totaal dus 8 getallen."
   utter_goal_setting_choose_date_4:
     - text: "Super! Je hebt nu een stop-datum. Deze is op {chosen_quit_date_slot}."
@@ -142,18 +150,74 @@ responses:
             Dit zal ik bijvoorbeeld doen door je meer uitleg te geven over stoppen met roken, je tips te geven en oefeningen te laten doen. 
             Deze oefeningen helpen je om vol te blijven houden!"
 
+
+# Branch 3a explanation on goal setting PA
+  utter_goal_setting_pa_expl_1:
+    - text: "Laten we nu kijken naar het doel om meer te gaan bewegen. 🎯"
+  utter_goal_setting_pa_expl_2:
+    - text: "Meer bewegen is goed voor zowel je lichaam als je brein en geheugen. Meer bewegen zorgt dus voor een goede
+            gezondheid. 😄 Daarnaast kan het stoppen met roken makkelijker zijn wanneer je meer beweegt. Ook kan meer
+            bewegen makkelijker zijn als je bent gestopt met roken."
+  utter_goal_setting_pa_expl_3:
+    - text: "Weinig bewegen en veel zitten is niet goed voor je. Probeer dus om niet te lang achter elkaar stil te
+            zitten."
+  utter_goal_setting_pa_expl_4:
+    - text: "Er zijn twee vormen van beweging: matig intensief en intensief. Onder matig intensief vallen activiteiten
+            als wandelen en fietsen 🚴. Onder intensief bewegen vallen de meeste sporten zoals hardlopen en voetballen
+            ⚽. Hieronder zie je een voorbeeld van verschillende sporten en hoe intensief deze sporten zijn:"
+  utter_goal_setting_pa_expl_5:
+    - text: "Maar wanneer beweeg je genoeg?"
+  utter_goal_setting_pa_expl_6:
+    - text: "In Nederland geldt het volgende advies voor bewegen: elke week minimaal 2 uur en 30 minuten matig
+            intensief bewegen of 1 uur en 15 minuten intensief te bewegen. Je kunt deze tijd ook verdelen over de week,
+            probeer dan steeds minimaal 10 minuten actief te zijn. ⏱"
+  utter_goal_setting_pa_expl_7:
+    - text: "Ik zal wat voorbeelden geven."
+  utter_goal_setting_pa_expl_8:
+    - text: "Voorbeeld 1: Stel je kiest ervoor om 2 uur en 30 minuten matig intensief te bewegen per week. Je verdeelt
+            deze tijd dan over de week. Je kan er bijvoorbeeld voor kiezen om 30 minuten matig intensief te bewegen op
+            maandag, 30 minuten op dinsdag, 30 minuten op donderdag en 1 uur op vrijdag. Zo heb je in totaal 2 uur en
+            30 minuten matig intensief bewogen. En ben je steeds minimaal 10 minuten actief geweest."
+  utter_goal_setting_pa_expl_9:
+    - text: "Voorbeeld 2: Je kunt er ook voor kiezen om 1 uur en 15 minuten intensief te bewegen per week. Je kunt dan
+            bijvoorbeeld op maandag 1 uur intensief sporten, en woensdag 15 minuten. Zo heb je in totaal 1 uur en 15
+            minuten intensief bewogen en ben je steeds minimaal 10 minuten actief geweest."
+  utter_goal_setting_pa_expl_10:
+    - text: "Om een beweegdoel te stellen is het niet alleen goed om te weten wat het advies is voor bewegen. Het is ook
+            belangrijk om te weten hoeveel je nu beweegt. We kijken hiervoor naar het aantal stappen dat jij elke dag
+            zet. 🚶"
+  utter_goal_setting_pa_expl_11:
+    - text: "In de afgelopen 9 dagen zette je ongeveer [Insert average amount of steps during previous 9 days] stappen
+            per dag!"
+
+
+# Branch 3b set longterm goal pa
+  utter_goal_setting_pa_set_1:
+    - text: "We gaan nu eerst nadenken over een lange-termijn doel voor bewegen. 🎯"
+  utter_goal_setting_pa_set_2:
+    - text: "Lange-termijn doelen gaan over wat je in de toekomst wilt bereiken. Het is belangrijk dat je een
+            lange-termijn doel stelt die specifiek, haalbaar en belangrijk voor je is. Ik ga je helpen om een passend
+            lange-termijn beweegdoel op te stellen."
+  utter_goal_setting_pa_set_3:
+    - text: "Over iets meer dan 3 maanden ben je klaar met het Perfect Fit programma. Waar zou je over 3 maanden willen
+            zijn qua beweging?"
+  utter_goal_setting_pa_set_4:
+    - text: "Laten we eerst nadenken over wat voor soort beweging je zou willen doen. 🚴 🚶 🏌️ 🏊 🏋️🧘"
+  utter_ask
+
   utter_ask_chosen_quit_date_slot:
     - text: "Welke datum wil je stoppen met roken?"
   utter_ask_goal_setting_plan_finished_slot:
     - text: "Typ 'klaar' als je hier klaar mee bent."
   utter_goal_setting_wrong_date:
-    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13/07/2023. 
+    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13-07-2023. 
             Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. 
             Kun je je stop-datum nog een keer typen? "
 
 
 actions:
   - action_get_first_last_date
+  - action_set_slot_goal_setting_dialog
   - goal_setting_continue_after_plan
   - validate_chosen_quit_date_form
   - validate_goal_setting_plan_finished_form
@@ -178,3 +242,8 @@ forms:
   extra_explanation_form:
     required_slots:
       - extra_explanation_quiting
+
+
+  which_sport_form:
+    required_slots:
+      - which_sport

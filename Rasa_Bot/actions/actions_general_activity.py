@@ -7,6 +7,8 @@ from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
 from virtual_coach_db.helper import (ExecutionInterventionComponents, 
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
+
+from . import validator
 from .definitions import (COMMITMENT, CONSENSUS, 
                           DATABASE_URL, 
                           NUM_TOP_ACTIVITIES, 
@@ -17,6 +19,7 @@ from .definitions import (COMMITMENT, CONSENSUS,
 from .helper import (get_latest_bot_utterance, 
                      get_random_activities, 
                      store_dialog_closed_answer_to_db)
+
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
@@ -188,17 +191,12 @@ class ValidateActivityUsefulnessForm(FormValidationAction):
         if last_utterance != 'utter_ask_activity_useful_rating':
             return {"activity_useful_rating": None}
 
-        if not self._validate_activity_useful_rating_response(value):
+        if not validator.validate_number_in_range_response(n_min=0, n_max=10, 
+                                                           response=value):
             dispatcher.utter_message(response="utter_please_answer_0_to_10")
             return {"activity_useful_rating": None}
 
         return {"activity_useful_rating": value}
-
-    @staticmethod
-    def _validate_activity_useful_rating_response(value):
-        if 0 <= int(value) <= 10:
-            return True
-        return False
 
 
 class ValidateSaveOrEditForm(FormValidationAction):
@@ -244,17 +242,11 @@ class ValidateGeneralActivityDescriptionForm(FormValidationAction):
         if last_utterance != 'utter_ask_general_activity_description_slot':
             return {"general_activity_description_slot": None}
 
-        if not self._validate_response_length(value):
+        if not validator.validate_long_enough_response_chars(value, 50):
             dispatcher.utter_message(response="utter_give_more_details")
             return {"general_activity_description_slot": None}
 
         return {"general_activity_description_slot": value}
-
-    @staticmethod
-    def _validate_response_length(value):
-        if len(value) >= 50:
-            return True
-        return False
 
 
 class SaveDescriptionInDb(Action):
@@ -319,7 +311,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
         if last_utterance != 'utter_ask_general_activity_next_activity_slot':
             return {"general_activity_next_activity_slot": None}
 
-        if not self._validate_response_value(value):
+        if not validator.validate_number_in_range_response(1, 4, value):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
             return {"general_activity_next_activity_slot": None}
 
@@ -336,12 +328,6 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
                     "rnd_activities_ids": rnd_activities_ids}
 
         return {"general_activity_next_activity_slot": value}
-
-    @staticmethod
-    def _validate_response_value(value):
-        if 1 <= int(value) <= 4:
-            return True
-        return False
 
 
 class GetLastPerformedActivity(Action):
@@ -499,17 +485,11 @@ class ValidatePersuasionReflectionForm(FormValidationAction):
         if last_utterance != 'utter_ask_persuasion_reflection_slot':
             return {"persuasion_reflection_slot": None}
 
-        if not self._validate_response_value(value):
+        if not validator.validate_long_enough_response_chars(value, 10):
             dispatcher.utter_message(response="utter_please_answer_more_words")
             return {"persuasion_reflection_slot": None}
 
         return {"persuasion_reflection_slot": value}
-
-    @staticmethod
-    def _validate_response_value(value):
-        if len(value) >= 10:
-            return True
-        return False
     
     
 class SavePersuasionToDatabase(Action):
@@ -643,18 +623,12 @@ class ValidatePersuasionWantForm(FormValidationAction):
         if last_utterance != 'utter_ask_persuasion_want_slot':
             return {"persuasion_want_slot": None}
 
-        if not self._validate_response_value(value):
+        if not validator.validate_number_in_range_response(1, 5, value):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
             return {"persuasion_want_slot": None}
 
         return {"persuasion_want_slot": float(value)}
 
-    @staticmethod
-    def _validate_response_value(value):
-        if 1 <= int(value) <= 5:
-            return True
-        return False
-    
     
 class ValidatePersuasionNeedForm(FormValidationAction):
     def name(self) -> Text:
@@ -670,18 +644,12 @@ class ValidatePersuasionNeedForm(FormValidationAction):
         if last_utterance != 'utter_ask_persuasion_need_slot':
             return {"persuasion_need_slot": None}
 
-        if not self._validate_response_value(value):
+        if not validator.validate_number_in_range_response(1, 5, value):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
             return {"persuasion_need_slot": None}
 
         return {"persuasion_need_slot": float(value)}
 
-    @staticmethod
-    def _validate_response_value(value):
-        if 1 <= int(value) <= 5:
-            return True
-        return False
-    
 
 class ValidatePersuasionPromptsForm(FormValidationAction):
     def name(self) -> Text:
@@ -697,17 +665,11 @@ class ValidatePersuasionPromptsForm(FormValidationAction):
         if last_utterance != 'utter_ask_persuasion_prompts_slot':
             return {"persuasion_prompts_slot": None}
 
-        if not self._validate_response_value(value):
+        if not validator.validate_number_in_range_response(1, 5, value):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
             return {"persuasion_prompts_slot": None}
 
         return {"persuasion_prompts_slot": float(value)}
-
-    @staticmethod
-    def _validate_response_value(value):
-        if 1 <= int(value) <= 5:
-            return True
-        return False
     
 
 class ValidatePersuasionEffortForm(FormValidationAction):
@@ -724,14 +686,8 @@ class ValidatePersuasionEffortForm(FormValidationAction):
         if last_utterance != 'utter_ask_persuasion_effort_slot':
             return {"persuasion_effort_slot": None}
 
-        if not self._validate_response_value(value):
+        if not validator.validate_number_in_range_response(0, 10, value):
             dispatcher.utter_message(response="utter_please_answer_0_to_10")
             return {"persuasion_effort_slot": None}
 
         return {"persuasion_effort_slot": float(value)}
-
-    @staticmethod
-    def _validate_response_value(value):
-        if 0 <= int(value) <= 10:
-            return True
-        return False

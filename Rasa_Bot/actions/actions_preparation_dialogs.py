@@ -142,6 +142,7 @@ class ValidateUserPreferencesForm(FormValidationAction):
         dispatcher.utter_message(text=f"OK! You want to receive reminders at {slot_value}.")
         return {"time_stamp": slot_value}
 
+
 class StoreUserPreferencesToDb(Action):
     def name(self) -> Text:
         return "action_store_user_preferences_to_db"

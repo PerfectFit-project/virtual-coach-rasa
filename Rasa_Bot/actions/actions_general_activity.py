@@ -1,5 +1,4 @@
 import random
-
 from sqlalchemy import update
 from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, 
                                               FirstAidKit,
@@ -7,7 +6,6 @@ from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
 from virtual_coach_db.helper import (ExecutionInterventionComponents, 
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
-
 from . import validator
 from .definitions import (COMMITMENT, CONSENSUS, 
                           DATABASE_URL, 
@@ -19,7 +17,6 @@ from .definitions import (COMMITMENT, CONSENSUS,
 from .helper import (get_latest_bot_utterance, 
                      get_random_activities, 
                      store_dialog_closed_answer_to_db)
-
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
@@ -469,8 +466,8 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
     )
 
     return user_inputs
-
-
+    
+    
 class ValidatePersuasionReflectionForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_persuasion_reflection_form'

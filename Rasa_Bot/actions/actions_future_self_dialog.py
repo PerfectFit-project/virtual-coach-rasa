@@ -12,7 +12,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.helper.helper_functions import get_db_session
-from virtual_coach_db.helper.definitions import PreparationInterventionComponents
+from virtual_coach_db.helper.definitions import (DialogQuestionsEnum,
+                                                 PreparationInterventionComponents)
 from virtual_coach_db.dbschema.models import (Users, DialogOpenAnswers, 
                                               UserInterventionState,
                                               InterventionComponents)
@@ -54,6 +55,9 @@ class ActionStoreMoverWords(Action):
     async def run(self, dispatcher, tracker, domain):
         answer = tracker.get_slot("picked_words")
         user_id = tracker.current_state()['sender_id']
+        store_dialog_open_answer_to_db(user_id,
+                                       DialogQuestionsEnum.FUTURE_SELF_MOVER_WORDS.value,
+                                       answer)
         store_dialog_open_answer_to_db(user_id, answer_value = answer, 
                                        question_id = DialogQuestions.FUTURE_SELF_MOVER_WORDS)
         return

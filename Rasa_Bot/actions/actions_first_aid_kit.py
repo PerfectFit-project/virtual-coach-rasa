@@ -1,10 +1,55 @@
+import logging
+
+from celery import Celery
+from datetime import datetime, timedelta
 from rasa_sdk import Action
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import FollowupAction
 from virtual_coach_db.dbschema.models import FirstAidKit
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
+from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES, REDIS_URL
 
+celery = Celery(broker=REDIS_URL)
+
+
+class ActionStartFak(Action):
+    """Action to run the First Aid Kit from external trigger"""
+
+    def name(self):
+        return "action_start_fak"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        logging.info("Launching first aid kit celery intent")
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, 'CENTRAL_get_first_aid_kit'))
+
+        return []
+
+
+class ActionResumeAfterFak(Action):
+    """Action to run the First Aid Kit from external trigger"""
+
+    def name(self):
+        return "action_resume_after_fak"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        current_intervention = tracker.get_slot('current_intervention_component')
+
+        if current_intervention is None:
+            return[FollowupAction('action_end_dialog')]
+
+        new_intent = 'EXTERNAL_' + current_intervention
+        logging.info(new_intent)
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, new_intent),
+                         eta=datetime.now() + timedelta(seconds=10))
+
+        return []
 
 
 class ActionGetFirstAidKit(Action):
@@ -29,11 +74,9 @@ class ActionGetFirstAidKit(Action):
         )
 
         kit_text = ""
-        kit_exists = False
 
+        # the kit exists
         if selected is not None:
-
-            kit_exists = True
 
             # get up to the highest rated activities
             sorted_activities = sorted(
@@ -50,5 +93,10 @@ class ActionGetFirstAidKit(Action):
                 if not activity_idx == len(selected) - 1:
                     kit_text += "\n"
 
-        return [SlotSet("first_aid_kit_text", kit_text),
-                SlotSet("first_aid_kit_exists", kit_exists)]
+            dispatcher.utter_message(template="utter_first_aid_kit",
+                                     first_aid_kit_text=kit_text)
+        # the kit doesn't exist
+        else:
+            dispatcher.utter_message(template="utter_first_aid_kit_empty")
+
+        return []

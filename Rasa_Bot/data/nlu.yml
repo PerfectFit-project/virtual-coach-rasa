@@ -98,10 +98,38 @@ nlu:
   examples: |
     - "EXTERNAL_trigger_goal_setting"
 
+- intent: EXTERNAL_relapse_dialog
+  examples: |
+    - "EXTERNAL_relapse_dialog"
+
+- intent: EXTERNAL_relapse_dialog_hrs
+  examples: |
+    - "EXTERNAL_relapse_dialog_hrs"
+
+- intent: EXTERNAL_relapse_dialog_lapse
+  examples: |
+    - "EXTERNAL_relapse_dialog_lapse"
+
+- intent: EXTERNAL_relapse_dialog_relapse
+  examples: |
+    - "EXTERNAL_relapse_dialog_relapse"
+
+- intent: EXTERNAL_relapse_dialog_pa
+  examples: |
+    - "EXTERNAL_relapse_dialog_pa"
+
+
+- intent: relapse_dialog
+  examples: |
+    - "relapse"
+    - "Relapse"
+    - "Having a relapse"
+    - "Ik heb een relapse"
+    - "Start relapse"
+
 - intent: EXTERNAL_done_with_video
   examples: |
     - "EXTERNAL_done_with_video"
-
 
 - intent: submit_user_preferences
   examples: |

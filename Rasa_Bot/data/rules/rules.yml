@@ -1,0 +1,64 @@
+version: "3.1"
+
+rules:
+- rule: Give user central mode options when they send a message with low NLU confidence
+  steps:
+  - intent: nlu_fallback
+  - action: utter_default
+  - action: utter_central_mode_options
+  - action: action_end_dialog
+
+# Only applies at start of conversation
+- rule: Process when people talk about urgent things that we cannot handle
+  conversation_start: true
+  steps:
+  - intent: urgent
+  - action: utter_refer
+  - action: utter_central_mode_options
+  - action: action_end_dialog
+
+- rule: Ask for foreseen smoking HRS whenever this is externally triggered (by scheduler)
+  steps:
+  - intent: EXTERNAL_trigger_ask_foreseen_hrs
+  - action: utter_ask_foreseen_hrs
+
+- rule:  Return the number of smoked cigarettes when the user asks for it
+  steps:
+  - intent: request_tracked_cigarettes
+  - action: action_save_number_cigarettes
+  - action: action_get_number_cigarettes
+  - action: action_end_dialog
+
+- rule:  Set a tracker reminder when asked
+  steps:
+  - intent: request_tracker_reminder
+  - action: action_set_cigarettes_tracker_reminder
+  - action: utter_reminder_is_set
+  - action: action_end_dialog
+
+- rule: Activate user preferences form
+  steps:
+  - intent: submit_user_preferences
+  - action: user_preferences_form
+  - active_loop: user_preferences_form
+
+- rule: Submit user preferences form
+  condition:
+  - active_loop: user_preferences_form
+  steps:
+  - action: user_preferences_form
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: utter_confirm
+  - action: action_store_user_preferences_to_db
+  - action: utter_user_preferences
+
+- rule:  Test metadata
+  steps:
+  - intent: request_metadata
+  - action: action_set_file_path
+  - action: action_upload_file
+  - action: utter_file_sent
+  - action: action_send_metadata
+  - action: action_end_dialog

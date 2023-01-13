@@ -1,0 +1,828 @@
+version: "3.1"
+
+intents:
+  - relapse_dialog
+  - EXTERNAL_relapse_dialog
+  - EXTERNAL_relapse_dialog_hrs
+  - EXTERNAL_relapse_dialog_relapse
+  - EXTERNAL_relapse_dialog_lapse
+  - EXTERNAL_relapse_dialog_pa
+
+slots:
+  smoke_or_pa:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: smoke_or_pa_form
+
+  now_or_later_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: relapse_stop_now_later_form
+
+  medication_info_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: relapse_medication_info_form
+
+  crave_lapse_relapse:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: crave_lapse_relapse_form
+
+  ehbo_me_self:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: ehbo_me_self_form
+
+  ehbo_me_self_lapse:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: ehbo_me_self_lapse_form
+
+  type_smoke:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: type_smoke
+
+  number_smoke:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: number_smoke
+
+  number_smoke_confirm:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: number_smoke_confirm
+
+  type_smoke_confirm:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: type_and_number_smoke_form
+            requested_slot: type_smoke_confirm
+
+  what_doing_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: what_doing_how_feel_smoke_form
+            requested_slot: what_doing_smoke
+
+  how_feel_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: what_doing_how_feel_smoke_form
+            requested_slot: how_feel_smoke
+
+  with_whom_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: with_whom_event_smoke_form
+            requested_slot: with_whom_smoke
+
+  event_smoke:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: with_whom_event_smoke_form
+            requested_slot: event_smoke
+
+  reflect_bar_chart:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: reflect_bar_chart_form
+            requested_slot: reflect_bar_chart
+
+  pa_type:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_type_together_why_fail_form
+            requested_slot: pa_type
+
+  pa_together:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_type_together_why_fail_form
+            requested_slot: pa_together
+  pa_why_fail:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_type_together_why_fail_form
+            requested_slot: pa_why_fail
+
+  pa_doing_today_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_doing_today_happened_special_form
+            requested_slot: pa_doing_today_slot
+
+  pa_happened_special_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_doing_today_happened_special_form
+            requested_slot: pa_happened_special_slot
+
+  hrs_new_activity_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_new_activity_form
+
+  hrs_situation_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_situation_form
+
+  hrs_feeling_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_feeling_form
+
+  hrs_who_with_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_who_with_form
+
+  hrs_what_happened_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_what_happened_form
+
+  hrs_enough_motivation_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_enough_motivation_form
+
+  pa_enough_motivation_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_enough_motivation_form
+
+  hrs_activity_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_activity_form
+
+  pa_specify_pa_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_specify_pa_form
+
+  # keeps track of which activity has been performed
+  hrs_coping_activities_performed:
+    type: text
+    initial_value: '-1'
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  hrs_choose_coping_activity_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_choose_coping_activity_form
+
+ # name of first proposed coping activity
+  coping_activity1_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of second proposed coping activity
+  coping_activity2_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # name of third proposed coping activity
+  coping_activity3_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # ids of the three coping activities
+  coping_activities_ids:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  # counts the repetition of choosing HRS activity
+  repetitions_counter:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+responses:
+# General
+  utter_relapse_intro_codeword:
+    - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
+  utter_relapse_intro_offer_help:
+    - text: "Goed dat je hulp vraagt. Ik ga je helpen."
+  utter_relapse_smoke_or_pa:
+    - text: "Gaat het om roken of lichamelijke beweging?"
+  utter_ask_smoke_or_pa_form_smoke_or_pa:
+    - text: "Typ '1' als je het gaat om roken. Typ '2' als het gaat om lichamelijke beweging."
+
+ # Smoke
+  utter_specify_smoke:
+    - text: "Kun je mij vertellen wat er aan de hand is?"
+  utter_ask_crave_lapse_relapse:
+    - text: "Typ '1' als je zin hebt om te roken. 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt. 
+             Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.
+             Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.
+             "
+  utter_smoke_crave_1:
+    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid"
+  utter_smoke_crave_2:
+    - text: "Het is vervelend, maar wel heel logisch dat je nog zin hebt om te roken als je net bent gestopt."
+  utter_smoke_crave_3:
+    - text: "Heftige trek kan je soms overspoelen en dan weet je even niet hoe je kan omgaan met deze trek."
+  utter_smoke_crave_4:
+    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt?"
+  utter_smoke_crave_5:
+    - text: "Eerst is het heel heftig, maar na een paar minuten wordt het vanzelf minder."
+  utter_smoke_crave_6:
+    - text: "Je kan erop vertrouwen dat de trek vanzelf weer minder wordt."
+  utter_smoke_crave_7:
+    - text: "Wat helpt is om tijdens deze heftige trek wat te gaan doen."
+  utter_smoke_crave_8:
+    - text: "Ik kan je daarbij helpen. Wat zullen we doen?"
+  utter_ask_ehbo_me_self:
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ 1 als je een
+             oefening uit je EHBO-doos wilt doen. ,Typ 2 als ik een oefening mag voorstellen. Typ 3
+             als je zelf een activiteit wilt kiezen."
+
+# smoke lapse
+
+  utter_smoke_lapse_1:
+    - text: "Goed dat je dit aangeeft"
+  utter_ask_type_smoke:
+    - text: "Kun je aangeven wat je vandaag hebt gerookt? Typ 1 voor sigaretten. Typ 2 voor
+             e-sigaretten. Typ 3 voor shags. Typ 4 als je iets anders hebt gerookt.
+             "
+  utter_ask_type_smoke_confirm:
+    - text: "Je hebt aangegeven dat je {type_smoke} hebt gerookt. Klopt dat? Typ ja of nee."
+  utter_ask_number_smoke:
+    - text: "Hoeveel heb je daarvan gerookt?"
+  utter_ask_number_smoke_confirm:
+    - text: "Je hebt aangegeven dat je daar {number_smoke} van hebt gerookt. Klopt dat?"
+  utter_smoke_lapse_5:
+    - text: "Bedankt voor jouw eerlijkheid."
+  utter_smoke_lapse_6:
+    - text: "Je hebt gerookt, maar dat betekent gelukkig niet dat het stoppen met roken mislukt is.
+            Stopen met roken is een process van vallen en opstaan. Het vallen is niet erg als je
+            maar weer opstaat. Uiteindelijk wordt dat steeds gemakkelijker.
+            "
+  utter_smoke_lapse_7:
+    - text: "Wees niet te hard voor jezelf omdat je weer hebt gerookt. Dit kan juist zorgen voor
+            meer stress en heftige trek. De stap om meer te roken is dan vaak heel klein.
+            "
+  utter_smoke_lapse_8:
+    - text: "Het belangrijkste is dat je kan leren van deze situaties. Als je stopt oefen je juist
+            ook in dit soort momenten hoe je de trek kan weerstaan. Zo wordt je er steeds beter in.
+            "
+  utter_smoke_lapse_9:
+    - text: "Om hiervan te leren helpt het om te kijken naar de situatie(s) waarin je toch weer ging
+             roken. Daarom wil ik je daar wat vragen over stellen."
+  utter_smoke_lapse_10:
+    - text: "Daarom wil ik je daar wat vragen over stellen."
+  utter_ask_what_doing_smoke:
+    - text: "Wat was je aan het doen toen je rookte? Je mag meerdere antwoorden geven met een spatie
+            er tussen. Typ 1 als je aan het werk was. Typ 2 als je thuis
+            bezig was met klusjes of huishouden. Typ 3 als je iets voor jezelf deed (hobby, met
+            iemand afspreken). Typ 4 als je aan het eten of drinken was. Typ 5 als je net alcohol of
+            koffie hebt gedronken. Typ 6 als je net wakker bent. Type 7 als je iets deed wat niet in
+            het lijstje staat.
+            "
+  utter_ask_how_feel_smoke:
+    - text: "Kun je vertellen hoe je je voelde toen je rookte? Je mag meerdere antwoorden geven met
+            een spatie ertussen. Typ 1 als je je schuldig voelde. Typ 2 als je je
+            vervelend voelde. Typ 3 als je je verdrietig voelde. Typ 4 als je je het gevoel had dat
+            het niet zou lukken om te stoppen met roken. Typ 5 als je je opgelucht voelde. 
+            "
+  utter_smoke_lapse_11:
+    - text: "Goed dat je je gevoelens kan benoemen."
+  utter_ask_with_whom_smoke:
+    - text: "Met wie was je toen je rookte? Je mag meerdere antwoorden geven met een spatie er
+             tussen. Typ 1 als je met je
+             partner was. Typ 2 als je alleen was. Typ 3 als je met vrienden en/of familie was. Typ
+             4 als was je met kennissen was. Typ 5 als je met collega's was. Typ 6 als je met andere
+             rokers was.
+             "
+  utter_ask_event_smoke:
+    - text: "Gebeurde er iets bijzonders?"
+  utter_smoke_lapse_12:
+    - text: "Dankjewel voor het delen."
+  utter_smoke_lapse_13:
+    - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren
+            patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende
+            keer dat je in die situatie zit.
+            "
+  utter_smoke_lapse_14:
+    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je kreeg zin om te roken in de
+            volgende situaties:"
+  utter_ask_reflect_bar_chart:
+    - text: "Hoe vind je het om dit zo te zien?"
+  utter_smoke_lapse_15:
+    - text: "Mooi dat dit zo kan benoemen."
+  utter_smoke_lapse_16:
+    - text: "Op dit moment kun je ervoor kiezen om door te zetten en opnieuw te stoppen met roken."
+  utter_smoke_lapse_17:
+    - text: "Ik raad je aan om meteen weer te stoppen. Wat kan helpen is om meteen de rest van de
+            sigaretten, e-sigaret navullingen, tabak etc. weg te gooien. Het kan ook helpen om te
+            praten met bijvoorbeeld een vriend of familielid over hoe het is gegaan en je plan om
+            opnieuw te stoppen."
+  utter_smoke_lapse_18:
+    - text: "Het kan ook helpen om te praten met bijvoorbeeld een vriend of familielid over hoe het 
+             is gegaan en je plan om opnieuw te stoppen."
+
+
+  utter_ask_ehbo_me_self_lapse:
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten.
+            Typ 1 als je een oefening uit je EHBO-doos wilt doen. 
+            Typ 2 als ik een oefening mag voorstellen. 
+            Typ 3 als je zelf een activiteit wilt kiezen.
+            Typ 4 als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt afsluiten."
+
+
+# 4a
+  utter_ask_hrs_new_activity_slot:
+    - text: "Is de trek weg of wil je nog een oefening doen? 
+            Typ 1 als de trek weg is. 
+            Typ 2 als de trek nog niet weg is en je nog een oefening wil doen."
+  utter_hrs_reasons_1:
+    - text: "Je kan trots zijn op jezelf dat je deze trek hebt weerstaan. Goed bezig!"
+  utter_hrs_reasons_2:
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je zin kreeg om te roken. "
+  utter_hrs_reasons_3:
+    - text: "Daarom wil ik je wat vragen stellen over de situatie waarin je was toen je zin kreeg om te roken."
+  utter_hrs_reasons_4:
+    - text: "Wat was je aan het doen toen je zin kreeg?"
+  utter_ask_hrs_situation_slot:
+    - text: "Je mag meerdere antwoorden geven.
+            Typ 1 als je aan het werk was. 
+            Typ 2 als je thuis bezig was met klusjes of huishouden. 
+            Typ 3 als je iets voor jezelf deed (hobby, met iemand afspreken). 
+            Typ 4 als je aan het eten of drinken was. 
+            Typ 5 als je net alcohol of koffie hebt gedronken. 
+            Typ 6 als je net wakker bent. 
+            Type 7 als je iets deed wat niet in het lijstje staat."
+  utter_hrs_how_did_you_feel_1:
+    - text: "Kun je mij vertellen hoe je je voelde toen je zin kreeg om te roken?"
+  utter_ask_hrs_feeling_slot:
+    - text: "Je mag meerdere antwoorden geven. 
+            Typ 1 als je stress had. 
+            Typ 2 als je verdrietig was. 
+            Typ 3 als je boos was. 
+            Typ 4 als je verveeld was. 
+            Typ 5 als je honger had. 
+            Typ 6 als je bang of angstig was. 
+            Typ 7 als je blij was. 
+            Typ 8 als je je anders voelde. "
+  utter_hrs_how_did_you_feel_2:
+    - text: "Goed dat je je gevoelens kan benoemen. "
+  utter_hrs_who_you_with:
+    - text: "Met wie was je toen je zin kreeg?"
+  utter_ask_hrs_who_with_slot:
+    - text: "Je mag meerdere antwoorden geven. 
+            Typ 1 als je met je partner was. 
+            Typ 2 als je alleen was. 
+            Typ 3 als je met vrienden en/of familie was. 
+            Typ 4 als was je met kennissen was. 
+            Typ 5 als je met collega's was. 
+            Typ 6 als je met andere rokers was."
+  utter_ask_hrs_what_happened_slot:
+    - text: "Gebeurde er iets bijzonders?"
+  utter_hrs_look_back_1:
+    - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren patronen te herkennen. 
+            Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
+  utter_hrs_look_back_2:
+    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je kreeg zin om te roken in de volgende situaties:"
+  utter_hrs_look_back_3:
+    - text: "Mooi dat je dit zo kan benoemen."
+  utter_ask_hrs_enough_motivation_slot:
+    - text: "Heb je weer genoeg motivatie en vertrouwen om verder te gaan? Typ 1 voor ja, typ 2 voor nee."
+  utter_good_to_hear_1:
+    - text: "Wat goed om te horen!"
+  utter_good_to_hear_2:
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het! :)"
+  utter_good_to_hear_3:
+    - text: "Heb je nog een vraag? Of wil je een extra steuntje in de rug? 
+            Je kunt dan altijd de gratis Stoplijn bellen: 0800-1995. 
+            De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Succes, je kan het!"
+  utter_bad_to_hear_1:
+    - text: "Dat vind ik vervelend om te horen."
+  utter_bad_to_hear_2:
+    - text: "Ik ben er voor je! Waar heb je behoefte aan?"
+  utter_ask_hrs_activity_slot:
+    - text: "Nog een oefening doen? Typ dan 1. Typ 2 als je verder wilt gaan met het gesprek."
+  utter_hrs_call_help:
+    - text: "Misschien heb je behoefte om iemand te spreken? Je kunt misschien praten met een vriend of familielid. 
+            Of bellen met de gratis Stoplijn (0800-1995). De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. 
+            Je kunt ook altijd een afspraak maken met je huisarts. Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt."
+  utter_hrs_list_activities_intro:
+    - text: "De volgende oefeningen kunnen jou op dit moment helpen met de trek."
+
+  utter_ask_hrs_choose_coping_activity_slot:
+    - text: "Welke van deze oefeningen wil je nu doen?
+            Typ 1 als je '{coping_activity1_name}' wilt doen.
+            Typ 2 als je '{coping_activity2_name}' wilt doen.
+            Typ 3 als je '{coping_activity3_name}' wilt doen.
+            Typ 4 als je wilt kiezen uit drie andere activiteiten."
+
+# 3c smoking - relapse
+  utter_smoke_relapse_1:
+    - text: "Je hebt meerdere dagen weer gerookt, maar dat betekent gelukkig niet dat het stoppen
+             met roken helemaal mislukt is."
+  utter_smoke_relapse_2:
+    - text: "Stopen met roken is een process van vallen en opstaan. Het vallen is niet erg als je
+             maar weer opstaat. Uiteindelijk wordt dat steeds gemakkelijker. Hoe vervelend ook, het
+             kan gebeuren dat je toch weer rookt als je gestopt bent."
+  utter_smoke_relapse_3:
+    - text: "Wees dus niet te hard voor jezelf omdat jeweer hebt gerookt, want dit kan juist zorgen
+             voor meer stress en heftige trek. En je kunt het ook zo zien: je hebt op heel veel
+             momenten juist ook niet gerookt. Dat is heel goed!"
+  utter_smoke_relapse_4:
+    - text: "Laten we samen kijken naar de situatie(s) waarin je toch weer ging roken. Door vaker te
+             kijken naar situaties waarin je zin krijgt om te roken, kun je leren
+             patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende
+             keer dat je in die situatie zit. Daarom wil ik je daar wat vragen over stellen. De
+             vragen gaan over de laatste keer dat je rookte"
+  utter_smoke_relapse_5:
+    - text: "Je kan ervoor kiezen om meteen te stoppen of een nieuwe stopdatum te plannen."
+  utter_ask_now_or_later_slot:
+    - text: "Hoe wil je nu verder? 
+            Typ 1 als je meteen weer wil stoppen. 
+            Typ 2 als je een nieuwe stopdatum wil inplannen."
+  utter_smoke_relapse_6:
+    - text: "Wat goed dat je ervoor kiest om meteen weer te stoppen met roken! 
+            Dit maakt het makkelijker om het ook echt te doen."
+  utter_smoke_relapse_7:
+    - text: "Heb je nog sigaretten, e-sigaret navullingen, tabek, etc. ? 
+            Wat helpt is om deze meteen weg te gooien. "
+  utter_smoke_relapse_8:
+    - text: "Wat ook helpt is om te kijken of je genoeg hulp hebt om te stoppen en gestopt te blijven."
+  utter_ask_medication_info_slot:
+    - text: "Met hulpmiddelen of medicatie vergroot je de kans om gestopt te blijven. 
+            Wil je hier meer informatie over? 
+            Typ 1 voor ja, typ 2 voor nee."
+# PA
+  utter_pa_define_1:
+    - text: "Kun je mij vertellen wat er aan de hand is?"
+  utter_ask_pa_specify_pa_slot:
+    - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt. Typ '2' als je merkt
+             dat het bewegen over het algemeen niet zo goed gaat als je zou willen.
+             "
+  utter_pa_lapse_1:
+    - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan
+             lastig zijn. Hoe vervelend ook, het kan dus gebeuren dat het even niet lukt. Wees dus
+             niet te hard voor jezelf. Daardoor kun je je rot voelen en dan krijg je minder zin om
+             te gaan. 
+             "
+  utter_pa_lapse_2:
+    - text: "En je kunt het ook positief bekijken: er zijn momenten geweest dat je wel in beweging
+             kwam. Dat is heel goed!"
+  utter_pa_lapse_3:
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen
+             zin hebt om in beweging te komen. Daarom wil ik je wat vragen stellen over de situatie
+             waarin je zit. "
+  utter_ask_pa_type:
+    - text: "Kun je mij vertellen wat voor lichamelijke activiteit je had gepland om te doen?"
+  utter_ask_pa_together:
+    - text: "Zou je dit met iemand samen doen? Typ 1 voor ja, typ 2 voor nee."
+  utter_ask_pa_why_fail:
+    - text: "Kun je aangeven wat de reden is dat dat je nu niet lukt? Je mag meerdere
+             antwoorden geven. Typ 1 als je geen zin hebt. Typ 2 als je moe bent en geen energie
+             hebt. Typ 3 als je geen tijd hebt. Typ 4 als er iets tussen is gekomen. Typ 5 als het
+             ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
+  utter_ask_pa_doing_today_slot:
+    - text: "Je mag meerdere antwoorden geven. 
+            Typ 1 als je aan het werk was. 
+            Typ 2 als je thuis bezig was met klusjes of huishouden. 
+            Typ 3 als je iets voor jezelf deed (hobby, met iemand afspreken). 
+            Typ 4 als je al lichamelijk actief bent geweest. 
+            Typ 5 als je iets deed wat niet in het lijstje staat. "
+  utter_ask_pa_happened_special_slot:
+    - text: "Gebeurde er iets bijzonders?"
+  utter_pa_lapse_4:
+    - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
+  utter_pa_lapse_5:
+    - text: "Wat heb je vandaag verder gedaan?"
+  utter_pa_lapse_6:
+    - text: "Door vaker te kijken naar situaties waarin je geen zin hebt om in beweging te komen, kun je leren patronen te herkennen. 
+            Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
+  utter_pa_lapse_7:
+    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je vond het in de volgende situaties lastig om in beweging te komen:"
+  utter_pa_lapse_8:
+    - text: "Op dit moment heb je de keuze om door te zetten en alsnog in beweging te komen."
+  utter_pa_lapse_9:
+    - text: "Als je dat gedaan hebt, ben je een stapje dichterbij het halen van je beweegdoel. En waarschijnlijk ben je blij met jezelf. "
+  utter_pa_lapse_10:
+    - text: "Het kan als een hobbel voelen, maar soms is het beste om gewoon te gaan of gewoon door te zetten. 
+            Omkleden of spullen pakken en gaan. Eenmaal bezig gaat het vaak makkelijker."
+  utter_pa_lapse_11:
+    - text: "Soms past een andere manier van bewegen beter en lukt het je wel om dat te doen. 
+            Je kunt bijvoorbeeld een stuk gaan wandelen, gaan tuinieren, iets doen aan het huishouden of thuis sporten. 
+            Neem nu even de tijd om na te denken hoe je op een andere manier kunt bewegen."
+  utter_pa_lapse_12:
+    - text: "Wat ook kan helpen is om met iemand in beweging te komen. Zo maak je het meteen ook gezellig. 
+            Bel dus gerust iemand uit je omgeving om te vragen of zij mee willen doen. "
+  utter_pa_lapse_13:
+    - text: "Je kunt ook plannen wanneer je alsnog gaat. 
+            Door het in je agenda te zetten spreek je met jezelf af dat je op een later moment in beweging komt."
+  utter_ask_pa_enough_motivation_slot:
+    - text: "Heb je weer voldoende motivatie om in beweging te komen of wil je nog een oefening doen?
+            Typ 1 als het je nu lukt om in beweging te komen. 
+            Typ 2 om te kijken wat de opties zijn om verder te gaan."
+  utter_pa_list_activities_intro:
+    - text: "De volgende oefeningen kunnen jou op dit moment helpen om je te motiveren."
+  utter_good_to_hear_pa_1:
+    - text: "Wat goed dat je weer gemotiveerd bent om het bewegen op te pakken!."
+  utter_pa_call_help_1:
+    - text: "Heb je behoefte om iemand te spreken? Je kunt misschien praten met een vriend of familielid."
+  utter_pa_call_help_2:
+    - text: "Wil je wat meer steun om in beweging te komen? Je kunt een afspraak maken met je huisarts. 
+            Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt. "
+  utter_pa_sick:
+    - text: "Wat vervelend voor je, ik hoop dat je je snel weer beter voelt. 
+            Typ '...' [command] in de chat wanneer je weer beter bent en klaar om weer in beweging te komen" # TODO: add command
+  utter_test_utterance:
+    - text: "This is a test utterance"
+  utter_test_utterance2:
+    - text: "This is a second test utterance"
+
+actions:
+  - action_check_reasons
+  - action_set_slot_relapse_dialog_hrs
+  - action_set_slot_relapse_dialog_lapse
+  - action_set_slot_relapse_dialog_pa
+  - action_set_slot_relapse_dialog_relapse
+  - action_trigger_relapse
+  - populate_coping_activities_list
+  - populate_coping_activities_list_pa
+  - show_barchart_difficult_situations
+  - show_barchart_difficult_situations_pa
+  - show_chosen_coping_activity
+  - show_first_coping_activity
+  - show_first_coping_activity_pa
+  - store_event_smoke
+  - store_how_feel_smoke
+  - store_hrs_feeling
+  - store_hrs_situation
+  - store_hrs_what_happened
+  - store_hrs_who_with
+  - store_number_smoke
+  - store_pa_specify_pa
+  - store_pa_type
+  - store_pa_together
+  - store_pa_why_fail
+  - store_pa_doing_today
+  - store_pa_happened_special
+  - store_reflect_barchart
+  - store_type_smoke
+  - store_what_doing_smoke
+  - store_with_whom_smoke
+  - validate_crave_lapse_relapse_form
+  - validate_ehbo_me_self_form
+  - validate_ehbo_me_self_lapse_form
+  - validate_hrs_activity_form
+  - validate_hrs_choose_coping_activity_form
+  - validate_hrs_enough_motivation_form
+  - validate_hrs_feeling_form
+  - validate_hrs_new_activity_form
+  - validate_hrs_situation_form
+  - validate_hrs_what_happened_form
+  - validate_hrs_who_with_form
+  - validate_lapse_ehbo_form
+  - validate_pa_doing_today_happened_special_form
+  - validate_pa_enough_motivation_form
+  - validate_pa_specify_pa_form
+  - validate_pa_type_together_why_fail_form
+  - validate_reflect_bar_chart_form
+  - validate_relapse_medication_info_form
+  - validate_relapse_stop_now_later_form
+  - validate_smoke_or_pa_form
+  - validate_type_and_number_smoke_form
+  - validate_what_doing_how_feel_smoke_form
+  - validate_with_whom_event_smoke_form
+
+forms:
+  crave_lapse_relapse_form:
+    required_slots:
+      - crave_lapse_relapse
+  smoke_or_pa_form:
+    required_slots:
+      - smoke_or_pa
+  ehbo_me_self_form:
+    required_slots:
+      - ehbo_me_self
+  ehbo_me_self_lapse_form:
+    required_slots:
+      - ehbo_me_self_lapse
+  type_and_number_smoke_form:
+    required_slots:
+      - type_smoke
+      - type_smoke_confirm
+      - number_smoke
+      - number_smoke_confirm
+  what_doing_how_feel_smoke_form:
+    required_slots:
+      - what_doing_smoke
+      - how_feel_smoke
+  with_whom_event_smoke_form:
+    required_slots:
+      - with_whom_smoke
+      - event_smoke
+  reflect_bar_chart_form:
+    required_slots:
+      - reflect_bar_chart
+
+  hrs_new_activity_form:
+    required_slots:
+      - hrs_new_activity_slot
+
+  hrs_situation_form:
+    required_slots:
+      - hrs_situation_slot
+
+  hrs_feeling_form:
+    required_slots:
+      - hrs_feeling_slot
+
+  hrs_who_with_form:
+    required_slots:
+      - hrs_who_with_slot
+
+  hrs_what_happened_form:
+    required_slots:
+      - hrs_what_happened_slot
+
+  hrs_enough_motivation_form:
+    required_slots:
+      - hrs_enough_motivation_slot
+
+  hrs_activity_form:
+    required_slots:
+      - hrs_activity_slot
+
+  hrs_choose_coping_activity_form:
+    required_slots:
+      - hrs_choose_coping_activity_slot
+
+  relapse_stop_now_later_form:
+    required_slots:
+      - now_or_later_slot
+
+  relapse_medication_info_form:
+    required_slots:
+      - medication_info_slot
+
+  pa_specify_pa_form:
+    required_slots:
+      - pa_specify_pa_slot
+
+  pa_type_together_why_fail_form:
+    required_slots:
+      - pa_type
+      - pa_together
+      - pa_why_fail
+
+  pa_doing_today_happened_special_form:
+    required_slots:
+      - pa_doing_today_slot
+      - pa_happened_special_slot
+
+  pa_enough_motivation_form:
+    required_slots:
+      - pa_enough_motivation_slot

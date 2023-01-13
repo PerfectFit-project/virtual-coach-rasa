@@ -150,7 +150,7 @@ def get_next_preparation_intervention_component(intervention_component: str):
     return next_intervention_component
 
 
-def get_intervention_component(intervention_component_name: str):
+def get_intervention_component(intervention_component_name: str) -> InterventionComponents:
     """
     Get the intervention component as stored in the DB from the
     intervention component's name.

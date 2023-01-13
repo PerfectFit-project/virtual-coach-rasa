@@ -4,12 +4,14 @@ Helper functions for rasa actions
 import datetime
 import secrets
 from typing import List, Optional, Any
-
 from .definitions import DATABASE_URL, TIMEZONE
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers,
-                                              InterventionComponents, UserPreferences,
-                                              InterventionActivity, UserInterventionState,
-                                              InterventionPhases)
+from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
+                                              DialogOpenAnswers, 
+                                              InterventionActivity,
+                                              InterventionComponents,
+                                              InterventionPhases,
+                                              UserInterventionState,
+                                              UserPreferences)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 

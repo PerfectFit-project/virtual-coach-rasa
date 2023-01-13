@@ -1,14 +1,26 @@
+import random
 from sqlalchemy import update
-from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, FirstAidKit,
+from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, 
+                                              FirstAidKit,
                                               InterventionActivity)
-from virtual_coach_db.helper import ExecutionInterventionComponents
+from virtual_coach_db.helper import (ExecutionInterventionComponents, 
+                                     DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
-from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES
-from .helper import get_latest_bot_utterance, get_random_activities
+from . import validator
+from .definitions import (COMMITMENT, CONSENSUS, 
+                          DATABASE_URL, 
+                          NUM_TOP_ACTIVITIES, 
+                          OPT_POLICY, STATE_FEATURE_MEANS, 
+                          REFLECTIVE_QUESTION_COMMITMENT,
+                          REFLECTIVE_QUESTION_COMMITMENT_IDENTITY,
+                          REFLECTIVE_QUESTION_CONSENSUS)
+from .helper import (get_latest_bot_utterance, 
+                     get_random_activities, 
+                     store_dialog_closed_answer_to_db)
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
-from typing import Text, Dict, Any
+from typing import Any, Dict, Text
 
 
 class CheckIfFirstExecutionGA(Action):
@@ -176,17 +188,12 @@ class ValidateActivityUsefulnessForm(FormValidationAction):
         if last_utterance != 'utter_ask_activity_useful_rating':
             return {"activity_useful_rating": None}
 
-        if not self._validate_activity_useful_rating_response(value):
+        if not validator.validate_number_in_range_response(n_min=0, n_max=10, 
+                                                           response=value):
             dispatcher.utter_message(response="utter_please_answer_0_to_10")
             return {"activity_useful_rating": None}
 
         return {"activity_useful_rating": value}
-
-    @staticmethod
-    def _validate_activity_useful_rating_response(value):
-        if 0 <= int(value) <= 10:
-            return True
-        return False
 
 
 class ValidateSaveOrEditForm(FormValidationAction):
@@ -232,17 +239,11 @@ class ValidateGeneralActivityDescriptionForm(FormValidationAction):
         if last_utterance != 'utter_ask_general_activity_description_slot':
             return {"general_activity_description_slot": None}
 
-        if not self._validate_response_length(value):
+        if not validator.validate_long_enough_response_chars(value, 50):
             dispatcher.utter_message(response="utter_give_more_details")
             return {"general_activity_description_slot": None}
 
         return {"general_activity_description_slot": value}
-
-    @staticmethod
-    def _validate_response_length(value):
-        if len(value) >= 50:
-            return True
-        return False
 
 
 class SaveDescriptionInDb(Action):
@@ -307,7 +308,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
         if last_utterance != 'utter_ask_general_activity_next_activity_slot':
             return {"general_activity_next_activity_slot": None}
 
-        if not self._validate_response_value(value):
+        if not validator.validate_number_in_range_response(1, 4, value):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
             return {"general_activity_next_activity_slot": None}
 
@@ -324,12 +325,6 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
                     "rnd_activities_ids": rnd_activities_ids}
 
         return {"general_activity_next_activity_slot": value}
-
-    @staticmethod
-    def _validate_response_value(value):
-        if 1 <= int(value) <= 4:
-            return True
-        return False
 
 
 class GetLastPerformedActivity(Action):
@@ -471,3 +466,227 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
     )
 
     return user_inputs
+    
+    
+class ValidatePersuasionReflectionForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_reflection_form'
+
+    def validate_persuasion_reflection_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_reflection_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_reflection_slot':
+            return {"persuasion_reflection_slot": None}
+
+        if not validator.validate_long_enough_response_chars(value, 10):
+            dispatcher.utter_message(response="utter_please_answer_more_words")
+            return {"persuasion_reflection_slot": None}
+
+        return {"persuasion_reflection_slot": value}
+    
+    
+class SavePersuasionToDatabase(Action):
+    """Save persuasion to database"""
+
+    def name(self):
+        return "save_persuasion_to_database"
+
+    async def run(self, dispatcher, tracker, domain):
+    
+        user_id = tracker.current_state()['sender_id']
+        
+        # Get chosen persuasion type
+        pers_type = tracker.get_slot('persuasion_type')
+        # Get index of chosen persuasive message; -1 if "no persuasion"
+        message_idx = tracker.get_slot("persuasive_message_index")
+        # Get answers to state feature questions
+        want = tracker.get_slot('persuasion_want_slot')
+        prompts = tracker.get_slot('persuasion_prompts_slot')
+        need = tracker.get_slot('persuasion_need_slot')
+        # Get effort score
+        effort = tracker.get_slot('persuasion_effort_slot')
+        
+        # Store state feature values to database
+        store_dialog_closed_answer_to_db(user_id, answer_value = want, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_WANT.value)
+        store_dialog_closed_answer_to_db(user_id, answer_value = need, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_NEED.value)
+        store_dialog_closed_answer_to_db(user_id, answer_value = prompts, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_PROMPTS.value)
+        # Store used persuasion type (1 = commitment, 2 = consensus, 3 = no persuasion)
+        store_dialog_closed_answer_to_db(user_id, answer_value = pers_type, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_TYPE.value)
+        # +2 since the lowest value we have is -1 in case of no persuasion, and the 
+        # answer values must start at 1 in the database
+        question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX.value
+        store_dialog_closed_answer_to_db(user_id, answer_value = message_idx + 2, 
+                                         question_id = question_id)
+        # +1 since the lowest value is 0
+        store_dialog_closed_answer_to_db(user_id, answer_value = effort + 1, 
+                                         question_id = DialogQuestionsEnum.PERSUASION_EFFORT.value)
+
+        return []
+    
+    
+def get_opt_persuasion_type(tracker: Tracker):
+    """
+    Get optimal persuasion type for user state.
+    """
+    
+    # Get answers to state feature questions
+    want = tracker.get_slot('persuasion_want_slot')
+    prompts = tracker.get_slot('persuasion_prompts_slot')
+    need = tracker.get_slot('persuasion_need_slot')
+    
+    # Make state binary
+    binary_state = [want >= STATE_FEATURE_MEANS[0], 
+                    prompts >= STATE_FEATURE_MEANS[1], 
+                    need >= STATE_FEATURE_MEANS[2]]
+    
+    # Get optimal persuasion type
+    pers_type = OPT_POLICY[binary_state[0]][binary_state[1]][binary_state[2]]
+    
+    return pers_type
+
+
+class SendPersuasiveMessageActivity(Action):
+    """Choose persuasion type and send persuasive message (if any)"""
+
+    def name(self):
+        return "send_persuasive_message_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
+        activities_slot = tracker.get_slot('rnd_activities_ids')
+
+        activity_id = activities_slot[chosen_option - 1]
+        session = get_db_session(db_url=DATABASE_URL)
+
+        # Get the activity benefit
+        activities = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id == activity_id
+            ).all()
+        )
+        benefit = activities[0].intervention_activity_benefit
+        
+        # Get optimal persuasion type for user state
+        pers_type = get_opt_persuasion_type(tracker)
+        
+        reflective_question = ""  # Reflective question to ask users as part of persuasion
+        input_required = False  # Whether we will ask a reflective question to users
+        message_idx = -1  # Index of persuasive message
+        # Commitment
+        if pers_type == 1:
+            input_required = True
+            message_idx = random.randrange(len(COMMITMENT))
+            dispatcher.utter_message(text=COMMITMENT[message_idx])
+            # Not identity-based formulation
+            if message_idx < 4:
+                reflective_question = REFLECTIVE_QUESTION_COMMITMENT
+            # Identity-based formulation
+            else:
+                reflective_question = REFLECTIVE_QUESTION_COMMITMENT_IDENTITY
+        # Consensus
+        elif pers_type == 2:
+            input_required = True
+            message_idx = random.randrange(len(CONSENSUS))
+            dispatcher.utter_message(text=CONSENSUS[message_idx] + " " + benefit)
+            reflective_question = REFLECTIVE_QUESTION_CONSENSUS
+        
+        return [SlotSet("persuasion_type", pers_type),
+                SlotSet("persuasive_message_index", message_idx),
+                SlotSet("persuasion_requires_input", input_required),
+                SlotSet("persuasion_reflective_question", reflective_question)]
+    
+
+class ValidatePersuasionWantForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_want_form'
+
+    def validate_persuasion_want_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_want_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_want_slot':
+            return {"persuasion_want_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"persuasion_want_slot": None}
+
+        return {"persuasion_want_slot": float(value)}
+
+    
+class ValidatePersuasionNeedForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_need_form'
+
+    def validate_persuasion_need_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_need_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_need_slot':
+            return {"persuasion_need_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"persuasion_need_slot": None}
+
+        return {"persuasion_need_slot": float(value)}
+
+
+class ValidatePersuasionPromptsForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_prompts_form'
+
+    def validate_persuasion_prompts_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_prompts_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_prompts_slot':
+            return {"persuasion_prompts_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"persuasion_prompts_slot": None}
+
+        return {"persuasion_prompts_slot": float(value)}
+    
+
+class ValidatePersuasionEffortForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_persuasion_effort_form'
+
+    def validate_persuasion_effort_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_effort_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_persuasion_effort_slot':
+            return {"persuasion_effort_slot": None}
+
+        if not validator.validate_number_in_range_response(0, 10, value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"persuasion_effort_slot": None}
+
+        return {"persuasion_effort_slot": float(value)}

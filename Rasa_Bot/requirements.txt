@@ -1,4 +1,4 @@
-git+https://github.com/PerfectFit-project/niceday_client#v0.1.3
+git+https://github.com/PerfectFit-project/niceday_client@v0.1.3
 protobuf==3.20.1  # temporary fix
 rasa==3.2.8 # NB! when updating, make sure to also update:
             # * rasa base image in actions/Dockerfile,

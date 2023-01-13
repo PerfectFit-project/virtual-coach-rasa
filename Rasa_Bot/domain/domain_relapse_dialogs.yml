@@ -634,7 +634,7 @@ responses:
             Typ 4 als je al lichamelijk actief bent geweest. 
             Typ 5 als je iets deed wat niet in het lijstje staat. "
   utter_ask_pa_happened_special_slot:
-    - text: "Gebeurde er vandaag iets bijzonders?"
+    - text: "Gebeurde er iets bijzonders?"
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_pa_lapse_5:
@@ -690,7 +690,6 @@ actions:
   - action_set_slot_relapse_dialog_pa
   - action_set_slot_relapse_dialog_relapse
   - action_trigger_relapse
-  - action_check_repetitions # checks how many times a new HRS activity has been asked
   - populate_coping_activities_list
   - populate_coping_activities_list_pa
   - show_barchart_difficult_situations

@@ -101,6 +101,39 @@ slots:
         conditions:
           - active_loop: read_second_testimonial_form
 
+  testimonial_evaluation:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: testimonial_evaluation_form
+
+  second_pa_goal:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: second_pa_goal_form
+
+  why_pa_goal_important_values:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: why_pa_goal_important_form
+            requested_slot: why_pa_goal_important_values
+
+  why_pa_goal_important_nuance:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: why_pa_goal_important_form
+            requested_slot: why_pa_goal_important_nuance
 
 responses:
   # Branch 1 introduction
@@ -269,7 +302,42 @@ responses:
   utter_second_testimonial_1:
     - text: "Hier is nog een voorbeeld van iemand die zijn of haar beweegdoel heeft gehaald 🙋🏾:"
   utter_second_testimonial_2:
-    - text: "[Insert testimonial 2 Nele/Beyza]"
+    - text: "[Insert testimonial 2 Nele/Beyza]"  # TODO: insert testimonial
+  utter_ask_testimonial_evaluation:
+    - text: "Wat vind je van het voorbeeld / de voorbeelden? Zijn er dingen die jij hetzelfde zou willen doen? Typ je
+            antwoord naar mij. "
+  utter_second_testimonial_3:
+    - text: "Bedankt voor het delen!"
+  utter_second_testimonial_4:
+    - text: "Nadat je het voorbeeld / de voorbeelden gelezen hebt, heb je misschien ook een beter idee van je eigen
+            beweegdoel. Daarom kun je je doel nog aanpassen als dat je wilt. "
+  utter_second_testimonial_5:
+    - text: "Dit is het beweegdoel dat je eerder opgesteld hebt: {first_pa_goal}"
+  utter_second_testimonial_6:
+    - text: "Kijk nog eens naar je doel. Probeer je doel zo specifiek mogelijk te maken. Dit helpt je bij het behalen
+            van je doel. 🎯"
+  utter_ask_second_pa_goal:
+    - text: "Typ je doel nogmaals. Het doel kan dus anders zijn dan het doel dat je eerder opgesteld hebt."
+  utter_second_testimonial_7:
+    - text: "Super"
+  utter_second_testimonial_8:
+    - text: "Je hebt je beweegdoel nu zo specifiek mogelijk gemaakt. Het is goed om doelen te stellen die voor jou
+            belangrijk zijn en bij jou passen."
+  utter_second_testimonial_9:
+    - text: "Laten we daarom kijken waarom dit beweegdoel belangrijk voor jou is."
+  utter_second_testimonial_10:
+    - text: "Dit doel is belangrijk voor jouw vanwege: Familie 👪 - Gezondheid 💪 - Relaties 🤝 - Persoonlijke
+            ontwikkeling 💡 - Werk 🧑‍💼 - Vrienden 🧑‍🤝‍🧑 "
+  utter_ask_why_pa_goal_important_values:
+    - text: "Typ '1' voor Familie'. Typ '2' voor Gezondheid. Typ '3' voor Relaties. Typ '4' voor Persoonlijke
+            ontwikkeling. Typ '5' voor Werk. En typ '6' voor Vrienden."
+  utter_second_testimonial_11:
+    - text: "Ah, mooie keus!"
+  utter_ask_why_pa_goal_important_nuance:
+    - text: "Ik kan me voorstellen dat jouw {why_pa_goal_important_values} belangrijk voor je is/zijn. Kun je me iets meer
+            vertellen over waarom dit doel belangrijk is voor jouw {why_pa_goal_important_values}?"
+  utter_second_testimonial_12:
+    - text: "Mooi! Goed dat je nagedacht hebt over waarom jouw beweegdoel belangrijk voor je is. 💭"
 
   utter_ask_chosen_quit_date_slot:
     - text: "Welke datum wil je stoppen met roken?"
@@ -278,8 +346,6 @@ responses:
   utter_ask_read_second_testimonial:
     - text: "Wil je nog een voorbeeld zien van iemand die zijn of haar beweegdoel heeft gehaald? Typ '1' als je nog een
             voorbeeld wilt zien. Typ '2' als je door wilt gaan."
-  utter_test_utter_1:
-    - text: "continue here"
 
 
 actions:
@@ -296,6 +362,9 @@ actions:
   - validate_testimonial_one_read_form
   - validate_testimonial_two_read_form
   - validate_read_second_testimonial_form
+  - validate_testimonial_evaluation_form
+  - validate_second_pa_form
+  - validate_why_pa_goal_important_form
 
 forms:
   # Branch 1 introduction
@@ -339,3 +408,12 @@ forms:
   testimonial_evaluation_form:
     required_slots:
       - testimonial_evaluation
+
+  second_pa_goal_form:
+    required_slots:
+      - second_pa_goal
+
+  why_pa_goal_important_form:
+    required_slots:
+      - why_pa_goal_important_values
+      - why_pa_goal_important_nuance

@@ -250,4 +250,85 @@ class ActionContinueTestimonialEvaluation(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        return [FollowupAction('utter_test_utter_1')]
+        return [FollowupAction('testimonial_evaluation_form')]
+
+
+class ValidateTestimonialEvaluationForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_testimonial_evaluation_form'
+
+    def validate_testimonial_evaluation(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate testimonial evaluation"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_testimonial_evaluation':
+            return {"testimonial_evaluation": None}
+
+        if not validator.validate_long_enough_response_chars(value, 15):
+            dispatcher.utter_message(response="utter_give_more_details")
+            return {"testimonial_evaluation": None}
+
+        return {"testimonial_evaluation": value}
+    
+    
+class ValidateSecondPaGoalForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_second_pa_form'
+
+    def validate_which_sport(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate second pa goal form"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_second_pa_goal':
+            return {"second_pa_goal": None}
+
+        if not validator.validate_long_enough_response_chars(value, 20):
+            dispatcher.utter_message(response="utter_give_more_details")
+            return {"second_pa_goal": None}
+
+        return {"second_pa_goal": value}
+
+
+class ValidateWhyPaGoalImportantForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_why_pa_goal_important_form'
+
+    def validate_why_pa_goal_important_values(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate why_pa_goal_important_values"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_why_pa_goal_important_values':
+            return {"why_pa_goal_important_values": None}
+
+        if not validator.validate_list(value, 1, 6):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_numbers")
+            return {"why_pa_goal_important_values": None}
+
+        dispatcher.utter_message(response="utter_second_testimonial_11")
+        return {"why_pa_goal_important_values": value}
+
+    def validate_why_pa_goal_important_nuance(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate why_pa_goal_important_nuance"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_why_pa_goal_important_nuance':
+            return {"why_pa_goal_important_nuance": None}
+
+        if not validator.validate_long_enough_response_chars(value, 15):
+            dispatcher.utter_message(response="utter_give_more_details")
+            return {"why_pa_goal_important_nuance": None}
+
+        return {"why_pa_goal_important_nuance": value}

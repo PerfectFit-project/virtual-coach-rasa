@@ -67,7 +67,7 @@ rules:
   - action: utter_goal_setting_choose_date_1
   - action: utter_goal_setting_choose_date_2
   - action: utter_goal_setting_choose_date_3
-  - action: chosen_quit_date_form
+  - action: chosen_quit_date_form  # TODO: check what happens if today is chosen as day.
   - active_loop: chosen_quit_date_form
   wait_for_user_input: false
 
@@ -116,7 +116,7 @@ rules:
   - action: utter_goal_setting_pa_set_6
   - action: first_pa_goal_form
   - active_loop: first_pa_goal_form
-  - active_loop: null  # TODO: ask if this is needed in database
+  - active_loop: null
   - action: utter_goal_setting_pa_set_7
   - action: utter_goal_setting_pa_set_8
   - action: utter_goal_setting_pa_set_9
@@ -155,4 +155,21 @@ rules:
 
 - rule: evaluate testimonials
   steps:
-  - action: utter_test_utter_1
+  - action: testimonial_evaluation_form
+  - active_loop: testimonial_evaluation_form
+  - active_loop: null  # TODO: store response to db
+  - action: utter_second_testimonial_3
+  - action: utter_second_testimonial_4
+  - action: utter_second_testimonial_5
+  - action: utter_second_testimonial_6
+  - action: second_pa_goal_form
+  - active_loop: second_pa_goal_form
+  - active_loop: null
+  - action: utter_second_testimonial_7
+  - action: utter_second_testimonial_8
+  - action: utter_second_testimonial_9
+  - action: utter_second_testimonial_10
+  - action: why_pa_goal_important_form
+  - active_loop: why_pa_goal_important_form
+  - active_loop: null  # TODO: replace the numbers for strings in second question
+  - action: utter_second_testimonial_12

@@ -2,6 +2,7 @@
 Stores definitions used in rasa actions, related to database, endpoints, timezone etcetera.
 """
 import os
+from enum import Enum
 
 from dateutil import tz
 

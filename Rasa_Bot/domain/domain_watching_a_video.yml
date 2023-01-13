@@ -4,11 +4,14 @@ intents:
   - EXTERNAL_done_with_video
 
 actions:
+  - action_continue_after_video
   - action_delayed_message_after_video
+  - action_display_video_link
+  - action_launch_watch_video_dialog
+  - action_set_medication_video_link
+  - action_set_slot_video_link
   - action_thanks_for_watching
   - validate_video_clear_form
-  - action_display_video_link
-  - action_set_slot_video_link
 
 forms:
   video_clear_form:

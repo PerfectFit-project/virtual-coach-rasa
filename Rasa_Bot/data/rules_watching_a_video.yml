@@ -27,7 +27,7 @@ rules:
   - action: video_clear_form
   - active_loop: null
   - slot_was_set:
-    - video_clear_option: 1
+    - video_clear_option: 2
   - action: action_display_video_link
   - action: utter_leaving_app_announcement
   - action: action_delayed_message_after_video
@@ -40,7 +40,7 @@ rules:
   - action: video_clear_form
   - active_loop: null
   - slot_was_set:
-    - video_clear_option: 2
+    - video_clear_option: 1
   - action: utter_clear_confirmation
   - action: utter_finish_video_dialog
-  - action: action_end_dialog
+  - action: action_continue_after_video

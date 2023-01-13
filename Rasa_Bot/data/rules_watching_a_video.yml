@@ -1,0 +1,46 @@
+version: "3.1"
+
+rules:
+- rule: prompt watch video
+  steps:
+  - intent: EXTERNAL_watch_video_dialog
+  - action: utter_watch_video_announcement
+  - action: utter_click_video_link
+  - action: action_display_video_link
+  - action: utter_leaving_app_announcement
+  - action: action_delayed_message_after_video
+
+- rule: after watching video unclear confirmation
+  steps:
+    - intent: EXTERNAL_done_with_video
+    - action: action_thanks_for_watching
+    - action: utter_thanks_for_watching
+    - action: video_clear_form
+    - active_loop: video_clear_form
+  wait_for_user_input: false
+
+- rule: User wants to replay the video
+
+  condition:
+  - active_loop: video_clear_form
+  steps:
+  - action: video_clear_form
+  - active_loop: null
+  - slot_was_set:
+    - video_clear_option: 1
+  - action: action_display_video_link
+  - action: utter_leaving_app_announcement
+  - action: action_delayed_message_after_video
+
+- rule: User doesn't want to watch the video again
+
+  condition:
+  - active_loop: video_clear_form
+  steps:
+  - action: video_clear_form
+  - active_loop: null
+  - slot_was_set:
+    - video_clear_option: 2
+  - action: utter_clear_confirmation
+  - action: utter_finish_video_dialog
+  - action: action_end_dialog

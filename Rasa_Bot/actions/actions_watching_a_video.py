@@ -6,6 +6,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
 from virtual_coach_db.helper.definitions import VideoLinks
+from . import validator
 from .definitions import REDIS_URL
 from .helper import get_latest_bot_utterance
 
@@ -73,14 +74,8 @@ class ValidateVideoClearForm(FormValidationAction):
         if last_utterance != 'utter_ask_video_clear_option':
             return {"video_clear_option": None}
 
-        video_clear = self._validate_video_clear_response(value)
+        video_clear = validator.validate_number_in_range_response(1, 2, value)
         if video_clear is None:
             dispatcher.utter_message(response="utter_please_answer_1_2")
 
         return {"video_clear_option": video_clear}
-
-    @staticmethod
-    def _validate_video_clear_response(value):
-        if value in ["1", "2"]:
-            return value
-        return None

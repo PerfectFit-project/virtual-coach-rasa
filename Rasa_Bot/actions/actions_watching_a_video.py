@@ -1,15 +1,16 @@
 import datetime
 from celery import Celery
-from rasa_sdk.events import ReminderScheduled, SlotSet
 from rasa_sdk import Action, Tracker
-from typing import Text, Dict, Any
-from rasa_sdk.forms import FormValidationAction
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
-from .helper import get_latest_bot_utterance
+from rasa_sdk.forms import FormValidationAction
+from typing import Text, Dict, Any
 from virtual_coach_db.helper.definitions import VideoLinks
 from .definitions import REDIS_URL
+from .helper import get_latest_bot_utterance
 
 celery = Celery(broker=REDIS_URL)
+
 
 class SetSlotVideoLink(Action):
     """ this is an example for setting the slot of the video link"""
@@ -19,6 +20,7 @@ class SetSlotVideoLink(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("video_link",
                         VideoLinks.TESTVIDEOLINK)]
+
 
 class DisplayVideoLink(Action):
     """Display a certain video link"""
@@ -30,6 +32,7 @@ class DisplayVideoLink(Action):
         link = tracker.get_slot('video_link')
         dispatcher.utter_message(text=link)
         return []
+
 
 class DelayedMessage(Action):
     """Schedules a reminder"""
@@ -44,6 +47,7 @@ class DelayedMessage(Action):
                          (user_id, new_intent),
                          eta=datetime.datetime.now() + datetime.timedelta(seconds=30))
         return []
+
 
 class ActionReactToReminder(Action):
     """Will ask user about the video after watching"""

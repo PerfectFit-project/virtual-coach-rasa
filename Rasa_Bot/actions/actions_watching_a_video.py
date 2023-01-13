@@ -119,6 +119,5 @@ class ContinueAfterVideo(Action):
             # resumes the relapse dialog opening the ehbo_me_self_lapse_form.
             # The flow will then depend on the chosen option in the form
             return [FollowupAction('ehbo_me_self_lapse_form')]
-        else:
-            # TODO: add the other possible cases
-            return [FollowupAction('utter_test_utterance')]
+        # TODO: add the other possible cases
+        return [FollowupAction('utter_test_utterance')]

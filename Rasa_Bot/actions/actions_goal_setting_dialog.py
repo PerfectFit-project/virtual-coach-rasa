@@ -1,7 +1,8 @@
 """
 Contains custom actions related to the relapse dialogs
 """
-from virtual_coach_db.helper import ExecutionInterventionComponents, PreparationInterventionComponents
+from virtual_coach_db.helper import (ExecutionInterventionComponents,
+                                     PreparationInterventionComponents)
 
 from . import validator
 from .definitions import TIMEZONE
@@ -40,7 +41,7 @@ class GoalSettingContinueAfterPlan(Action):
             # resumes the relapse dialog from rule: smoke relapse decide to get medication info
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]
-        elif current_dialog == PreparationInterventionComponents.GOAL_SETTING:
+        if current_dialog == PreparationInterventionComponents.GOAL_SETTING:
             # TODO: change to the actual action once implemented
             return [FollowupAction('utter_test_utterance')]
 
@@ -62,7 +63,8 @@ class ValidateChosenQuitDateForm(FormValidationAction):
         start_date = tracker.get_slot('first_possible_quit_date')
         stop_date = tracker.get_slot('last_possible_quit_date')
 
-        if not (validator.validate_date_format(value) and validator.validate_date_range(value, start_date, stop_date)):
+        if (not (validator.validate_date_format(value)
+                 and validator.validate_date_range(value, start_date, stop_date))):
             dispatcher.utter_message(response="utter_goal_setting_wrong_date")
             return {"chosen_quit_date_slot": None}
 

@@ -1,0 +1,10 @@
+version: "3.1"
+
+rules:
+- rule: start preparation phase
+  steps:
+  - intent: test_intent
+  - action: action_set_slot_previous_dialog
+  - action: utter_finished_preparation_phase
+  - action: utter_next_part
+  - action: action_expected_time_next_part

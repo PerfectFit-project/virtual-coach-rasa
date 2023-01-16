@@ -1,0 +1,20 @@
+##Domain for preparation phase dialog
+intents:
+  - test_intent
+
+actions:
+  - action_expected_time_next_part
+  - action_set_slot_previous_dialog
+
+slots:
+ expected_next_time_interval:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+responses:
+  utter_finished_preparation_phase:
+    - text: "Je hebt zojuist weer een onderdeel van de voorbereidingsfase afgerond. Goed gedaan!"
+  utter_next_part:
+    - text: "Je kunt nu door naar het volgende onderdeel."

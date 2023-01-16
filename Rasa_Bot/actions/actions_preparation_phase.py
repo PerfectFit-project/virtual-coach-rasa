@@ -24,7 +24,7 @@ class ExpectedTimeNextPart(Action):
         return "action_expected_time_next_part"
 
     async def run(self, dispatcher, tracker, domain):
-        expectedTimeInterval = tracker.get_slot('expected_next_time_interval')
+        expectedTimeInterval = tracker.get_slot('expected_next_time_interval').split(" ")
         message = "Ik verwacht dat het volgende onderdeel " + expectedTimeInterval[0] + " tot " \
                   + expectedTimeInterval[1] + " minuten zal duren."
         dispatcher.utter_message(text=message)

@@ -173,3 +173,71 @@ rules:
   - active_loop: why_pa_goal_important_form
   - active_loop: null  # TODO: replace the numbers for strings in second question
   - action: utter_second_testimonial_12
+  - action: utter_second_testimonial_13
+  - action: pa_goal_reachable_form
+  - active_loop: pa_goal_reachable_form
+  wait_for_user_input: false
+
+- rule: pa goal reachable and challenging
+  condition:
+  - active_loop: pa_goal_reachable_form
+  steps:
+  - action: pa_goal_reachable_form
+  - active_loop: null
+  - slot_was_set:
+    - pa_goal_reachable: 1
+  - action: utter_second_testimonial_15
+  - action: action_continue_step_goal_pa
+
+- rule: pa goal too hard and change
+  condition:
+  - active_loop: pa_goal_reachable_form
+  steps:
+  - action: pa_goal_reachable_form
+  - active_loop: null
+  - slot_was_set:
+    - pa_goal_reachable: 2
+  - action: utter_second_testimonial_16
+  - action: action_continue_change_pa_goal
+
+- rule: pa goal too easy and change
+  condition:
+  - active_loop: pa_goal_reachable_form
+  steps:
+  - action: pa_goal_reachable_form
+  - active_loop: null
+  - slot_was_set:
+    - pa_goal_reachable: 3
+  - action: utter_second_testimonial_17
+  - action: action_continue_change_pa_goal
+
+- rule: change pa goal
+  steps:
+  - action: utter_second_testimonial_18
+  - action: refine_second_pa_goal_form
+  - active_loop: refine_second_pa_goal_form
+  - active_loop: null  # TODO: store to db
+  - action: utter_second_testimonial_19
+  - action: utter_second_testimonial_20
+  - action: utter_second_testimonial_21
+  - action: action_continue_step_goal_pa
+
+- rule: step goal pa  # 3c
+  steps:
+  - action: utter_step_goal_pa_1
+  - action: utter_step_goal_pa_2
+  - action: utter_step_goal_pa_3
+  - action: utter_step_goal_pa_4
+  - action: utter_step_goal_pa_5
+  - action: utter_step_goal_pa_6
+  - action: utter_step_goal_pa_7
+  - action: utter_step_goal_pa_8
+  - action: finished_writing_pa_form
+  - active_loop: finished_writing_pa_form
+  - active_loop: null
+  - action: utter_step_goal_pa_9
+  - action: utter_step_goal_pa_10
+  - action: utter_step_goal_pa_11
+  - action: utter_closing_1
+  - action: utter_closing_2
+  - action: utter_closing_3

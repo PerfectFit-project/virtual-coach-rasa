@@ -332,3 +332,83 @@ class ValidateWhyPaGoalImportantForm(FormValidationAction):
             return {"why_pa_goal_important_nuance": None}
 
         return {"why_pa_goal_important_nuance": value}
+
+
+class ValidatePaGoalReachableForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_pa_goal_reachable_form'
+
+    def validate_pa_goal_reachable(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pa_goal_reachable"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_pa_goal_reachable':
+            return {"pa_goal_reachable": None}
+
+        if not validator.validate_list(value, 1, 3):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            return {"pa_goal_reachable": None}
+
+        return {"pa_goal_reachable": value}
+
+
+class ActionContinueChangePaGoal(Action):
+    def name(self):
+        return "action_continue_change_pa_goal"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('utter_second_testimonial_18')]
+
+
+class ValidateRefineSecondPaGoalForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_refine_second_pa_goal_form'
+
+    def validate_refine_second_pa_goal(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate refine second pa goal form"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_refine_second_pa_goal':
+            return {"refine_second_pa_goal": None}
+
+        if not validator.validate_long_enough_response_chars(value, 20):
+            dispatcher.utter_message(response="utter_give_more_details")
+            return {"refine_second_pa_goal": None}
+
+        return {"refine_second_pa_goal": value}
+
+
+class ActionContinueStepGoalPa(Action):
+    def name(self):
+        return "action_continue_step_goal_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('utter_step_goal_pa_1')]
+
+
+class ValidateFinishedWritingPaForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_finished_writing_pa_form'
+
+    def validate_finished_writing_pa(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate finished_writing_pa slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_finished_writing_pa':
+            return {"finished_writing_pa": None}
+
+        if value not in ['Klaar', 'klaar']:
+            return {"finished_writing_pa": None}
+
+        return {"finished_writing_pa": value}

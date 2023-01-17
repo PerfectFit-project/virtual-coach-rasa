@@ -338,6 +338,20 @@ def get_open_answers(user_id, question_id):
 
     return closed_answers
 
+def count_answers(answers, closed_answer_options):
+    result = []
+    for i in range(len(closed_answer_options)):
+        amount_of_answers = 0
+        closed_answer = closed_answer_options[i]
+
+        for answer in answers:
+            if answer.answer_description == closed_answer:
+                amount_of_answers += 1
+
+        result.append(amount_of_answers)
+    return result
+
+
 
 def week_day_to_numerical_form(week_day):
     if week_day.lower() == "monday":

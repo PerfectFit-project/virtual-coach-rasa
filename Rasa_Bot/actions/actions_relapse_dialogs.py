@@ -230,11 +230,13 @@ class ShowBarchartDifficultSituations(Action):
             fig = add_subplot(fig, closed_answer_options, data, i+1, 1)
 
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
-        fig.write_image("chart.PNG")
+
+        filepath = '/app/barchart_difficult_situations.PNG'
+        fig.write_image("barchart_difficult_situations.PNG")
 
         # TODO: plot barchart, save and send
 
-        return []
+        return [SlotSet("upload_file_path", filepath)]
 
 
 class ShowBarchartDifficultSituationsPa(Action):

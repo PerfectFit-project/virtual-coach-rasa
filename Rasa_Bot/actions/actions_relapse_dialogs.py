@@ -8,7 +8,7 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, make_graph,
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, make_graph_object,
                      get_closed_answers, get_open_answers, get_all_closed_answers, count_answers)
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -201,6 +201,13 @@ class ShowBarchartDifficultSituations(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
+        fig = make_subplots(
+            rows=3, cols=1,
+            subplot_titles=("Wat was je aan het doen?",
+                            "Hoe voelde je je?",
+                            "Met wie was je?")
+        )
+
         question_ids = [DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
                         DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value,
                         DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value]
@@ -213,11 +220,36 @@ class ShowBarchartDifficultSituations(Action):
             data.append(count_answers(answers, closed_answer_options))
 
 
-        logging.info("making chart")
+        fig = make_graph_object(fig, closed_answer_options, data, 1, 1)
 
-        chart = make_graph("Jouw Mogelijke Situaties", closed_answer_options, data)
+        question_ids = [DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value,
+                        DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value,
+                        DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value]
 
-        chart.write_image("chart.PNG")
+        closed_answer_options = get_all_closed_answers(question_ids[0])
+
+        data = []
+        for question_id in question_ids:
+            answers = get_closed_answers(user_id, question_id)
+            data.append(count_answers(answers, closed_answer_options))
+
+        fig = make_graph_object(fig, closed_answer_options, data, 2, 1)
+
+        question_ids = [DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value,
+                        DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
+                        DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]
+
+        closed_answer_options = get_all_closed_answers(question_ids[0])
+
+        for question_id in question_ids:
+            answers = get_closed_answers(user_id, question_id)
+            data.append(count_answers(answers, closed_answer_options))
+
+        fig = make_graph_object(fig, closed_answer_options, data, 3, 1)
+
+        fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
+
+        fig.write_image("chart.PNG")
 
         # TODO: plot barchart, save and send
 

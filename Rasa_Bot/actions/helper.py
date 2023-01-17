@@ -370,13 +370,18 @@ def week_day_to_numerical_form(week_day):
         return 7
     return -1
 
-def make_graph(title, x_axis, data):
-    fig = go.Figure(data=[
+def make_graph_object(fig, x_axis, data, row, column):
+    fig.add_trace(
         go.Bar(name='Craving', x=x_axis, y=data[0]),
+        row=row, col=column
+    )
+    fig.add_trace(
         go.Bar(name='Lapse', x=x_axis, y=data[1]),
-        go.Bar(name='Relapse', x=x_axis, y=data[2])
-    ])
+        row=row, col=column
+    )
+    fig.add_trace(
+        go.Bar(name='Relapse', x=x_axis, y=data[2]),
+        row=row, col=column
+    )
     # Change the bar mode
-    fig.update_layout(barmode='group')
-    fig.update_layout(title_text=title)
     return fig

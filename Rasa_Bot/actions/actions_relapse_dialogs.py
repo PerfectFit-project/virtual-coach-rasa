@@ -8,7 +8,7 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, make_graph_object,
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, add_subplot,
                      get_closed_answers, get_open_answers, get_all_closed_answers, count_answers)
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -208,47 +208,28 @@ class ShowBarchartDifficultSituations(Action):
                             "Met wie was je?")
         )
 
-        question_ids = [DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
+        question_ids = [[DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
                         DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value,
-                        DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value]
+                        DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value],
+                        [DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value,
+                         DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value],
+                        [DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value,
+                         DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]]
 
-        closed_answer_options = get_all_closed_answers(question_ids[0])
+        for i in range(len(question_ids)):
+            data = []
+            question_ids_subset = question_ids[i]
+            closed_answer_options = get_all_closed_answers(question_ids_subset[0])
 
-        data = []
-        for question_id in question_ids:
-            answers = get_closed_answers(user_id, question_id)
-            data.append(count_answers(answers, closed_answer_options))
+            for question_id in question_ids_subset:
+                answers = get_closed_answers(user_id, question_id)
+                data.append(count_answers(answers, closed_answer_options))
 
-
-        fig = make_graph_object(fig, closed_answer_options, data, 1, 1)
-
-        question_ids = [DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value,
-                        DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value,
-                        DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value]
-
-        closed_answer_options = get_all_closed_answers(question_ids[0])
-
-        data = []
-        for question_id in question_ids:
-            answers = get_closed_answers(user_id, question_id)
-            data.append(count_answers(answers, closed_answer_options))
-
-        fig = make_graph_object(fig, closed_answer_options, data, 2, 1)
-
-        question_ids = [DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value,
-                        DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
-                        DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]
-
-        closed_answer_options = get_all_closed_answers(question_ids[0])
-
-        for question_id in question_ids:
-            answers = get_closed_answers(user_id, question_id)
-            data.append(count_answers(answers, closed_answer_options))
-
-        fig = make_graph_object(fig, closed_answer_options, data, 3, 1)
+            fig = add_subplot(fig, closed_answer_options, data, i+1, 1)
 
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
-
         fig.write_image("chart.PNG")
 
         # TODO: plot barchart, save and send

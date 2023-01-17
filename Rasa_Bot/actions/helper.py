@@ -370,7 +370,7 @@ def week_day_to_numerical_form(week_day):
         return 7
     return -1
 
-def make_graph_object(fig, x_axis, data, row, column):
+def add_subplot(fig, x_axis, data, row, column):
     fig.add_trace(
         go.Bar(name='Craving', x=x_axis, y=data[0]),
         row=row, col=column

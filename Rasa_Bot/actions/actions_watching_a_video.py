@@ -101,8 +101,9 @@ class ValidateVideoClearForm(FormValidationAction):
             return {"video_clear_option": None}
 
         video_clear = validator.validate_number_in_range_response(1, 2, value)
-        if video_clear is None:
+        if video_clear is False:
             dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"video_clear_option": None}
 
         return {"video_clear_option": value}
 

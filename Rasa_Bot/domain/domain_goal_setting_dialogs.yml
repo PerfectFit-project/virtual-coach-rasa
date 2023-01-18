@@ -81,7 +81,8 @@ responses:
   utter_ask_goal_setting_plan_finished_slot:
     - text: "Typ 'klaar' als je hier klaar mee bent."
   utter_goal_setting_wrong_date:
-    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13/07/2023. 
+    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13-07-2023. 
+
             Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. 
             Kun je je stop-datum nog een keer typen? "
 

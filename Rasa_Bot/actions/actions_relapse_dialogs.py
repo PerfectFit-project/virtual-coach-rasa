@@ -8,8 +8,8 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, add_subplot,
-                     get_closed_answers, get_open_answers, get_all_closed_answers, count_answers)
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state,
+                     populate_fig)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -220,24 +220,7 @@ class ShowBarchartDifficultSituations(Action):
                          DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
                          DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]]
 
-        for i in range(len(question_ids)):
-            data = []
-            question_ids_subset = question_ids[i]
-            closed_answer_options = get_all_closed_answers(question_ids_subset[0])
-
-            for question_id in question_ids_subset:
-                closed_answers = get_all_closed_answers(question_id)
-                answers = get_closed_answers(user_id, question_id)
-                data.append(count_answers(answers, closed_answers))
-
-            answer_descriptions = []
-            for answer in closed_answer_options:
-                answer_descriptions.append(answer.answer_description)
-
-            if i > 0:
-                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, False)
-            else:
-                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, True)
+        fig = populate_fig(fig, question_ids, user_id, legends)
 
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
 
@@ -256,8 +239,8 @@ class ShowBarchartDifficultSituationsPa(Action):
 
         fig = make_subplots(
             rows=3, cols=1,
-            subplot_titles=("Reden niet lichamelijk actief",
-                            "Zou je met iemand actief zijn?",
+            subplot_titles=("Zou je met iemand actief zijn?",
+                            "Reden niet lichamelijk actief",
                             "Wat je vandaag verder deed")
         )
 
@@ -267,24 +250,7 @@ class ShowBarchartDifficultSituationsPa(Action):
                         [DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value],
                         [DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]]
 
-        for i in range(len(question_ids)):
-            data = []
-            question_ids_subset = question_ids[i]
-            closed_answer_options = get_all_closed_answers(question_ids_subset[0])
-
-            for question_id in question_ids_subset:
-                closed_answers = get_all_closed_answers(question_id)
-                answers = get_closed_answers(user_id, question_id)
-                data.append(count_answers(answers, closed_answers))
-
-            answer_descriptions = []
-            for answer in closed_answer_options:
-                answer_descriptions.append(answer.answer_description)
-
-            if i > 0:
-                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, False)
-            else:
-                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, True)
+        fig = populate_fig(fig, question_ids, user_id, legends)
 
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
 

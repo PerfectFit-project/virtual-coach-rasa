@@ -5,7 +5,6 @@ import datetime
 import secrets
 from typing import List, Optional, Any
 import plotly.graph_objects as go
-import plotly.express as px
 
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, DialogOpenAnswers,
@@ -346,9 +345,9 @@ def count_answers(answers, closed_answer_options):
 
     """
     result = []
-    for i in range(len(closed_answer_options)):
+    for closed_answer_option in closed_answer_options:
         amount_of_answers = 0
-        closed_answer = closed_answer_options[i]
+        closed_answer = closed_answer_option
 
         for answer in answers:
             if answer.closed_answers_id == closed_answer.closed_answers_id:
@@ -376,25 +375,57 @@ def week_day_to_numerical_form(week_day):
         return 7
     return -1
 
-def add_subplot(fig, x_axis, data, legends, row, column, showlegend):
+def add_subplot(fig, x_axis, data, figure_specifics):
     """
        Add a barchart subplot to a given figure, with the following data.
         Args:
                 fig: the figure to add a subplot to
                 x_axis: the x-axis of the added bar chart, corresponds to the answer options
                 data: the actual data, these are the values returned by count_answers
-                legends: an array of legends and colors associated with them
-                row: row to add the subplot in
-                column: column to add the subplot in
-                showlegend: boolean value specifying whether or not to show the legend
+                figure_specifics: minor specifications about the subplot to be added
             Returns:
                     An updated figure, with the new barchart subplot added in.
     """
-    for i in range(len(data)):
+    legends, row, column, showlegend = figure_specifics
+    for i, y_axis in enumerate(data):
         legend, color = legends[i]
         fig.add_trace(
-            go.Bar(legendgroup=legend, name=legend, x=x_axis, y=data[i], showlegend=showlegend, marker_color=color),
+            go.Bar(legendgroup=legend, name=legend, x=x_axis, y=y_axis,
+                   showlegend=showlegend, marker_color=color),
             row=row, col=column
         )
     # Change the bar mode
+    return fig
+
+def populate_fig(fig, question_ids, user_id, legends):
+    """
+       Populate a given figure with the responses for the closed answers,
+       associated with the specific user.
+        Args:
+                fig: the figure to populate
+                question_ids: the questions to retrieve the responses to
+                user_id: the id of the user to retrieve the responses to
+                legends: the titles and colors for the plot
+            Returns:
+                    A plot, showing the accumulated results for each
+                    question specified by the parameters.
+    """
+    for i, question_ids_subset in enumerate(question_ids):
+        data = []
+        closed_answer_options = get_all_closed_answers(question_ids_subset[0])
+
+        for question_id in question_ids_subset:
+            closed_answers = get_all_closed_answers(question_id)
+            answers = get_closed_answers(user_id, question_id)
+            data.append(count_answers(answers, closed_answers))
+
+        answer_descriptions = []
+        for answer in closed_answer_options:
+            answer_descriptions.append(answer.answer_description)
+
+        showlegend = bool(i == 0)
+
+        figure_specifics = [legends, i + 1, 1, showlegend]
+        fig = add_subplot(fig, answer_descriptions, data, figure_specifics)
+
     return fig

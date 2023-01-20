@@ -263,9 +263,9 @@ class ShowBarchartDifficultSituationsPa(Action):
 
         legends = [("Obstakels bewegen", "blue")]
 
-        question_ids = [[DialogQuestionsEnum.RELAPSE_PA_TOGETHER],
-                        [DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL],
-                        [DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY]]
+        question_ids = [[DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value],
+                        [DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value],
+                        [DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]]
 
         for i in range(len(question_ids)):
             data = []
@@ -281,7 +281,10 @@ class ShowBarchartDifficultSituationsPa(Action):
             for answer in closed_answer_options:
                 answer_descriptions.append(answer.answer_description)
 
-            fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1)
+            if i > 0:
+                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, False)
+            else:
+                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, True)
 
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
 

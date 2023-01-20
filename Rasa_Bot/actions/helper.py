@@ -284,13 +284,12 @@ def get_closed_answers(user_id, question_id):
 
 def get_all_closed_answers(question_id):
     """
-       Get the closed answer responses associated with the given user and question.
+       Get all the possible closed answers associated with a given question id.
         Args:
-                user_id: the user_id of the user to retrieve the answers for
                 question_id: the question_id for which the answers should be retrieved
 
             Returns:
-                    All the answers that the user has given for the given question
+                    All the possible answers to the question specified
 
     """
     session = get_db_session(db_url=DATABASE_URL)
@@ -309,7 +308,7 @@ def get_all_closed_answers(question_id):
 
 def get_open_answers(user_id, question_id):
     """
-       Get the closed answer responses associated with the given user and question.
+       Get the open answer responses associated with the given user and question.
         Args:
                 user_id: the user_id of the user to retrieve the answers for
                 question_id: the question_id for which the answers should be retrieved
@@ -334,6 +333,18 @@ def get_open_answers(user_id, question_id):
     return closed_answers
 
 def count_answers(answers, closed_answer_options):
+    """
+       Count up the closed_answer responses for each answer option.
+        Args:
+                answers: the answers of the user, retreived from the database
+                closed_answer_options: the answer options for the given question
+
+            Returns:
+                    An array of values, specifying the amount of occurences of an answer
+                    for the corresponding option, aligning with the index of the option.
+                    Example... [2, 1, 3] for ["At the gym", "At home", "Outside"]
+
+    """
     result = []
     for i in range(len(closed_answer_options)):
         amount_of_answers = 0
@@ -366,6 +377,19 @@ def week_day_to_numerical_form(week_day):
     return -1
 
 def add_subplot(fig, x_axis, data, legends, row, column, showlegend):
+    """
+       Add a barchart subplot to a given figure, with the following data.
+        Args:
+                fig: the figure to add a subplot to
+                x_axis: the x-axis of the added bar chart, corresponds to the answer options
+                data: the actual data, these are the values returned by count_answers
+                legends: an array of legends and colors associated with them
+                row: row to add the subplot in
+                column: column to add the subplot in
+                showlegend: boolean value specifying whether or not to show the legend
+            Returns:
+                    An updated figure, with the new barchart subplot added in.
+    """
     for i in range(len(data)):
         legend, color = legends[i]
         fig.add_trace(

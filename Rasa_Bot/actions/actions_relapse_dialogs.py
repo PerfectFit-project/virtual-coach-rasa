@@ -281,7 +281,7 @@ class ShowBarchartDifficultSituationsPa(Action):
             for answer in closed_answer_options:
                 answer_descriptions.append(answer.answer_description)
 
-            fig = add_subplot(fig, answer_descriptions, data, i + 1, 1)
+            fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1)
 
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
 

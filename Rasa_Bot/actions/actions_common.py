@@ -1,4 +1,5 @@
 import logging
+import os
 
 from celery import Celery
 from niceday_client import NicedayClient
@@ -60,6 +61,8 @@ class SendMetadata(Action):
             json_message={"text": "image",
                           "attachmentIds": [id_file]},
         )
+        file_path = tracker.get_slot("upload_file_path")
+        os.remove(file_path)
         return[]
 
 

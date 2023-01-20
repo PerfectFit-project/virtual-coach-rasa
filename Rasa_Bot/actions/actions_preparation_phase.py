@@ -40,9 +40,9 @@ class ExpectedTimeNextPart(Action):
 
 class ValidateNowOrLaterFrom(FormValidationAction):
     def name(self) -> Text:
-        return "validate_next_part_now_or_later_form"
+        return "validate_now_or_later"
 
-    def validate_next_part_now_or_later_form(
+    def validate_now_or_later(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument

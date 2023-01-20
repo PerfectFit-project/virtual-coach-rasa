@@ -78,7 +78,6 @@ class UploadFile(Action):
         response = client.upload_file(user_id, filepath, file)
         file_id = response['id']
         logging.info(response)
-        logging.info(file_id)
 
         return[SlotSet("uploaded_file_id", file_id)]
 

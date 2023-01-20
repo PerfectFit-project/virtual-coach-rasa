@@ -208,6 +208,8 @@ class ShowBarchartDifficultSituations(Action):
                             "Met wie was je?")
         )
 
+        legends = [("Trek", "crimson"), ("Eenmalig gerookt", "blue"), ("Vaker gerookt", "orange")]
+
         question_ids = [[DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
                         DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value,
                         DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value],
@@ -224,17 +226,23 @@ class ShowBarchartDifficultSituations(Action):
             closed_answer_options = get_all_closed_answers(question_ids_subset[0])
 
             for question_id in question_ids_subset:
+                closed_answers = get_all_closed_answers(question_id)
                 answers = get_closed_answers(user_id, question_id)
-                data.append(count_answers(answers, closed_answer_options))
+                data.append(count_answers(answers, closed_answers))
 
-            fig = add_subplot(fig, closed_answer_options, data, i+1, 1)
+            answer_descriptions = []
+            for answer in closed_answer_options:
+                answer_descriptions.append(answer.answer_description)
+
+            if i > 0:
+                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, False)
+            else:
+                fig = add_subplot(fig, answer_descriptions, data, legends, i + 1, 1, True)
 
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
 
         filepath = '/app/barchart_difficult_situations.PNG'
         fig.write_image("barchart_difficult_situations.PNG")
-
-        # TODO: plot barchart, save and send
 
         return [SlotSet("upload_file_path", filepath)]
 
@@ -244,9 +252,43 @@ class ShowBarchartDifficultSituationsPa(Action):
         return "show_barchart_difficult_situations_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        # TODO: plot barchart, save and send
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        return []
+        fig = make_subplots(
+            rows=3, cols=1,
+            subplot_titles=("Reden niet lichamelijk actief",
+                            "Zou je met iemand actief zijn?",
+                            "Wat je vandaag verder deed")
+        )
+
+        legends = [("Obstakels bewegen", "blue")]
+
+        question_ids = [[DialogQuestionsEnum.RELAPSE_PA_TOGETHER],
+                        [DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL],
+                        [DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY]]
+
+        for i in range(len(question_ids)):
+            data = []
+            question_ids_subset = question_ids[i]
+            closed_answer_options = get_all_closed_answers(question_ids_subset[0])
+
+            for question_id in question_ids_subset:
+                closed_answers = get_all_closed_answers(question_id)
+                answers = get_closed_answers(user_id, question_id)
+                data.append(count_answers(answers, closed_answers))
+
+            answer_descriptions = []
+            for answer in closed_answer_options:
+                answer_descriptions.append(answer.answer_description)
+
+            fig = add_subplot(fig, answer_descriptions, data, i + 1, 1)
+
+        fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
+
+        filepath = '/app/barchart_difficult_situations_pa.PNG'
+        fig.write_image("barchart_difficult_situations_pa.PNG")
+
+        return [SlotSet("upload_file_path", filepath)]
 
 
 class ShowFirstCopingActivity(Action):

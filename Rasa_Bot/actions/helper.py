@@ -270,9 +270,9 @@ def get_closed_answers(user_id, question_id):
 
     closed_answers = (
         session.query(
-            ClosedAnswers
+            DialogClosedAnswers
         )
-        .join(DialogClosedAnswers)
+        .join(ClosedAnswers)
         .filter(
             DialogClosedAnswers.users_nicedayuid == user_id,
             ClosedAnswers.question_id == question_id
@@ -305,12 +305,7 @@ def get_all_closed_answers(question_id):
         .all()
     )
 
-    all_closed_answers = []
-
-    for i in closed_answers:
-        all_closed_answers.append(i.answer_description)
-
-    return all_closed_answers
+    return closed_answers
 
 def get_open_answers(user_id, question_id):
     """
@@ -345,7 +340,7 @@ def count_answers(answers, closed_answer_options):
         closed_answer = closed_answer_options[i]
 
         for answer in answers:
-            if answer.answer_description == closed_answer:
+            if answer.closed_answers_id == closed_answer.closed_answers_id:
                 amount_of_answers += 1
 
         result.append(amount_of_answers)
@@ -370,18 +365,12 @@ def week_day_to_numerical_form(week_day):
         return 7
     return -1
 
-def add_subplot(fig, x_axis, data, row, column):
-    fig.add_trace(
-        go.Bar(name='Craving', x=x_axis, y=data[0]),
-        row=row, col=column
-    )
-    fig.add_trace(
-        go.Bar(name='Lapse', x=x_axis, y=data[1]),
-        row=row, col=column
-    )
-    fig.add_trace(
-        go.Bar(name='Relapse', x=x_axis, y=data[2]),
-        row=row, col=column
-    )
+def add_subplot(fig, x_axis, data, legends, row, column, showlegend):
+    for i in range(len(data)):
+        legend, color = legends[i]
+        fig.add_trace(
+            go.Bar(legendgroup=legend, name=legend, x=x_axis, y=data[i], showlegend=showlegend, marker_color=color),
+            row=row, col=column
+        )
     # Change the bar mode
     return fig

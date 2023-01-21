@@ -1,0 +1,53 @@
+##Domain for watching a video
+intents:
+  - EXTERNAL_watch_video_dialog
+  - EXTERNAL_done_with_video
+
+actions:
+  - action_continue_after_video
+  - action_delayed_message_after_video
+  - action_display_video_link
+  - action_launch_watch_video_dialog
+  - action_set_medication_video_link
+  - action_set_slot_video_link
+  - action_thanks_for_watching
+  - validate_video_clear_form
+
+forms:
+  video_clear_form:
+    required_slots:
+      - video_clear_option
+
+slots:
+ video_clear_option:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: video_clear_form
+ video_link:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+responses:
+  ### test
+  utter_watch_video_announcement:
+    - text: "Je gaat nu een video bekijken."
+  utter_click_video_link:
+    - text: "Klik op onderstaande link om de video te openen."
+  utter_leaving_app_announcement:
+    - text: "Je verlaat daarmee even de app. Je komt daarna weer terug in de app."
+  utter_thanks_for_watching:
+    - text: "Bedankt voor het kijken van de video! Was alles duidelijk of wil je hem nog een keer bekijken?"
+  utter_ask_video_clear_option:
+    - text: "Typ '1' voor 'duidelijk' en '2' voor 'nog een keer bekijken'"
+  utter_clear_confirmation:
+    - text: "Fijn dat de video duidelijk was."
+  utter_finish_video_dialog:
+    - text: "Je bent klaar met dit video onderdeel."

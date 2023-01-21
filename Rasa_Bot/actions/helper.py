@@ -30,7 +30,10 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
     """
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
+    # The answers to the closed questions are pre-defined and initialized in the DB.
+    # To have a unique known ID for the answers that we can use to store the user's response,
+    # it is assigned by combining the question id and the value of the answer (always a number)
+    # using the following logic. See also virtual_coach_db.helper.populate_db
     answer_id = answer_value + question_id * 100
 
     entry = DialogClosedAnswers(closed_answers_id=answer_id,
@@ -154,6 +157,10 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         .all()
     )
 
+    # if the list of phases of components is empty, it is not in the DB
+    if not phase or not components:
+        raise ValueError('component or phase not found')
+
     session.add(UserInterventionState(
         users_nicedayuid=user_id,
         intervention_phase_id=phases[0].phase_id,
@@ -211,7 +218,9 @@ def get_latest_bot_utterance(events) -> Optional[Any]:
         if event['event'] == 'bot':
             events_bot.append(event)
 
-    if len(events_bot) != 0 and 'utter_action' in events_bot[-1]['metadata']:
+    if (len(events_bot) != 0
+            and 'metadata' in events_bot[-1]
+            and 'utter_action' in events_bot[-1]['metadata']):
         last_utterance = events_bot[-1]['metadata']['utter_action']
     else:
         last_utterance = None

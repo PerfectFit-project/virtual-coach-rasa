@@ -39,6 +39,15 @@ class ActionCheckReasons(Action):
         return []
 
 
+class ActionLaunchGoalSetting(Action):
+    def name(self):
+        return "action_launch_goal_setting"
+
+    async def run(self, dispatcher, tracker, domain):
+        # starts the rule for setting a new quit date in the goal setting dialog
+        return [FollowupAction('action_get_first_last_date')]
+
+
 class ActionResetOneFourSlot(Action):
     def name(self):
         return "action_reset_one_four_slot"

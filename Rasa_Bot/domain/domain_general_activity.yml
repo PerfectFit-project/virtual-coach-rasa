@@ -131,6 +131,78 @@ slots:
     influence_conversation: true
     mappings:
       - type: custom
+      
+  persuasion_prompts_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: persuasion_prompts_form
+          
+  # User response to state question on wanting to do an activity
+  persuasion_want_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: persuasion_want_form
+  
+  # User response to state question on needing to do an activity
+  persuasion_need_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: persuasion_need_form
+  
+  # Chosen persuasion type (e.g., 0: commitment, 1: consensus) 
+  persuasion_type:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+      
+  # Index of chosen persuasive message
+  persuasive_message_index:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  # Whether persuasion requires input (i.e., after reflective question)
+  persuasion_requires_input:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
+      
+  # Reflective question for persuasion type
+  persuasion_reflective_question:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+      
+  # User response to persuasive reflective question
+  persuasion_reflection_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: persuasion_reflection_form
+          
+  # User response regarding effort spent on activity
+  persuasion_effort_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: persuasion_effort_form
 
 forms:
   # this form is for rating the most recent activity
@@ -150,24 +222,48 @@ forms:
   general_activity_next_activity_form:
     required_slots:
       - general_activity_next_activity_slot
+  # ask user if they have sth that prompts/reminds them to do the activity
+  persuasion_prompts_form:
+    required_slots:
+      - persuasion_prompts_slot
+  # ask user if they feel like they want to do the activity
+  persuasion_want_form:
+    required_slots:
+      - persuasion_want_slot 
+  # ask user if they feel like they need to do the activity
+  persuasion_need_form:
+    required_slots:
+      - persuasion_need_slot
+  # ask user to reflect on reflective question from persuasion type
+  persuasion_reflection_form:
+    required_slots:
+      - persuasion_reflection_slot
+  # ask user how much effort they spent on activity from last time
+  persuasion_effort_form:
+    required_slots:
+      - persuasion_effort_slot
 
 
 responses:
+  utter_ask_persuasion_effort_slot:
+    - text: "Laten we eerst terugkijken op je vorige oefening. Hoeveel moeite heb je gestoken in de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal geen moeite'. 10 is 'heel erg veel'. Typ nu een cijfer van 0 - 10."
+  utter_persuasion_effort_thanks:
+    - text: "Oke, bedankt om dat te delen!"
   utter_ask_activity_useful_rating: #6
-    - text: "Laten we eerst terugkijken op je vorige oefening. Hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
+    - text: "En hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
   utter_general_activity_look_back:
     - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
   utter_general_activity_thanks_top_5_1:
-  - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
 #  utter_what_you_learned_from_activity:
   utter_general_activity_thanks_top_5_2:
     - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
   utter_ask_save_or_edit_slot:
     - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor 'Bewaren', Typ 2 voor 'Aanpassen'. "
   utter_general_activity_save:
-    - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. . "
+    - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
   utter_general_activity_edit_1:
     - text: "Prima! "
   utter_general_activity_edit_2:
@@ -181,10 +277,40 @@ responses:
   utter_ask_general_activity_next_activity_slot:
     - text: "Welke oefening wil je doen? Typ 1 als je '{activity1_name}' wilt doen. Typ 2 als je '{activity2_name}' wilt doen. Typ 3 als je '{activity3_name}' wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
   utter_general_activity_next_user:
-    - text: "Oké, goede keuze! Veel succes met de oefening."
+    - text: "Oké, goede keuze!"
   utter_general_activity_next_coach:
-    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen. Veel succes! "
-
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen."
+  utter_persuasion_questions_intro:
+    - text: "Ik wil je nu graag een paar vragen stellen over de activiteit die je gaat doen."
+    - text: "Dan zou ik je nu graag wat vragen stellen over de activiteit die je gaat doen."
+    - text: "Ik zou je nu graag wat willen vragen over de activiteit die je gaat doen."
+  utter_persuasion_questions_intro_2:
+    - text: "Kun je mij laten weten wat je van de volgende uitspraken vindt?"
+  utter_ask_persuasion_prompts_slot_intro:
+    - text: "1) Ik heb dingen die mij eraan herinneren om de activiteit te doen."
+  utter_ask_persuasion_prompts_slot:
+    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+  utter_ask_persuasion_want_slot_intro:
+    - text: "2) Ik heb het gevoel dat ik de activiteit wil gaan doen."
+  utter_ask_persuasion_want_slot:
+    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+  utter_ask_persuasion_need_slot_intro:
+    - text: "3) Ik heb het gevoel dat ik de activiteit moet doen."
+  utter_ask_persuasion_need_slot:
+    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+  utter_thank_persuasion_reflection:
+    - text: "Oké, bedankt voor het delen!"  
+    - text: "Super dat je jouw gedachten met mij wilde delen!"
+    - text: "Heel fijn dat je dit wilde delen!"
+  utter_ask_persuasion_reflection_slot:
+    - text: "{persuasion_reflective_question}"
+  utter_thank_persuasion_state_questions:
+    - text: "Super! Bedankt voor je antwoorden."
+    - text: "Bedankt voor het beantwoorden van de vragen!"
+    - text: "Goed! Heel fijn dat je deze vragen wilde beantwoorden."
+  utter_intro_activity_text:
+    - text: "Hier is je nieuwe oefening:"
+    
 actions:
   - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
@@ -202,3 +328,11 @@ actions:
   - check_who_decides # determines if the user can decide or if the coach decides
   - action_set_slot_general_activity # set the slot to the current running dialog
   - load_activity # load the activity instructions
+  - validate_persuasion_want_form  # validate value is between 1 and 5
+  - validate_persuasion_need_form   # validate value is between 1 and 5
+  - validate_persuasion_prompts_form  # validate value is between 1 and 5
+  - send_persuasive_message_activity  # choose and send persuasive message to persuade user to do activity
+  - validate_persuasion_reflection_form
+  - save_persuasion_to_database  # Save state features and persuasion type to database
+  - validate_persuasion_effort_form    # Validate effort score
+  

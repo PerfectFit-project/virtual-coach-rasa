@@ -13,6 +13,7 @@ rules:
   wait_for_user_input: false
 
 - rule: User has time now
+
   condition:
   - active_loop: next_part_now_or_later_form
   steps:
@@ -24,6 +25,7 @@ rules:
     - action: action_end_dialog
 
 - rule: User wants to do it later
+
   condition:
     - active_loop: next_part_now_or_later_form
   steps:

@@ -5,7 +5,7 @@ intents:
 actions:
   - action_expected_time_next_part
   - action_set_slot_previous_dialog
-  - validate_now_or_later
+  - validate_next_part_now_or_later_form
   - action_ask_new_time
 
 forms:

@@ -40,7 +40,7 @@ class ExpectedTimeNextPart(Action):
 
 class ValidateNowOrLaterFrom(FormValidationAction):
     def name(self) -> Text:
-        return "validate_now_or_later"
+        return "validate_next_part_now_or_later_form"
 
     def validate_now_or_later(
             self, value: Text, dispatcher: CollectingDispatcher,

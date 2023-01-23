@@ -119,6 +119,7 @@ rules:
   - active_loop: null
   - action: utter_goal_setting_pa_set_7
   - action: utter_goal_setting_pa_set_8
+  - action: action_goal_setting_choose_testimonials
   - action: utter_goal_setting_pa_set_9
   - action: testimonial_one_read_form
   - active_loop: testimonial_one_read_form

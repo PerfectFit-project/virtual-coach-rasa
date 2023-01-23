@@ -1,10 +1,12 @@
 """
 Contains custom actions related to the relapse dialogs
 """
+from virtual_coach_db.dbschema.models import (Testimonials, Users)
 from virtual_coach_db.helper import ExecutionInterventionComponents, PreparationInterventionComponents
+from virtual_coach_db.helper.helper_functions import get_db_session
 
 from . import validator
-from .definitions import TIMEZONE
+from .definitions import DATABASE_URL, TIMEZONE
 from .helper import (get_latest_bot_utterance)
 from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
@@ -26,6 +28,55 @@ class ActionGetFirstLastDate(Action):
 
         return [SlotSet('first_possible_quit_date', first_date),
                 SlotSet('last_possible_quit_date', last_date)]
+    
+    
+class ActionGoalSettingChooseTestimonials(Action):
+    def name(self):
+        return "action_goal_setting_choose_testimonials"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        # Get user ID
+        user_id = tracker.current_state()['sender_id']
+
+        # Create session object to connect db
+        session = get_db_session(db_url=DATABASE_URL)
+        
+        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+        
+        # Get self-efficacy, cluster ratings, and godin activity level of user
+        user_se = selected.testim_self_efficacy_pref
+        user_c1 = selected.testim_sim_cluster_1
+        user_c3 = selected.testim_sim_cluster_3
+        user_godin = selected.testim_godin_activity_level
+        
+        model_cluster_ratings =  0.07711 * user_c1 +  0.25887 * user_c3
+        
+        # Get testimonials
+        selected = session.query(Testimonials).all()
+        motiv_all = []
+        for t_idx, t in enumerate(selected):
+            t_godin = t.godin_activity_level
+            t_se = t.self_efficacy_pref
+            t_poc1 = int(t.part_of_cluster1)
+            t_poc3 = int(t.part_of_cluster3)
+            # Need to divide by 100 and 2 for scaling to interval [0, 1]
+            model_sim = -1.00491 * abs(user_se - t_se)/100 -0.93247 * abs(user_godin - t_godin)/2 
+            model_cluster_member = -0.72352 * t_poc1 - 1.16833 * t_poc3
+            model_cluster_inter = 0.26407 * user_c1 * t_poc1 + 0.30176 * user_c3 * t_poc3
+            motiv_all.append(model_sim + model_cluster_ratings + model_cluster_member + model_cluster_inter)
+            
+
+        # Sort testimonials based on motivation rating since we want the 
+        # 2 most motivating testimonials
+        motiv_all_sorted = sorted(range(len(motiv_all)), 
+                                  key=lambda k: motiv_all[k],
+                                  reverse = True)
+        
+        return [SlotSet('goal_setting_testimonial_1',
+                selected[motiv_all_sorted[0]].testimonial_text),
+                SlotSet('goal_setting_testimonial_2',
+                selected[motiv_all_sorted[1]].testimonial_text)]
 
 
 class ActionGoalSettingContinueAfterPlan(Action):

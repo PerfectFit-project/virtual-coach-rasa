@@ -34,4 +34,17 @@ rules:
     - slot_was_set:
       - now_or_later: 2
     - action: utter_preparation_delay_warning
+    - action: action_ask_new_time
+    - action: pick_a_daypart_form
+    - active_loop: pick_a_daypart_form
+  wait_for_user_input: false
 
+- rule: An hour
+  condition:
+  - active_loop: pick_a_daypart_form
+  steps:
+    - action: pick_a_daypart_form
+    - active_loop: null
+    - action: action_schedule_next_preparation_phase
+    - action: utter_see_you
+    - action: action_end_dialog

@@ -38,7 +38,7 @@ class ExpectedTimeNextPart(Action):
         return []
 
 
-class ValidateNowOrLaterFrom(FormValidationAction):
+class ValidateNowOrLaterForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_next_part_now_or_later_form"
 
@@ -57,6 +57,36 @@ class ValidateNowOrLaterFrom(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2")
 
         return {"now_or_later": value}
+
+class ValidatePickADaypartForm(FormValidationAction):
+    def name(self) -> Text:
+        return "validate_pick_a_daypart_form"
+
+    def validate_chosen_daypart(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """validate pick a daypart form"""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_chosen_daypart':
+            return {"chosen_daypart": None}
+
+        correct_format = validator.validate_number_in_range_response(1, 4, value)
+        if not correct_format:
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+
+        return {"chosen_daypart": value}
+
+def Schedule_Next_Prep_Phase(Action):
+    def name(self) -> Text:
+        return "action_schedule_next_preparation_phase"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+        chosen_option = tracker.get_slot('chosen_daypart')
+        timestamp = tracker.get_slot('daypart_options_timestamp')
+        dialog = tracker.get_slot('current_intervention_component')
 
 
 def get_daypart_options_str() -> list:
@@ -96,7 +126,7 @@ class AskNewTime(Action):
                  "uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3' als je het {1} wilt doen. En typ '4' als " \
                  "je het {2} wilt doen. "
         utterance = prompt.format(*options)
-        dispatcher.utter_message(text=utterance)
 
         timestamp = datetime.datetime.timestamp(datetime.datetime.now())
-        return [SlotSet("daypart_options_timestamp", timestamp)]
+        return [SlotSet("daypart_options_timestamp", timestamp), SlotSet("daypart_options_string", utterance)]
+

@@ -7,13 +7,41 @@ actions:
   - action_set_slot_previous_dialog
   - validate_next_part_now_or_later_form
   - action_ask_new_time
+  - validate_pick_a_daypart_form
+  - action_schedule_next_preparation_phase
 
 forms:
   next_part_now_or_later_form:
     required_slots:
       - now_or_later
+  pick_a_daypart_form:
+    required_slots:
+      - chosen_daypart
+
 
 slots:
+ daypart_options_timestamp:
+   type: any
+   influence_conversation: false
+   mappings:
+     - type: custom
+ daypart_options_string:
+   type: text
+   influence_conversation: false
+   mappings:
+     - type: custom
+ chosen_daypart:
+   type: categorical
+   values:
+     - 1
+     - 2
+     - 3
+     - 4
+   influence_conversation: true
+   mappings:
+     - type: from_text
+       conditions:
+         - active_loop: pick_a_daypart_form
  now_or_later:
    type: categorical
    values:
@@ -41,3 +69,7 @@ responses:
     - text: "Super, dan gaan we beginnen! 😊"
   utter_preparation_delay_warning:
     - text: "Oké. Het is wel belangrijk om alle onderdelen van de voorbereidingsfase te doorlopen voordat je stopt met roken en meer gaat bewegen. Zo ben je goed voorbereid!"
+  utter_ask_chosen_daypart:
+    - text: "{daypart_options_string}"
+  utter_see_you:
+    - text: "Prima, ik spreek je dan weer! 🙋"

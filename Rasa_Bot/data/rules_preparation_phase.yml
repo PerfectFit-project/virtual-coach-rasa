@@ -20,7 +20,7 @@ rules:
     - action: next_part_now_or_later_form
     - active_loop: null
     - slot_was_set:
-        - video_clear_option: 1
+        - now_or_later: 1
     - action: utter_lets_start
     - action: action_end_dialog
 
@@ -32,6 +32,6 @@ rules:
     - action: next_part_now_or_later_form
     - active_loop: null
     - slot_was_set:
-      - video_clear_option: 2
+      - now_or_later: 2
     - action: utter_preparation_delay_warning
 

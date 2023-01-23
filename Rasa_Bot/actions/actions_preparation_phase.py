@@ -53,10 +53,10 @@ class ValidateNowOrLaterFrom(FormValidationAction):
             return {"now_or_later": None}
 
         now_or_later = validator.validate_number_in_range_response(1, 2, value)
-        if now_or_later is None:
+        if not now_or_later:
             dispatcher.utter_message(response="utter_please_answer_1_2")
 
-        return {"now_or_later": now_or_later}
+        return {"now_or_later": value}
 
 
 def get_daypart_options_str() -> list:
@@ -99,5 +99,4 @@ class AskNewTime(Action):
         dispatcher.utter_message(text=utterance)
 
         timestamp = datetime.datetime.timestamp(datetime.datetime.now())
-        #return [SlotSet("daypart_options_timestamp", timestamp)]
-        return []
+        return [SlotSet("daypart_options_timestamp", timestamp)]

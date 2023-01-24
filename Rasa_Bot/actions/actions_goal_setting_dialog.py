@@ -33,6 +33,15 @@ class ActionGetFirstLastDate(Action):
     
 def goal_setting_testimonial_model_output(t, user_se, user_godin, user_c1,
                                           user_c3):
+    """
+    Get the output of the linear regression model used to predict motivation
+    ratings of testimonials that differs per testimonial.
+    The model is a simplified version of the one developed in the publicly
+    available MSc. thesis by Beyza Hizli
+    (http://resolver.tudelft.nl/uuid:b7225a91-6ae8-4a32-8441-38fb7ff74b4c).
+    The simplification was done to reduce the number of variables we need
+    to collect data on.
+    """
     
     t_godin = t.godin_activity_level
     t_se = t.self_efficacy_pref

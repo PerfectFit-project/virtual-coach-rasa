@@ -36,6 +36,8 @@ def goal_setting_testimonial_model_output(t, user_se, user_godin, user_c1,
     """
     Get the output of the linear regression model used to predict motivation
     ratings of testimonials that differs per testimonial.
+    We do not consider the terms that do not differ between testimonials as
+    they do not impact which testimonial is chosen.
     The model is a simplified version of the one developed in the publicly
     available MSc. thesis by Beyza Hizli
     (http://resolver.tudelft.nl/uuid:b7225a91-6ae8-4a32-8441-38fb7ff74b4c).
@@ -75,10 +77,6 @@ class ActionGoalSettingChooseTestimonials(Action):
         user_c3 = selected.testim_sim_cluster_3
         user_godin = selected.testim_godin_activity_level
 
-        # Get model output for the cluster ratings (this term is the same
-        # for each testimonial)
-        model_user_c1_c3 =  0.07711 * user_c1 +  0.25887 * user_c3
-
         # Get testimonials
         selected = session.query(Testimonials).all()
         # Compute motivation score (i.e., model output) for each testimonial
@@ -90,7 +88,7 @@ class ActionGoalSettingChooseTestimonials(Action):
                                                                    user_c1, 
                                                                    user_c3)
 
-            motiv_all.append(model_user_c1_c3 + model_output_t)
+            motiv_all.append(model_output_t)
             
 
         # Sort testimonials based on motivation rating since we want the 

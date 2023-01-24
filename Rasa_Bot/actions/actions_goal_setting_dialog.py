@@ -80,15 +80,11 @@ class ActionGoalSettingChooseTestimonials(Action):
         # Get testimonials
         selected = session.query(Testimonials).all()
         # Compute motivation score (i.e., model output) for each testimonial
-        motiv_all = []
-        for t in selected:
-            
-            model_output_t = goal_setting_testimonial_model_output(t, user_se, 
+        motiv_all = [goal_setting_testimonial_model_output(t, user_se, 
                                                                    user_godin, 
                                                                    user_c1, 
-                                                                   user_c3)
-
-            motiv_all.append(model_output_t)
+                                                                   user_c3) for
+                                                                   t in selected]
             
 
         # Sort testimonials based on motivation rating since we want the 

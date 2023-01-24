@@ -2,7 +2,8 @@
 Contains custom actions related to the relapse dialogs
 """
 from virtual_coach_db.dbschema.models import (Testimonials, Users)
-from virtual_coach_db.helper import ExecutionInterventionComponents, PreparationInterventionComponents
+from virtual_coach_db.helper import (ExecutionInterventionComponents, 
+                                     PreparationInterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 from . import validator
@@ -10,7 +11,7 @@ from .definitions import DATABASE_URL, TIMEZONE
 from .helper import (get_latest_bot_utterance)
 from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, FollowupAction
+from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
@@ -30,41 +31,57 @@ class ActionGetFirstLastDate(Action):
                 SlotSet('last_possible_quit_date', last_date)]
     
     
+def goal_setting_testimonial_model_output(t, user_se, user_godin, user_c1,
+                                          user_c3):
+    
+    t_godin = t.godin_activity_level
+    t_se = t.self_efficacy_pref
+    t_poc1 = int(t.part_of_cluster1)
+    t_poc3 = int(t.part_of_cluster3)
+    # Need to divide by 100 and 2 for scaling to interval [0, 1]
+    model_sim = -1.00491 * abs(user_se - t_se)/100 -0.93247 * abs(user_godin - t_godin)/2 
+    model_cluster_member = -0.72352 * t_poc1 - 1.16833 * t_poc3
+    model_cluster_inter = 0.26407 * user_c1 * t_poc1 + 0.30176 * user_c3 * t_poc3
+    
+    return  model_cluster_member + model_cluster_inter + model_sim
+    
+    
 class ActionGoalSettingChooseTestimonials(Action):
     def name(self):
         return "action_goal_setting_choose_testimonials"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         # Get user ID
         user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
         session = get_db_session(db_url=DATABASE_URL)
-        
+
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-        
+
         # Get self-efficacy, cluster ratings, and godin activity level of user
         user_se = selected.testim_self_efficacy_pref
         user_c1 = selected.testim_sim_cluster_1
         user_c3 = selected.testim_sim_cluster_3
         user_godin = selected.testim_godin_activity_level
-        
-        model_cluster_ratings =  0.07711 * user_c1 +  0.25887 * user_c3
-        
+
+        # Get model output for the cluster ratings (this term is the same
+        # for each testimonial)
+        model_user_c1_c3 =  0.07711 * user_c1 +  0.25887 * user_c3
+
         # Get testimonials
         selected = session.query(Testimonials).all()
+        # Compute motivation score (i.e., model output) for each testimonial
         motiv_all = []
-        for t_idx, t in enumerate(selected):
-            t_godin = t.godin_activity_level
-            t_se = t.self_efficacy_pref
-            t_poc1 = int(t.part_of_cluster1)
-            t_poc3 = int(t.part_of_cluster3)
-            # Need to divide by 100 and 2 for scaling to interval [0, 1]
-            model_sim = -1.00491 * abs(user_se - t_se)/100 -0.93247 * abs(user_godin - t_godin)/2 
-            model_cluster_member = -0.72352 * t_poc1 - 1.16833 * t_poc3
-            model_cluster_inter = 0.26407 * user_c1 * t_poc1 + 0.30176 * user_c3 * t_poc3
-            motiv_all.append(model_sim + model_cluster_ratings + model_cluster_member + model_cluster_inter)
+        for t in selected:
+            
+            model_output_t = goal_setting_testimonial_model_output(t, user_se, 
+                                                                   user_godin, 
+                                                                   user_c1, 
+                                                                   user_c3)
+
+            motiv_all.append(model_user_c1_c3 + model_output_t)
             
 
         # Sort testimonials based on motivation rating since we want the 
@@ -93,6 +110,8 @@ class ActionGoalSettingContinueAfterPlan(Action):
             return [FollowupAction('relapse_medication_info_form')]
         elif current_dialog == PreparationInterventionComponents.GOAL_SETTING:
             return [FollowupAction('utter_goal_setting_pa_expl_1')]
+        else:
+            return None  # TODO (prospector complained)
 
 
 class ValidateChosenQuitDateForm(FormValidationAction):
@@ -112,7 +131,9 @@ class ValidateChosenQuitDateForm(FormValidationAction):
         start_date = tracker.get_slot('first_possible_quit_date')
         stop_date = tracker.get_slot('last_possible_quit_date')
 
-        if not (validator.validate_date_format(value) and validator.validate_date_range(value, start_date, stop_date)):
+        if not (validator.validate_date_format(value) and validator.validate_date_range(value, 
+                                                                                        start_date, 
+                                                                                        stop_date)):
             dispatcher.utter_message(response="utter_goal_setting_wrong_date")
             return {"chosen_quit_date_slot": None}
 

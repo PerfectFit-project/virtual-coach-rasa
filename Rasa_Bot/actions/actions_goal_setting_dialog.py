@@ -31,8 +31,8 @@ class ActionGetFirstLastDate(Action):
                 SlotSet('last_possible_quit_date', last_date)]
     
     
-def goal_setting_testimonial_model_output(t, user_se, user_godin, user_c1,
-                                          user_c3):
+def goal_setting_testimonial_model_output(t, user_se: float, user_godin: float, 
+                                          user_c1: float, user_c3: float):
     """
     Get the output of the linear regression model used to predict motivation
     ratings of testimonials that differs per testimonial.
@@ -43,12 +43,24 @@ def goal_setting_testimonial_model_output(t, user_se, user_godin, user_c1,
     (http://resolver.tudelft.nl/uuid:b7225a91-6ae8-4a32-8441-38fb7ff74b4c).
     The simplification was done to reduce the number of variables we need
     to collect data on.
+    
+    Args:
+        t (object from Testimonials table): testimonial
+        user_se: user self-efficacy
+        user_godin: user godin activity level
+        user_c1: user similarity rating for cluster 1
+        user_c3: user similarity rating for cluster 3
+    
+    Returns:
+        float: model output based on testimonial and user (i.e., motivational impact)
+        
     """
     
-    t_godin = t.godin_activity_level
-    t_se = t.self_efficacy_pref
-    t_poc1 = int(t.part_of_cluster1)
-    t_poc3 = int(t.part_of_cluster3)
+    t_godin = t.godin_activity_level  # godin level of person providing testimonial
+    t_se = t.self_efficacy_pref  # self-efficacy of person providing testimonial
+    t_poc1 = int(t.part_of_cluster1)  # whether testimonial is part of cluster 1
+    t_poc3 = int(t.part_of_cluster3)  # whether testimonial is part of cluster 3
+
     # Need to divide by 100 and 2 for scaling to interval [0, 1]
     model_sim = -1.00491 * abs(user_se - t_se)/100 -0.93247 * abs(user_godin - t_godin)/2 
     model_cluster_member = -0.72352 * t_poc1 - 1.16833 * t_poc3
@@ -80,11 +92,11 @@ class ActionGoalSettingChooseTestimonials(Action):
         # Get testimonials
         selected = session.query(Testimonials).all()
         # Compute motivation score (i.e., model output) for each testimonial
-        motiv_all = [goal_setting_testimonial_model_output(t, user_se, 
-                                                                   user_godin, 
-                                                                   user_c1, 
-                                                                   user_c3) for
-                                                                   t in selected]
+        motiv_all = [goal_setting_testimonial_model_output(t, 
+                                                           user_se, 
+                                                           user_godin, 
+                                                           user_c1, 
+                                                           user_c3) for t in selected]
             
 
         # Sort testimonials based on motivation rating since we want the 

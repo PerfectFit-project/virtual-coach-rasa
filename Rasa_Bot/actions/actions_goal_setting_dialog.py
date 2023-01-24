@@ -31,7 +31,7 @@ class ActionGetFirstLastDate(Action):
                 SlotSet('last_possible_quit_date', last_date)]
     
     
-def goal_setting_testimonial_model_output(t, user_se: float, user_godin: float, 
+def goal_setting_testimonial_model_output(t, user_se: float, user_godin: int, 
                                           user_c1: float, user_c3: float):
     """
     Get the output of the linear regression model used to predict motivation
@@ -46,10 +46,10 @@ def goal_setting_testimonial_model_output(t, user_se: float, user_godin: float,
     
     Args:
         t (object from Testimonials table): testimonial
-        user_se: user self-efficacy
-        user_godin: user godin activity level
-        user_c1: user similarity rating for cluster 1
-        user_c3: user similarity rating for cluster 3
+        user_se (float): user self-efficacy
+        user_godin (int): user godin activity level
+        user_c1 (float): user similarity rating for cluster 1
+        user_c3 (float): user similarity rating for cluster 3
     
     Returns:
         float: model output based on testimonial and user (i.e., motivational impact)

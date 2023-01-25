@@ -8,13 +8,15 @@ from celery import Celery
 from . import validator
 from .definitions import REDIS_URL, MORNING, AFTERNOON, EVENING, TIMEZONE
 from .helper import get_latest_bot_utterance
+from .actions_rescheduling_dialog import get_reschedule_date
 import datetime
 
 celery = Celery(broker=REDIS_URL)
 
 
 class SetSlotPreviousDialog(Action):
-    """ this is an example for setting the slot of the previous dialog"""
+    """ this is an example for setting the time interval of the previous dialog,
+     it should be incorporated in the regular method of setting the dialog slot"""
 
     def name(self):
         return "action_set_slot_previous_dialog"
@@ -78,16 +80,19 @@ class ValidatePickADaypartForm(FormValidationAction):
 
         return {"chosen_daypart": value}
 
-def Schedule_Next_Prep_Phase(Action):
+class Schedule_Next_Prep_Phase(Action):
+    """ reschedule the dialog for another time """
     def name(self) -> Text:
         return "action_schedule_next_preparation_phase"
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        chosen_option = tracker.get_slot('chosen_daypart')
+        chosen_option = int(tracker.get_slot('chosen_daypart'))
         timestamp = tracker.get_slot('daypart_options_timestamp')
         dialog = tracker.get_slot('current_intervention_component')
+        eta = get_reschedule_date(timestamp, chosen_option)
 
+        celery.send_task('celery_tasks.reschedule_dialog', (user_id, dialog, eta))
 
 def get_daypart_options_str() -> list:
     options = []

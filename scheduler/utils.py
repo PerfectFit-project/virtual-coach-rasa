@@ -3,8 +3,8 @@ import os
 from datetime import datetime, date, timedelta
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
-from virtual_coach_db.helper.definitions import (PreparationInterventionComponents,
-                                                 PreparationInterventionComponentsTriggers)
+from virtual_coach_db.helper.definitions import (Components,
+                                                 ComponentsTriggers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -12,19 +12,19 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 # ordered lists of the intervention components
-preparation_components_order = [PreparationInterventionComponents.PROFILE_CREATION,
-                                PreparationInterventionComponents.MEDICATION_TALK,
-                                PreparationInterventionComponents.COLD_TURKEY,
-                                PreparationInterventionComponents.PLAN_QUIT_START_DATE,
-                                PreparationInterventionComponents.FUTURE_SELF,
-                                PreparationInterventionComponents.GOAL_SETTING]
+preparation_components_order = [Components.PROFILE_CREATION,
+                                Components.MEDICATION_TALK,
+                                Components.COLD_TURKEY,
+                                Components.PLAN_QUIT_START_DATE,
+                                Components.FUTURE_SELF,
+                                Components.GOAL_SETTING]
 
-preparation_triggers_order = [PreparationInterventionComponentsTriggers.PROFILE_CREATION.value,
-                              PreparationInterventionComponentsTriggers.MEDICATION_TALK.value,
-                              PreparationInterventionComponentsTriggers.COLD_TURKEY.value,
-                              PreparationInterventionComponentsTriggers.PLAN_QUIT_START_DATE.value,
-                              PreparationInterventionComponentsTriggers.FUTURE_SELF.value,
-                              PreparationInterventionComponentsTriggers.GOAL_SETTING.value]
+preparation_triggers_order = [ComponentsTriggers.PROFILE_CREATION.value,
+                              ComponentsTriggers.MEDICATION_TALK.value,
+                              ComponentsTriggers.COLD_TURKEY.value,
+                              ComponentsTriggers.PLAN_QUIT_START_DATE.value,
+                              ComponentsTriggers.FUTURE_SELF.value,
+                              ComponentsTriggers.GOAL_SETTING.value]
 
 
 def compute_next_day(selectable_days: list) -> date:
@@ -133,7 +133,7 @@ def get_next_preparation_intervention_component(intervention_component: str):
     Args:
         intervention_component: the name of the currently completed component.
                                 The names are listed in virtual_coach_db.helper.definitions
-                                in the PreparationInterventionComponents class
+                                in the Components class
 
     Returns:
             The next intervention component to be administered
@@ -158,7 +158,7 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
     Args:
         intervention_component_name: the name of the intervention component.
                                 The names are listed in virtual_coach_db.helper.definitions
-                                in the PreparationInterventionComponents class
+                                in the Components class
 
     Returns:
             The intervention component as an InterventionComponents object.

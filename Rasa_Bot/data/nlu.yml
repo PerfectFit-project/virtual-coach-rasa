@@ -73,6 +73,10 @@ nlu:
 - intent: EXTERNAL_watch_video_dialog
   examples: |
     - EXTERNAL_watch_video_dialog
+### preparation phase
+- intent: EXTERNAL_trigger_preparation_introduction
+  examples: |
+    - "EXTERNAL_trigger_preparation_introduction"
 
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
@@ -81,6 +85,12 @@ nlu:
 - intent: EXTERNAL_trigger_medication_talk
   examples: |
     - "EXTERNAL_trigger_medication_talk"
+
+- intent: EXTERNAL_trigger_track_behavior
+  examples: |
+    - "EXTERNAL_trigger_track_behavior" 
+
+###
 
 - intent: EXTERNAL_trigger_cold_turkey
   examples: |
@@ -113,6 +123,10 @@ nlu:
 - intent: EXTERNAL_relapse_dialog_relapse
   examples: |
     - "EXTERNAL_relapse_dialog_relapse"
+
+- intent: EXTERNAL_relapse_dialog_pa
+  examples: |
+    - "EXTERNAL_relapse_dialog_pa"
 
 - intent: EXTERNAL_relapse_dialog_pa
   examples: |

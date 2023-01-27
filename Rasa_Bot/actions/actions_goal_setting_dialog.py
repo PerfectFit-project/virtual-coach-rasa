@@ -1,8 +1,7 @@
 """
 Contains custom actions related to the relapse dialogs
 """
-from virtual_coach_db.helper import (ExecutionInterventionComponents,
-                                     PreparationInterventionComponents)
+from virtual_coach_db.helper import (Components)
 
 from . import validator
 from .definitions import TIMEZONE
@@ -37,11 +36,11 @@ class GoalSettingContinueAfterPlan(Action):
         # checks in which dialog the user is, and resumes the correct flow accordingly
         current_dialog = tracker.get_slot('current_intervention_component')
 
-        if current_dialog == ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE:
+        if current_dialog == Components.RELAPSE_DIALOG_RELAPSE:
             # resumes the relapse dialog from rule: smoke relapse decide to get medication info
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]
-        if current_dialog == PreparationInterventionComponents.GOAL_SETTING:
+        if current_dialog == Components.GOAL_SETTING:
             # TODO: change to the actual action once implemented
             return [FollowupAction('utter_test_utterance')]
 

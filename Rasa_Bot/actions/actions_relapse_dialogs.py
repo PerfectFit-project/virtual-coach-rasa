@@ -15,7 +15,7 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents,
+from virtual_coach_db.helper.definitions import (Components,
                                                  DialogQuestionsEnum, Phases)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
@@ -72,11 +72,11 @@ class ActionSetSlotRelapseDialog(Action):
         # update the user_intervention_state table
 
         store_user_intervention_state(user_id,
-                                      ExecutionInterventionComponents.RELAPSE_DIALOG_HRS,
+                                      Components.RELAPSE_DIALOG_HRS,
                                       Phases.LAPSE)
 
         return [SlotSet('current_intervention_component',
-                        ExecutionInterventionComponents.RELAPSE_DIALOG_HRS)]
+                        Components.RELAPSE_DIALOG_HRS)]
 
 
 class ActionSetSlotRelapseDialogLapse(Action):
@@ -89,10 +89,10 @@ class ActionSetSlotRelapseDialogLapse(Action):
         # update the user_intervention_state table
 
         store_user_intervention_state(user_id,
-                                      ExecutionInterventionComponents.RELAPSE_DIALOG_LAPSE,
+                                      Components.RELAPSE_DIALOG_LAPSE,
                                       Phases.LAPSE)
         return [SlotSet('current_intervention_component',
-                        ExecutionInterventionComponents.RELAPSE_DIALOG_LAPSE)]
+                        Components.RELAPSE_DIALOG_LAPSE)]
 
 
 class ActionSetSlotRelapseDialogPa(Action):
@@ -105,10 +105,10 @@ class ActionSetSlotRelapseDialogPa(Action):
         # update the user_intervention_state table
 
         store_user_intervention_state(user_id,
-                                      ExecutionInterventionComponents.RELAPSE_DIALOG_PA,
+                                      Components.RELAPSE_DIALOG_PA,
                                       Phases.LAPSE)
         return [SlotSet('current_intervention_component',
-                        ExecutionInterventionComponents.RELAPSE_DIALOG_PA)]
+                        Components.RELAPSE_DIALOG_PA)]
 
 
 class ActionSetSlotRelapseDialogRelapse(Action):
@@ -121,10 +121,10 @@ class ActionSetSlotRelapseDialogRelapse(Action):
         # update the user_intervention_state table
 
         store_user_intervention_state(user_id,
-                                      ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE,
+                                      Components.RELAPSE_DIALOG_RELAPSE,
                                       Phases.LAPSE)
         return [SlotSet('current_intervention_component',
-                        ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE)]
+                        Components.RELAPSE_DIALOG_RELAPSE)]
 
 
 class PopulateCopingActivitiesList(Action):
@@ -169,7 +169,7 @@ class TriggerRelapseDialog(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         celery.send_task('celery_tasks.relapse_dialog',
-                         (user_id, ExecutionInterventionComponents.RELAPSE_DIALOG))
+                         (user_id, Components.RELAPSE_DIALOG))
 
         return []
 

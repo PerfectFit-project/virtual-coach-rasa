@@ -6,6 +6,16 @@ version: "3.1"
 stories:
 
  ## Profile Creation
+- story: Preparation introduction
+  steps:
+    - intent: EXTERNAL_trigger_preparation_introduction
+    - action: action_set_slot_preparation_intro
+    - action: utter_ask_preparation_intro
+    - intent: oke
+    - action: mark_dialog_as_completed
+    - action: action_end_dialog
+
+ ## Profile Creation
 - story: Profile Creation placeholder
   steps:
     - intent: EXTERNAL_trigger_profile_creation
@@ -24,6 +34,18 @@ stories:
    - intent: oke
    - action: mark_dialog_as_completed
    - action: action_end_dialog
+
+## Track behavior
+- story: Track behavior placeholder
+  steps:
+   - intent: EXTERNAL_trigger_track_behavior
+   - action: action_set_slot_track_behavior
+   - action: utter_track_behavior
+   - intent: oke
+   - action: mark_dialog_as_completed
+   - action: action_end_dialog
+
+
 
 ## Cold Turkey
 - story: Cold Turkey placeholder

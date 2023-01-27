@@ -6,8 +6,10 @@ import utils
 from celery import Celery
 from datetime import datetime
 from dateutil import tz
+from state_machine.state_machine import StateMachine, EventEnum, Event
+from state_machine.controller import OnboardingState
 from virtual_coach_db.dbschema.models import UserPreferences, UserInterventionState
-from virtual_coach_db.helper.definitions import Phases
+from virtual_coach_db.helper.definitions import Phases, Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -20,9 +22,40 @@ app = Celery('celery_tasks', broker=REDIS_URL)
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
 
+TEST_USER = int(os.getenv('TEST_USER_ID'))
+
+state_machines = [{'machine': StateMachine(OnboardingState(TEST_USER)), 'id': TEST_USER}]
+
 
 @app.task
-def intervention_component_completed(user_id: int, intervention_component_name: str):
+def crate_new_user(user_id: int):
+    global state_machines
+
+    state_machines.append({'machine': StateMachine(OnboardingState(user_id)), 'id': user_id})
+
+
+@app.task(bind=True)
+def user_trigger_dialog(self,
+                        user_id: int,
+                        triggered_dialog: Components):  # pylint: disable=unused-argument
+    # get the user state machine
+    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
+    user_fsm.on_event(Event(EventEnum.USER_TRIGGER, triggered_dialog))
+
+
+@app.task(bind=True)
+def intervention_component_completed(self,
+                                     user_id: int,
+                                     completed_dialog: Components):  # pylint: disable=unused-argument
+
+    logging.info('Celery received a dialog completion')
+    # get the user state machine
+    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
+    user_fsm.on_event(Event(EventEnum.DIALOG_COMPLETED, completed_dialog))
+
+
+@app.task
+def intervention_component_completed_old(user_id: int, intervention_component_name: str):
     logging.info(intervention_component_name)
     phase = utils.get_current_phase(user_id)
     intervention_component = utils.get_intervention_component(intervention_component_name)
@@ -165,8 +198,8 @@ def plan_execution_dialogs(user_id: int):
 
     preferences = (
         session.query(UserPreferences)
-               .filter(UserPreferences.users_nicedayuid == user_id)
-               .all()
+        .filter(UserPreferences.users_nicedayuid == user_id)
+        .all()
     )
 
     for preference in preferences:

@@ -5,7 +5,7 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import VideoLinks, ExecutionInterventionComponents
+from virtual_coach_db.helper.definitions import VideoLinks, Components
 from . import validator
 from .definitions import REDIS_URL
 from .helper import get_latest_bot_utterance
@@ -116,7 +116,7 @@ class ContinueAfterVideo(Action):
         # checks in which dialog the user is, and resumes the correct flow accordingly
         current_dialog = tracker.get_slot('current_intervention_component')
 
-        if current_dialog == ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE:
+        if current_dialog == Components.RELAPSE_DIALOG_RELAPSE:
             # resumes the relapse dialog opening the ehbo_me_self_lapse_form.
             # The flow will then depend on the chosen option in the form
             return [FollowupAction('ehbo_me_self_lapse_form')]

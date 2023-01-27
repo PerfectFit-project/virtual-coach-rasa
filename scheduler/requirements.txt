@@ -1,5 +1,5 @@
 celery
 python-dotenv
-git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.8
+git+https://github.com/PerfectFit-project/virtual-coach-db@311-time-structure
 redis
 requests

@@ -22,7 +22,7 @@ rules:
     - slot_was_set:
         - now_or_later: 1
     - action: utter_lets_start
-    - action: action_end_dialog
+    - action: action_start_next_dialog
 
 - rule: User wants to do it later
 

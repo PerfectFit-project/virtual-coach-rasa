@@ -9,6 +9,7 @@ actions:
   - action_ask_new_time
   - validate_pick_a_daypart_form
   - action_schedule_next_preparation_phase
+  - action_start_next_dialog
 
 forms:
   next_part_now_or_later_form:

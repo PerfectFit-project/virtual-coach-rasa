@@ -1,6 +1,6 @@
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
-from virtual_coach_db.helper.definitions import DialogExpectedDuration
+from virtual_coach_db.helper.definitions import DialogExpectedDuration, ExecutionInterventionComponentsTriggers
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
@@ -11,20 +11,8 @@ from .helper import get_latest_bot_utterance
 from .actions_rescheduling_dialog import get_reschedule_date
 import datetime
 
+
 celery = Celery(broker=REDIS_URL)
-
-
-class SetSlotPreviousDialog(Action):
-    """ this is an example for setting the time interval of the previous dialog,
-     it should be incorporated in the regular method of setting the dialog slot"""
-
-    def name(self):
-        return "action_set_slot_previous_dialog"
-
-    async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("expected_next_time_interval",
-                        DialogExpectedDuration.DIALOG1)]
-
 
 class ExpectedTimeNextPart(Action):
     """Give expected time of next part"""
@@ -33,7 +21,8 @@ class ExpectedTimeNextPart(Action):
         return "action_expected_time_next_part"
 
     async def run(self, dispatcher, tracker, domain):
-        expectedTimeInterval = tracker.get_slot('expected_next_time_interval').split(" ")
+        nextDialog = str(tracker.get_slot('current_intervention_component'))
+        expectedTimeInterval = DialogExpectedDuration[nextDialog].split(" ")
         message = "Ik verwacht dat het volgende onderdeel " + expectedTimeInterval[0] + " tot " \
                   + expectedTimeInterval[1] + " minuten zal duren.⏱️"
         dispatcher.utter_message(text=message)
@@ -79,6 +68,16 @@ class ValidatePickADaypartForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
 
         return {"chosen_daypart": value}
+
+class StartNextDialog(Action):
+    """set trigger for next dialog"""
+    def name(self) -> Text:
+        return "action_start_next_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+        nextDialog = tracker.get_slot('current_intervention_component')
+        celery.send_task('celery_tasks.trigger_intervention_component', (user_id, nextDialog))
 
 class Schedule_Next_Prep_Phase(Action):
     """ reschedule the dialog for another time """

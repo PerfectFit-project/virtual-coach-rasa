@@ -1,12 +1,12 @@
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
-from virtual_coach_db.helper.definitions import PreviousDialog
+from virtual_coach_db.helper.definitions import DialogExpectedDuration
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
 from celery import Celery
 from . import validator
-from .definitions import REDIS_URL, MORNING, AFTERNOON, EVENING, TIMEZONE
+from .definitions import REDIS_URL, MORNING, AFTERNOON, TIMEZONE
 from .helper import get_latest_bot_utterance
 from .actions_rescheduling_dialog import get_reschedule_date
 import datetime
@@ -23,7 +23,7 @@ class SetSlotPreviousDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("expected_next_time_interval",
-                        PreviousDialog.DIALOG1)]
+                        DialogExpectedDuration.DIALOG1)]
 
 
 class ExpectedTimeNextPart(Action):
@@ -127,11 +127,12 @@ class AskNewTime(Action):
     async def run(self, dispatcher, tracker, domain):
         options = get_daypart_options_str()
 
-        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende onderdeel over 1 " \
-                 "uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3' als je het {1} wilt doen. En typ '4' als " \
+        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende"\
+                 "onderdeel over 1 uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3'"\
+                 " als je het {1} wilt doen. En typ '4' als " \
                  "je het {2} wilt doen. "
         utterance = prompt.format(*options)
 
         timestamp = datetime.datetime.timestamp(datetime.datetime.now())
-        return [SlotSet("daypart_options_timestamp", timestamp), SlotSet("daypart_options_string", utterance)]
-
+        return [SlotSet("daypart_options_timestamp", timestamp),
+                SlotSet("daypart_options_string", utterance)]

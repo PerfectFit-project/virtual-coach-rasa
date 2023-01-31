@@ -29,20 +29,9 @@ class OnboardingState(State):
     def on_dialog_completed(self, dialog):
         logging.info('A dialog has been completed  %s ', dialog)
 
-        # get the id of the dialog
-        db_component = utils.get_intervention_component(dialog)
-        state = UserInterventionState(
-            users_nicedayuid=self.user_id,
-            intervention_phase_id=1,  # probably we don't need this any longer in the DB
-            intervention_component_id=db_component.intervention_component_id,
-            completed=True,
-            last_time=datetime.now().astimezone(TIMEZONE),
-            last_part=0,
-            next_planned_date=None,
-            task_uuid=None
-        )
-        # record the dialog completion in the DB
-        utils.store_intervention_component_to_db(state)
+        utils.store_intervention_component_to_db(user_id=self.user_id,
+                                                 dialog=dialog,
+                                                 phase_id=1)
 
         if dialog == Components.PREPARATION_INTRODUCTION:
             logging.info('Prep completed, starting profile creation')
@@ -74,7 +63,7 @@ class OnboardingState(State):
             self.schedule_next_dialogs()
             # upon the completion of the future self dialog,
             # the new state can be triggered
-            self.set_new_state(TrackingState())
+            self.set_new_state(TrackingState(self.user_id))
 
     def on_user_trigger(self, dialog):
         # in the preparation phase nothing can be triggered
@@ -94,7 +83,7 @@ class OnboardingState(State):
 
     def schedule_next_dialogs(self):
 
-        start_date = get_start_date(self.user_id)
+        start_date = utils.get_start_date(self.user_id)
 
         # on day 9 at 10 a.m. send future self
         fs_time = create_new_date(start_date=start_date,
@@ -120,9 +109,7 @@ class OnboardingState(State):
         to day 9 of the preparation phase
         """
         first_date = date.today() + timedelta(days=1)
-        last_date = get_start_date(self.user_id) + timedelta(days=8)
-
-        db_component = utils.get_intervention_component(NotificationsTriggers.TRACK_NOTIFICATION)
+        last_date = utils.get_start_date(self.user_id) + timedelta(days=8)
 
         for day in range((last_date - first_date).days):
             planned_date = create_new_date(start_date=first_date,
@@ -133,42 +120,73 @@ class OnboardingState(State):
                                     (self.user_id, NotificationsTriggers.TRACK_NOTIFICATION),
                                     eta=planned_date)
 
-            state = UserInterventionState(
-                users_nicedayuid=self.user_id,
-                intervention_phase_id=1,
-                intervention_component_id=db_component.intervention_component_id,
-                completed=False,
-                last_time=None,
-                last_part=0,
-                next_planned_date=planned_date,
-                task_uuid=str(task.task_id)
-            )
-
-            utils.store_intervention_component_to_db(state)
+            utils.store_scheduled_dialog(user_id=self.user_id,
+                                         dialog=NotificationsTriggers.TRACK_NOTIFICATION,
+                                         phase_id=1,
+                                         task_uuid=str(task.task_id),
+                                         planned_date=planned_date)
 
 
 class TrackingState(State):
 
-    def __init__(self):
+    def __init__(self, user_id):
         super().__init__()
+        self.user_id = user_id
         self.state = State.TRACKING
         self.new_state = None
 
     def run(self):
         logging.info('Starting Tracking state')
+        current_date = date.today()
+        self.check_if_end_date(current_date)
+
+    def on_user_trigger(self, dialog):
+        # in the preparation phase nothing can be triggered
+        # the central fallback mode is triggered instead
+        celery.send_task(TRIGGER_COMPONENT,
+                         (self.user_id,
+                          ComponentsTriggers.FIRST_AID_KIT))
+
+    def on_new_day(self, current_date: datetime.date):
+        self.check_if_end_date(current_date)
+
+    def check_if_end_date(self, date_to_check: date):
+        intervention_day = utils.retrieve_intervention_day(self.user_id, date_to_check)
+        # the Goal Setting state starts on day 10 of the intervention
+        if intervention_day == 10:
+            self.set_new_state(GoalsSettingState(self.user_id))
 
 
 class GoalsSettingState(State):
 
-    def __init__(self):
+    def __init__(self, user_id):
         super().__init__()
+        self.user_id = user_id
         self.state = State.GOALS_SETTING
 
-    def on_event(self, event):
-        if event == State.TEST:
-            return BufferState()
+    def on_dialog_completed(self, dialog):
+        logging.info('A dialog has been completed  %s ', dialog)
 
-        return self.state
+        utils.store_intervention_component_to_db(user_id=self.user_id,
+                                                 dialog=dialog,
+                                                 phase_id=1)
+        if dialog == Components.GOAL_SETTING:
+            logging.info('Goal setting completed, starting first aid kit')
+            celery.send_task(TRIGGER_COMPONENT,
+                             (self.user_id,
+                              ComponentsTriggers.FIRST_AID_KIT))
+        elif dialog == Components.FIRST_AID_KIT:
+            logging.info('First aid kit completed, starting buffering state')
+            self.set_new_state(BufferState(self.user_id))
+
+    def on_new_day(self, current_date: datetime.date):
+        intervention_day = utils.retrieve_intervention_day(current_date)
+        if intervention_day == 14:
+            self.plan_execution_phase()
+
+    def plan_execution_phase(self):
+        # TODO: add logic for exec planning
+        pass
 
     def run(self):
         print(self.state)
@@ -176,8 +194,9 @@ class GoalsSettingState(State):
 
 class BufferState(State):
 
-    def __init__(self):
+    def __init__(self, user_id):
         super().__init__()
+        self.user_id = user_id
         self.state = State.BUFFER
 
     def on_event(self, event):
@@ -249,32 +268,6 @@ class ClosingState(State):
 
     def run(self):
         print(self.state)
-
-
-def get_start_date(user_id: int) -> date:
-    """
-    Retrieve teh starting date of the intervention for a user
-    Args:
-        user_id: ID of the user
-
-    Returns: the intervention starting date
-
-    """
-    session = get_db_session(DATABASE_URL)
-
-    selected = (
-        session.query(
-            Users
-        )
-        .filter(
-            Users.nicedayuid == user_id
-        )
-        .all()
-    )
-
-    start_date = selected[0].start_date.date()
-
-    return start_date
 
 
 def create_new_date(start_date: date, time_delta: int, hour: int) -> datetime:

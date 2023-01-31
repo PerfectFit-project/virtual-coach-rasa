@@ -7,7 +7,7 @@ import logging
 class EventEnum(Enum):
     USER_TRIGGER = 'user_trigger'
     DIALOG_COMPLETED = 'dialog_completed'
-    NEW_DAy = 'new_day'
+    NEW_DAY = 'new_day'
 
 
 @dataclass
@@ -32,6 +32,9 @@ class StateMachine:
         elif event.EventType == EventEnum.DIALOG_COMPLETED:
             logging.info('Dialog completed event received %s ', event.Descriptor)
             self.state.on_dialog_completed(event.Descriptor)
+        elif event.EventType == EventEnum.NEW_DAY:
+            logging.info('New day received ')
+            self.state.on_new_day(event.Descriptor)
 
     def new_state_callback(self):
         logging.info('I received a callback')

@@ -1,15 +1,15 @@
 import os
 
 from datetime import datetime, date, timedelta
+from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-
 DATABASE_URL = os.getenv('DATABASE_URL')
-
+TIMEZONE = tz.gettz("Europe/Amsterdam")
 
 # ordered lists of the intervention components
 preparation_components_order = [Components.PROFILE_CREATION,
@@ -57,7 +57,7 @@ def compute_next_day(selectable_days: list) -> date:
         next_weekday = selectable_days[0]
 
     # compute the date of the next selected day
-    next_date = today + timedelta((next_weekday-today_weekday) % 7)
+    next_date = today + timedelta((next_weekday - today_weekday) % 7)
 
     return next_date
 
@@ -270,3 +270,84 @@ def store_intervention_component_to_db(state: UserInterventionState):
     selected.user_intervention_state.append(entry)
 
     session.commit()  # Update database
+
+
+def get_start_date(user_id: int) -> date:
+    """
+    Retrieve teh starting date of the intervention for a user
+    Args:
+        user_id: ID of the user
+
+    Returns: the intervention starting date
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (
+        session.query(
+            Users
+        )
+        .filter(
+            Users.nicedayuid == user_id
+        )
+        .all()
+    )
+
+    start_date = selected[0].start_date.date()
+
+    return start_date
+
+
+def retrieve_intervention_day(user_id: int, current_date: date) -> int:
+    """
+    Computes the number of days from the start day of the intervention
+    (first day of preparation phase)
+
+    Args:
+        user_id: ID of the user
+        current_date: the current date
+
+    Returns:
+        The number of days since  the intervention start day
+
+    """
+    start_date = get_start_date(user_id=user_id)
+
+    # add +1 because the count starts at day 1
+    intervention_day = (current_date - start_date).days + 1
+
+    return intervention_day
+
+
+def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
+    # get the id of the dialog
+    db_component = get_intervention_component(dialog)
+    state = UserInterventionState(
+        users_nicedayuid=user_id,
+        intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
+        intervention_component_id=db_component.intervention_component_id,
+        completed=True,
+        last_time=datetime.now().astimezone(TIMEZONE),
+        last_part=0,
+        next_planned_date=None,
+        task_uuid=None
+    )
+    # record the dialog completion in the DB
+    store_intervention_component_to_db(state)
+
+
+def store_scheduled_dialog(user_id: int, dialog: str, phase_id: int, task_uuid: str, planned_date: datetime):
+    # get the id of the dialog
+    db_component = get_intervention_component(dialog)
+    state = UserInterventionState(
+        users_nicedayuid=user_id,
+        intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
+        intervention_component_id=db_component.intervention_component_id,
+        completed=True,
+        last_time=None,
+        last_part=0,
+        next_planned_date=None,
+        task_uuid=task_uuid
+    )
+    # record the dialog completion in the DB
+    store_intervention_component_to_db(state)

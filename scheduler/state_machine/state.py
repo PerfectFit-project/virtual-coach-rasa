@@ -1,3 +1,6 @@
+import datetime
+
+
 class State(object):
     """
     Enum of possible states
@@ -13,13 +16,17 @@ class State(object):
     CLOSING = "Closing"
     TEST = "Test"
 
-    def __init__(self):
+    def __init__(self, user_id):
         """
         Initialize an instance of the state
         """
+        self.user_id = user_id
         self.state = None
-        self.user_id = None
         self.new_state = None
+
+    def __state__(self):
+
+        return self.state
 
     def run(self):
         """
@@ -53,9 +60,15 @@ class State(object):
         """
         return None
 
-    def __state__(self):
+    def on_new_day(self, date: datetime.date):
+        """
+        Determines what happens when on the date change. The timing might
+        trigger a state transition
+        Args:
+            date: the current date
 
-        return self.state
+        """
+        return None
 
     def signal_new_event(self):
         """
@@ -69,21 +82,3 @@ class State(object):
     def set_new_state(self, new_state):
         self.new_state = new_state
         self.signal_new_event()
-
-
-class StateEvent(object):
-
-    def __init__(self):
-        self.__eventhandlers = []
-
-    def __iadd__(self, handler):
-        self.__eventhandlers.append(handler)
-        return self
-
-    def __isub__(self, handler):
-        self.__eventhandlers.remove(handler)
-        return self
-
-    def __call__(self, *args, **keywargs):
-        for eventhandler in self.__eventhandlers:
-            eventhandler(*args, **keywargs)

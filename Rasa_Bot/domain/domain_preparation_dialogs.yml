@@ -6,7 +6,7 @@ intents:
 - EXTERNAL_trigger_track_behavior
 - EXTERNAL_trigger_cold_turkey
 - EXTERNAL_trigger_plan_quit_start
-- EXTERNAL_trigger_mental_contrasting
+- EXTERNAL_trigger_future_self
 - EXTERNAL_trigger_goal_setting
 - submit_user_preferences
 - oke

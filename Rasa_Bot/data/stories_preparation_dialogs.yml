@@ -70,7 +70,7 @@ stories:
 ## Mental-contrasting
 - story: Mental-contrasting placeholder
   steps:
-  - intent: EXTERNAL_trigger_mental_contrasting
+  - intent: EXTERNAL_trigger_future_self
   - action: action_set_slot_mental_contrasting
   - action: utter_mental_contrasting
   - intent: oke

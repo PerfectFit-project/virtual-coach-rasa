@@ -100,9 +100,9 @@ nlu:
   examples: |
     - "EXTERNAL_trigger_plan_quit_start"
 
-- intent: EXTERNAL_trigger_mental_contrasting
+- intent: EXTERNAL_trigger_future_self
   examples: |
-    - "EXTERNAL_trigger_mental_contrasting"
+    - "EXTERNAL_trigger_future_self"
 
 - intent: EXTERNAL_trigger_goal_setting
   examples: |

@@ -21,18 +21,21 @@ class StateMachine:
     def __init__(self, state: State):
         self.state = state
         self.machine_id = self.state.user_id
+        self.state.signal_new_event = self.new_state_callback
         logging.info('A FSM has been created with the ID ', self.machine_id)
 
     def on_event(self, event: Event):
         logging.info('Event received by FSM: ', event)
-        new_state = None
         if event.EventType == EventEnum.USER_TRIGGER:
-            logging.info('User trigger event received', event.EventType)
-            new_state = self.state.on_user_trigger(event.Descriptor)
+            logging.info('User trigger event received %s ', event.Descriptor)
+            self.state.on_user_trigger(event.Descriptor)
         elif event.EventType == EventEnum.DIALOG_COMPLETED:
-            logging.info('Dialog completed event received', event.Descriptor)
-            new_state = self.state.on_dialog_completed(event.Descriptor)
+            logging.info('Dialog completed event received %s ', event.Descriptor)
+            self.state.on_dialog_completed(event.Descriptor)
 
-        if new_state is not None:
-            self.state = new_state
-            new_state.run()
+    def new_state_callback(self):
+        logging.info('I received a callback')
+        self.state = self.state.new_state
+        self.state.signal_new_event = self.new_state_callback
+        logging.info('Moving to a new state %s: ', self.state.__state__())
+        self.state.run()

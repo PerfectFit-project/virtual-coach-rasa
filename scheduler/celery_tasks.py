@@ -1,11 +1,10 @@
 import logging
 import os
 import requests
-import utils
-
 from celery import Celery
 from datetime import datetime
 from dateutil import tz
+from state_machine import utils
 from state_machine.state_machine import StateMachine, EventEnum, Event
 from state_machine.controller import OnboardingState
 from virtual_coach_db.dbschema.models import UserPreferences, UserInterventionState
@@ -38,9 +37,7 @@ def crate_new_user(user_id: int):
 def user_trigger_dialog(self,
                         user_id: int,
                         triggered_dialog: Components):  # pylint: disable=unused-argument
-    # get the user state machine
-    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
-    user_fsm.on_event(Event(EventEnum.USER_TRIGGER, triggered_dialog))
+    send_fsm_event(user_id=user_id, event=Event(EventEnum.USER_TRIGGER, triggered_dialog))
 
 
 @app.task(bind=True)
@@ -49,81 +46,7 @@ def intervention_component_completed(self,
                                      completed_dialog: Components):  # pylint: disable=unused-argument
 
     logging.info('Celery received a dialog completion')
-    # get the user state machine
-    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
-    user_fsm.on_event(Event(EventEnum.DIALOG_COMPLETED, completed_dialog))
-
-
-@app.task
-def intervention_component_completed_old(user_id: int, intervention_component_name: str):
-    logging.info(intervention_component_name)
-    phase = utils.get_current_phase(user_id)
-    intervention_component = utils.get_intervention_component(intervention_component_name)
-    intervention_id = intervention_component.intervention_component_id
-
-    next_intervention_component = None
-
-    if phase.phase_name == Phases.PREPARATION:
-
-        state = UserInterventionState(
-            users_nicedayuid=user_id,
-            intervention_phase_id=phase.phase_id,
-            intervention_component_id=intervention_id,
-            completed=True,
-            last_time=datetime.now().astimezone(TIMEZONE),
-            last_part=0,
-            next_planned_date=None,
-            task_uuid=None
-        )
-        utils.store_intervention_component_to_db(state)
-
-        next_intervention_component = \
-            utils.get_next_preparation_intervention_component(intervention_component_name)
-
-        if next_intervention_component is not None:
-            trigger_intervention_component.apply_async(
-                args=[user_id, next_intervention_component])
-
-        else:
-            logging.info("PREPARATION PHASE ENDED")
-            plan_execution_dialogs(user_id)
-
-    elif phase.phase_name == Phases.EXECUTION:
-
-        trigger = intervention_component.intervention_component_trigger
-        next_planned_date = utils.get_next_planned_date(user_id, intervention_id)
-
-        # schedule the task
-        task_uuid = trigger_intervention_component.apply_async(
-            args=[user_id, trigger],
-            eta=next_planned_date)
-
-        state = UserInterventionState(
-            users_nicedayuid=user_id,
-            intervention_phase_id=phase.phase_id,
-            intervention_component_id=intervention_id,
-            completed=True,
-            last_time=datetime.now().astimezone(TIMEZONE),
-            last_part=0,
-            next_planned_date=next_planned_date,
-            task_uuid=str(task_uuid)
-        )
-
-        utils.store_intervention_component_to_db(state)
-
-    else:
-        state = UserInterventionState(
-            users_nicedayuid=user_id,
-            intervention_phase_id=phase.phase_id,
-            intervention_component_id=intervention_id,
-            completed=True,
-            last_time=datetime.now().astimezone(TIMEZONE),
-            last_part=0,
-            next_planned_date=None,
-            task_uuid=None
-        )
-
-        utils.store_intervention_component_to_db(state)
+    send_fsm_event(user_id=user_id, event=Event(EventEnum.DIALOG_COMPLETED, completed_dialog))
 
 
 @app.task
@@ -226,3 +149,9 @@ def plan_execution_dialogs(user_id: int):
             task_uuid=str(task_uuid)
         )
         utils.store_intervention_component_to_db(state)
+
+
+def send_fsm_event(user_id: int, event: Event):
+    # get the user state machine
+    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
+    user_fsm.on_event(event)

@@ -1,18 +1,20 @@
 import logging
-
+from state_machine import utils
 from celery import Celery
 from datetime import date, datetime, timedelta
-from state_machine.state import State
+from dateutil import tz
+from state_machine.state import State, StateEvent
 from virtual_coach_db.helper.definitions import (ComponentsTriggers,
                                                  Components,
                                                  NotificationsTriggers)
 from virtual_coach_db.helper.helper_functions import (get_db_session)
-from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.dbschema.models import Users, UserInterventionState
 import os
 
 REDIS_URL = os.getenv('REDIS_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
 TRIGGER_COMPONENT = 'celery_tasks.trigger_intervention_component'
+TIMEZONE = tz.gettz("Europe/Amsterdam")
 celery = Celery(broker=REDIS_URL)
 
 
@@ -22,15 +24,26 @@ class OnboardingState(State):
         super().__init__()
         self.state = State.ONBOARDING
         self.user_id = user_id
-
-    def on_event(self, event):
-        if event == State.TEST:
-            return TrackingState()
-
-        return self.state
+        self.new_state = None
 
     def on_dialog_completed(self, dialog):
-        logging.info('A dialog has been completed')
+        logging.info('A dialog has been completed  %s ', dialog)
+
+        # get the id of the dialog
+        db_component = utils.get_intervention_component(dialog)
+        state = UserInterventionState(
+            users_nicedayuid=self.user_id,
+            intervention_phase_id=1,  # probably we don't need this any longer in the DB
+            intervention_component_id=db_component.intervention_component_id,
+            completed=True,
+            last_time=datetime.now().astimezone(TIMEZONE),
+            last_part=0,
+            next_planned_date=None,
+            task_uuid=None
+        )
+        # record the dialog completion in the DB
+        utils.store_intervention_component_to_db(state)
+
         if dialog == Components.PREPARATION_INTRODUCTION:
             logging.info('Prep completed, starting profile creation')
             celery.send_task(TRIGGER_COMPONENT,
@@ -59,12 +72,18 @@ class OnboardingState(State):
 
         elif dialog == Components.FUTURE_SELF:
             self.schedule_next_dialogs()
+            # upon the completion of the future self dialog,
+            # the new state can be triggered
+            self.set_new_state(TrackingState())
 
     def on_user_trigger(self, dialog):
         # in the preparation phase nothing can be triggered
+        # the central fallback mode is triggered instead
         celery.send_task(TRIGGER_COMPONENT,
                          (self.user_id,
                           ComponentsTriggers.FIRST_AID_KIT))
+
+        return None
 
     def run(self):
         logging.info('Onboarding State running')
@@ -78,16 +97,19 @@ class OnboardingState(State):
         start_date = get_start_date(self.user_id)
 
         # on day 9 at 10 a.m. send future self
-        fs_date = start_date + timedelta(days=8)
-        fs_time = datetime(fs_date.year, fs_date.month, fs_date.day, 10, 00)
+        fs_time = create_new_date(start_date=start_date,
+                                  time_delta=8,
+                                  hour=10)
 
         celery.send_task(TRIGGER_COMPONENT,
                          (self.user_id, ComponentsTriggers.FUTURE_SELF),
                          eta=fs_time)
 
         # on day 10 at 10 a.m. send future self plan goal setting
-        gs_date = start_date + timedelta(days=9)
-        gs_time = datetime(gs_date.year, gs_date.month, gs_date.day, 10, 00)
+        gs_time = create_new_date(start_date=start_date,
+                                  time_delta=9,
+                                  hour=10)
+
         celery.send_task(TRIGGER_COMPONENT,
                          (self.user_id, ComponentsTriggers.GOAL_SETTING),
                          eta=gs_time)
@@ -100,13 +122,29 @@ class OnboardingState(State):
         first_date = date.today() + timedelta(days=1)
         last_date = get_start_date(self.user_id) + timedelta(days=8)
 
+        db_component = utils.get_intervention_component(NotificationsTriggers.TRACK_NOTIFICATION)
+
         for day in range((last_date - first_date).days):
-            celery.send_task(TRIGGER_COMPONENT,
-                             (self.user_id, NotificationsTriggers.TRACK_NOTIFICATION),
-                             eta=datetime(first_date.year,
-                                          first_date.month,
-                                          first_date.day,
-                                          10, 00) + timedelta(days=day))
+            planned_date = create_new_date(start_date=first_date,
+                                           time_delta=day,
+                                           hour=10)
+
+            task = celery.send_task(TRIGGER_COMPONENT,
+                                    (self.user_id, NotificationsTriggers.TRACK_NOTIFICATION),
+                                    eta=planned_date)
+
+            state = UserInterventionState(
+                users_nicedayuid=self.user_id,
+                intervention_phase_id=1,
+                intervention_component_id=db_component.intervention_component_id,
+                completed=False,
+                last_time=None,
+                last_part=0,
+                next_planned_date=planned_date,
+                task_uuid=str(task.task_id)
+            )
+
+            utils.store_intervention_component_to_db(state)
 
 
 class TrackingState(State):
@@ -114,15 +152,10 @@ class TrackingState(State):
     def __init__(self):
         super().__init__()
         self.state = State.TRACKING
-
-    def on_event(self, event):
-        if event == State.TEST:
-            return GoalsSettingState()
-
-        return self.state
+        self.new_state = None
 
     def run(self):
-        print(self.state)
+        logging.info('Starting Tracking state')
 
 
 class GoalsSettingState(State):
@@ -242,3 +275,24 @@ def get_start_date(user_id: int) -> date:
     start_date = selected[0].start_date.date()
 
     return start_date
+
+
+def create_new_date(start_date: date, time_delta: int, hour: int) -> datetime:
+    """
+    Create a new timedate object from the date object. It adds a 'time_delta'
+    number of days to the starting date
+
+    Args:
+        start_date: the date to start from
+        time_delta: the number of days to be added to the start_date
+        hour: the hour to be used in the new date
+
+    Returns:
+        A datetime object with the start_date + time_delta number of days and the
+        hour specified
+
+    """
+    new_date = start_date + timedelta(days=time_delta)
+    new_timedate = datetime(new_date.year, new_date.month, new_date.day, hour, 00)
+
+    return new_timedate

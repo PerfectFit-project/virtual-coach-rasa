@@ -162,6 +162,18 @@ slots:
       - type: from_text
         conditions:
           - active_loop: finished_writing_pa_form
+          
+  goal_setting_testimonial_1:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+      
+  goal_setting_testimonial_2:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
 
 responses:
   # Branch 1 introduction
@@ -320,7 +332,7 @@ responses:
   utter_goal_setting_pa_set_8:
     - text: "Het voorbeeld is van iemand die zijn of haar beweegdoel heeft gehaald 🙋:"
   utter_goal_setting_pa_set_9:
-    - text: "[Insert testimonial 1 Nele/Beyza]"  # TODO: insert testimonial
+    - text: '🏁 "{goal_setting_testimonial_1}"'
   utter_ask_testimonial_one_read:
     - text: "Typ 'klaar' als je het voorbeeld gelezen hebt."
   utter_ask_testimonial_two_read:
@@ -330,7 +342,7 @@ responses:
   utter_second_testimonial_1:
     - text: "Hier is nog een voorbeeld van iemand die zijn of haar beweegdoel heeft gehaald 🙋🏾:"
   utter_second_testimonial_2:
-    - text: "[Insert testimonial 2 Nele/Beyza]"  # TODO: insert testimonial
+    - text: '🏁 "{goal_setting_testimonial_2}"'
   utter_ask_testimonial_evaluation:
     - text: "Wat vind je van het voorbeeld / de voorbeelden? Zijn er dingen die jij hetzelfde zou willen doen? Typ je
             antwoord naar mij. "
@@ -456,6 +468,7 @@ responses:
 actions:
   - action_get_first_last_date
   - action_set_slot_goal_setting_dialog
+  - action_goal_setting_choose_testimonials
   - action_goal_setting_continue_after_plan
   - action_continue_testimonial_evaluation
   - action_continue_change_pa_goal

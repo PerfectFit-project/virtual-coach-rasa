@@ -38,9 +38,8 @@ def goal_setting_testimonial_model_output(t, user_se: float, user_godin: int,
     ratings of testimonials that differs per testimonial.
     We do not consider the terms that do not differ between testimonials as
     they do not impact which testimonial is chosen.
-    The model is a simplified version of the one developed in the publicly
-    available MSc. thesis by Beyza Hizli
-    (http://resolver.tudelft.nl/uuid:b7225a91-6ae8-4a32-8441-38fb7ff74b4c).
+    The model is a simplified version of the one developed in this
+    paper: https://doi.org/10.1007/s10916-022-01899-9.
     The simplification was done to reduce the number of variables we need
     to collect data on.
     

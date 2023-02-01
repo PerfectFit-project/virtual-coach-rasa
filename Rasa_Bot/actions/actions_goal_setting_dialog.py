@@ -36,13 +36,13 @@ def goal_setting_testimonial_model_output(t, user_se: float, user_godin: int,
     """
     Get the output of the linear regression model used to predict motivation
     ratings of testimonials that differs per testimonial.
-    We do not consider the terms that do not differ between testimonials as
-    they do not impact which testimonial is chosen.
+    We do not consider the model terms that do not differ between testimonials
+    as they do not impact which testimonial is chosen.
     The model is a simplified version of the one developed in this
     paper: https://doi.org/10.1007/s10916-022-01899-9.
     The simplification was done to reduce the number of variables we need
     to collect data on.
-    
+
     Args:
         t (object from Testimonials table): testimonial
         user_se (float): user self-efficacy
@@ -54,17 +54,19 @@ def goal_setting_testimonial_model_output(t, user_se: float, user_godin: int,
         float: model output based on testimonial and user (i.e., motivational impact)
         
     """
-    
+
     t_godin = t.godin_activity_level  # godin level of person providing testimonial
     t_se = t.self_efficacy_pref  # self-efficacy of person providing testimonial
     t_poc1 = int(t.part_of_cluster1)  # whether testimonial is part of cluster 1
     t_poc3 = int(t.part_of_cluster3)  # whether testimonial is part of cluster 3
 
-    # Need to divide by 100 and 2 for scaling to interval [0, 1]
+    # Need to divide by 100 and 2 for scaling to interval [0, 1] for
+    # self-efficacy and godin activity level.
+    # Cluster ratings are not scaled to [0, 1] in the model.
     model_sim = -1.00491 * abs(user_se - t_se)/100 -0.93247 * abs(user_godin - t_godin)/2 
     model_cluster_member = -0.72352 * t_poc1 - 1.16833 * t_poc3
     model_cluster_inter = 0.26407 * user_c1 * t_poc1 + 0.30176 * user_c3 * t_poc3
-    
+
     return  model_cluster_member + model_cluster_inter + model_sim
     
     
@@ -88,22 +90,21 @@ class ActionGoalSettingChooseTestimonials(Action):
         user_c3 = selected.testim_sim_cluster_3
         user_godin = selected.testim_godin_activity_level
 
-        # Get testimonials
+        # Get all testimonials from database
         selected = session.query(Testimonials).all()
-        # Compute motivation score (i.e., model output) for each testimonial
+        # Compute motivation rating (i.e., model output) for each testimonial
         motiv_all = [goal_setting_testimonial_model_output(t, 
                                                            user_se, 
                                                            user_godin, 
                                                            user_c1, 
                                                            user_c3) for t in selected]
-            
 
         # Sort testimonials based on motivation rating since we want the 
         # 2 most motivating testimonials
         motiv_all_sorted = sorted(range(len(motiv_all)), 
                                   key=lambda k: motiv_all[k],
                                   reverse = True)
-        
+
         return [SlotSet('goal_setting_testimonial_1',
                 selected[motiv_all_sorted[0]].testimonial_text),
                 SlotSet('goal_setting_testimonial_2',

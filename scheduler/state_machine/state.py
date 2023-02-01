@@ -10,7 +10,6 @@ class State(object):
     TRACKING = "Tracking"
     GOALS_SETTING = "Goals setting"
     BUFFER = "Buffer"
-    EXECUTION_START = "Execution start"
     EXECUTION_RUN = "Execution run"
     RELAPSE = "Relapse"
     CLOSING = "Closing"
@@ -58,6 +57,7 @@ class State(object):
             not to be changed
 
         """
+
         return None
 
     def on_new_day(self, date: datetime.date):

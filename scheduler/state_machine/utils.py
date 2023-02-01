@@ -67,31 +67,35 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
     Gets the last state saved in the DB for an intervention component
 
     Args:
+        intervention_component_id:
         user_id: the id of the user
-            intervention_component_id: the id of the intervention component as
+        intervention_component_id: the id of the intervention component as
             saved in the DB
 
     Returns:
             The last row saved in the user_intervention_state table in the DB for the
             given user and intervention component. A UserInterventionState object is
-            returned.
+            returned. In case no entry is found, it returns None
     """
     session = get_db_session(DATABASE_URL)
 
-    selected = (
-        session.query(
-            UserInterventionState
+    try:
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid == user_id,
+                UserInterventionState.intervention_component_id == intervention_component_id
+            )
+            .order_by(UserInterventionState.id.desc())  # order by descending id
+            .limit(1)  # get only the first result
+            .one()
         )
-        .filter(
-            UserInterventionState.users_nicedayuid == user_id,
-            UserInterventionState.intervention_component_id == intervention_component_id
-        )
-        .order_by(UserInterventionState.id.desc())  # order by descending id
-        .limit(1)  # get only the first result
-        .all()
-    )
+    except:
+        selected = None
 
-    return selected[0]
+    return selected
 
 
 def get_current_phase(user_id: int) -> InterventionPhases:
@@ -283,19 +287,33 @@ def get_start_date(user_id: int) -> date:
     """
     session = get_db_session(DATABASE_URL)
 
-    selected = (
-        session.query(
-            Users
-        )
-        .filter(
-            Users.nicedayuid == user_id
-        )
-        .all()
-    )
+    selected = (session.query(Users)
+                .filter(Users.nicedayuid == user_id)
+                .one())
 
-    start_date = selected[0].start_date.date()
+    start_date = selected.start_date.date()
 
     return start_date
+
+
+def get_quit_date(user_id: int) -> date:
+    """
+    Retrieve the smoking quit date of a user
+    Args:
+        user_id: ID of the user
+
+    Returns: the smoking quit starting date
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (session.query(Users)
+                .filter(Users.nicedayuid == user_id)
+                .one())
+
+    quit_date = selected.quit_date.date()
+
+    return quit_date
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:
@@ -320,33 +338,73 @@ def retrieve_intervention_day(user_id: int, current_date: date) -> int:
 
 
 def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
+    """
+    This function marks when a dialog has been completed, by update or creating
+    the entry in the DB
+    Args:
+        user_id: id of the user
+        dialog: name of the dialog
+        phase_id: id of the intervention phase
+
+    """
+    # get the id of the dialog
+    db_component = get_intervention_component(dialog)
+    last_state = get_last_component_state(user_id=user_id,
+                                          intervention_component_id=db_component.intervention_component_id)
+    # update the dialog entry, setting the `completed` filed to true
+    if last_state is not None:
+        last_state.completed = True
+        last_state.last_time = datetime.now().astimezone(TIMEZONE)
+        session = get_db_session(DATABASE_URL)
+        selected = (session.query(UserInterventionState)
+                    .filter(UserInterventionState.id == last_state.id)
+                    .one())
+
+        selected.completed = False
+
+        session.commit()
+    # if for any reason the dialog starting was not recorded in the DB, create the entry
+    else:
+        state = UserInterventionState(
+            users_nicedayuid=user_id,
+            intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
+            intervention_component_id=db_component.intervention_component_id,
+            completed=True,
+            last_time=datetime.now().astimezone(TIMEZONE),
+            last_part=0,
+            next_planned_date=None,
+            task_uuid=None
+        )
+        # record the dialog completion in the DB
+        store_intervention_component_to_db(state)
+
+
+def store_scheduled_dialog(user_id: int,
+                           dialog: str,
+                           phase_id: int,
+                           planned_date: datetime = datetime.now().astimezone(TIMEZONE),
+                           task_uuid: str = None):
+    """
+    This function marks when a dialog has been completed, by update or creating
+    the entry in the DB
+    Args:
+        user_id: id of the user
+        dialog: name of the dialog
+        phase_id: id of the intervention phase
+        planned_date: date when the dialog is to be delivered
+        task_uuid: celery task uuid
+
+    """
     # get the id of the dialog
     db_component = get_intervention_component(dialog)
     state = UserInterventionState(
         users_nicedayuid=user_id,
         intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
         intervention_component_id=db_component.intervention_component_id,
-        completed=True,
-        last_time=datetime.now().astimezone(TIMEZONE),
-        last_part=0,
-        next_planned_date=None,
-        task_uuid=None
-    )
-    # record the dialog completion in the DB
-    store_intervention_component_to_db(state)
-
-
-def store_scheduled_dialog(user_id: int, dialog: str, phase_id: int, task_uuid: str, planned_date: datetime):
-    # get the id of the dialog
-    db_component = get_intervention_component(dialog)
-    state = UserInterventionState(
-        users_nicedayuid=user_id,
-        intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
-        intervention_component_id=db_component.intervention_component_id,
-        completed=True,
+        completed=False,
         last_time=None,
         last_part=0,
-        next_planned_date=None,
+        next_planned_date=planned_date,
         task_uuid=task_uuid
     )
     # record the dialog completion in the DB

@@ -15,6 +15,9 @@ from .definitions import TIMEZONE
 from .definitions import MORNING, AFTERNOON, EVENING
 from .helper import get_latest_bot_utterance
 
+from . import validator
+
+
 celery = Celery(broker=REDIS_URL)
 
 
@@ -42,19 +45,11 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         if last_utterance != 'utter_ask_rescheduling_now_or_later_form_rescheduling_now':
             return {"rescheduling_now": None}
 
-        now_or_later = self._validate_now_or_later_response(value)
-        if now_or_later is None:
-            dispatcher.utter_message(response="utter_please_answer_now_or_later")
+        now_or_later = validator.validate_number_in_range_response(1, 2, value)
+        if not now_or_later:
+            dispatcher.utter_message(response="utter_please_answer_1_2")
 
         return {"rescheduling_now": now_or_later}
-
-    @staticmethod
-    def _validate_now_or_later_response(value):
-        if value.lower() in ['nu', 'nou', 'nu is goed']:
-            return True
-        if value.lower() in ['later', 'later.', 'niet nu']:
-            return False
-        return None
 
 
 class ActionGetReschedulingOptionsList(Action):

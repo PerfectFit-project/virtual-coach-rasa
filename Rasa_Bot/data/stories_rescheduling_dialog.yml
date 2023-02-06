@@ -7,10 +7,12 @@ stories:
 - story: rescheduling query dialog now
   steps:
     - checkpoint: rescheduling_query_dialog
+    - action: utter_intro
+    - action: action_expected_time_next_part
     - action: rescheduling_now_or_later_form
     - active_loop: rescheduling_now_or_later_form
     - slot_was_set:
-      - rescheduling_now: true
+      - rescheduling_now: 1
     - active_loop: null
     - action: utter_user_chose_now
     - action: action_set_continuation
@@ -24,9 +26,9 @@ stories:
     - action: rescheduling_now_or_later_form
     - active_loop: rescheduling_now_or_later_form
     - slot_was_set:
-      - rescheduling_now: false
+      - rescheduling_now: 2
     - active_loop: null
-    - action: utter_user_chose_later
+    - action: s
     - action: action_get_rescheduling_options_list
     - action: rescheduling_options_form
     - active_loop: rescheduling_options_form  # TODO: use rescheduling_option slot to reschedule

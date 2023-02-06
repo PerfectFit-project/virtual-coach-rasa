@@ -1,6 +1,6 @@
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
-from virtual_coach_db.helper.definitions import DialogExpectedDuration, ExecutionInterventionComponentsTriggers
+from virtual_coach_db.helper.definitions import DialogExpectedDuration, ExecutionInterventionComponentsTriggers, ExecutionInterventionComponents
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
@@ -76,8 +76,8 @@ class StartNextDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        nextDialog = tracker.get_slot('current_intervention_component')
-        celery.send_task('celery_tasks.trigger_intervention_component', (user_id, nextDialog))
+        nextDialog = tracker.get_slot('current_intervention_component').upper()
+        celery.send_task('celery_tasks.trigger_intervention_component', (user_id, ExecutionInterventionComponentsTriggers[nextDialog].value))
 
 class Schedule_Next_Prep_Phase(Action):
     """ reschedule the dialog for another time """

@@ -1,2 +1,3 @@
-connexion==2.7.0
-swagger-ui-bundle==0.0.8
+connexion
+swagger-ui-bundle
+pytz

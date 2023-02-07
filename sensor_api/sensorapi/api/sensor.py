@@ -1,4 +1,7 @@
-from flask import make_response, request
+import flask 
+from connexion import request, NoContent
+from model import StepCount
+from auth import require_token
 
 
 def http_response(sensor_type):
@@ -19,9 +22,9 @@ def http_response(sensor_type):
 
     if valid:
         # TODO: store data to DB
-        return make_response({'message': 'Ok'}, 200)
+        return flask.make_response({'message': 'Ok'}, 200)
     else:
-        return make_response({'message': message}, 405)
+        return flask.make_response({'message': message}, 405)
 
 
 class Sensor():
@@ -35,4 +38,22 @@ class Sensor():
         return http_response(self.sensor_type)
 
 
+class StepEndpoints:
+    @require_token
+    def post(self):
+        params = request.values
+
+        step_count = StepCount(
+            user = params.get("user"),
+            localTime = params.get("localTime"),
+            timezone = params.get("timezone"),
+            value = params.get("value"),
+        )
+        step_count.add_to_db()
+
+        return NoContent, 200
+
+
 Accelerometer = Sensor('Accelerometer')
+Step = StepEndpoints()
+

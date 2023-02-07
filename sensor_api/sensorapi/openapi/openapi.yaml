@@ -24,7 +24,7 @@ paths:
       tags:
         - Accelerometer
       summary: Create Accelerometer Data
-      operationId: sensor_api.sensorapi.api.sensor.Accelerometer.post
+      operationId: api.sensor.Accelerometer.post
       requestBody:
         $ref: '#/components/requestBodies/Accelerometer'
       responses:
@@ -32,6 +32,20 @@ paths:
           description: Successful operation
         '405':
           description: Validation exception
+  /step:
+    post:
+      tags:
+        - step
+      summary: Update The Step Count
+      operationId: api.sensor.Step.post
+      requestBody:
+        $ref: '#/components/requestBodies/Step'
+      responses:
+        '200':
+          description: Step Count Updated
+        '405':
+          description: Validation exception
+        
 components:
   schemas:
     Accelerometer:
@@ -42,6 +56,30 @@ components:
           format: email
         sensorData:
           type: number
+    Step:
+      type: object
+      properties:
+        user:
+          type: string
+          description: hash_id of the user
+          example: 9o0xZ0JGRauKnlY31dYJjA
+        token:
+          type: string
+          description: token of the user
+          example: "bf12441748548f45cd1ca9e6edc9a538f088289afd0b4ce2f008459f064b7c1b"
+        localTime:
+          type: string
+          example: "2023-01-19T09:00:00.000"
+        utcTime:
+          type: number
+          example: 1674115200000
+        timezone:
+          type: string
+          example: "Europe/Amsterdam"
+        value:
+          type: number
+          example: 14
+
   requestBodies:
     Accelerometer:
       required: true
@@ -49,3 +87,9 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Accelerometer'
+    Step:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Step'

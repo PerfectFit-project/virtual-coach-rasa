@@ -1,10 +1,9 @@
 from datetime import datetime
 from pydantic import BaseModel, validator
 import pytz
-from const import LOCAL_TIME_FMT
+from .const import LOCAL_TIME_FMT, DATABASE_URL
 from virtual_coach_db.dbschema.models import StepCounts
 from virtual_coach_db.helper.helper_functions import get_db_session
-from const import DATABASE_URL
 
 class User(BaseModel):
     id: int
@@ -12,7 +11,7 @@ class User(BaseModel):
 
 class StepCount(BaseModel):
     user: User
-    localTime: datetime
+    localTime: str
     timezone: str
     value: int
 
@@ -20,6 +19,7 @@ class StepCount(BaseModel):
     def validate_timezone(cls, v):
         if v not in pytz.all_timezones:
             raise ValueError('Invalid Timezone')
+        return v
         
     @validator('localTime')
     def validate_localTime(cls, v):

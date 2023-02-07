@@ -1,7 +1,7 @@
 import flask 
 from connexion import request, NoContent
-from model import StepCount
-from auth import require_token
+from .model import StepCount
+from .auth import require_token
 
 
 def http_response(sensor_type):
@@ -41,13 +41,13 @@ class Sensor():
 class StepEndpoints:
     @require_token
     def post(self):
-        params = request.values
+        body = request.json
 
         step_count = StepCount(
-            user = params.get("user"),
-            localTime = params.get("localTime"),
-            timezone = params.get("timezone"),
-            value = params.get("value"),
+            user = body["user"],
+            localTime = body["localTime"],
+            timezone = body["timezone"],
+            value = body["value"]
         )
         step_count.add_to_db()
 

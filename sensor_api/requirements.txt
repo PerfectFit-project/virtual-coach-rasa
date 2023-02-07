@@ -1,3 +1,5 @@
+wheel
 connexion
 swagger-ui-bundle
 pytz
+git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.9

@@ -20,3 +20,5 @@ EVENING = (18, 24)
 
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5
+
+FILE_PATH_IMAGE_PA = '/app/hoe_intensief_beweeg_jij.jpg'

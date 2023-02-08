@@ -488,7 +488,7 @@ actions:
   - validate_pa_goal_reachable_form
   - validate_refine_second_pa_goal_form
   - validate_finished_writing_pa_form
-  - action_upload_image_pa
+  - action_set_file_path_pa_image
 
 forms:
   # Branch 1 introduction

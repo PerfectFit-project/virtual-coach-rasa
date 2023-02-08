@@ -5,7 +5,6 @@ from virtual_coach_db.dbschema.models import (Testimonials, Users)
 from virtual_coach_db.helper import (ExecutionInterventionComponents, 
                                      PreparationInterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
-
 from . import validator
 from .definitions import DATABASE_URL, TIMEZONE, FILE_PATH_IMAGE_PA
 from .helper import (get_latest_bot_utterance, store_quit_date_to_db, store_long_term_pa_goal_to_db)
@@ -498,3 +497,14 @@ class ValidateFinishedWritingPaForm(FormValidationAction):
             return {"finished_writing_pa": None}
 
         return {"finished_writing_pa": value}
+
+
+class SetFilePathPaImage(Action):
+    def name(self):
+        return "action_set_file_path_pa_image"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        filepath = FILE_PATH_IMAGE_PA
+
+        return[SlotSet("upload_file_path", filepath)]

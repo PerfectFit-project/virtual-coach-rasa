@@ -98,7 +98,10 @@ rules:
   - action: utter_goal_setting_pa_expl_2
   - action: utter_goal_setting_pa_expl_3
   - action: utter_goal_setting_pa_expl_4
-  - action: utter_goal_setting_pa_expl_5  # TODO: show image with levels of PA intensity
+  - action: action_set_file_path_pa_image
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: utter_goal_setting_pa_expl_5
   - action: utter_goal_setting_pa_expl_6
   - action: utter_goal_setting_pa_expl_7
   - action: utter_goal_setting_pa_expl_8

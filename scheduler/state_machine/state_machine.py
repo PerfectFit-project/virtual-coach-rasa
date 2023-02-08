@@ -22,10 +22,10 @@ class StateMachine:
         self.state = state
         self.machine_id = self.state.user_id
         self.state.signal_new_event = self.new_state_callback
-        logging.info('A FSM has been created with the ID ', self.machine_id)
+        logging.info('A FSM has been created with the ID %s', self.machine_id)
 
     def on_event(self, event: Event):
-        logging.info('Event received by FSM: ', event)
+        logging.info('Event received by FSM %s: ', event)
         if event.EventType == EventEnum.USER_TRIGGER:
             logging.info('User trigger event received %s ', event.Descriptor)
             self.state.on_user_trigger(event.Descriptor)
@@ -33,7 +33,7 @@ class StateMachine:
             logging.info('Dialog completed event received %s ', event.Descriptor)
             self.state.on_dialog_completed(event.Descriptor)
         elif event.EventType == EventEnum.NEW_DAY:
-            logging.info('New day received ')
+            logging.info('New day received %s: ')
             self.state.on_new_day(event.Descriptor)
 
     def new_state_callback(self):

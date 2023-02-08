@@ -438,7 +438,7 @@ class SetSlotGeneralActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        InterventionComponents.GENERAL_ACTIVITY)]
+                        Components.GENERAL_ACTIVITY)]
 
 
 def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):

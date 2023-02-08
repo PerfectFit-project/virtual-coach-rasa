@@ -84,9 +84,9 @@ class OnboardingState(State):
     def run(self):
         logging.info('Onboarding State running')
         # the first dialog is the introduction video
-        celery.send_task(TRIGGER_COMPONENT,
-                         (self.user_id,
-                          ComponentsTriggers.PREPARATION_INTRODUCTION))
+        plan_and_store(user_id=self.user_id,
+                       dialog=Components.PREPARATION_INTRODUCTION,
+                       trigger=ComponentsTriggers.PREPARATION_INTRODUCTION)
 
     def schedule_next_dialogs(self):
 
@@ -126,8 +126,8 @@ class OnboardingState(State):
                                            hour=10)
 
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.TRACK_NOTIFICATION,
-                           trigger=ComponentsTriggers.TRACK_NOTIFICATION,
+                           dialog=Notifications.TRACK_NOTIFICATION,
+                           trigger=NotificationsTriggers.TRACK_NOTIFICATION,
                            planned_date=planned_date)
 
 
@@ -152,6 +152,8 @@ class TrackingState(State):
                           ComponentsTriggers.FIRST_AID_KIT))
 
     def on_new_day(self, current_date: datetime.date):
+        print(type(current_date))
+        logging.info('current date: %s', current_date)
         self.check_if_end_date(current_date)
 
     def check_if_end_date(self, date_to_check: date):
@@ -234,8 +236,8 @@ class GoalsSettingState(State):
                                            hour=10)
 
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.PA_NOTIFICATION,
-                           trigger=ComponentsTriggers.PA_NOTIFICATION,
+                           dialog=Notifications.PA_NOTIFICATION,
+                           trigger=NotificationsTriggers.PA_NOTIFICATION,
                            planned_date=planned_date)
 
     def run(self):
@@ -336,7 +338,7 @@ def plan_and_store(user_id: int, dialog: str, trigger: str, planned_date: dateti
 
     """
     if planned_date is None:
-        celery.send_task(TRIGGER_COMPONENT, (user_id, trigger), eta=planned_date)
+        celery.send_task(TRIGGER_COMPONENT, (user_id, trigger))
 
         utils.store_scheduled_dialog(user_id=user_id, dialog=dialog, phase_id=1)
     else:

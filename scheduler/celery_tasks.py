@@ -2,7 +2,7 @@ import logging
 import os
 import requests
 from celery import Celery
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from dateutil import tz
 from state_machine import utils
 from state_machine.state_machine import StateMachine, EventEnum, Event
@@ -24,13 +24,23 @@ app.conf.timezone = TIMEZONE
 TEST_USER = int(os.getenv('TEST_USER_ID'))
 
 state_machines = [{'machine': StateMachine(OnboardingState(TEST_USER)), 'id': TEST_USER}]
+# state_machines = []
 
 
 @app.task
-def crate_new_user(user_id: int):
+def create_new_user(user_id: int):
+    # this is a placeholder for the creation of a new user. At the moment we initialize
+    # just one fsm with a test user
     global state_machines
 
     state_machines.append({'machine': StateMachine(OnboardingState(user_id)), 'id': user_id})
+
+
+@app.task
+def start_user_intervention(user_id: int):
+    # run the first state
+    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
+    user_fsm.state.run()
 
 
 @app.task(bind=True)
@@ -38,6 +48,18 @@ def user_trigger_dialog(self,
                         user_id: int,
                         triggered_dialog: Components):  # pylint: disable=unused-argument
     send_fsm_event(user_id=user_id, event=Event(EventEnum.USER_TRIGGER, triggered_dialog))
+
+
+@app.task(bind=True)
+def notify_new_day(self, current_date: datetime.date):  # pylint: disable=unused-argument
+    [send_fsm_event(user_id=item['id'], event=Event(EventEnum.NEW_DAY, current_date)) for item in state_machines]
+    # schedule the task for tomorrow
+    tomorrow = datetime.today() + timedelta(days=1)
+    notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
+
+
+tomorrow = datetime.today() + timedelta(minutes=5)
+notify_new_day.apply_async(args=[tomorrow])
 
 
 @app.task(bind=True)

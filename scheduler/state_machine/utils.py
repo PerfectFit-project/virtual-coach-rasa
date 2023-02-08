@@ -351,16 +351,16 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
     db_component = get_intervention_component(dialog)
     last_state = get_last_component_state(user_id=user_id,
                                           intervention_component_id=db_component.intervention_component_id)
+
     # update the dialog entry, setting the `completed` filed to true
     if last_state is not None:
-        last_state.completed = True
         last_state.last_time = datetime.now().astimezone(TIMEZONE)
         session = get_db_session(DATABASE_URL)
         selected = (session.query(UserInterventionState)
                     .filter(UserInterventionState.id == last_state.id)
                     .one())
 
-        selected.completed = False
+        selected.completed = True
 
         session.commit()
     # if for any reason the dialog starting was not recorded in the DB, create the entry

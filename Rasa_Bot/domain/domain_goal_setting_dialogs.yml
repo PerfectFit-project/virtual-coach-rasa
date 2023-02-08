@@ -478,16 +478,17 @@ actions:
   - validate_how_doing_form
   - validate_extra_explanation_form
   - validate_which_sport_form
-  - validate_first_pa_form
+  - validate_first_pa_goal_form
   - validate_testimonial_one_read_form
   - validate_testimonial_two_read_form
   - validate_read_second_testimonial_form
   - validate_testimonial_evaluation_form
-  - validate_second_pa_form
+  - validate_second_pa_goal_form
   - validate_why_pa_goal_important_form
   - validate_pa_goal_reachable_form
   - validate_refine_second_pa_goal_form
   - validate_finished_writing_pa_form
+  - action_upload_image_pa
 
 forms:
   # Branch 1 introduction

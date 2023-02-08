@@ -7,8 +7,8 @@ from virtual_coach_db.helper import (ExecutionInterventionComponents,
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 from . import validator
-from .definitions import DATABASE_URL, TIMEZONE
-from .helper import (get_latest_bot_utterance)
+from .definitions import DATABASE_URL, TIMEZONE, FILE_PATH_IMAGE_PA
+from .helper import (get_latest_bot_utterance, store_quit_date_to_db, store_long_term_pa_goal_to_db)
 from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import FollowupAction, SlotSet
@@ -125,8 +125,8 @@ class ActionGoalSettingContinueAfterPlan(Action):
             return [FollowupAction('relapse_medication_info_form')]
         elif current_dialog == PreparationInterventionComponents.GOAL_SETTING:
             return [FollowupAction('utter_goal_setting_pa_expl_1')]
-        else:
-            return None  # TODO (prospector complained)
+
+        return None
 
 
 class ValidateChosenQuitDateForm(FormValidationAction):
@@ -152,6 +152,8 @@ class ValidateChosenQuitDateForm(FormValidationAction):
             dispatcher.utter_message(response="utter_goal_setting_wrong_date")
             return {"chosen_quit_date_slot": None}
 
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        store_quit_date_to_db(user_id, value)
         return {"chosen_quit_date_slot": value}
 
 
@@ -219,13 +221,6 @@ class ActionSetSlotGoalSettingDialog(Action):
         return "action_set_slot_goal_setting_dialog"
 
     async def run(self, dispatcher, tracker, domain):
-        # TODO: check if we need to store user_intervention_state
-        # user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        # update the user_intervention_state table
-        # store_user_intervention_state(user_id,
-        #                               PreparationInterventionComponents.GOAL_SETTING,
-        #                               Phases.PREPARATION)
 
         return [SlotSet('current_intervention_component',
                         PreparationInterventionComponents.GOAL_SETTING)]
@@ -254,9 +249,9 @@ class ValidateWhichSportForm(FormValidationAction):
 
 class ValidateFirstPaGoalForm(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_first_pa_form'
+        return 'validate_first_pa_goal_form'
 
-    def validate_which_sport(
+    def validate_first_pa_goal(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
@@ -363,9 +358,9 @@ class ValidateTestimonialEvaluationForm(FormValidationAction):
     
 class ValidateSecondPaGoalForm(FormValidationAction):
     def name(self) -> Text:
-        return 'validate_second_pa_form'
+        return 'validate_second_pa_goal_form'
 
-    def validate_which_sport(
+    def validate_second_pa_goal(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
@@ -379,6 +374,8 @@ class ValidateSecondPaGoalForm(FormValidationAction):
             dispatcher.utter_message(response="utter_give_more_details")
             return {"second_pa_goal": None}
 
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        store_long_term_pa_goal_to_db(user_id, value)
         return {"second_pa_goal": value}
 
 
@@ -469,6 +466,8 @@ class ValidateRefineSecondPaGoalForm(FormValidationAction):
             dispatcher.utter_message(response="utter_give_more_details")
             return {"refine_second_pa_goal": None}
 
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        store_long_term_pa_goal_to_db(user_id, value)
         return {"refine_second_pa_goal": value}
 
 

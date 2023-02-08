@@ -67,7 +67,7 @@ rules:
   - action: utter_goal_setting_choose_date_1
   - action: utter_goal_setting_choose_date_2
   - action: utter_goal_setting_choose_date_3
-  - action: chosen_quit_date_form  # TODO: check what happens if today is chosen as day.
+  - action: chosen_quit_date_form
   - active_loop: chosen_quit_date_form
   wait_for_user_input: false
 
@@ -75,7 +75,7 @@ rules:
   condition:
   - active_loop: chosen_quit_date_form
   steps:
-  - action: chosen_quit_date_form  # TODO: store date to db
+  - action: chosen_quit_date_form
   - active_loop: null
   - action: utter_goal_setting_choose_date_4
   - action: utter_goal_setting_choose_date_5
@@ -111,7 +111,7 @@ rules:
   - action: utter_goal_setting_pa_set_4
   - action: which_sport_form
   - active_loop: which_sport_form
-  - active_loop: null  # TODO: store slot to the database
+  - active_loop: null
   - action: utter_goal_setting_pa_set_5
   - action: utter_goal_setting_pa_set_6
   - action: first_pa_goal_form
@@ -158,7 +158,7 @@ rules:
   steps:
   - action: testimonial_evaluation_form
   - active_loop: testimonial_evaluation_form
-  - active_loop: null  # TODO: store response to db
+  - active_loop: null
   - action: utter_second_testimonial_3
   - action: utter_second_testimonial_4
   - action: utter_second_testimonial_5
@@ -172,7 +172,7 @@ rules:
   - action: utter_second_testimonial_10
   - action: why_pa_goal_important_form
   - active_loop: why_pa_goal_important_form
-  - active_loop: null  # TODO: replace the numbers for strings in second question
+  - active_loop: null
   - action: utter_second_testimonial_12
   - action: utter_second_testimonial_13
   - action: pa_goal_reachable_form
@@ -217,7 +217,7 @@ rules:
   - action: utter_second_testimonial_18
   - action: refine_second_pa_goal_form
   - active_loop: refine_second_pa_goal_form
-  - active_loop: null  # TODO: store to db
+  - active_loop: null
   - action: utter_second_testimonial_19
   - action: utter_second_testimonial_20
   - action: utter_second_testimonial_21
@@ -242,3 +242,5 @@ rules:
   - action: utter_closing_1
   - action: utter_closing_2
   - action: utter_closing_3
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog

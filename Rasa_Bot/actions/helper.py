@@ -13,6 +13,42 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, Dialog
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
+def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
+    """
+        Store a user's long-term physical activity (PA) goal in the database.
+
+        Args:
+            user_id (int): The id of the user.
+            long_term_pa_goal (str): The long-term PA goal.
+
+        Returns:
+            Nothing
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.long_term_pa_goal = long_term_pa_goal
+    session.commit()
+
+
+def store_quit_date_to_db(user_id: int, quit_date: str):
+    """
+    Store the quit date for a user in the database.
+
+    Args:
+        user_id (int): The id of the user.
+        quit_date (str): The quit date in the format 'dd-mm-yyyy'.
+
+    Returns:
+        Nothing
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.quit_date = quit_date
+    session.commit()
+
+
 def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_value: int):
     """
        saves to the db a closed answer

@@ -147,7 +147,14 @@ class ActionFirstAidKitCheckUserInputRequired(Action):
 
         # Check in database if activity requires user input
         session = get_db_session(db_url=DATABASE_URL)
-        selected = session.query(InterventionActivity).filter_by(intervention_activity_id=activity_id).one()
+        selected = (
+            session.query(
+                InterventionActivity
+                )
+            .filter_by(
+                intervention_activity_id=activity_id
+                ).one()
+            )
 
         input_required = int(selected.user_input_required)
 
@@ -187,7 +194,14 @@ class ActionFirstAidKitGetInstructions(Action):
         activity_id = tracker.get_slot('first_aid_kit_chosen_activity_slot')
 
         session = get_db_session(db_url=DATABASE_URL)
-        selected = session.query(InterventionActivity).filter_by(intervention_activity_id=activity_id).one()
+        selected = (
+            session.query(
+                InterventionActivity
+                )
+            .filter_by(
+                intervention_activity_id=activity_id
+                ).one()
+            )
 
         instructions = selected.intervention_activity_full_instructions
 

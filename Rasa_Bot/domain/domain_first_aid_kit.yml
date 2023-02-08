@@ -2,15 +2,148 @@ version: "3.1"
 
 intents:
   - CENTRAL_get_first_aid_kit
+  
+  
+slots:
+  # Whether the first aid kit contains something
+  first_aid_kit_filled:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
+  # First aid kit content
+  first_aid_kit_text:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # IDs of the activities in the first aid kit
+  first_aid_kit_activities_ids:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # ID of chosen activity in database
+  first_aid_kit_chosen_activity_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: first_aid_kit_chosen_activity_form
+  # Whether chosen activity requires input from user
+  first_aid_kit_chosen_activity_input_required:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: custom
+  
+  # User input for chosen activity if it requires input
+  first_aid_kit_user_input_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # Instructions for chosen activity if activity does not require input
+  first_aid_kit_instructions_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+      
+  # Whether user wants to end the dialog
+  # 1 means end, 2 means repeat
+  first_aid_kit_end_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: first_aid_kit_end_form
 
 responses:
-  ### First-aid kit
-  utter_first_aid_kit:
-    - text: "Hier is je EHBO doos:\n{first_aid_kit_text}."
   utter_first_aid_kit_empty:
-    - text: "Je hebt niets in je EHBO doos.\nProbeer iets te bedenken waar je dankbaar voor bent."
+    - text: "Je hebt op dit moment nog niets in je EHBO-doos.\nAls je zin krijgt om te roken of juist geen zin hebt om in beweging te komen helpt het om jezelf af te leiden. Het doen van een oefening kan hierbij helpen.\nTyp het woord 'Oefening' om een oefening te doen."
+  
+  
+  utter_first_aid_kit_intro:
+    - text: "Je wilt graag zien wat er in je EHBO-doos zit. 🧰 Laten we je EHBO-doos nu bekijken!"
+    - text: "Je wilt graag weten wat er in je EHBO-doos zit. 🧰 Laten we dat nu eens bekijken!"
+    - text: "Je wil graag zien wat er in je EHBO-doos zit. 🧰 Laten we dat nu bekijken!"
 
+
+  utter_first_aid_kit_show_activity_titles_1:
+    - text: "De volgende vijf oefeningen vond jij het meest nuttig om te doen en zitten in jouw EHBO-doos 🧰:\n{first_aid_kit_text}."
+    - text: "Deze vijf oefeningen vond jij het meest nuttig en zijn in jouw EHBO-doos 🧰:\n{first_aid_kit_text}."
+  utter_first_aid_kit_show_activity_titles_2:
+    - text: "Kies een van de oefeningen. Ik laat je deze oefening dan opnieuw zien. Of ik laat jouw eigen tekst over wat je van deze oefening geleerd hebt zien."
+    - text: "Kies een oefening. Ik laat je deze oefening dan opnieuw zien. Of ik laat jouw eigen tekst zien over wat je van deze oefening geleerd hebt."
+  utter_ask_first_aid_kit_chosen_activity_slot:
+    - text: "Welke oefening wil je bekijken? Typ '1', '2', '3', '4' of '5'."
+    - text: "Welke oefening wil je zien? Typ '1', '2', '3', '4' of '5'."
+    
+    
+  utter_first_aid_kit_show_full_text_input_1:
+    - text: "Oke! Dit is wat je geleerd hebt van deze oefening:\n{first_aid_kit_user_input_slot}"
+    - text: "Oké! Dit is wat je hebt geleerd van deze oefening:\n{first_aid_kit_user_input_slot}"
+  utter_first_aid_kit_show_full_text_input_2:
+    - text: "Misschien kunnen deze tips je nu helpen, tijdens dit moeilijke moment?"
+    - text: "Deze tips kunnen je misschien nu helpen, in dit moeilijke moment."
+
+
+  utter_first_aid_kit_show_full_text_noinput_1:
+    - text: "Bedankt! Ik laat je de oefening nog een keer zien:\n{first_aid_kit_instructions_slot}"
+    - text: "Bedankt! Ik laat de oefening nog een keer zien:\n{first_aid_kit_instructions_slot}"
+    - text: "Dank je! Ik laat de oefening nog een keer zien:\n{first_aid_kit_instructions_slot}"
+    - text: "Bedankt! Ik herhaal de oefening voor je:\n{first_aid_kit_instructions_slot}"
+    - text: "Dankjewel! Ik laat de oefening opnieuw zien:\n{first_aid_kit_instructions_slot}"
+  utter_first_aid_kit_show_full_text_noinput_2:
+    - text: "Misschien kan deze oefening je nu helpen, tijdens dit moeilijke moment."
+    - text: "Deze oefening kan je misschien nu helpen, in dit moeilijke moment."
+
+
+  utter_first_aid_kit_end_or_repeat_1:
+    - text: "Hebben de oefening of de tips je geholpen om je doelen vol te houden tijdens dit moeilijke moment? Of wil je graag nog meer oefeningen of tips zien?"
+    - text: "Hebben de oefening of tips je geholpen om je doelen vol te houden in dit moeilijke moment? Of wil je nog meer zien?"
+  utter_ask_first_aid_kit_end_slot:
+    - text: "Typ '1' als je klaar bent met het bekijken van je EHBO-doos. 😄 Typ '2' als je meer oefeningen of tips wil zien. 🤔"
+    - text: "Typ '1' als je klaar bent met het bekijken van je EHBO-doos. 😄 Typ '2' voor meer oefeningen of tips. 🤔"
+    - text: "Typ '1' als je klaar bent met het bekijken van je EHBO-doos. 😄 Typ '2' als je meer wilt zien. 🤔"
+    
+    
+  utter_first_aid_kit_end_1:
+    - text: "Goed. Ik hoop dat de oefening(en) in je EHBO-doos je geholpen hebben. Blijf volhouden!"
+    - text: "Mooi. Ik hoop dat de oefening(en) in je EHBO-doos je hebben geholpen. Blijf doorgaan!"
+    - text: "Prima. Ik hoop dat de oefeningen in je EHBO-doos je helpen. Houd vol!"
+    - text: "Goed. Ik hoop dat de oefeningen in je EHBO-doos je steunen. Blijf doorgaan!"
+  utter_first_aid_kit_end_2:
+    - text: "Wanneer je je EHBO-doos later weer eens wilt bekijken, typ dan weer 'EHBO'. We spreken elkaar snel! 👋"
+    - text: "Typ 'EHBO' als je je EHBO-doos later weer wilt bekijken. Tot snel! 👋"
+    - text: "Voor als je later nog eens naar je EHBO-doos wilt kijken, typ 'EHBO'. Tot later! 👋"
+    - text: "Als je weer wilt kijken naar je EHBO-doos, typ dan later 'EHBO'. Tot snel! 👋"
+
+  utter_first_aid_kit_repeat_1:
+    - text: "Oke, ik zal je laten zien welke oefeningen of tips je nog meer kunt bekijken."
+    - text: "Oké, ik laat zien welke andere oefeningen of tips je kunt bekijken."
+
+forms:
+  first_aid_kit_chosen_activity_form:
+    required_slots:
+      - first_aid_kit_chosen_activity_slot
+  first_aid_kit_end_form:
+    required_slots:
+      - first_aid_kit_end_slot
+    
 actions:
+  - action_first_aid_kit_check_user_input_required
+  - action_first_aid_kit_get_instructions
+  - action_first_aid_kit_get_user_input
+  - action_first_aid_kit_repeat
   - action_get_first_aid_kit
   - action_resume_after_fak
   - action_start_fak
+  - validate_first_aid_kit_chosen_activity_form
+  - validate_first_aid_kit_end_form

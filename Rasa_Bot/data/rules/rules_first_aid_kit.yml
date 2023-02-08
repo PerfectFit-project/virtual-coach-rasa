@@ -2,9 +2,87 @@
 version: "3.1"
 
 rules:
-## Get first aid kit
-- rule: Get first aid kit
+## Get first aid kit empty
+- rule: Get first aid kit empty
   steps:
-    - intent: CENTRAL_get_first_aid_kit
-    - action: action_get_first_aid_kit
-    - action: action_resume_after_fak
+  - intent: CENTRAL_get_first_aid_kit
+  - action: action_get_first_aid_kit
+  - slot_was_set:
+     - first_aid_kit_filled: false
+  - action: utter_first_aid_kit_empty
+  - action: action_resume_after_fak
+
+## 1: Get first aid kit is filled
+- rule: Get first aid kit filled
+  steps:
+  - intent: CENTRAL_get_first_aid_kit
+  - action: action_get_first_aid_kit
+  - slot_was_set:
+    - first_aid_kit_filled: true
+  - action: utter_first_aid_kit_intro
+  - action: action_first_aid_kit_repeat
+  wait_for_user_input: false
+  
+## 2 + 3a: user input required
+- rule: First aid kit user input required
+  steps:
+  - action: utter_first_aid_kit_show_activity_titles_1
+  - action: utter_first_aid_kit_show_activity_titles_2
+  - action: first_aid_kit_chosen_activity_form
+  - active_loop: first_aid_kit_chosen_activity_form
+  - active_loop: null
+  - action: action_first_aid_kit_check_user_input_required
+  - slot_was_set:
+    - first_aid_kit_chosen_activity_input_required: true
+  - action: action_first_aid_kit_get_user_input
+  - action: utter_first_aid_kit_show_full_text_input_1
+  - action: utter_first_aid_kit_show_full_text_input_2
+  - action: utter_first_aid_kit_end_or_repeat_1
+  - action: first_aid_kit_end_form
+  - active_loop: first_aid_kit_end_form
+  wait_for_user_input: false
+    
+## 2 + 3b: no user input required
+- rule: First aid kit no user input required
+  steps:
+  - action: utter_first_aid_kit_show_activity_titles_1
+  - action: utter_first_aid_kit_show_activity_titles_2
+  - action: first_aid_kit_chosen_activity_form
+  - active_loop: first_aid_kit_chosen_activity_form
+  - active_loop: null
+  - action: action_first_aid_kit_check_user_input_required
+  - slot_was_set:
+    - first_aid_kit_chosen_activity_input_required: false
+  - action: action_first_aid_kit_get_instructions
+  - action: utter_first_aid_kit_show_full_text_noinput_1
+  - action: utter_first_aid_kit_show_full_text_noinput_2
+  - action: utter_first_aid_kit_end_or_repeat_1
+  - action: first_aid_kit_end_form
+  - active_loop: first_aid_kit_end_form
+  wait_for_user_input: false
+    
+## 4a: User wants to end dialog
+- rule: End first aid kit dialog
+  condition:
+    - active_loop: first_aid_kit_end_form
+  steps:
+  - action: first_aid_kit_end_form
+  - active_loop: null
+  - slot_was_set:
+    - first_aid_kit_end_slot: 1
+  - action: utter_first_aid_kit_end_1
+  - action: utter_first_aid_kit_end_2
+  - action: action_resume_after_fak
+  wait_for_user_input: false
+  
+## 4b: User wants to repeat dialog
+- rule: Repeat first aid kit dialog
+  condition:
+    - active_loop: first_aid_kit_end_form
+  steps:
+  - action: first_aid_kit_end_form
+  - active_loop: null
+  - slot_was_set:
+    - first_aid_kit_end_slot: 2
+  - action: utter_first_aid_kit_repeat_1
+  - action: action_first_aid_kit_repeat

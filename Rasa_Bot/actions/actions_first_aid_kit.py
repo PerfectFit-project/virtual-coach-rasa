@@ -1,13 +1,22 @@
 import logging
 
+from . import validator
+from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES, REDIS_URL
+from .helper import (get_latest_bot_utterance,
+                     get_user_intervention_activity_inputs,)
+
 from celery import Celery
 from datetime import datetime, timedelta
-from rasa_sdk import Action
-from rasa_sdk.events import FollowupAction
-from virtual_coach_db.dbschema.models import FirstAidKit
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import FollowupAction, SlotSet
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.forms import FormValidationAction
+from typing import Any, Dict, Text
+from virtual_coach_db.dbschema.models import (FirstAidKit,
+                                              InterventionActivity)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES, REDIS_URL
+
 
 celery = Celery(broker=REDIS_URL)
 
@@ -40,7 +49,7 @@ class ActionResumeAfterFak(Action):
 
         current_intervention = tracker.get_slot('current_intervention_component')
 
-        if current_intervention is None:
+        if current_intervention == 'NONE':
             return[FollowupAction('action_end_dialog')]
 
         new_intent = 'EXTERNAL_' + current_intervention
@@ -74,11 +83,13 @@ class ActionGetFirstAidKit(Action):
         )
 
         kit_text = ""
+        filled = False  # Whether the first aid kit has content
+        activity_ids_list = []  # List of activity IDs
 
         # the kit exists
         if selected is not None:
 
-            # get up to the highest rated activities
+            # get the highest rated activities
             sorted_activities = sorted(
                 selected,
                 key=lambda x: x.activity_rating
@@ -86,17 +97,130 @@ class ActionGetFirstAidKit(Action):
 
             for activity_idx, activity in enumerate(sorted_activities):
                 kit_text += str(activity_idx + 1) + ") "
-                if activity.intervention_activity_id is None:
-                    kit_text += activity.user_activity_title
-                else:
-                    kit_text += activity.intervention_activity.intervention_activity_title
+                kit_text += activity.intervention_activity.intervention_activity_title
+                kit_text += ": " + activity.intervention_activity.intervention_activity_description
                 if not activity_idx == len(selected) - 1:
                     kit_text += "\n"
+                
+                activity_ids_list.append(activity.intervention_activity.intervention_activity_id)
+            
+            filled = True
 
-            dispatcher.utter_message(template="utter_first_aid_kit",
-                                     first_aid_kit_text=kit_text)
-        # the kit doesn't exist
-        else:
-            dispatcher.utter_message(template="utter_first_aid_kit_empty")
+        return [SlotSet('first_aid_kit_text', kit_text),
+                SlotSet('first_aid_kit_filled', filled),
+                SlotSet('first_aid_kit_activities_ids', activity_ids_list)]
 
-        return []
+
+class ValidateFirstAidKitChosenActivityForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_first_aid_kit_chosen_activity_form'
+
+    def validate_first_aid_kit_chosen_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate first_aid_kit_chosen_activity_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_first_aid_kit_chosen_activity_slot':
+            return {"first_aid_kit_chosen_activity_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min=1, n_max=5, 
+                                                           response=value):
+            return {"first_aid_kit_chosen_activity_slot": None}
+
+        activity_ids_list = tracker.get_slot('first_aid_kit_activities_ids')
+
+        return {"first_aid_kit_chosen_activity_slot": activity_ids_list[int(value) - 1]}
+
+
+class ActionFirstAidKitCheckUserInputRequired(Action):
+    """Check whether chosen activity requires user input."""
+
+    def name(self):
+        return "action_first_aid_kit_check_user_input_required"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        # Get ID of chosen activity
+        activity_id = tracker.get_slot('first_aid_kit_chosen_activity_slot')
+
+        # Check in database if activity requires user input
+        session = get_db_session(db_url=DATABASE_URL)
+        selected = session.query(InterventionActivity).filter_by(intervention_activity_id=activity_id).one()
+
+        input_required = int(selected.user_input_required)
+
+        return [SlotSet('first_aid_kit_chosen_activity_input_required', 
+                        input_required)]
+    
+
+class ActionFirstAidKitGetUserInput(Action):
+    """Get most recent user input for chosen activity from database."""
+
+    def name(self):
+        return "action_first_aid_kit_get_user_input"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        # Get ID of chosen activity
+        activity_id = tracker.get_slot('first_aid_kit_chosen_activity_slot')
+
+        user_id = tracker.current_state()['sender_id']
+
+        user_inputs = get_user_intervention_activity_inputs(user_id, 
+                                                            activity_id)
+        last_input = user_inputs[-1].user_input
+
+        return [SlotSet("first_aid_kit_user_input_slot", last_input)]
+
+
+class ActionFirstAidKitGetInstructions(Action):
+    """Get instructions for chosen activity from database."""
+
+    def name(self):
+        return "action_first_aid_kit_get_instructions"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        # Get ID of chosen activity
+        activity_id = tracker.get_slot('first_aid_kit_chosen_activity_slot')
+
+        session = get_db_session(db_url=DATABASE_URL)
+        selected = session.query(InterventionActivity).filter_by(intervention_activity_id=activity_id).one()
+
+        instructions = selected.intervention_activity_full_instructions
+
+        return [SlotSet("first_aid_kit_instructions_slot", instructions)]
+
+
+class ValidateFirstAidKitEndForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_first_aid_kit_end_form'
+
+    def validate_first_aid_kit_end_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate first_aid_kit_end_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_first_aid_kit_end_slot':
+            return {"first_aid_kit_end_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min=1, n_max=2, 
+                                                           response=value):
+            return {"first_aid_kit_end_slot": None}
+
+        return {"first_aid_kit_end_slot": int(value)}
+
+
+class ActionFirstAidKitRepeat(Action):
+    """Repeat first aid kit dialog."""
+
+    def name(self):
+        return "action_first_aid_kit_repeat"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        return [FollowupAction('utter_first_aid_kit_show_activity_titles_1')]

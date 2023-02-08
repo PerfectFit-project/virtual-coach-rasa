@@ -1,6 +1,7 @@
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
-from virtual_coach_db.helper.definitions import DialogExpectedDuration, ExecutionInterventionComponentsTriggers
+from virtual_coach_db.helper.definitions import DialogExpectedDuration, 
+                                                ExecutionInterventionComponentsTriggers
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any

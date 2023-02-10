@@ -21,7 +21,7 @@ stories:
 
 - story: continue with future self dialog after rescheduling query
   steps:
-    - checkpoint: continue_with_future_self_dialog_after_rescheduling_query
+    - intent: EXTERNAL_trigger_continue_future_self_activity
     - action: utter_future_self_explanation
     - checkpoint: ask_smoking_words_list
 

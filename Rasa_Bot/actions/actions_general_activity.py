@@ -3,7 +3,7 @@ from sqlalchemy import update
 from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, 
                                               FirstAidKit,
                                               InterventionActivity)
-from virtual_coach_db.helper import (ExecutionInterventionComponents, 
+from virtual_coach_db.helper import (ExecutionInterventionComponents,
                                      DialogQuestionsEnum,
                                      ExecutionInterventionComponentsTriggers)
 from virtual_coach_db.helper.helper_functions import get_db_session
@@ -26,6 +26,7 @@ from typing import Any, Dict, Text
 
 from celery import Celery
 celery = Celery(broker=REDIS_URL)
+
 
 class ActionStartReschedulingDialog(Action):
     def name(self) -> Text:

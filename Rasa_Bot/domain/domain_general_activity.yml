@@ -1,6 +1,6 @@
 intents:
 - review_last_activity
-
+- EXTERNAL_trigger_continue_general_activity
 
 slots:
   # Check if it is the first time the dialog is performed

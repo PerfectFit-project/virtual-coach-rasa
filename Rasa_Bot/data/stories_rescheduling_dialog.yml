@@ -1,12 +1,12 @@
 # Stories for rescheduling dialog
 version: "3.1"
 
-stories:
+rules:
 
 # Rescheduling query - now
-- story: rescheduling query dialog now
+- rule: rescheduling query dialog now - activity dialog
   steps:
-    - checkpoint: rescheduling_query_dialog
+    - intent: EXTERNAL_trigger_reschedule_activity
     - action: utter_intro
     - action: action_expected_time_next_part
     - action: rescheduling_now_or_later_form
@@ -16,19 +16,39 @@ stories:
     - active_loop: null
     - action: utter_user_chose_now
     - action: action_set_continuation
-    - checkpoint: continue_dialog_checkpoint
+    - slot_was_set:
+      - dialog_to_continue: general_activity
+    - action: action_continue_with_general_activity
+
+- rule: rescheduling query dialog now - future self dialog
+  steps:
+    - intent: EXTERNAL_trigger_reschedule_activity
+    - action: utter_intro
+    - action: action_expected_time_next_part
+    - action: rescheduling_now_or_later_form
+    - active_loop: rescheduling_now_or_later_form
+    - slot_was_set:
+      - rescheduling_now: 1
+    - active_loop: null
+    - action: utter_user_chose_now
+    - action: action_set_continuation
+    - slot_was_set:
+      - dialog_to_continue: future_self_preparation
+    - action: action_continue_with_future_self_dialog_after_rescheduling_query
 
 
 # Rescheduling query - later
-- story: rescheduling query dialog later
+- rule: rescheduling query dialog later
   steps:
-    - checkpoint: rescheduling_query_dialog
+    - intent: EXTERNAL_trigger_reschedule_activity
+    - action: utter_intro
+    - action: action_expected_time_next_part
     - action: rescheduling_now_or_later_form
     - active_loop: rescheduling_now_or_later_form
     - slot_was_set:
       - rescheduling_now: 2
     - active_loop: null
-    - action: s
+    - action: utter_user_chose_later
     - action: action_get_rescheduling_options_list
     - action: rescheduling_options_form
     - active_loop: rescheduling_options_form  # TODO: use rescheduling_option slot to reschedule
@@ -42,16 +62,3 @@ stories:
     # TODO: what are we going to do at the end of the dialog if the user types something again?
     # Maybe a ConversationPaused() event from custom action?
 
-- story: get to general activity dialog
-  steps:
-    - checkpoint: continue_dialog_checkpoint
-    - slot_was_set:
-      - dialog_to_continue: general_activity
-    - checkpoint: continue_with_general_activity
-
-- story: get to future self dialog
-  steps:
-    - checkpoint: continue_dialog_checkpoint
-    - slot_was_set:
-      - dialog_to_continue: future_self_preparation
-    - checkpoint: continue_with_future_self_dialog_after_rescheduling_query

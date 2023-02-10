@@ -15,10 +15,31 @@ from .definitions import TIMEZONE
 from .definitions import MORNING, AFTERNOON, EVENING
 from .helper import get_latest_bot_utterance
 
+from virtual_coach_db.helper import ExecutionInterventionComponentsTriggers
+
 from . import validator
 
 
 celery = Celery(broker=REDIS_URL)
+
+class ActionContinueGeneralActivityDialog(Action):
+    def name(self) -> Text:
+        return "action_continue_with_general_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, ExecutionInterventionComponentsTriggers.RESCHEDULE_ACTIVITY))
+
+
+class ActionContinueFutureSelfDialog(Action):
+    def name(self) -> Text:
+        return "action_continue_with_future_self_dialog_after_rescheduling_query"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, ExecutionInterventionComponentsTriggers.RESCHEDULE_ACTIVITY))
 
 
 class ActionResetReschedulingNowSlot(Action):

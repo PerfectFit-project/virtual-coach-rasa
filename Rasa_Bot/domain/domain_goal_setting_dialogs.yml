@@ -453,6 +453,11 @@ responses:
   utter_step_goal_pa_11:
     - text: "Ik ga je helpen met het halen van je beweegdoelen. Ik zal je de komende tijd meer uitleg geven over bewegen
             en je tips en oefeningen geven. 💡 Deze oefeningen helpen je om vol te blijven houden!"
+  utter_goal_setting_wrong_date:
+    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13-07-2023. 
+
+            Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. 
+            Kun je je stop-datum nog een keer typen? "
 
 # 4 closing
   utter_closing_1:

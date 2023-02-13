@@ -21,7 +21,7 @@ class ActionStartFak(Action):
     async def run(self, dispatcher, tracker, domain):
 
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        print("CELERY INTENT")
+        logging.info("Launching first aid kit celery intent")
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, 'CENTRAL_get_first_aid_kit'))
 

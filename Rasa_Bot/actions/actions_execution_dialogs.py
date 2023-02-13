@@ -49,6 +49,5 @@ class SetSlotRelapseDialog(Action):
         return "action_set_slot_relapse_dialog"
 
     async def run(self, dispatcher, tracker, domain):
-        print(ExecutionInterventionComponents.RELAPSE_DIALOG)
         return [SlotSet("current_intervention_component",
                         ExecutionInterventionComponents.RELAPSE_DIALOG)]

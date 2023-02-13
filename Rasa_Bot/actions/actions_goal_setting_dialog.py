@@ -122,6 +122,7 @@ class ActionGoalSettingContinueAfterPlan(Action):
             # resumes the relapse dialog from rule: smoke relapse decide to get medication info
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]
+
         elif current_dialog == PreparationInterventionComponents.GOAL_SETTING:
             return [FollowupAction('utter_goal_setting_pa_expl_1')]
 
@@ -145,9 +146,8 @@ class ValidateChosenQuitDateForm(FormValidationAction):
         start_date = tracker.get_slot('first_possible_quit_date')
         stop_date = tracker.get_slot('last_possible_quit_date')
 
-        if not (validator.validate_date_format(value) and validator.validate_date_range(value, 
-                                                                                        start_date, 
-                                                                                        stop_date)):
+        if (not (validator.validate_date_format(value)
+                 and validator.validate_date_range(value, start_date, stop_date))):
             dispatcher.utter_message(response="utter_goal_setting_wrong_date")
             return {"chosen_quit_date_slot": None}
 

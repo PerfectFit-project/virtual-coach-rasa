@@ -353,16 +353,12 @@ def count_answers(answers, closed_answer_options):
                     Example... [2, 1, 3] for ["At the gym", "At home", "Outside"]
 
     """
-    result = []
-    for closed_answer_option in closed_answer_options:
-        amount_of_answers = 0
-        closed_answer = closed_answer_option
-
-        for answer in answers:
-            if answer.closed_answers_id == closed_answer.closed_answers_id:
-                amount_of_answers += 1
-
-        result.append(amount_of_answers)
+       result = [
+        len(
+            [answer for answer in answers if answer.closed_answers_id == closed_answer.closed_answers_id]
+        ) for
+              closed_answer in closed_answer_options
+    ]
     return result
 
 
@@ -420,17 +416,12 @@ def populate_fig(fig, question_ids, user_id, legends):
                     question specified by the parameters.
     """
     for i, question_ids_subset in enumerate(question_ids):
-        data = []
         closed_answer_options = get_all_closed_answers(question_ids_subset[0])
 
-        for question_id in question_ids_subset:
-            closed_answers = get_all_closed_answers(question_id)
-            answers = get_closed_answers(user_id, question_id)
-            data.append(count_answers(answers, closed_answers))
+        data = [count_answers(get_closed_answers(user_id, question_id), get_all_closed_answers(question_id)) for
+                question_id in question_ids_subset]
 
-        answer_descriptions = []
-        for answer in closed_answer_options:
-            answer_descriptions.append(answer.answer_description)
+        answer_descriptions = [answer.answer_description for answer in closed_answer_options]
 
         showlegend = bool(i == 0)
 

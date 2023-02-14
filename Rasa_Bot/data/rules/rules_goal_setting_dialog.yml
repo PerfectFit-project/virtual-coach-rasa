@@ -7,7 +7,7 @@ rules:
 ## 1 Introduce goal setting dialog
 - rule: introduce goal setting dialog
   steps:
-  - intent: goal_setting_dialog  # for testing
+  - intent: EXTERNAL_trigger_goal_setting
   - action: action_set_slot_goal_setting_dialog
   - action: utter_goal_setting_greeting
   - action: how_doing_form

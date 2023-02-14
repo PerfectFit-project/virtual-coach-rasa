@@ -23,6 +23,7 @@ actions:
   - action_upload_file
   - action_send_metadata
   - action_set_file_path
+  - action_delete_file
 
 
 responses:

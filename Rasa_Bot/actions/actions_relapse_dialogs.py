@@ -234,7 +234,11 @@ class ShowBarchartDifficultSituations(Action):
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
 
         filepath = '/app/barchart_difficult_situations.PNG'
-        fig.write_image("barchart_difficult_situations.PNG")
+
+        try:
+            fig.write_image("barchart_difficult_situations.PNG")
+        except Exception:
+            logging.info("File upload unsuccessful.")
 
         return [SlotSet("upload_file_path", filepath)]
 
@@ -264,7 +268,11 @@ class ShowBarchartDifficultSituationsPa(Action):
         fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
 
         filepath = '/app/barchart_difficult_situations_pa.PNG'
-        fig.write_image("barchart_difficult_situations_pa.PNG")
+
+        try:
+            fig.write_image("barchart_difficult_situations_pa.PNG")
+        except Exception:
+            logging.info("File upload unsuccessful.")
 
         return [SlotSet("upload_file_path", filepath)]
 

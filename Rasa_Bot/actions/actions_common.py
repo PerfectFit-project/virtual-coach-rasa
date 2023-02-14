@@ -58,11 +58,9 @@ class SendMetadata(Action):
         """
         id_file = tracker.get_slot("uploaded_file_id")
         dispatcher.utter_message(
-            json_message={"text": "image",
+            json_message={"text": "Click on the image to see the full picture",
                           "attachmentIds": [id_file]},
         )
-        file_path = tracker.get_slot("upload_file_path")
-        os.remove(file_path)
         return[]
 
 
@@ -83,6 +81,20 @@ class UploadFile(Action):
         logging.info(response)
 
         return[SlotSet("uploaded_file_id", file_id)]
+
+class DeleteFile(Action):
+    def name(self):
+        return "action_delete_file"
+
+    async def run(self, dispatcher, tracker, domain):
+        file_path = tracker.get_slot("upload_file_path")
+
+        try:
+            os.remove(file_path)
+        except FileNotFoundError:
+            logging.info("File to remove not found.")
+
+        return[]
 
 
 class SetFilePath(Action):

@@ -158,6 +158,7 @@ rules:
   - action: show_barchart_difficult_situations
   - action: action_upload_file
   - action: action_send_metadata
+  - action: action_delete_file
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false
@@ -362,9 +363,10 @@ rules:
   - action: utter_smoke_lapse_12
   - action: utter_smoke_lapse_13
   - action: utter_smoke_lapse_14
-  - action: show_barchart_difficult_situations # TODO: send bar diagram moeilijke situaties
+  - action: show_barchart_difficult_situations
   - action: action_upload_file
   - action: action_send_metadata
+  - action: action_delete_file
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false
@@ -743,9 +745,10 @@ rules:
   - action: utter_pa_lapse_5
   - action: utter_pa_lapse_6
   - action: utter_pa_lapse_7
-  - action: show_barchart_difficult_situations_pa # TODO: implement action
+  - action: show_barchart_difficult_situations_pa
   - action: action_upload_file
   - action: action_send_metadata
+  - action: action_delete_file
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false

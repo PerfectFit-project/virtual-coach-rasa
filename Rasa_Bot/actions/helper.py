@@ -263,7 +263,7 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
 
     return rnd_activities
 
-def get_closed_answers(user_id, question_id):
+def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
     """
        Get the closed answer responses associated with the given user and question.
         Args:
@@ -290,7 +290,7 @@ def get_closed_answers(user_id, question_id):
 
     return closed_answers
 
-def get_all_closed_answers(question_id):
+def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
     """
        Get all the possible closed answers associated with a given question id.
         Args:
@@ -314,7 +314,7 @@ def get_all_closed_answers(question_id):
 
     return closed_answers
 
-def get_open_answers(user_id, question_id):
+def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     """
        Get the open answer responses associated with the given user and question.
         Args:
@@ -327,7 +327,7 @@ def get_open_answers(user_id, question_id):
     """
     session = get_db_session(db_url=DATABASE_URL)
 
-    closed_answers = (
+    open_answers = (
         session.query(
             DialogOpenAnswers
         )
@@ -338,9 +338,10 @@ def get_open_answers(user_id, question_id):
         .all()
     )
 
-    return closed_answers
+    return open_answers
 
-def count_answers(answers, closed_answer_options):
+def count_answers(answers: List[DialogClosedAnswers],
+                  closed_answer_options: List[ClosedAnswers]) -> List[int]:
     """
        Count up the closed_answer responses for each answer option.
         Args:
@@ -356,10 +357,8 @@ def count_answers(answers, closed_answer_options):
     result = [
         len(
             [answer for answer in answers if answer.closed_answers_id == closed_answer.closed_answers_id]
-        ) for
-              closed_answer in closed_answer_options
+        ) for closed_answer in closed_answer_options
     ]
-
     return result
 
 
@@ -381,7 +380,7 @@ def week_day_to_numerical_form(week_day):
         return 7
     return -1
 
-def add_subplot(fig, x_axis, data, figure_specifics):
+def add_subplot(fig, x_axis: List[str], data: List[List[int]], figure_specifics) -> Any:
     """
        Add a barchart subplot to a given figure, with the following data.
         Args:
@@ -403,7 +402,7 @@ def add_subplot(fig, x_axis, data, figure_specifics):
     # Change the bar mode
     return fig
 
-def populate_fig(fig, question_ids, user_id, legends):
+def populate_fig(fig, question_ids: List[int], user_id: int, legends) -> Any:
     """
        Populate a given figure with the responses for the closed answers,
        associated with the specific user.

@@ -123,7 +123,7 @@ class ActionGoalSettingContinueAfterPlan(Action):
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]
 
-        elif current_dialog == PreparationInterventionComponents.GOAL_SETTING:
+        if current_dialog == PreparationInterventionComponents.GOAL_SETTING:
             return [FollowupAction('utter_goal_setting_pa_expl_1')]
 
         return None

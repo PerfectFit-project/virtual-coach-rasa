@@ -356,7 +356,8 @@ def count_answers(answers: List[DialogClosedAnswers],
     """
     result = [
         len(
-            [answer for answer in answers if answer.closed_answers_id == closed_answer.closed_answers_id]
+            [answer for answer in answers if
+             answer.closed_answers_id == closed_answer.closed_answers_id]
         ) for closed_answer in closed_answer_options
     ]
     return result
@@ -418,8 +419,8 @@ def populate_fig(fig, question_ids: List[int], user_id: int, legends) -> Any:
     for i, question_ids_subset in enumerate(question_ids):
         closed_answer_options = get_all_closed_answers(question_ids_subset[0])
 
-        data = [count_answers(get_closed_answers(user_id, question_id), get_all_closed_answers(question_id)) for
-                question_id in question_ids_subset]
+        data = [count_answers(get_closed_answers(user_id, question_id),
+                get_all_closed_answers(question_id)) for question_id in question_ids_subset]
 
         answer_descriptions = [answer.answer_description for answer in closed_answer_options]
 

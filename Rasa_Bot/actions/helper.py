@@ -353,12 +353,13 @@ def count_answers(answers, closed_answer_options):
                     Example... [2, 1, 3] for ["At the gym", "At home", "Outside"]
 
     """
-       result = [
+    result = [
         len(
             [answer for answer in answers if answer.closed_answers_id == closed_answer.closed_answers_id]
         ) for
               closed_answer in closed_answer_options
     ]
+
     return result
 
 

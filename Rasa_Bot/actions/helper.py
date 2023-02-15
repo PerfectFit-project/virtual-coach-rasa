@@ -403,7 +403,7 @@ def add_subplot(fig, x_axis: List[str], data: List[List[int]], figure_specifics)
     # Change the bar mode
     return fig
 
-def populate_fig(fig, question_ids: List[int], user_id: int, legends) -> Any:
+def populate_fig(fig, question_ids: List[List[int]], user_id: int, legends) -> Any:
     """
        Populate a given figure with the responses for the closed answers,
        associated with the specific user.

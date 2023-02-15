@@ -1,0 +1,16 @@
+# Rules for the closing dialog
+version: "3.1"
+
+rules:
+
+# Rules for congratulating
+- rule: congratulate user for closing dialog
+  steps:
+  - intent: closing_dialog  # For testing
+  - action: action_get_name_from_database
+  - action: utter_greet
+  - action: utter_closing_congratualate_1
+  - action: utter_closing_congratualate_2
+  - action: utter_closing_congratualate_3
+  - action: utter_closing_congratualate_4
+  - action: utter_closing_congratualate_5

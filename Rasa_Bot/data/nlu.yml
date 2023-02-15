@@ -153,3 +153,11 @@ nlu:
     - "file"
     - "File"
     - "Start file"
+
+- intent: closing_dialog
+  examples: |
+    - "closing dialog"
+    - "clsing dalg"
+    - "colsing dialgo"
+    - "closign dailog"
+    - "closin dialo"

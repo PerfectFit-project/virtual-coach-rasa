@@ -1,0 +1,43 @@
+version: "3.1"
+
+intents:
+  - closing_dialog
+
+
+slots:
+#  smoke_or_pa:
+#    type: categorical
+#    values:
+#      - 1
+#      - 2
+#    influence_conversation: true
+#    mappings:
+#      - type: from_text
+#        conditions:
+#          - active_loop: smoke_or_pa_form
+
+
+responses:
+# Congratulating
+  utter_closing_congratualate_1:
+    - text: "Gefeliciteerd, je hebt het hele Perfect Fit programma gedaan!🥳"
+  utter_closing_congratualate_2:
+    - text: "Heel goed dat je het hebt volgehouden tot het einde."
+  utter_closing_congratualate_3:
+    - text: "Misschien heb je aan het begin wel een beloning voor jezelf bedacht, voor als je klaar bent met Perfect
+             Fit. Dat is nu!"
+  utter_closing_congratualate_4:
+    - text: "Tijd dus om jezelf te belonen. Je hebt het verdiend.🏆"
+  utter_closing_congratualate_5:
+    - text: "Heb je niks bedacht, of weet je het niet meer? Je mag natuurlijk ook nu iets bedenken.💭"
+  utter_closing_congratualate_6:
+    - text: "Ik wil graag met jou bekijken hoe het is gegaan met meer bewegen en stoppen met roken! En wat je hebt bereikt."
+
+#actions:
+#  - action_check_reasons
+
+
+#forms:
+#  hrs_new_activity_form:
+#    required_slots:
+#      - hrs_new_activity_slot

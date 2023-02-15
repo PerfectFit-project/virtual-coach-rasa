@@ -381,7 +381,7 @@ def week_day_to_numerical_form(week_day):
         return 7
     return -1
 
-def add_subplot(fig, x_axis: List[str], data: List[List[int]], figure_specifics) -> Any:
+def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     """
        Add a barchart subplot to a given figure, with the following data.
         Args:
@@ -397,13 +397,14 @@ def add_subplot(fig, x_axis: List[str], data: List[List[int]], figure_specifics)
         legend, color = legends[i]
         fig.add_trace(
             go.Bar(legendgroup=legend, name=legend, x=x_axis, y=y_axis,
-                   showlegend=showlegend, marker_color=color),
+                   showlegend=showlegend, marker_color=color, text=y_axis),
             row=row, col=column
         )
+    fig.update_yaxes(visible=False, showticklabels=False)
     # Change the bar mode
     return fig
 
-def populate_fig(fig, question_ids: List[List[int]], user_id: int, legends) -> Any:
+def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
     """
        Populate a given figure with the responses for the closed answers,
        associated with the specific user.

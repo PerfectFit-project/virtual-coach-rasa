@@ -231,7 +231,8 @@ class ShowBarchartDifficultSituations(Action):
 
         fig = populate_fig(fig, question_ids, user_id, legends)
 
-        fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
+        fig.update_layout(height=1200, width=800, title_text="Op deze grafieken zie je hoe vaak je"
+                                     " in een bepaalde situatie was toen je")
 
         filepath = '/app/barchart_difficult_situations.PNG'
 
@@ -265,7 +266,9 @@ class ShowBarchartDifficultSituationsPa(Action):
 
         fig = populate_fig(fig, question_ids, user_id, legends)
 
-        fig.update_layout(height=1200, width=600, title_text="Jouw moeilijke situaties")
+        fig.update_layout(height=1200, width=800, title_text="Op deze grafieken"
+                          " zie je hoe vaak je in een bepaalde situatie was toen "
+                          "het moeilijk vond om in beweging te komen")
 
         filepath = '/app/barchart_difficult_situations_pa.PNG'
 

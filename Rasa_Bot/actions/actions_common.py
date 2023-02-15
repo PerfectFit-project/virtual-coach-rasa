@@ -58,7 +58,7 @@ class SendMetadata(Action):
         """
         id_file = tracker.get_slot("uploaded_file_id")
         dispatcher.utter_message(
-            json_message={"text": "Click on the image to see the full picture",
+            json_message={"text": "Klik op het plaatje",
                           "attachmentIds": [id_file]},
         )
         return[]

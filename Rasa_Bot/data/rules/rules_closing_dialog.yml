@@ -14,3 +14,50 @@ rules:
   - action: utter_closing_congratualate_3
   - action: utter_closing_congratualate_4
   - action: utter_closing_congratualate_5
+  - action: utter_closing_pa_1
+  - action: utter_closing_pa_2  # TODO: insert number of steps
+  - action: utter_closing_pa_3
+  - action: utter_closing_pa_4
+  - action: utter_closing_pa_5  # TODO: insert goal in utter
+  - action: closing_pa_evaluation_form
+  - active_loop: closing_pa_evaluation_form
+  wait_for_user_input: false
+
+## 2a goal achieved
+- rule: smoke hrs system suggest activity
+  condition:
+  - active_loop: closing_pa_evaluation_form
+  steps:
+  - action: closing_pa_evaluation_form
+  - active_loop: null
+  - slot_was_set:
+    - closing_pa_evaluation: 1
+  - action: utter_closing_pa_6
+  - action: utter_closing_pa_7
+  - action: utter_closing_pa_8
+
+## 2b goal almost achieved
+- rule: smoke hrs system suggest activity
+  condition:
+  - active_loop: closing_pa_evaluation_form
+  steps:
+  - action: closing_pa_evaluation_form
+  - active_loop: null
+  - slot_was_set:
+    - closing_pa_evaluation: 2
+  - action: utter_closing_pa_9
+  - action: utter_closing_pa_10
+  - action: utter_closing_pa_11
+
+## 2c goal not achieved
+- rule: smoke hrs system suggest activity
+  condition:
+  - active_loop: closing_pa_evaluation_form
+  steps:
+  - action: closing_pa_evaluation_form
+  - active_loop: null
+  - slot_was_set:
+    - closing_pa_evaluation: 3
+  - action: utter_closing_pa_12
+  - action: utter_closing_pa_13
+  - action: utter_closing_pa_14

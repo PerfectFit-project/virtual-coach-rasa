@@ -5,20 +5,21 @@ intents:
 
 
 slots:
-#  smoke_or_pa:
-#    type: categorical
-#    values:
-#      - 1
-#      - 2
-#    influence_conversation: true
-#    mappings:
-#      - type: from_text
-#        conditions:
-#          - active_loop: smoke_or_pa_form
+  closing_pa_evaluation:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_pa_evaluation_form
 
 
 responses:
-# Congratulating
+# 1 Congratulating
   utter_closing_congratualate_1:
     - text: "Gefeliciteerd, je hebt het hele Perfect Fit programma gedaan!🥳"
   utter_closing_congratualate_2:
@@ -33,11 +34,48 @@ responses:
   utter_closing_congratualate_6:
     - text: "Ik wil graag met jou bekijken hoe het is gegaan met meer bewegen en stoppen met roken! En wat je hebt bereikt."
 
-#actions:
-#  - action_check_reasons
+# 2 PA
+  utter_closing_pa_1:
+    - text: "Laten we eerst kijken naar bewegen.🚶🏃"
+  utter_closing_pa_2:
+    - text: "Je hebt steeds je stappen bijgehouden. In totaal heb je [insert total number of steps over entire Perfect
+             Fit program] stappen gezet tijdens Perfect Fit!🚶"  # TODO: insert number of steps
+  utter_closing_pa_3:
+    - text: "Misschien zijn het er zelfs nog wel meer, als je de tracker niet altijd om had."
+  utter_closing_pa_4:
+    - text: "Toen je begon met Perfect Fit heb je ook een beweegdoel bedacht, voor aan het eind van het programma."
+  utter_closing_pa_5:
+    - text: "Dit was jouw doel: [insert new_goal]"  # TODO: insert goal
+  utter_ask_closing_pa_evaluation:
+    - text: "Hoe is het gegaan met dit doel? Typ '1' als je het doel hebt bereikt. 
+             Typ '2' als je het doel bijna hebt bereikt. 
+             Typ '3' als je het doel niet hebt bereikt."
+  utter_closing_pa_6:
+    - text: "Geweldig! Heel knap dat je je doel hebt bereikt en dat het is gelukt om meer te gaan bewegen.👏 "
+  utter_closing_pa_7:
+    - text: "Je hebt vast gemerkt dat het bewegen makkelijker gaat. Misschien is het zelfs al een nieuwe gewoonte aan
+             het worden."
+  utter_closing_pa_8:
+    - text: "Ik hoop dat je blij bent met wat je hebt bereikt! We gaan straks kijken hoe je het bewegen kunt
+             volhouden.💪"
+  utter_closing_pa_9:
+    - text: "Wat goed dat je meer bent gaan bewegen! Dat gaat echt de goede kant op."
+  utter_closing_pa_10:
+    - text: "Het is belangrijk om te letten op wat er al goed gaat."
+  utter_closing_pa_11:
+    - text: "We gaan straks kijken hoe je kunt blijven bewegen en je doel kunt halen.🚶"
+  utter_closing_pa_12:
+    - text: "Goed dat je het aangeeft. Het is niet altijd fijn om hier zo bij stil te staan."
+  utter_closing_pa_13:
+    - text: "Maar denk ook aan wat er wel gelukt is.✅"
+  utter_closing_pa_14:
+    - text: "Je bent iets nieuws aan het doen. Dan is het veel belangrijker wat er al lukt, dan wat er nog niet lukt."
+
+actions:
+  - validate_closing_pa_evaluation_form
 
 
-#forms:
-#  hrs_new_activity_form:
-#    required_slots:
-#      - hrs_new_activity_slot
+forms:
+  closing_pa_evaluation_form:
+    required_slots:
+      - closing_pa_evaluation

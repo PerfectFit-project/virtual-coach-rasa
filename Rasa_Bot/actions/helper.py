@@ -8,6 +8,7 @@ from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
                                               DialogOpenAnswers, 
                                               InterventionActivity,
+                                              InterventionActivitiesPerformed,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
@@ -41,6 +42,22 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
                                 datetime=datetime.datetime.now().astimezone(TIMEZONE))
     selected.dialog_closed_answers.append(entry)
     session.commit()  # Update database
+
+
+def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
+    session = get_db_session(db_url=DATABASE_URL)
+
+    user_inputs = (
+        session.query(
+            InterventionActivitiesPerformed
+        )
+        .filter(
+            InterventionActivitiesPerformed.users_nicedayuid == user_id,
+            InterventionActivitiesPerformed.intervention_activity_id == activity_id
+        ).all()
+    )
+
+    return user_inputs
 
 
 def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answers_values: str):

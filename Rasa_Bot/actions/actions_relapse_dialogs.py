@@ -253,16 +253,16 @@ class ShowBarchartDifficultSituationsPa(Action):
 
         fig = make_subplots(
             rows=3, cols=1,
-            subplot_titles=("Zou je met iemand actief zijn?",
+            subplot_titles=("Wat je overdag verder deed?",
                             "Reden niet lichamelijk actief",
-                            "Wat je vandaag verder deed")
+                            "Zou je met iemand actief zijn?")
         )
 
         legends = [("Obstakels bewegen", "blue")]
 
-        question_ids = [[[DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value]],
+        question_ids = [[[DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]],
                         [[DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value]],
-                        [[DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]]]
+                        [[DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value]]]
 
         fig = populate_fig(fig, question_ids, user_id, legends)
 

@@ -24,7 +24,7 @@ rules:
   wait_for_user_input: false
 
 ## 2a goal achieved
-- rule: smoke hrs system suggest activity
+- rule: pa goal achieved
   condition:
   - active_loop: closing_pa_evaluation_form
   steps:
@@ -35,9 +35,10 @@ rules:
   - action: utter_closing_pa_6
   - action: utter_closing_pa_7
   - action: utter_closing_pa_8
+  - action: closing_continue_after_pa
 
 ## 2b goal almost achieved
-- rule: smoke hrs system suggest activity
+- rule: pa goal almost achieved
   condition:
   - active_loop: closing_pa_evaluation_form
   steps:
@@ -48,9 +49,11 @@ rules:
   - action: utter_closing_pa_9
   - action: utter_closing_pa_10
   - action: utter_closing_pa_11
+  - action: closing_continue_after_pa
+
 
 ## 2c goal not achieved
-- rule: smoke hrs system suggest activity
+- rule: pa goal not achieved
   condition:
   - active_loop: closing_pa_evaluation_form
   steps:
@@ -61,3 +64,64 @@ rules:
   - action: utter_closing_pa_12
   - action: utter_closing_pa_13
   - action: utter_closing_pa_14
+  - action: utter_closing_pa_15
+  - action: closing_continue_after_pa
+
+## 3a0: sucessful quitter
+- rule: resume smoking after pa
+  steps:
+  - action: action_closing_get_smoking_status
+  - slot_was_set:
+    - closing_smoking_status: 1
+  - action: utter_closing_smoke_1
+  - action: closing_lapse_info_correct_form
+  - active_loop: closing_lapse_info_correct_form
+  wait_for_user_input: false
+
+## 3a1: sucessful quitter
+- rule: smoking indeed succesful
+  condition:
+    - active_loop: closing_lapse_info_correct_form
+  steps:
+  - action: closing_lapse_info_correct_form
+  - slot_was_set:
+    - closing_lapse_info_correct: 1
+  - active_loop: null
+  - action: utter_closing_smoke_succes_1
+  - action: utter_closing_smoke_succes_2
+  - action: utter_closing_smoke_succes_3  # TODO: add delay of 10s for next utter
+  - action: utter_closing_smoke_succes_4
+  - action: utter_closing_smoke_succes_5
+  - action: utter_closing_smoke_succes_6
+  - action: utter_closing_smoke_succes_7
+  - action: utter_closing_smoke_succes_8
+
+## 3a2: sucessful quitter - but not
+- rule: smoking actually unsuccesful
+  condition:
+    - active_loop: closing_lapse_info_correct_form
+  steps:
+  - action: closing_lapse_info_correct_form
+  - active_loop: null
+  - slot_was_set:
+    - closing_lapse_info_correct: 2
+  - active_loop: null
+  - action: closing_continue_after_lapse_info_incorrect  # TODO: Fix this pathway
+
+
+## 3c smoking had relapse
+- rule: resume smoking after pa relapse
+  steps:
+  - action: action_closing_get_smoking_status
+  - slot_was_set:
+    - closing_smoking_status: 2
+  - action: utter_closing_smoke_1
+  - action: utter_closing_smoke_lapse_1  # TODO: fix this pathway
+  - action: utter_closing_smoke_lapse_2
+  - action: utter_closing_smoke_lapse_3
+  - action: utter_closing_smoke_lapse_4
+  - action: utter_closing_smoke_lapse_5
+  - action: utter_closing_smoke_lapse_6
+  - action: utter_closing_smoke_lapse_7
+  - action: utter_closing_smoke_lapse_8
+  - action: utter_closing_smoke_lapse_9

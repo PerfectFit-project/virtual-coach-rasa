@@ -17,6 +17,25 @@ slots:
         conditions:
           - active_loop: closing_pa_evaluation_form
 
+  closing_smoking_status:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+
+  closing_lapse_info_correct:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_lapse_info_correct_form
 
 responses:
 # 1 Congratulating
@@ -70,12 +89,71 @@ responses:
     - text: "Maar denk ook aan wat er wel gelukt is.✅"
   utter_closing_pa_14:
     - text: "Je bent iets nieuws aan het doen. Dan is het veel belangrijker wat er al lukt, dan wat er nog niet lukt."
+  utter_closing_pa_15:
+    - text: "We gaan straks kijken hoe je verder kunt gaan met bewegen.🚶"
+
+# 3 Smoke
+  utter_closing_smoke_1:
+    - text: "Maar eerst wil ik met je kijken naar stoppen-met-roken."
+  utter_ask_closing_lapse_info_correct:
+    - text: "Als ik het goed zie, heb jij in de laatste 4 weken niet gerookt. Klopt dat?
+             Typ '1' voor JA, DAT KLOPT. 👍
+             Typ '2' voor NEE, DAT KLOPT NIET. 👎"
+  utter_closing_smoke_succes_1:
+    - text: "Het is je gelukt om te stoppen met roken!👏 Voortaan ben jij dus een niet-roker. Ontzettend knap gedaan."
+  utter_closing_smoke_succes_2:
+    - text: "Een tijdje geleden hebben we samen nagedacht over wie je wilde zijn, als je zou stoppen met roken en meer
+             zou bewegen."
+  utter_closing_smoke_succes_3:
+    - text: "Weet je nog hoe dat er uit zag? Probeer dat weer voor je te zien.💭"
+  utter_closing_smoke_succes_4:
+    - text: "Misschien is dit nu al wel zo. Of misschien nog niet helemaal, maar dan ben je goed op weg."
+  utter_closing_smoke_succes_5:
+    - text: "Sta eens stil bij wat je hebt bereikt. Je mag echt trots zijn op jezelf💪, want stoppen met roken is niet
+             makkelijk. En meer bewegen ook niet."
+  utter_closing_smoke_succes_6:
+    - text: "Jij hebt doorgezet, omdat je weet waarom je dit wilt."
+  utter_closing_smoke_succes_7:
+    - text: "Bedenk eens wat het allemaal oplevert, dat je niet meer rookt en meer beweegt. Voor jezelf en de mensen
+             die belangrijk voor jou zijn.💭"
+  utter_closing_smoke_succes_8:
+    - text: "Je kunt dit ook opschrijven, als je wilt.✍️"
+
+  utter_closing_smoke_lapse_1:
+    - text: "Je hebt in de afgelopen tijd hard gewerkt en geoefend om niet te roken."
+  utter_closing_smoke_lapse_2:
+    - text: "Door te oefenen ben je weer dichterbij een rookvrij leven. Ook als je nog wel eens gerookt hebt."
+  utter_closing_smoke_lapse_3:
+    - text: "Oefenen is belangrijk. Bijna niemand stopt in 1 keer met roken."
+  utter_closing_smoke_lapse_4:
+    - text: "Roken is heel verslavend. Maar jij hebt de moed om dit te veranderen!💪"
+  utter_closing_smoke_lapse_5:
+    - text: "Een tijdje geleden hebben we samen nagedacht over wie je wilde zijn, als je zou stoppen met roken en meer
+             zou bewegen."
+  utter_closing_smoke_lapse_6:
+    - text: "Weet je nog hoe dat er uit zag? Probeer dat weer voor je te zien.💭"
+  utter_closing_smoke_lapse_7:
+    - text: "Houd dat doel voor ogen!"
+  utter_closing_smoke_lapse_8:
+    - text: "Bedenk eens wat het allemaal oplevert, als je niet meer rookt en meer beweegt. Voor jezelf en de mensen
+             die belangrijk voor jou zijn.💭"
+  utter_closing_smoke_lapse_9:
+    - text: "Je kunt dit ook opschrijven, als je wilt.✍️"
+
 
 actions:
   - validate_closing_pa_evaluation_form
+  - action_closing_get_smoking_status
+  - closing_continue_after_pa
+  - closing_continue_after_lapse_info_incorrect
+  - validate_closing_lapse_info_correct_form
 
 
 forms:
   closing_pa_evaluation_form:
     required_slots:
       - closing_pa_evaluation
+
+  closing_lapse_info_correct_form:
+    required_slots:
+      - closing_lapse_info_correct

@@ -1,5 +1,5 @@
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, FollowupAction
 from virtual_coach_db.helper.definitions import (DialogExpectedDuration,
                                                  ExecutionInterventionComponentsTriggers)
 from rasa_sdk.executor import CollectingDispatcher
@@ -36,3 +36,53 @@ class ValidateClosingPaEvaluationForm(FormValidationAction):
             return {"closing_pa_evaluation": None}
 
         return {"closing_pa_evaluation": value}
+
+
+class ActionGetSmokingStatus(Action):
+    def name(self):
+        return "action_closing_get_smoking_status"
+
+    async def run(self, dispatcher, tracker, domain):
+        # get smoking status with 1: not (re)lapsed and 2: did (re)lapse last 4 weeks
+        smoking_status = 1  # TODO: get this from database
+        return [SlotSet('closing_smoking_status', smoking_status)]
+
+
+class ClosingContinueAfterPa(Action):
+    def name(self):
+        return "closing_continue_after_pa"
+
+    async def run(self, dispatcher, tracker, domain):
+        # checks in which dialog the user is, and resumes the correct flow accordingly
+        return [FollowupAction('action_closing_get_smoking_status')]
+
+
+class ClosingContinueAfterLapseInfoIncorrect(Action):
+    def name(self):
+        return "closing_continue_after_lapse_info_incorrect"
+
+    async def run(self, dispatcher, tracker, domain):
+        # checks in which dialog the user is, and resumes the correct flow accordingly
+        return [FollowupAction('utter_closing_smoke_lapse_1')]
+
+
+class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_closing_lapse_info_correct_form'
+
+    def validate_closing_lapse_info_correct(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate form whether info on (re)lapse is correct"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_closing_lapse_info_correct':
+            return {"closing_lapse_info_correct": None}
+
+        if not validator.validate_number_in_range_response(1, 2, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"closing_lapse_info_correct": None}
+
+        return {"closing_lapse_info_correct": value}

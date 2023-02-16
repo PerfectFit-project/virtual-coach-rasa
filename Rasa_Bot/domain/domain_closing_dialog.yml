@@ -141,6 +141,103 @@ responses:
     - text: "Je kunt dit ook opschrijven, als je wilt.✍️"
 
 
+# 4 Relapse prevention plan
+  utter_closing_prevention_plan_1:
+    - text: "Laten we nu samen een plan maken om verder te gaan met wat jij hebt bereikt. En om het vol te houden!💪"
+  utter_closing_prevention_plan_2:
+    - text: "Je hebt veel geleerd over situaties die lastig voor je waren. Misschien is het al makkelijker dan het
+             eerst was. Maar het is goed om op te blijven letten."
+  utter_closing_prevention_plan_3:
+    - text: "Ik wil graag, voor de laatste keer, met je kijken naar lastige situaties. En naar wat je kunt doen in deze
+             situaties."
+  utter_closing_prevention_plan_4:
+    - text: "Het is handig om je plan straks op te schrijven.✍️ Neem daarom even de tijd om een pen en papier te
+             pakken, of je telefoon, of typ het op een computer of tablet. Net wat jij handig vindt."
+  utter_closing_prevention_plan_5:
+    - text: "Hier zie je de situaties die het moeilijker voor jou kunnen maken om niet te roken:"
+  utter_closing_prevention_plan_6:
+    - text: "Het komt je vast bekend voor."
+  utter_closing_prevention_plan_7:
+    - text: "Hier zijn jouw lastige situaties voor bewegen🚶:"
+  utter_closing_prevention_plan_8:
+    - text: "Gelukkig kun je veel doen als het even moeilijk is!"
+  utter_closing_prevention_plan_9:
+    - text: "Hier zie je de oefeningen die jou het meest hebben geholpen. Die kun je natuurlijk blijven doen."
+  utter_closing_prevention_plan_10:
+    - text: "Ik zal jouw moeilijke situaties en de 5 oefeningen die jij het meest nuttig vindt (uit je EHBO-doos) ook
+             naar je e-mailen als we klaar zijn.🧰"
+  utter_closing_prevention_plan_11:
+    - text: "Daar zit de tekst van de oefeningen bij, zodat je ze nog eens kunt doen. Als je in een oefening iets naar
+             mij hebt gestuurd, voeg ik dat ook toe."
+  utter_closing_prevention_plan_12:
+    - text: "Er zijn vast nog andere dingen die jou hebben geholpen om niet te roken en meer te bewegen."
+  utter_closing_prevention_plan_13:
+    - text: "Neem even de tijd om dit te bedenken en op te schrijven.💭✍️"
+  utter_closing_prevention_plan_14:
+    - text: "Dat kost nu wat moeite, maar het zal je later helpen!"
+  utter_closing_prevention_plan_15:
+    - text: "Stel dat je het over een paar maanden moeilijk hebt, dan is het heel handig om dit te hebben. Je hoeft dan
+             niet meer te bedenken wat je kunt doen."
+  utter_closing_prevention_plan_16:
+    - text: "Goed gedaan!👍 Een goed plan is het halve werk."
+
+
+# 4 Relapse prevention plan - successful quitters
+  utter_closing_prevention_success_1:
+    - text: "Dan nog een hele belangrijke tip om niet weer te gaan roken: rook helemaal niks!"
+  utter_closing_prevention_success_2:
+    - text: "Zelfs niet 1 sigaret, en zelfs niet 1 trekje van een sigaret."
+  utter_closing_prevention_success_3:
+    - text: "Dat klinkt als een open deur, hè?🚪 Maar je kunt zomaar in de verleiding komen."
+  utter_closing_prevention_success_4:
+    - text: "Als je toch rookt ben je jezelf alleen maar aan het klieren. Het is echt zonde van wat je allemaal gedaan
+            hebt."
+  utter_closing_prevention_success_5:
+    - text: "Je hebt nu iets fantastisch bereikt, en dat wil je natuurlijk zo houden!"
+  utter_closing_prevention_success_6:
+    - text: "Ik heb er vertrouwen in dat jij dit kunt.💪"
+
+# 4 Relapse prevention plan - less successful quitters
+  utter_closing_prevention_lapse_1:
+    - text: "Maar zoals ik al zei: roken is heel verslavend."
+  utter_closing_prevention_lapse_2:
+    - text: "Soms is het makkelijker om helemaal te stoppen met roken, als je daar wat meer hulp bij hebt."
+  utter_closing_prevention_lapse_3:
+    - text: "De meeste mensen moeten heel vaak proberen om te stoppen met roken, voordat het echt lukt."
+  utter_closing_prevention_lapse_4:
+    - text: "Dat ligt niet aan die mensen, maar aan de sigaret."
+  utter_closing_prevention_lapse_5:
+    - text: "Misschien heb je behoefte om iemand te spreken? Je kunt bellen met de gratis Stoplijn (0800-1995).📞 De
+            Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Zij kunnen met jou bespreken wat bij jou
+            past, en hoe jij het beste kunt stoppen met roken."
+  utter_closing_prevention_lapse_6:
+    - text: "Je kunt ook altijd een afspraak maken met je huisarts. Die is vaak goed op de hoogte van wat er mogelijk
+             is in jouw buurt. Je huisarts kan je ook helpen om te stoppen met roken."
+  utter_closing_prevention_lapse_7:
+    - text: "En vergeet niet: door alles wat je hebt gedaan en geoefend ben je weer een stuk dichterbij een rookvrij
+             leven!"
+  utter_closing_prevention_lapse_8:
+    - text: "Dat heb je knap gedaan. Als je blijft volhouden, dan word je op een dag een niet-roker.💪 Geloof mij maar!"
+
+# 5 Closing
+  utter_closing_closing_1:
+    - text: "Dan was dit ons laatste gesprek. Je hebt hard gewerkt, en ik hoop dat Perfect Fit je heeft geholpen om
+             dichter bij jouw doelen te komen."
+  utter_closing_closing_2:
+    - text: "Dankjewel voor jouw inzet!🙏"
+  utter_closing_closing_3:
+    - text: "Ik zal je nog een e-mail sturen met wat we vandaag hebben besproken. En bewaar je eigen plan op een plek
+             waar je het makkelijk kunt vinden."
+  utter_closing_closing_4:
+    - text: "Dan nog heel wat anders. Perfect Fit wordt steeds verbeterd. Het is heel waardevol om te weten hoe je het
+             vond."
+  utter_closing_closing_5:
+    - text: "Ik vond het leuk om samen met jou het Perfect Fit programma te doen.🤝 Ik hoop dat jij er ook veel aan hebt
+             gehad."
+  utter_closing_closing_6:
+    - text: "Je krijgt nog een e-mail, met het belangrijkste van ons gesprek van vandaag. Dan wens ik je nu alle
+             goeds!😊"
+
 actions:
   - validate_closing_pa_evaluation_form
   - action_closing_get_smoking_status

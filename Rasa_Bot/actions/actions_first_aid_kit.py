@@ -99,7 +99,7 @@ class ActionGetFirstAidKit(Action):
                 kit_text += str(activity_idx + 1) + ") "
                 kit_text += activity.intervention_activity.intervention_activity_title
                 kit_text += ": " + activity.intervention_activity.intervention_activity_description
-                if not activity_idx == len(selected) - 1:
+                if not activity_idx == len(sorted_activities) - 1:
                     kit_text += "\n"
                 
                 activity_ids_list.append(activity.intervention_activity.intervention_activity_id)

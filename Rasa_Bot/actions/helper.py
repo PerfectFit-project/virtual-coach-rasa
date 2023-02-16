@@ -418,16 +418,20 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
                     question specified by the parameters.
     """
     for i, question_ids_subset in enumerate(question_ids):
-        closed_answer_options = get_all_closed_answers(question_ids_subset[0])
+        closed_answer_options = get_all_closed_answers(question_ids_subset[0][0])
 
-        data = [count_answers(get_closed_answers(user_id, question_id),
-                get_all_closed_answers(question_id)) for question_id in question_ids_subset]
+        data = []
+        for question_ids_list in question_ids_subset:
+            temp_data = [0] * len(closed_answer_options)
+            for question_id in question_ids_list:
+                closed_answers = get_all_closed_answers(question_id)
+                answers = get_closed_answers(user_id, question_id)
+                temp_data = [sum(x) for x in zip(temp_data, count_answers(answers, closed_answers))]
+            data.append(temp_data)
 
         answer_descriptions = [answer.answer_description for answer in closed_answer_options]
 
-        showlegend = bool(i == 0)
-
-        figure_specifics = [legends, i + 1, 1, showlegend]
+        figure_specifics = [legends, i + 1, 1, bool(i == 0)]
         fig = add_subplot(fig, answer_descriptions, data, figure_specifics)
 
     return fig

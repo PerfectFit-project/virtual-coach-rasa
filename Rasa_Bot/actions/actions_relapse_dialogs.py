@@ -217,17 +217,17 @@ class ShowBarchartDifficultSituations(Action):
                             "Met wie was je?")
         )
 
-        legends = [("Trek", "crimson"), ("Eenmalig gerookt", "blue"), ("Vaker gerookt", "orange")]
+        legends = [("Trek kreeg", "yellow"), ("Rookte", "red")]
 
-        question_ids = [[DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value,
-                        DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value,
-                        DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value],
-                        [DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value,
-                         DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value,
-                         DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value],
-                        [DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value,
-                         DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
-                         DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]]
+        question_ids = [[[DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value],
+                        [DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value,
+                        DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value]],
+                        [[DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value],
+                         [DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value]],
+                        [[DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value],
+                         [DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]]]
 
         fig = populate_fig(fig, question_ids, user_id, legends)
 
@@ -260,15 +260,16 @@ class ShowBarchartDifficultSituationsPa(Action):
 
         legends = [("Obstakels bewegen", "blue")]
 
-        question_ids = [[DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value],
-                        [DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value],
-                        [DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]]
+        question_ids = [[[DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value]],
+                        [[DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value]],
+                        [[DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]]]
 
         fig = populate_fig(fig, question_ids, user_id, legends)
 
         fig.update_layout(height=1200, width=800, title_text="Op deze grafieken"
-                          " zie je hoe vaak je in een bepaalde situatie was toen "
-                          "het moeilijk vond om in beweging te komen")
+                          " zie je hoe vaak je in een bepaalde situatie was toen <br>"
+                          "het moeilijk vond om in beweging te komen",
+                          showlegend=False)
 
         filepath = '/app/barchart_difficult_situations_pa.PNG'
 

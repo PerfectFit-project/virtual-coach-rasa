@@ -14,7 +14,8 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              UserPreferences)
+                                              UserPreferences,
+                                              ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 

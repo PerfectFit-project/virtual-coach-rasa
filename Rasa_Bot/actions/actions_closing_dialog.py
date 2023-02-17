@@ -57,15 +57,6 @@ class ClosingContinueAfterPa(Action):
         return [FollowupAction('action_closing_get_smoking_status')]
 
 
-class ClosingContinueAfterLapseInfoIncorrect(Action):
-    def name(self):
-        return "closing_continue_after_lapse_info_incorrect"
-
-    async def run(self, dispatcher, tracker, domain):
-        # checks in which dialog the user is, and resumes the correct flow accordingly
-        return [FollowupAction('utter_closing_smoke_lapse_1')]
-
-
 class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_closing_lapse_info_correct_form'

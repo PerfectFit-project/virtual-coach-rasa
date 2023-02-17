@@ -106,8 +106,15 @@ rules:
   - slot_was_set:
     - closing_lapse_info_correct: 2
   - active_loop: null
-  - action: closing_continue_after_lapse_info_incorrect  # TODO: Fix this pathway
-
+  - action: utter_closing_smoke_lapse_1
+  - action: utter_closing_smoke_lapse_2
+  - action: utter_closing_smoke_lapse_3
+  - action: utter_closing_smoke_lapse_4
+  - action: utter_closing_smoke_lapse_5
+  - action: utter_closing_smoke_lapse_6
+  - action: utter_closing_smoke_lapse_7
+  - action: utter_closing_smoke_lapse_8
+  - action: utter_closing_smoke_lapse_9
 
 ## 3c smoking had relapse
 - rule: resume smoking after pa relapse
@@ -116,7 +123,7 @@ rules:
   - slot_was_set:
     - closing_smoking_status: 2
   - action: utter_closing_smoke_1
-  - action: utter_closing_smoke_lapse_1  # TODO: fix this pathway
+  - action: utter_closing_smoke_lapse_1
   - action: utter_closing_smoke_lapse_2
   - action: utter_closing_smoke_lapse_3
   - action: utter_closing_smoke_lapse_4

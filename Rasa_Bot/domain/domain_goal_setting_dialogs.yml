@@ -1,6 +1,18 @@
 version: "3.1"
 
+intents:
+  - EXTERNAL_trigger_goal_setting
+
 slots:
+  # Branch 1 introduction
+  # slot required to ask the user how is he/she doing
+  how_doing_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: how_doing_form
   # the quit date chosen by the user for quitting smoking
   chosen_quit_date_slot:
     type: text
@@ -33,7 +45,177 @@ slots:
         conditions:
           - active_loop: goal_setting_plan_finished_form
 
+# ask if user wants explanation on cold turkey
+  extra_explanation_quiting:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: extra_explanation_form
+
+  which_sport:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: which_sport_form
+
+  first_pa_goal:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: first_pa_goal_form
+
+  testimonial_one_read:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: testimonial_one_read_form
+
+  testimonial_two_read:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: testimonial_two_read_form
+
+  read_second_testimonial:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: read_second_testimonial_form
+
+  testimonial_evaluation:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: testimonial_evaluation_form
+
+  second_pa_goal:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: second_pa_goal_form
+
+  why_pa_goal_important_values:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: why_pa_goal_important_form
+            requested_slot: why_pa_goal_important_values
+
+  why_pa_goal_important_nuance:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: why_pa_goal_important_form
+            requested_slot: why_pa_goal_important_nuance
+
+  pa_goal_reachable:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: pa_goal_reachable_form
+
+  refine_second_pa_goal:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: refine_second_pa_goal_form
+
+  finished_writing_pa:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: finished_writing_pa_form
+          
+  goal_setting_testimonial_1:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+      
+  goal_setting_testimonial_2:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
 responses:
+  # Branch 1 introduction
+  utter_goal_setting_greeting:
+    - text: "Hoi, wat leuk om je weer te spreken! 👋"
+  utter_ask_how_doing_slot:
+    - text: "Hoe gaat het met je?"
+  utter_thanks_for_sharing:
+    - text: "Bedankt voor het delen."
+  utter_goal_setting_1:
+    - text: "We gaan beginnen aan het volgende onderdeel van de voorbereidingsfase: doelen stellen. 🎯"
+  utter_goal_setting_2:
+    - text: "Afgelopen dagen heb je bijgehouden hoeveel je rookte en is gemeten hoeveel stappen je elke dag hebt gezet. 
+             Ook heb je nagedacht over jezelf in de toekomst. Dat helpt bij het stellen van doelen."
+  utter_goal_setting_3:
+    - text: "Maar waarom is het belangrijk om een doel te stellen? Een doel stellen zorgt ervoor dat je weet waar je
+             naar toe wilt werken. Dit kan helpen om gemotiveerd te blijven en je te richten op wat je wilt bereiken."
+  utter_goal_setting_4:
+    - text: "Bij het stellen van doelen is een goede voorbereiding belangrijk. Hier ga ik je bij helpen! We stellen
+             eerst een doel en maken dan een plan. Dit doen we voor stoppen met roken én voor meer bewegen."
+
+  # Branch 2a explenation goal setting smoking
+  utter_goal_setting_smoke_1:
+    - text: "Laten we eerst een doel stellen voor stoppen met roken. 🚭"
+  utter_goal_setting_smoke_2:
+    - text: "Hiervoor gaan we een stop-datum kiezen. Dit wordt de datum waarop je stopt met roken. 📅"
+  utter_goal_setting_smoke_3:
+    - text: "Het kan lastig kan zijn om in 1 keer te stoppen met roken. Onderzoek laat wel zien dat in 1 keer stoppen
+             met roken beter werkt dan langzaam aan stoppen. Ik raad daarom aan om in 1 keer te stoppen. 🛑"
+  utter_ask_extra_explanation_quiting:
+    - text: "Wil je meer uitleg over waarom in 1 keer stoppen het beste werkt? Of wil je gelijk doorgaan met het kiezen
+             van een stop-datum? Typ '1' als je meer uitleg wilt of typ '2' als je gelijk een stop-datum wil kiezen."
+
+ # Branch 2a1 extra explanation on cold turkey
+  utter_goal_setting_extra_explanation_1:
+    - text: "Wanneer je gaat stoppen met roken, werkt het vaak beter om in 1 keer te stoppen dan om langzaam af te
+             bouwen (te minderen). Het risico is namelijk dat je gaat minderen maar het echte stoppen blijft uitstellen.
+             "
+  utter_goal_setting_extra_explanation_2:
+    - text: "Ook geven veel mensen aan dat meteen stoppen duidelijkheid geeft. Bij afbouwen kan het aantrekkelijk zijn
+             om toch nog een extra keer te roken. En je kunt dan weer in je oude rookpatroon terug vallen. Niet roken
+             betekent 0 sigaretten. Deze duidelijke regel maakt het makkelijker om het vol te houden."
+
   utter_goal_setting_choose_date_1:
     - text: "Als je wilt kun je morgen al beginnen met stoppen met roken. 
             Maar je kunt ook kiezen voor een latere stop-datum, bijvoorbeeld over een week. 
@@ -44,7 +226,7 @@ responses:
     - text: "Ik help jou de komende weken en ik geef je tips, zodat je het niet alleen hoeft te doen!."
   utter_goal_setting_choose_date_3:
     - text: "Kies dus een datum tussen {first_possible_quit_date} en {last_possible_quit_date}.
-            Typ de datum op deze manier: dd/mm/jjjj. Dus eerst de dag/dan de maand/en dan het jaar. 
+            Typ de datum op deze manier: dd-mm-jjjj. Dus eerst de dag-dan de maand-en dan het jaar. 
             Je typt in totaal dus 8 getallen."
   utter_goal_setting_choose_date_4:
     - text: "Super! Je hebt nu een stop-datum. Deze is op {chosen_quit_date_slot}."
@@ -76,24 +258,249 @@ responses:
             Dit zal ik bijvoorbeeld doen door je meer uitleg te geven over stoppen met roken, je tips te geven en oefeningen te laten doen. 
             Deze oefeningen helpen je om vol te blijven houden!"
 
+
+# Branch 3a explanation on goal setting PA
+  utter_goal_setting_pa_expl_1:
+    - text: "Laten we nu kijken naar het doel om meer te gaan bewegen. 🎯"
+  utter_goal_setting_pa_expl_2:
+    - text: "Meer bewegen is goed voor zowel je lichaam als je brein en geheugen. Meer bewegen zorgt dus voor een goede
+            gezondheid. 😄 Daarnaast kan het stoppen met roken makkelijker zijn wanneer je meer beweegt. Ook kan meer
+            bewegen makkelijker zijn als je bent gestopt met roken."
+  utter_goal_setting_pa_expl_3:
+    - text: "Weinig bewegen en veel zitten is niet goed voor je. Probeer dus om niet te lang achter elkaar stil te
+            zitten."
+  utter_goal_setting_pa_expl_4:
+    - text: "Er zijn twee vormen van beweging: matig intensief en intensief. Onder matig intensief vallen activiteiten
+            als wandelen en fietsen 🚴. Onder intensief bewegen vallen de meeste sporten zoals hardlopen en voetballen
+            ⚽. Hieronder zie je een voorbeeld van verschillende sporten en hoe intensief deze sporten zijn:"
+  utter_goal_setting_pa_expl_5:
+    - text: "Maar wanneer beweeg je genoeg?"
+  utter_goal_setting_pa_expl_6:
+    - text: "In Nederland geldt het volgende advies voor bewegen: elke week minimaal 2 uur en 30 minuten matig
+            intensief bewegen of 1 uur en 15 minuten intensief te bewegen. Je kunt deze tijd ook verdelen over de week,
+            probeer dan steeds minimaal 10 minuten actief te zijn. ⏱"
+  utter_goal_setting_pa_expl_7:
+    - text: "Ik zal wat voorbeelden geven."
+  utter_goal_setting_pa_expl_8:
+    - text: "Voorbeeld 1: Stel je kiest ervoor om 2 uur en 30 minuten matig intensief te bewegen per week. Je verdeelt
+            deze tijd dan over de week. Je kan er bijvoorbeeld voor kiezen om 30 minuten matig intensief te bewegen op
+            maandag, 30 minuten op dinsdag, 30 minuten op donderdag en 1 uur op vrijdag. Zo heb je in totaal 2 uur en
+            30 minuten matig intensief bewogen. En ben je steeds minimaal 10 minuten actief geweest."
+  utter_goal_setting_pa_expl_9:
+    - text: "Voorbeeld 2: Je kunt er ook voor kiezen om 1 uur en 15 minuten intensief te bewegen per week. Je kunt dan
+            bijvoorbeeld op maandag 1 uur intensief sporten, en woensdag 15 minuten. Zo heb je in totaal 1 uur en 15
+            minuten intensief bewogen en ben je steeds minimaal 10 minuten actief geweest."
+  utter_goal_setting_pa_expl_10:
+    - text: "Om een beweegdoel te stellen is het niet alleen goed om te weten wat het advies is voor bewegen. Het is ook
+            belangrijk om te weten hoeveel je nu beweegt. We kijken hiervoor naar het aantal stappen dat jij elke dag
+            zet. 🚶"
+  utter_goal_setting_pa_expl_11:
+    - text: "In de afgelopen 9 dagen zette je ongeveer [Insert average amount of steps during previous 9 days] stappen
+            per dag!"
+
+
+# Branch 3b set longterm goal pa
+  utter_goal_setting_pa_set_1:
+    - text: "We gaan nu eerst nadenken over een lange-termijn doel voor bewegen. 🎯"
+  utter_goal_setting_pa_set_2:
+    - text: "Lange-termijn doelen gaan over wat je in de toekomst wilt bereiken. Het is belangrijk dat je een
+            lange-termijn doel stelt die specifiek, haalbaar en belangrijk voor je is. Ik ga je helpen om een passend
+            lange-termijn beweegdoel op te stellen."
+  utter_goal_setting_pa_set_3:
+    - text: "Over iets meer dan 3 maanden ben je klaar met het Perfect Fit programma. Waar zou je over 3 maanden willen
+            zijn qua beweging?"
+  utter_goal_setting_pa_set_4:
+    - text: "Laten we eerst nadenken over wat voor soort beweging je zou willen doen. 🚴 🚶 🏌️ 🏊 🏋️🧘"
+  utter_ask_which_sport:
+    - text: "Welke sport of soort beweging zou je graag willen doen? Typ nu de sport die je graag wilt doen.
+            Bijvoorbeeld 'wandelen', 'hardlopen', 'tennissen', 'dansen', 'yoga doen' of iets anders."
+  utter_too_few_charachters_sport:
+    - text: "Ik begrijp niet helemaal welke sport je bedoelt. Wil je nog een keer de sport typen die je graag wilt doen
+            om actiever te worden?"
+  utter_goal_setting_pa_set_5:
+    - text: "Super, je wilt dus vaker {which_sport}."
+  utter_goal_setting_pa_set_6:
+    - text: "Je weet nu welke sport je wilt doen. Laten we je beweegdoel nog wat verder uitbreiden."
+  utter_ask_first_pa_goal:
+    - text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport},
+            voor hoe lang, waar, en wil je het samen met iemand doen of alleen?"
+  utter_goal_setting_pa_set_7:
+    - text: "Oké! Goed dat je nagedacht hebt over je lange-termijn beweegdoel. Dit hoeft nog niet je definitieve doel te
+            zijn. We gaan eerst naar een voorbeeld kijken van iemand anders. Daarna kun je je doel nog aanpassen als je
+            wilt."
+  utter_goal_setting_pa_set_8:
+    - text: "Het voorbeeld is van iemand die zijn of haar beweegdoel heeft gehaald 🙋:"
+  utter_goal_setting_pa_set_9:
+    - text: '🏁 "{goal_setting_testimonial_1}"'
+  utter_ask_testimonial_one_read:
+    - text: "Typ 'klaar' als je het voorbeeld gelezen hebt."
+  utter_ask_testimonial_two_read:
+    - text: "Typ 'klaar' als je het voorbeeld gelezen hebt."
+
+# 3b1: second testimonial
+  utter_second_testimonial_1:
+    - text: "Hier is nog een voorbeeld van iemand die zijn of haar beweegdoel heeft gehaald 🙋🏾:"
+  utter_second_testimonial_2:
+    - text: '🏁 "{goal_setting_testimonial_2}"'
+  utter_ask_testimonial_evaluation:
+    - text: "Wat vind je van het voorbeeld / de voorbeelden? Zijn er dingen die jij hetzelfde zou willen doen? Typ je
+            antwoord naar mij. "
+  utter_second_testimonial_3:
+    - text: "Bedankt voor het delen!"
+  utter_second_testimonial_4:
+    - text: "Nadat je het voorbeeld / de voorbeelden gelezen hebt, heb je misschien ook een beter idee van je eigen
+            beweegdoel. Daarom kun je je doel nog aanpassen als dat je wilt. "
+  utter_second_testimonial_5:
+    - text: "Dit is het beweegdoel dat je eerder opgesteld hebt: {first_pa_goal}"
+  utter_second_testimonial_6:
+    - text: "Kijk nog eens naar je doel. Probeer je doel zo specifiek mogelijk te maken. Dit helpt je bij het behalen
+            van je doel. 🎯"
+  utter_ask_second_pa_goal:
+    - text: "Typ je doel nogmaals. Het doel kan dus anders zijn dan het doel dat je eerder opgesteld hebt."
+  utter_second_testimonial_7:
+    - text: "Super"
+  utter_second_testimonial_8:
+    - text: "Je hebt je beweegdoel nu zo specifiek mogelijk gemaakt. Het is goed om doelen te stellen die voor jou
+            belangrijk zijn en bij jou passen."
+  utter_second_testimonial_9:
+    - text: "Laten we daarom kijken waarom dit beweegdoel belangrijk voor jou is."
+  utter_second_testimonial_10:
+    - text: "Dit doel is belangrijk voor jouw vanwege: Familie 👪 - Gezondheid 💪 - Relaties 🤝 - Persoonlijke
+            ontwikkeling 💡 - Werk 🧑‍💼 - Vrienden 🧑‍🤝‍🧑 "
+  utter_ask_why_pa_goal_important_values:
+    - text: "Typ '1' voor Familie'. Typ '2' voor Gezondheid. Typ '3' voor Relaties. Typ '4' voor Persoonlijke
+            ontwikkeling. Typ '5' voor Werk. En typ '6' voor Vrienden."
+  utter_second_testimonial_11:
+    - text: "Ah, mooie keus!"
+  utter_ask_why_pa_goal_important_nuance:
+    - text: "Ik kan me voorstellen dat jouw {why_pa_goal_important_values} belangrijk voor je is/zijn. Kun je me iets
+            meer vertellen over waarom dit doel belangrijk is voor jouw {why_pa_goal_important_values}?"
+  utter_second_testimonial_12:
+    - text: "Mooi! Goed dat je nagedacht hebt over waarom jouw beweegdoel belangrijk voor je is. 💭"
+  utter_second_testimonial_13:
+    - text: "Dan gaan we nu alleen nog kijken of je doel ook haalbaar is binnen de komende 3 maanden. Je wilt namelijk
+            zeker weten dat je de tijd en mogelijkheid hebt om je doel te behalen."
+  utter_second_testimonial_14:
+    - text: "Hoe haalbaar is jouw beweegdoel: {second_pa_goal}? 🎯"
+  utter_ask_pa_goal_reachable:
+    - text: "Typ '1' wanneer je denkt dat je doel haalbaar is. Typ '2' wanneer je je doel aan wilt passen, omdat het je
+            te moeilijk lijkt. En typ '3' wanneer je je doel aan wilt passen, omdat het je te makkelijk lijkt. "
+  utter_second_testimonial_15:
+    - text: "Super! Een haalbaar, maar uitdagend doel vergroot de kans op succes. 🏆"
+  utter_second_testimonial_16:
+    - text: "Misschien is je beweegdoel een beetje te moeilijk. Het is oké om met een iets makkelijker doel te
+            beginnen."
+  utter_second_testimonial_17:
+    - text: "Misschien is je beweegdoel iets te makkelijk. Het is goed om jezelf een beetje uit te dagen."
+  utter_second_testimonial_18:
+    - text: "Je wilt je beweegdoel aanpassen. Dit is jouw eerder opgestelde doel: {second_pa_goal}."
+  utter_ask_refine_second_pa_goal:
+    - text: "Typ nu je nieuwe doel in. Een haalbaar, maar uitdagend doel vergroot de kans op succes. 🏆"
+  utter_second_testimonial_19:
+    - text: "Ik hoop dat je doel nu beter past."
+  utter_second_testimonial_20:
+    - text: "Goed! Je hebt nagedacht over een lange-termijn doel voor over 3 maanden dat specifiek, haalbaar en
+            belangrijk voor je is: {refine_second_pa_goal}"
+  utter_second_testimonial_21:
+    - text: "Dit lijkt mij een mooi doel om naartoe te werken! 🤗"
   utter_ask_chosen_quit_date_slot:
     - text: "Welke datum wil je stoppen met roken?"
   utter_ask_goal_setting_plan_finished_slot:
     - text: "Typ 'klaar' als je hier klaar mee bent."
+  utter_ask_read_second_testimonial:
+    - text: "Wil je nog een voorbeeld zien van iemand die zijn of haar beweegdoel heeft gehaald? Typ '1' als je nog een
+            voorbeeld wilt zien. Typ '2' als je door wilt gaan."
+
+# 3c step goal pa
+  utter_step_goal_pa_1:
+    - text: "Komende maanden ga ik je helpen om steeds wat meer te bewegen. Dit gaan we doen door jouw aantal stappen
+            per dag te verhogen. Zo zal je je fitter gaan voelen en zal je conditie verbeteren. Dit helpt je om je
+            lange-termijn doel te behalen. 🎯"
+  utter_step_goal_pa_2:
+    - text: "Wanneer je meer gaat bewegen is het belangrijk om dit langzaam op te bouwen. Als je een keer meer wilt doen
+            is dat geen probleem. Let er wel op dat je niet te veel, te snel doet. Dit kan leiden tot blessures. 🤕 Het
+            is beter om iedere dag ietsje meer te doen dan in 1 keer heel veel."
+  utter_step_goal_pa_3:
+    - text: "Ik zal je hierbij helpen. Dit doe ik door je elke dag een stappendoel te geven. Het doel komt voort uit
+            het aantal stappen dat je de dagen ervoor gezet hebt. Zo heb je elke dag een persoonlijk stappendoel die
+            haalbaar en uitdagend is. "
+  utter_step_goal_pa_4:
+    - text: "Daarom wordt je stappendoel voor morgen: [Insert 7th highest amount of steps during previous 9 days]
+            stappen. 🚶 "  # TODO: add this number
+  utter_step_goal_pa_5:
+    - text: "Nu we je stappendoel weten, kunnen we nadenken over hoe je dit doel gaat bereiken. Laten we daarom een
+            plan opstellen, net zoals je gedaan hebt voor stoppen met roken. 📝 Dit plan kan helpen om je stappendoelen
+            te halen."
+  utter_step_goal_pa_6:
+    - text: "Hoe kun jij jezelf helpen om je stappendoelen te halen en actiever te worden?"
+  utter_step_goal_pa_7:
+    - text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport}. Maar je kunt
+            natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
+            huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."
+  utter_step_goal_pa_8:
+    - text: "Om jezelf te helpen kun je bijvoorbeeld de avond voordat je gaat hardlopen je sportschoenen klaarzetten,
+            een 'sportmaatje' zoeken, je auto verder weg parkeren of een herinnering in je telefoon zetten om tijdens je
+            lunchpauze een rondje te wandelen. 📱"
+  utter_ask_finished_writing_pa:
+    - text: "Wat zou jou helpen om meer te bewegen en dichter bij je doelen te komen? Denk hier eens rustig over na. Pak
+            pen en papier en schrijf 3 dingen op die jij komende dagen kunt doen om jezelf te helpen. ✍️ 
+            Typ 'klaar' als je hiermee klaar bent."
+  utter_step_goal_pa_9:
+    - text: "Je kunt dit papier ook op een plek hangen waar je het vaak ziet, om jezelf hieraan te herinneren."
+  utter_step_goal_pa_10:
+    - text: "Een goede voorbereiding is het halve werk!"
+  utter_step_goal_pa_11:
+    - text: "Ik ga je helpen met het halen van je beweegdoelen. Ik zal je de komende tijd meer uitleg geven over bewegen
+            en je tips en oefeningen geven. 💡 Deze oefeningen helpen je om vol te blijven houden!"
   utter_goal_setting_wrong_date:
     - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13-07-2023. 
 
             Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. 
             Kun je je stop-datum nog een keer typen? "
 
+# 4 closing
+  utter_closing_1:
+    - text: "Geweldig! 👍 Nu heb je een stop-datum. En een dagelijks stappendoel die je gaat helpen om je lange-termijn
+            beweegdoel over 3 maanden te behalen. Daarnaast heb je ook nagedacht over een plan om je doelen te behalen.
+            Je hebt dus al goede stappen gezet! "
+  utter_closing_2:
+    - text: "De weg naar het behalen van doelen is niet altijd even makkelijk. 🆘 Dit is een proces met vallen en
+            opstaan. Ik zal zorgen dat je de nodige hulp krijgt."
+  utter_closing_3:
+    - text: "Ik heb vertrouwen in je. Zet 'm op! 💪"
 
 actions:
   - action_get_first_last_date
-  - goal_setting_continue_after_plan
+  - action_set_slot_goal_setting_dialog
+  - action_goal_setting_choose_testimonials
+  - action_goal_setting_continue_after_plan
+  - action_continue_testimonial_evaluation
+  - action_continue_change_pa_goal
+  - action_continue_step_goal_pa
   - validate_chosen_quit_date_form
   - validate_goal_setting_plan_finished_form
+  - validate_how_doing_form
+  - validate_extra_explanation_form
+  - validate_which_sport_form
+  - validate_first_pa_goal_form
+  - validate_testimonial_one_read_form
+  - validate_testimonial_two_read_form
+  - validate_read_second_testimonial_form
+  - validate_testimonial_evaluation_form
+  - validate_second_pa_goal_form
+  - validate_why_pa_goal_important_form
+  - validate_pa_goal_reachable_form
+  - validate_refine_second_pa_goal_form
+  - validate_finished_writing_pa_form
+  - action_set_file_path_pa_image
 
 forms:
+  # Branch 1 introduction
+  # form to ask the user how is he/she doing
+  how_doing_form:
+    required_slots:
+      - how_doing_slot
+
   chosen_quit_date_form:
     required_slots:
       - chosen_quit_date_slot
@@ -101,3 +508,52 @@ forms:
   goal_setting_plan_finished_form:
     required_slots:
       - goal_setting_plan_finished_slot
+
+  extra_explanation_form:
+    required_slots:
+      - extra_explanation_quiting
+
+  which_sport_form:
+    required_slots:
+      - which_sport
+
+  first_pa_goal_form:
+    required_slots:
+      - first_pa_goal
+
+  testimonial_one_read_form:
+    required_slots:
+      - testimonial_one_read
+
+  testimonial_two_read_form:
+    required_slots:
+      - testimonial_two_read
+
+  read_second_testimonial_form:
+    required_slots:
+      - read_second_testimonial
+
+  testimonial_evaluation_form:
+    required_slots:
+      - testimonial_evaluation
+
+  second_pa_goal_form:
+    required_slots:
+      - second_pa_goal
+
+  why_pa_goal_important_form:
+    required_slots:
+      - why_pa_goal_important_values
+      - why_pa_goal_important_nuance
+
+  pa_goal_reachable_form:
+    required_slots:
+      - pa_goal_reachable
+
+  refine_second_pa_goal_form:
+    required_slots:
+      - refine_second_pa_goal
+
+  finished_writing_pa_form:
+    required_slots:
+      - finished_writing_pa

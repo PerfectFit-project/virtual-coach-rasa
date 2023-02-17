@@ -1,0 +1,76 @@
+##Domain for preparation phase dialog
+intents:
+  - EXTERNAL_preparation_phase
+
+actions:
+  - action_expected_time_next_part
+  - action_set_slot_previous_dialog
+  - validate_next_part_now_or_later_form
+  - action_ask_new_time
+  - validate_pick_a_daypart_form
+  - action_schedule_next_preparation_phase
+  - action_start_next_dialog
+
+forms:
+  next_part_now_or_later_form:
+    required_slots:
+      - now_or_later
+  pick_a_daypart_form:
+    required_slots:
+      - chosen_daypart
+
+
+slots:
+ daypart_options_timestamp:
+   type: any
+   influence_conversation: false
+   mappings:
+     - type: custom
+ daypart_options_string:
+   type: text
+   influence_conversation: false
+   mappings:
+     - type: custom
+ chosen_daypart:
+   type: categorical
+   values:
+     - 1
+     - 2
+     - 3
+     - 4
+   influence_conversation: true
+   mappings:
+     - type: from_text
+       conditions:
+         - active_loop: pick_a_daypart_form
+ now_or_later:
+   type: categorical
+   values:
+     - 1
+     - 2
+   influence_conversation: true
+   mappings:
+     - type: from_text
+       conditions:
+         - active_loop: next_part_now_or_later_form
+ expected_next_time_interval:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+responses:
+  utter_finished_preparation_phase:
+    - text: "Je hebt zojuist weer een onderdeel van de voorbereidingsfase afgerond. Goed gedaan!👏"
+  utter_next_part:
+    - text: "Je kunt nu door naar het volgende onderdeel."
+  utter_ask_now_or_later:
+    - text: "Wil jij het volgende onderdeel nu doen of later? Typ '1' wanneer je nu tijd hebt om een oefening te doen. Typ '2' wanneer je de oefening liever later doet."
+  utter_lets_start:
+    - text: "Super, dan gaan we beginnen! 😊"
+  utter_preparation_delay_warning:
+    - text: "Oké. Het is wel belangrijk om alle onderdelen van de voorbereidingsfase te doorlopen voordat je stopt met roken en meer gaat bewegen. Zo ben je goed voorbereid!"
+  utter_ask_chosen_daypart:
+    - text: "{daypart_options_string}"
+  utter_see_you:
+    - text: "Prima, ik spreek je dan weer! 🙋"

@@ -1,0 +1,10 @@
+version: "3.1"
+
+rules:
+
+## Rules for the relapse dialog
+## 1a: Trigger weekly reflection dialog
+- rule: Activate weekly reflection
+  steps:
+  - intent: weekly_reflection
+  - action: action_trigger_weekly_reflection

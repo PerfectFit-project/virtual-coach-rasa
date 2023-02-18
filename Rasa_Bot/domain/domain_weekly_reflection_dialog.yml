@@ -4,6 +4,196 @@ intents:
   - weekly_reflection
 
 slots:
+  how_went_non_smoke:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: how_went_non_smoke_form
+
+  specific_moments:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: specific_moments_form
+
+  smoked_previous_week:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: smoked_previous_week_form
+
+  possible_smoking_situations:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: possible_smoking_situations_form
+
+  how_went_pa:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: how_went_pa_form
+
+  difficult_moments:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: difficult_moments_form
+
+  refresh_previous_week:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: refresh_previous_week_form
+
+  met_expectations:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: met_expectations_form
+
+  if_doable:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: if_doable_form
+
+  difficult_moments_next_week:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: difficult_moments_next_week_form
+
+  how_are_you:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: how_are_you_form
+
+  free_reflect_1:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: free_reflect_1_form
+
+  free_reflect_2:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: free_reflect_2_form
+
+  free_reflect_3:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: free_reflect_3_form
+
+  free_reflect_4:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: free_reflect_4_form
+
+  user_ready_1:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: user_ready_1_form
+
+  user_ready_2:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: user_ready_2_form
+
+  user_ready_3:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: user_ready_3_form
+
+  have_equipment:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: have_equipment_form
 
 responses:
   # 1. Congratulate
@@ -33,7 +223,7 @@ responses:
 
   # 4. Reflection on Non-Smoking
   # 4a How did the non-smoking go?
-  utter_ask_how_went_1:
+  utter_ask_how_went_non_smoke:
     - text: "Laten wij nu terugkijken hoe het niet-roken deze week ging. 
              Typ '1' als het heel goed ging 😄. 
              Typ '2' als het goed ging 🙂. 
@@ -131,7 +321,7 @@ responses:
     - text: "Een voorbeeld is: 'Komende week ga ik mijn vrienden opnieuw vragen om niet te roken als ik erbij ben'. "
   utter_look_forward_12:
     - text: "Een ander voorbeeld is: 'Komende week ga ik buiten wandelen op momenten dat ik vroeger zou roken.' "
-  utter_ask_user_ready:
+  utter_ask_user_ready_1:
     - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
   utter_look_forward_13:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je altijd even kan terugkijken wat je had
@@ -201,7 +391,7 @@ responses:
     - text: "Dat hoort erbij. Nieuwe week, nieuwe kansen. Hou vol!"
 
   #6c How did you think it went?
-  utter_ask_how_went_2:
+  utter_ask_how_went_pa:
     - text: "Hoe vind jij dat het afgelopen week is gegaan met je lichamelijke beweging? Dat kan van alles zijn.
              Dus niet alleen wandelen en hardlopen, maar ook sporten, huishouden doen, enzovoort. 
              Typ '1' als het heel goed ging 😄. 
@@ -364,7 +554,7 @@ responses:
     - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
   utter_predict_difficult_moments_8:
     - text: "Een ander voorbeeld is: 'Komende week zet ik opnieuw mijn hardloopschoenen bij de deur zodat ik meteen ga als ik terug kom van werk.'"
-  utter_ask_if_ready_1:
+  utter_ask_user_ready_2:
     - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent."
   utter_predict_difficult_moments_9:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je altijd even kan terugkijken wat je had bedacht.
@@ -380,7 +570,7 @@ responses:
     - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
   utter_predict_difficult_moments_14:
     - text: "Een ander voorbeeld is: 'Ik ga lopend of met de fiets boodschappen doen'."
-  utter_ask_if_ready_2:
+  utter_ask_user_ready_3:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week gaat doen om te zorgen dat je actief bent en blijft.
              Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
   utter_predict_difficult_moments_15:
@@ -404,3 +594,81 @@ responses:
 
 actions:
   - action_trigger_weekly_reflection
+  - validate_how_went_non_smoke_form
+  - validate_specific_moments_form
+  - validate_smoked_previous_week_form
+  - validate_possible_smoking_situations_form
+  - validate_how_went_pa_form
+  - validate_difficult_moments_form
+  - validate_refresh_previous_week_form
+  - validate_met_expectations_form
+  - validate_if_doable_form
+  - validate_difficult_moments_next_week_form
+  - validate_how_are_you_form
+  - validate_free_reflect_1_form
+  - validate_free_reflect_2_form
+  - validate_free_reflect_3_form
+  - validate_free_reflect_4_form
+  - validate_user_ready_1_form
+  - validate_user_ready_2_form
+  - validate_user_ready_3_form
+  - validate_have_equipment_form
+
+forms:
+  how_went_non_smoke_form:
+    required_slots:
+      - how_went_non_smoke
+  specific_moments_form:
+    required_slots:
+      - specific_moments
+  smoked_previous_week_form:
+    required_slots:
+      - smoked_previous_week
+  possible_smoking_situations_form:
+    required_slots:
+      - possible_smoking_situations
+  how_went_pa_form:
+    required_slots:
+      - how_went_pa
+  difficult_moments_form:
+    required_slots:
+      - difficult_moments
+  refresh_previous_week_form:
+    required_slots:
+      - refresh_previous_week
+  met_expectations_form:
+    required_slots:
+      - met_expectations
+  if_doable_form:
+    required_slots:
+      - if_doable
+  difficult_moments_next_week_form:
+    required_slots:
+      - difficult_moments_next_week
+  how_are_you_form:
+    required_slots:
+      - how_are_you
+  free_reflect_1_form:
+    required_slots:
+      - free_reflect_1
+  free_reflect_2_form:
+    required_slots:
+      - free_reflect_2
+  free_reflect_3_form:
+    required_slots:
+      - free_reflect_3
+  free_reflect_4_form:
+    required_slots:
+      - free_reflect_4
+  user_ready_1_form:
+    required_slots:
+      - user_ready_1
+  user_ready_2_form:
+    required_slots:
+      - user_ready_2
+  user_ready_3_form:
+    required_slots:
+      - user_ready_3
+  have_equipment_form:
+    required_slots:
+      - have_equipment

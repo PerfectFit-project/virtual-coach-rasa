@@ -22,6 +22,7 @@ from . import validator
 
 celery = Celery(broker=REDIS_URL)
 
+
 class ActionContinueGeneralActivityDialog(Action):
     def name(self) -> Text:
         return "action_continue_with_general_activity"
@@ -104,7 +105,7 @@ class ActionResetReschedulingOptionSlot(Action):
         return "action_reset_rescheduling_option_slot"
 
     async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("rescheduling_option", None)]
+        return [SlotSet("chosen_daypart", None)]
 
 
 class ValidateReschedulingOptionsForm(FormValidationAction):
@@ -142,8 +143,8 @@ class ActionRescheduleDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        chosen_option = tracker.get_slot('rescheduling_option')
-        timestamp = tracker.get_slot('rescheduling_options_timestamp')
+        chosen_option = int(tracker.get_slot('chosen_daypart'))
+        timestamp = tracker.get_slot('daypart_options_timestamp')
         dialog = tracker.get_slot('current_intervention_component')
         eta = get_reschedule_date(timestamp, chosen_option)
 

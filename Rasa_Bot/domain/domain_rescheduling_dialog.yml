@@ -16,21 +16,26 @@ slots:
       conditions:
       - active_loop: rescheduling_now_or_later_form
   # String with rescheduling options for uttering the options
-  rescheduling_options_string:
+  daypart_options_string:
     type: text
     influence_conversation: false
     mappings:
-    - type: custom
+      - type: custom
   # Chosen rescheduling option in case user does not want to continue dialog now
-  rescheduling_option:
-    type: float
-    influence_conversation: false
+  chosen_daypart:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: true
     mappings:
-    - type: from_text
-      conditions:
-      - active_loop: rescheduling_options_form
+      - type: from_text
+        conditions:
+          - active_loop: pick_a_daypart_form
   # Chosen rescheduling option, stored as datetime
-  rescheduling_options_timestamp:
+  daypart_options_timestamp:
     type: any
     influence_conversation: false
     mappings:
@@ -87,11 +92,14 @@ actions:
   - action_set_continuation
   - action_continue_with_general_activity
   - action_continue_with_future_self_dialog_after_rescheduling_query
+  - action_ask_new_time
+  - pick_a_daypart_form
+  - validate_pick_a_daypart_form
 
 forms:
   rescheduling_now_or_later_form:
     required_slots:
       - rescheduling_now
-  rescheduling_options_form:
+  pick_a_daypart_form:
     required_slots:
-      - rescheduling_option
+      - chosen_daypart

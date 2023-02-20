@@ -97,3 +97,43 @@ class ValidateClosingReflectionSmokeDoneForm(FormValidationAction):
             return {"closing_reflection_smoke_done": None}
 
         return {"closing_reflection_smoke_done": value}
+
+
+class ValidateClosingRelapsePreventionPlanOneDoneForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_closing_relapse_prevention_plan_one_done_form'
+
+    def validate_closing_relapse_prevention_plan_one_done(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate goal_setting_plan_finished"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_closing_relapse_prevention_plan_one_done':
+            return {"closing_relapse_prevention_plan_one_done": None}
+
+        if value not in ['Klaar', 'klaar']:
+            return {"closing_relapse_prevention_plan_one_done": None}
+
+        return {"closing_relapse_prevention_plan_one_done": value}
+
+
+class ValidateClosingRelapsePreventionPlanTwoDoneForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_closing_relapse_prevention_plan_two_done_form'
+
+    def validate_closing_relapse_prevention_plan_two_done(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate goal_setting_plan_finished"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_closing_relapse_prevention_plan_two_done':
+            return {"closing_relapse_prevention_plan_two_done": None}
+
+        if value not in ['Klaar', 'klaar']:
+            return {"closing_relapse_prevention_plan_two_done": None}
+
+        return {"closing_relapse_prevention_plan_two_done": value}

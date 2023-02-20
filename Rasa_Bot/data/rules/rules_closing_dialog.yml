@@ -154,3 +154,21 @@ rules:
   - action: utter_closing_prevention_plan_2
   - action: utter_closing_prevention_plan_3
   - action: utter_closing_prevention_plan_4
+  - action: closing_relapse_prevention_plan_one_done_form
+  - active_loop: closing_relapse_prevention_plan_one_done_form
+  - active_loop: null
+  - action: utter_closing_prevention_plan_5
+  - action: utter_closing_prevention_plan_6
+  - action: utter_closing_prevention_plan_7  # TODO: send lastige situaties bewegen
+  - action: utter_closing_prevention_plan_8
+  - action: utter_closing_prevention_plan_9  # TODO: send useful exercises
+  - action: utter_closing_prevention_plan_10  # TODO: check if we can use email to participants
+  - action: utter_closing_prevention_plan_11  # TODO: check if we can use email to participants
+  - action: utter_closing_prevention_plan_12
+  - action: utter_closing_prevention_plan_13
+  - action: utter_closing_prevention_plan_14
+  - action: utter_closing_prevention_plan_15
+  - action: closing_relapse_prevention_plan_two_done_form
+  - active_loop: closing_relapse_prevention_plan_two_done_form
+  - active_loop: null
+  - action: utter_closing_prevention_plan_16

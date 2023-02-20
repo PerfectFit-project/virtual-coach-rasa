@@ -39,11 +39,27 @@ slots:
 
   closing_reflection_smoke_done:
     type: text
-    influence_conversation: false
+    influence_conversation: true
     mappings:
       - type: from_text
         conditions:
           - active_loop: closing_reflection_smoke_done_form
+
+  closing_relapse_prevention_plan_one_done:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_relapse_prevention_plan_one_done_form
+
+  closing_relapse_prevention_plan_two_done:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_relapse_prevention_plan_two_done_form
 
 responses:
 # 1 Congratulating
@@ -248,6 +264,10 @@ responses:
 
   utter_ask_closing_reflection_smoke_done:
     - text: "Typ 'klaar' als je klaar bent om verder te gaan."
+  utter_ask_closing_relapse_prevention_plan_one_done:
+    - text: "Typ 'klaar' als je klaar bent om verder te gaan."
+  utter_ask_closing_relapse_prevention_plan_two_done:
+    - text: "Typ 'klaar' als je klaar bent om verder te gaan."
 
 
 actions:
@@ -257,7 +277,8 @@ actions:
   - closing_continue_after_lapse_info_incorrect
   - validate_closing_lapse_info_correct_form
   - validate_closing_reflection_smoke_done_form
-
+  - validate_closing_relapse_prevention_plan_one_done_form
+  - validate_closing_relapse_prevention_plan_two_done_form
 
 forms:
   closing_pa_evaluation_form:
@@ -270,4 +291,12 @@ forms:
 
   closing_reflection_smoke_done_form:
     required_slots:
-      - closing_reflection_smoke_donerasa
+      - closing_reflection_smoke_done
+
+  closing_relapse_prevention_plan_one_done_form:
+    required_slots:
+      - closing_relapse_prevention_plan_one_done
+
+  closing_relapse_prevention_plan_two_done_form:
+    required_slots:
+      - closing_relapse_prevention_plan_two_done

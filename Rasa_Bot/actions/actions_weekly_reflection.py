@@ -43,7 +43,8 @@ class TriggerStepDialogDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        celery.send_task('celery_tasks.step_dialog_component', (user_id))
+        celery.send_task('celery_tasks.step_dialog_component',
+                         (user_id, ExecutionInterventionComponents.WEEKLY_REFLECTION))
 
         return []
 
@@ -54,7 +55,8 @@ class TriggerStepAdviceDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        celery.send_task('celery_tasks.step_advice_component', (user_id))
+        celery.send_task('celery_tasks.step_advice_component',
+                         (user_id, ExecutionInterventionComponents.WEEKLY_REFLECTION))
 
         return []
 
@@ -118,7 +120,7 @@ class ValidateSmokedPreviousWeekForm(FormValidationAction):
 
         return {"smoked_previous_week": value}
 
-class ValidatePossibleSmokingSitutationsForm(FormValidationAction):
+class ValidatePossibleSmokingSituationsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_possible_smoking_situations_form'
 
@@ -136,7 +138,7 @@ class ValidatePossibleSmokingSitutationsForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"possible_smoking_situations": None}
 
-        return {"possible_smoking_situtations": value}
+        return {"possible_smoking_situations": value}
 
 class ValidateHowWentPaForm(FormValidationAction):
     def name(self) -> Text:

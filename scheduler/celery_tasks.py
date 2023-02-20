@@ -138,7 +138,7 @@ def weekly_reflection_dialog(user_id: int, intervention_component_name: str):
 
 
 @app.task
-def step_dialog_component(user_id: int):
+def step_dialog_component(user_id: int, intervention_component_name: str):
     steps_bool = True
     ##TODO get total steps for week and steps for each day. Then based on that trigger next component
 
@@ -153,7 +153,7 @@ def step_dialog_component(user_id: int):
             args=[user_id, 'EXTERNAL_step_dialog_group2'])
 
 @app.task
-def step_advice_component(user_id: int):
+def step_advice_component(user_id: int, intervention_component_name: str):
     steps_bool = True
     ##TODO get total steps for week and steps for each day. Then based on that trigger next component
 

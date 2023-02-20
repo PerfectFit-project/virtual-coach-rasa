@@ -71,3 +71,5 @@ responses:
      - text: "Hoi!"
   utter_give_more_details:
     - text: "Kun je dat wat uitgebreider uitleggen?"
+  utter_please_answer_klaar:
+    - text: "Typ 'klaar' als je hier klaar mee bent."

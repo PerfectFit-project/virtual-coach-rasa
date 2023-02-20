@@ -138,6 +138,37 @@ def weekly_reflection_dialog(user_id: int, intervention_component_name: str):
 
 
 @app.task
+def step_dialog_component(user_id: int):
+    steps_bool = True
+    ##TODO get total steps for week and steps for each day. Then based on that trigger next component
+
+    ## Group 1 >> users with total weekly steps < 56.000 AND steps are NOT ≥ 8000 on 4/7 previous days
+    ## Group 2 >> users with total weekly steps ≥ 56.000 AND steps ≥ 8000 on 4/7 previous days
+
+    if steps_bool:
+        trigger_intervention_component.apply_async(
+            args=[user_id, 'EXTERNAL_step_dialog_group1'])
+    else:
+        trigger_intervention_component.apply_async(
+            args=[user_id, 'EXTERNAL_step_dialog_group2'])
+
+@app.task
+def step_advice_component(user_id: int):
+    steps_bool = True
+    ##TODO get total steps for week and steps for each day. Then based on that trigger next component
+
+    ## Group 1 >> users with total weekly steps < 56.000 AND steps are NOT ≥ 8000 on 4/7 previous days
+    ## Group 2 >> users with total weekly steps ≥ 56.000 AND steps ≥ 8000 on 4/7 previous days
+
+    if steps_bool:
+        trigger_intervention_component.apply_async(
+            args=[user_id, 'EXTERNAL_step_advice_group1'])
+    else:
+        trigger_intervention_component.apply_async(
+            args=[user_id, 'EXTERNAL_step_advice_group2'])
+
+
+@app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
     intervention_component = utils.get_intervention_component(intervention_component_name)
     intervention_component_id = intervention_component.intervention_component_id
@@ -183,8 +214,8 @@ def plan_execution_dialogs(user_id: int):
 
     preferences = (
         session.query(UserPreferences)
-               .filter(UserPreferences.users_nicedayuid == user_id)
-               .all()
+        .filter(UserPreferences.users_nicedayuid == user_id)
+        .all()
     )
 
     for preference in preferences:

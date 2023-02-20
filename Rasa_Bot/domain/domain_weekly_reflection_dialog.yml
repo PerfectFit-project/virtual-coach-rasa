@@ -187,6 +187,14 @@ slots:
         conditions:
           - active_loop: user_ready_3_form
 
+  user_ready_4:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: user_ready_4_form
+
   have_equipment:
     type: text
     influence_conversation: false
@@ -341,6 +349,8 @@ responses:
   utter_look_forward_19:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week gaat doen als je zin
              krijgt om te roken. Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
+  utter_ask_user_ready_2:
+    - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
   utter_look_forward_20:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je er op een moeilijk moment snel bij kan. Je kan het papier
              bijvoorbeeld in het hoesje van je telefoon bewaren. Je kan anders ook een foto maken van het papier en deze terugzoeken in je fotogalerij 📱."
@@ -439,6 +449,8 @@ responses:
     - text: "Was het specifiek deze week moeilijk in om beweging te komen of gaat bewegen in het algemeen minder goed dan je zou willen? 
              Typ '1' als het vooral afgelopen week moeilijk ging. 
              Typ '2' als bewegen over het algemeen minder goed gaat dan je zou willen.   "
+  utter_type_1_or_2_difficult_moments:
+    - text: "Typ 1 of 2 om aan te geven of bewegen nu even wat minder makkelijk ging of dat het vaker niet gaat"
   utter_difficult_moments_pa_7:
     - text: "Hoe vervelend ook, het kan dus gebeuren dat in beweging komen even niet lukt.  "
   utter_difficult_moments_pa_8:
@@ -536,47 +548,51 @@ responses:
     - text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen." ##TODO show graph
   utter_predict_difficult_moments_2:
     - text: "Vergelijk wat je komende week gaat doen met de situaties waarin je het eerder moeilijk vond om in beweging te komen."
+  utter_predict_difficult_moments_3:
+    - text: "Vergelijk wat je komende week gaat doen met de situaties waarin je het eerder moeilijk vond om in beweging te komen."
   utter_ask_difficult_moments_next_week:
     - text: "Als je dit zo vergelijkt, denk je dat er komende week moeilijke momenten gaan komen 🛑?
              Momenten waarop jij het lastig gaat vinden om in beweging te komen? 
              Typ '1' voor nee. 
              Typ '2' voor ja. "
-  utter_predict_difficult_moments_3:
-    - text: "Geweldig! 😊"
   utter_predict_difficult_moments_4:
-    - text: "Zelfs als je geen moeilijke momenten voorspelt is handig om te bedenken hoe je het komende week gaat volhouden om te bewegen."
+    - text: "Geweldig! 😊"
   utter_predict_difficult_moments_5:
-    - text: "Door nu een plan te maken ben je goed voorbereid op een actieve nieuwe week 📓."
+    - text: "Zelfs als je geen moeilijke momenten voorspelt is handig om te bedenken hoe je het komende week gaat volhouden om te bewegen."
   utter_predict_difficult_moments_6:
+    - text: "Door nu een plan te maken ben je goed voorbereid op een actieve nieuwe week 📓."
+  utter_predict_difficult_moments_7:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week nieuw of opnieuw gaat doen om in beweging
              te komen en je beweegdoelen te halen.  "
-  utter_predict_difficult_moments_7:
-    - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
   utter_predict_difficult_moments_8:
-    - text: "Een ander voorbeeld is: 'Komende week zet ik opnieuw mijn hardloopschoenen bij de deur zodat ik meteen ga als ik terug kom van werk.'"
-  utter_ask_user_ready_2:
-    - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent."
+    - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
   utter_predict_difficult_moments_9:
+    - text: "Een ander voorbeeld is: 'Komende week zet ik opnieuw mijn hardloopschoenen bij de deur zodat ik meteen ga als ik terug kom van werk.'"
+  utter_ask_user_ready_3:
+    - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent."
+  utter_predict_difficult_moments_10:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je altijd even kan terugkijken wat je had bedacht.
              Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren.
              Je kan anders ook een foto maken van het papier en deze terugzoeken in je fotogalerij 📱."
-  utter_predict_difficult_moments_10:
-    - text: "Oké. Komende week wordt het soms misschien lastig om in beweging te komen. Knap dat je dit van jezelf weet en eerlijk zegt."
   utter_predict_difficult_moments_11:
-    - text: "Het is handig om alvast te bedenken hoe je gaat zorgen dat je komende week je beweegdoelen haalt."
+    - text: "Oké. Komende week wordt het soms misschien lastig om in beweging te komen. Knap dat je dit van jezelf weet en eerlijk zegt."
   utter_predict_difficult_moments_12:
-    - text: "Door nu alvast een plan te maken hoef je op het moment zelf niet meer na te denken. Je hoeft dan alleen maar te doen wat je hebt bedacht 📓."
+    - text: "Het is handig om alvast te bedenken hoe je gaat zorgen dat je komende week je beweegdoelen haalt."
   utter_predict_difficult_moments_13:
-    - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
+    - text: "Door nu alvast een plan te maken hoef je op het moment zelf niet meer na te denken. Je hoeft dan alleen maar te doen wat je hebt bedacht 📓."
   utter_predict_difficult_moments_14:
+    - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
+  utter_predict_difficult_moments_15:
     - text: "Een ander voorbeeld is: 'Ik ga lopend of met de fiets boodschappen doen'."
-  utter_ask_user_ready_3:
+  utter_ask_user_ready_4:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week gaat doen om te zorgen dat je actief bent en blijft.
              Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
-  utter_predict_difficult_moments_15:
+  utter_predict_difficult_moments_16:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je er op een moeilijk moment snel bij kan.
              Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren.
              Je kan anders ook een foto maken van het papier en deze terugzoeken in je fotogalerij 📱."
+  utter_type_1_2_difficult_moments:
+    - text: "Typ 1 of 2 om aan te geven of je denkt dat er komende week moeilijke momenten gaan zijn"
 
   # 8. Closing
   utter_closing_1:
@@ -594,6 +610,8 @@ responses:
 
 actions:
   - action_trigger_weekly_reflection
+  - action_trigger_step_dialog
+  - action_trigger_step_advice
   - validate_how_went_non_smoke_form
   - validate_specific_moments_form
   - validate_smoked_previous_week_form
@@ -604,7 +622,6 @@ actions:
   - validate_met_expectations_form
   - validate_if_doable_form
   - validate_difficult_moments_next_week_form
-  - validate_how_are_you_form
   - validate_free_reflect_1_form
   - validate_free_reflect_2_form
   - validate_free_reflect_3_form
@@ -612,7 +629,6 @@ actions:
   - validate_user_ready_1_form
   - validate_user_ready_2_form
   - validate_user_ready_3_form
-  - validate_have_equipment_form
 
 forms:
   how_went_non_smoke_form:
@@ -669,6 +685,9 @@ forms:
   user_ready_3_form:
     required_slots:
       - user_ready_3
+  user_ready_4_form:
+    required_slots:
+      - user_ready_4
   have_equipment_form:
     required_slots:
       - have_equipment

@@ -95,6 +95,9 @@ rules:
   - action: utter_closing_smoke_succes_6
   - action: utter_closing_smoke_succes_7
   - action: utter_closing_smoke_succes_8
+  - action: closing_reflection_smoke_done_form
+  - active_loop: closing_reflection_smoke_done_form
+  wait_for_user_input: false
 
 ## 3a2: sucessful quitter - but not
 - rule: smoking actually unsuccesful
@@ -111,10 +114,13 @@ rules:
   - action: utter_closing_smoke_lapse_3
   - action: utter_closing_smoke_lapse_4
   - action: utter_closing_smoke_lapse_5
-  - action: utter_closing_smoke_lapse_6
+  - action: utter_closing_smoke_lapse_6  # TODO: wait about 10s before next utter
   - action: utter_closing_smoke_lapse_7
   - action: utter_closing_smoke_lapse_8
   - action: utter_closing_smoke_lapse_9
+  - action: closing_reflection_smoke_done_form
+  - active_loop: closing_reflection_smoke_done_form
+  wait_for_user_input: false
 
 ## 3c smoking had relapse
 - rule: resume smoking after pa relapse
@@ -128,7 +134,23 @@ rules:
   - action: utter_closing_smoke_lapse_3
   - action: utter_closing_smoke_lapse_4
   - action: utter_closing_smoke_lapse_5
-  - action: utter_closing_smoke_lapse_6
+  - action: utter_closing_smoke_lapse_6  # TODO: wait about 10s before next utter
   - action: utter_closing_smoke_lapse_7
   - action: utter_closing_smoke_lapse_8
   - action: utter_closing_smoke_lapse_9
+  - action: closing_reflection_smoke_done_form
+  - active_loop: closing_reflection_smoke_done_form
+  wait_for_user_input: false
+
+
+# 4 relapse prevention plan
+- rule: relapse prevention plan general
+  condition:
+  - active_loop: closing_reflection_smoke_done_form
+  steps:
+  - action: closing_reflection_smoke_done_form
+  - active_loop: null
+  - action: utter_closing_prevention_plan_1
+  - action: utter_closing_prevention_plan_2
+  - action: utter_closing_prevention_plan_3
+  - action: utter_closing_prevention_plan_4

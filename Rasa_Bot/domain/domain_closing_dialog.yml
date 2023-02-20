@@ -37,6 +37,14 @@ slots:
         conditions:
           - active_loop: closing_lapse_info_correct_form
 
+  closing_reflection_smoke_done:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_reflection_smoke_done_form
+
 responses:
 # 1 Congratulating
   utter_closing_congratualate_1:
@@ -238,12 +246,17 @@ responses:
     - text: "Je krijgt nog een e-mail, met het belangrijkste van ons gesprek van vandaag. Dan wens ik je nu alle
              goeds!😊"
 
+  utter_ask_closing_reflection_smoke_done:
+    - text: "Typ 'klaar' als je klaar bent om verder te gaan."
+
+
 actions:
   - validate_closing_pa_evaluation_form
   - action_closing_get_smoking_status
   - closing_continue_after_pa
   - closing_continue_after_lapse_info_incorrect
   - validate_closing_lapse_info_correct_form
+  - validate_closing_reflection_smoke_done_form
 
 
 forms:
@@ -254,3 +267,7 @@ forms:
   closing_lapse_info_correct_form:
     required_slots:
       - closing_lapse_info_correct
+
+  closing_reflection_smoke_done_form:
+    required_slots:
+      - closing_reflection_smoke_donerasa

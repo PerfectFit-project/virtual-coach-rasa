@@ -77,3 +77,23 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
             return {"closing_lapse_info_correct": None}
 
         return {"closing_lapse_info_correct": value}
+
+
+class ValidateClosingReflectionSmokeDoneForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_closing_reflection_smoke_done_form'
+
+    def validate_closing_reflection_smoke_done(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate goal_setting_plan_finished"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_closing_reflection_smoke_done':
+            return {"closing_reflection_smoke_done": None}
+
+        if value not in ['Klaar', 'klaar']:
+            return {"closing_reflection_smoke_done": None}
+
+        return {"closing_reflection_smoke_done": value}

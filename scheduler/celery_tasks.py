@@ -95,12 +95,8 @@ def intervention_component_completed(user_id: int, intervention_component_name: 
 
 @app.task
 def relapse_dialog(user_id: int, intervention_component_name: str):
-    ##TODO functionality to detect relapse and return to correct component
-    logging.info("celery received")
     phase = utils.get_phase_object(Phases.LAPSE.value)
     component = utils.get_intervention_component(intervention_component_name)
-
-    logging.info("celery received the message")
 
     state = UserInterventionState(
         users_nicedayuid=user_id,
@@ -117,6 +113,28 @@ def relapse_dialog(user_id: int, intervention_component_name: str):
 
     trigger_intervention_component.apply_async(
         args=[user_id, 'EXTERNAL_relapse_dialog'])
+
+
+@app.task
+def weekly_reflection_dialog(user_id: int, intervention_component_name: str):
+    phase = utils.get_phase_object(Phases.EXECUTION.value)
+    component = utils.get_intervention_component(intervention_component_name)
+
+    state = UserInterventionState(
+        users_nicedayuid=user_id,
+        intervention_phase_id=phase.phase_id,
+        intervention_component_id=component.intervention_component_id,
+        completed=False,
+        last_time=datetime.now().astimezone(TIMEZONE),
+        last_part=0,
+        next_planned_date=None,
+        task_uuid=None
+    )
+
+    utils.store_intervention_component_to_db(state)
+
+    trigger_intervention_component.apply_async(
+        args=[user_id, 'EXTERNAL_weekly_reflection'])
 
 
 @app.task

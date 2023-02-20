@@ -2,9 +2,183 @@ version: "3.1"
 
 rules:
 
-## Rules for the relapse dialog
-## 1a: Trigger weekly reflection dialog
+## Rules for the weekly reflection dialog
+## 1. Congratulate & 2. Explanation Reflection
 - rule: Activate weekly reflection
   steps:
   - intent: weekly_reflection
   - action: action_trigger_weekly_reflection
+
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: utter_congratulate_1
+  - action: utter_congratulate_2
+  - action: utter_congratulate_3
+  - action: utter_explain_reflection_1
+  - action: utter_explain_reflection_2
+  - action: utter_explain_reflection_3
+  - action: how_are_you_form
+  - active_loop: how_are_you_form
+  wait_for_user_input: false
+
+## 3. How are you?
+- rule: How are you
+  condition:
+  - active_loop: how_are_you_form
+  steps:
+  - action: how_are_you_form
+  - active_loop: null
+  - action: utter_how_are_you_1
+  - action: how_went_non_smoke_form
+  - active_loop: how_went_non_smoke_form
+  wait_for_user_input: false
+
+## 4. Reflection on Non-Smoking
+## 4a How did the non-smoking go?
+
+## Non-Smoking form user answered great
+- rule: Reflection on non-smoking going great
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 1
+  - action: utter_reflect_non_smoke_1
+  - action: free_reflect_1_form
+  - active_loop: free_reflect_1_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered good
+- rule: Reflection on non-smoking going well
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 2
+  - action: utter_reflect_non_smoke_1
+  - action: free_reflect_1_form
+  - active_loop: free_reflect_1_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered okay
+- rule: Reflection on non-smoking going okay
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 3
+  - action: utter_reflect_non_smoke_3
+  - action: free_reflect_2_form
+  - active_loop: free_reflect_2_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered not great
+- rule: Reflection on non-smoking going okay
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 4
+  - action: utter_reflect_non_smoke_5
+  - action: utter_reflect_non_smoke_6
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered bad
+- rule: Reflection on non-smoking going bad
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 5
+  - action: utter_reflect_non_smoke_5
+  - action: utter_reflect_non_smoke_6
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## Additional rule to bring us back to main path
+- rule: Setup for difficult moments 1
+  condition:
+    - active_loop: free_reflect_1_form
+  steps:
+  - action: free_reflect_1_form
+  - active_loop: null
+  - action: utter_reflect_non_smoke_2
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## Additional rule to bring us back to main path
+- rule: Setup for difficult moments 2
+  condition:
+    - active_loop: free_reflect21_form
+  steps:
+  - action: free_reflect_2_form
+  - active_loop: null
+  - action: utter_reflect_non_smoke_4
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## 4b Were there difficult moments?
+
+## User answered 1
+## TODO Figure out how to show barchart from before
+- rule: No difficult moments
+  condition:
+    - active_loop: specific_moments_form
+  steps:
+  - action: specific_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - specific_moments: 1
+  - action: utter_difficult_moments_1
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: utter_look_forward_4
+  - action: utter_look_forward_5
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
+
+## User answered 3
+## TODO Figure out how to show barchart from before
+- rule: Not sure if difficult moments
+  condition:
+    - active_loop: specific_moments_form
+  steps:
+  - action: specific_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - specific_moments: 3
+  - action: utter_difficult_moments_2
+  - action: utter_difficult_moments_3
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: utter_look_forward_4
+  - action: utter_look_forward_5
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
+
+
+## TODO Find out how to exit and do part of the dialogue then come back

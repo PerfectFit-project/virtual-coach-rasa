@@ -141,6 +141,19 @@ nlu:
     - "Oke"
     - "Ok"
 
+- intent: weekly_reflection
+  examples: |
+    - "weekly reflection"
+    - "week"
+    - "Week"
+    - "weekly"
+    - "Weekly"
+    - "weeek"
+    - "weekk"
+    - "wweek"
+    - "weeklyy"
+    - "Weekly reflection"
+
 - intent: request_metadata
   examples: |
     - "Metadata"

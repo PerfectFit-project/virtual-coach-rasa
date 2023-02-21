@@ -143,7 +143,7 @@ rules:
   wait_for_user_input: false
 
 
-# 4 relapse prevention plan
+# 4 relapse prevention plan - general
 - rule: relapse prevention plan general
   condition:
   - active_loop: closing_reflection_smoke_done_form
@@ -170,5 +170,28 @@ rules:
   - action: utter_closing_prevention_plan_15
   - action: closing_relapse_prevention_plan_two_done_form
   - active_loop: closing_relapse_prevention_plan_two_done_form
+  wait_for_user_input: false
+
+# 4 relapse prevention plan - succes quiter
+- rule: relapse prevention plan succes quiter
+  condition:
+  - active_loop: closing_relapse_prevention_plan_two_done_form
+  steps:
+  - action: closing_relapse_prevention_plan_two_done_form
   - active_loop: null
   - action: utter_closing_prevention_plan_16
+  - slot_was_set:
+    - closing_smoking_status: 1
+  - action: utter_closing_prevention_success_1
+
+# 4 relapse prevention plan - unsucces quiter
+- rule: relapse prevention plan unsucces quiter
+  condition:
+  - active_loop: closing_relapse_prevention_plan_two_done_form
+  steps:
+  - action: closing_relapse_prevention_plan_two_done_form
+  - active_loop: null
+  - action: utter_closing_prevention_plan_16
+  - slot_was_set:
+    - closing_smoking_status: 2
+  - action: utter_closing_prevention_lapse_1

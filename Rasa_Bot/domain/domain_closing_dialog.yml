@@ -24,7 +24,7 @@ slots:
       - 2
     influence_conversation: true
     mappings:
-      - type: from_text
+      - type: custom
 
   closing_lapse_info_correct:
     type: categorical

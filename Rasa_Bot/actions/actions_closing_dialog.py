@@ -4,7 +4,7 @@ from virtual_coach_db.helper.definitions import (DialogExpectedDuration,
                                                  ExecutionInterventionComponentsTriggers)
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from typing import Text, Dict, Any
+from typing import Text, Dict, Any, List, Union
 from celery import Celery
 from . import validator
 from .definitions import REDIS_URL, MORNING, AFTERNOON, TIMEZONE
@@ -63,7 +63,7 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
 
     def validate_closing_lapse_info_correct(
             self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[str, Union[int, str]]:
         # pylint: disable=unused-argument
         """Validate form whether info on (re)lapse is correct"""
 
@@ -75,6 +75,10 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"closing_lapse_info_correct": None}
+
+        if value == 2:
+            return {"closing_smoking_status": 2,
+                    "closing_lapse_info_correct": value}
 
         return {"closing_lapse_info_correct": value}
 

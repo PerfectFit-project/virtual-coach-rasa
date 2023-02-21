@@ -637,6 +637,7 @@ actions:
   - validate_user_ready_1_form
   - validate_user_ready_2_form
   - validate_user_ready_3_form
+  - validate_how_are_you_form
 
 forms:
   how_went_non_smoke_form:

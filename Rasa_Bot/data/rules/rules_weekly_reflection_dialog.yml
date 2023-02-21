@@ -20,7 +20,6 @@ rules:
   - action: utter_explain_reflection_3
   - action: how_are_you_form
   - active_loop: how_are_you_form
-  wait_for_user_input: false
 
 ## 3. How are you?
 - rule: How are you

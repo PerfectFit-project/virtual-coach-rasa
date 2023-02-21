@@ -410,4 +410,17 @@ class ValidateUserReady4Form(FormValidationAction):
 
         return {"user_ready_4": value}
 
+class ValidateHowAreYou(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_how_are_you_form'
 
+    def validate_how_are_you(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_how_are_you':
+            return {"how_are_you": None}
+
+        return {"how_are_you": value}

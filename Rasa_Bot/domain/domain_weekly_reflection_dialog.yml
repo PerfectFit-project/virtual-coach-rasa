@@ -203,6 +203,15 @@ slots:
         conditions:
           - active_loop: have_equipment_form
 
+  pa_group:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: custom
+
 responses:
   # 1. Congratulate
   utter_congratulate_1:
@@ -610,8 +619,7 @@ responses:
 
 actions:
   - action_trigger_weekly_reflection
-  - action_trigger_step_dialog
-  - action_trigger_step_advice
+  - action_select_pa_group
   - validate_how_went_non_smoke_form
   - validate_specific_moments_form
   - validate_smoked_previous_week_form

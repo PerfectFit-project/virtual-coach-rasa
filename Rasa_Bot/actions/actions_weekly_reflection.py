@@ -36,29 +36,18 @@ class TriggerWeeklyReflectionDialog(Action):
 
         return []
 
-class TriggerStepDialogDialog(Action):
+class SelectPaGroup(Action):
     def name(self):
-        return "action_trigger_step_dialog"
+        return "action_select_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        celery.send_task('celery_tasks.step_dialog_component',
-                         (user_id, ExecutionInterventionComponents.WEEKLY_REFLECTION))
-
-        return []
-
-class TriggerStepAdviceDialog(Action):
-    def name(self):
-        return "action_trigger_step_advice"
-
-    async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        celery.send_task('celery_tasks.step_advice_component',
-                         (user_id, ExecutionInterventionComponents.WEEKLY_REFLECTION))
-
-        return []
+        ## TODO get steps and use to set the slot
+        steps_bool = True
+        if steps_bool:
+            return [SlotSet('pa_group', 1)]
+        return [SlotSet('pa_group', 2)]
 
 class ValidateHowWentNonSmokeForm(FormValidationAction):
     def name(self) -> Text:

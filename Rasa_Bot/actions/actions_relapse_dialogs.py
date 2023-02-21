@@ -8,7 +8,8 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state)
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state,
+                     populate_fig)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -19,6 +20,7 @@ from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents
                                                  DialogQuestionsEnum, Phases)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
+from plotly.subplots import make_subplots
 
 celery = Celery(broker=REDIS_URL)
 
@@ -206,9 +208,40 @@ class ShowBarchartDifficultSituations(Action):
         return "show_barchart_difficult_situations"
 
     async def run(self, dispatcher, tracker, domain):
-        # TODO: plot barchart, save and send
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        return []
+        fig = make_subplots(
+            rows=3, cols=1,
+            subplot_titles=("Wat was je aan het doen?",
+                            "Hoe voelde je je?",
+                            "Met wie was je?")
+        )
+
+        legends = [("Trek kreeg", "yellow"), ("Rookte", "red")]
+
+        question_ids = [[[DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value],
+                        [DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value,
+                        DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value]],
+                        [[DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value],
+                         [DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value]],
+                        [[DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value],
+                         [DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]]]
+
+        fig = populate_fig(fig, question_ids, user_id, legends)
+
+        fig.update_layout(height=1200, width=800, title_text="Op deze grafieken zie je hoe vaak je"
+                                     " in een bepaalde situatie was toen je")
+
+        filepath = '/app/barchart_difficult_situations.PNG'
+
+        try:
+            fig.write_image("barchart_difficult_situations.PNG")
+        except Exception:
+            logging.info("File upload unsuccessful.")
+
+        return [SlotSet("upload_file_path", filepath)]
 
 
 class ShowBarchartDifficultSituationsPa(Action):
@@ -216,9 +249,36 @@ class ShowBarchartDifficultSituationsPa(Action):
         return "show_barchart_difficult_situations_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        # TODO: plot barchart, save and send
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        return []
+        fig = make_subplots(
+            rows=3, cols=1,
+            subplot_titles=("Wat je overdag verder deed?",
+                            "Reden niet lichamelijk actief",
+                            "Zou je met iemand actief zijn?")
+        )
+
+        legends = [("Obstakels bewegen", "blue")]
+
+        question_ids = [[[DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]],
+                        [[DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value]],
+                        [[DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value]]]
+
+        fig = populate_fig(fig, question_ids, user_id, legends)
+
+        fig.update_layout(height=1200, width=800, title_text="Op deze grafieken"
+                          " zie je hoe vaak je in een bepaalde situatie was toen <br>"
+                          "het moeilijk vond om in beweging te komen",
+                          showlegend=False)
+
+        filepath = '/app/barchart_difficult_situations_pa.PNG'
+
+        try:
+            fig.write_image("barchart_difficult_situations_pa.PNG")
+        except Exception:
+            logging.info("File upload unsuccessful.")
+
+        return [SlotSet("upload_file_path", filepath)]
 
 
 class ShowFirstCopingActivity(Action):

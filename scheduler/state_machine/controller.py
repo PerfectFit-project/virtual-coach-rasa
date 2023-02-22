@@ -1,27 +1,15 @@
 import logging
-from state_machine import utils
 from celery import Celery
+from const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURATION,
+                   PREPARATION_GA, MAX_PREPARATION_DURATION, EXECUTION_DURATION,
+                   REDIS_URL, DATABASE_URL, TRIGGER_COMPONENT, TIMEZONE)
 from datetime import date, datetime, timedelta
-from dateutil import tz
+from state_machine import utils
 from state_machine.state import State
 from virtual_coach_db.helper.definitions import (ComponentsTriggers,
                                                  Components, Notifications,
                                                  NotificationsTriggers)
-import os
 
-# intervention times (days)
-FUTURE_SELF_INTRO = 8
-GOAL_SETTING = 9
-TRACKING_DURATION = 10
-PREPARATION_GA = 14
-MAX_PREPARATION_DURATION = 21
-EXECUTION_DURATION = 12 * 7  # 12 weeks
-#
-
-REDIS_URL = os.getenv('REDIS_URL')
-DATABASE_URL = os.getenv('DATABASE_URL')
-TRIGGER_COMPONENT = 'celery_tasks.trigger_intervention_component'
-TIMEZONE = tz.gettz("Europe/Amsterdam")
 celery = Celery(broker=REDIS_URL)
 
 
@@ -89,13 +77,13 @@ class OnboardingState(State):
                        trigger=ComponentsTriggers.PREPARATION_INTRODUCTION)
 
     def schedule_next_dialogs(self):
-
+        # get the data on which the user has started the intervention
+        # (day 1 of preparation phase)
         start_date = utils.get_start_date(self.user_id)
 
         # on day 9 at 10 a.m. send future self
-        fs_time = create_new_date(start_date=start_date,
-                                  time_delta=FUTURE_SELF_INTRO,
-                                  hour=10)
+        fs_time = utils.create_new_date(start_date=start_date,
+                                        time_delta=FUTURE_SELF_INTRO)
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.FUTURE_SELF,
@@ -103,9 +91,8 @@ class OnboardingState(State):
                        planned_date=fs_time)
 
         # on day 10 at 10 a.m. send future self plan goal setting
-        gs_time = create_new_date(start_date=start_date,
-                                  time_delta=GOAL_SETTING,
-                                  hour=10)
+        gs_time = utils.create_new_date(start_date=start_date,
+                                        time_delta=GOAL_SETTING)
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.GOAL_SETTING,
@@ -121,9 +108,8 @@ class OnboardingState(State):
         last_date = utils.get_start_date(self.user_id) + timedelta(days=8)
 
         for day in range((last_date - first_date).days):
-            planned_date = create_new_date(start_date=first_date,
-                                           time_delta=day,
-                                           hour=10)
+            planned_date = utils.create_new_date(start_date=first_date,
+                                                 time_delta=day)
 
             plan_and_store(user_id=self.user_id,
                            dialog=Notifications.TRACK_NOTIFICATION,
@@ -185,6 +171,7 @@ class GoalsSettingState(State):
             # after the completion of the goal setting dialog, the execution
             # phase can be planned
             self.plan_buffer_phase_dialogs()
+
         elif dialog == Components.FIRST_AID_KIT:
             logging.info('First aid kit completed, starting buffering state')
             self.set_new_state(BufferState(self.user_id))
@@ -194,14 +181,14 @@ class GoalsSettingState(State):
         start_date = utils.get_start_date(self.user_id)
 
         if (quit_date - start_date).days >= PREPARATION_GA:
-            planned_date = create_new_date(start_date=start_date, time_delta=PREPARATION_GA, hour=10)
+            planned_date = utils.create_new_date(start_date=start_date, time_delta=PREPARATION_GA)
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            trigger=ComponentsTriggers.GENERAL_ACTIVITY,
                            planned_date=planned_date)
 
         if (quit_date - start_date).days == MAX_PREPARATION_DURATION:
-            planned_date = create_new_date(start_date=start_date, time_delta=MAX_PREPARATION_DURATION, hour=10)
+            planned_date = utils.create_new_date(start_date=start_date, time_delta=MAX_PREPARATION_DURATION)
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            trigger=ComponentsTriggers.GENERAL_ACTIVITY,
@@ -211,12 +198,12 @@ class GoalsSettingState(State):
         # this is the intro video to be sent the first time
         # the execution starts (not after lapse/relapse)
         quit_date = utils.get_quit_date(self.user_id)
-        planned_date = create_new_date(quit_date, 0, 10)
+        planned_date = utils.create_new_date(start_date=quit_date)
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.EXECUTION_INTRODUCTION,
                        trigger=ComponentsTriggers.EXECUTION_INTRODUCTION,
-                       planned_date=quit_date)
+                       planned_date=planned_date)
 
     def activate_pa_notifications(self):
         # the notifications start from the dey after the goal setting dialog has been completed
@@ -231,9 +218,8 @@ class GoalsSettingState(State):
         last_date = first_date + timedelta(days=total_duration)
 
         for day in range((last_date - first_date).days):
-            planned_date = create_new_date(start_date=first_date,
-                                           time_delta=day,
-                                           hour=10)
+            planned_date = utils.create_new_date(start_date=first_date,
+                                                 time_delta=day)
 
             plan_and_store(user_id=self.user_id,
                            dialog=Notifications.PA_NOTIFICATION,
@@ -268,6 +254,7 @@ class BufferState(State):
 
     def check_if_end_date(self, current_date: datetime.date):
         quit_date = utils.get_start_date(self.user_id)
+
         if current_date == quit_date:
             logging.info('Buffer sate ended, starting execution state')
             self.set_new_state(ExecutionRunState(self.user_id))
@@ -277,7 +264,58 @@ class ExecutionRunState(State):
 
     def __init__(self, user_id):
         super().__init__(user_id)
+        self.user_id = user_id
         self.state = State.EXECUTION_RUN
+
+    def on_dialog_completed(self, dialog):
+        logging.info('A dialog has been completed  %s ', dialog)
+
+        utils.store_completed_dialog(user_id=self.user_id,
+                                     dialog=dialog,
+                                     phase_id=2)
+
+        if dialog == Components.EXECUTION_INTRODUCTION:
+            logging.info('Execution intro completed, starting general activity')
+            plan_and_store(user_id=self.user_id,
+                           dialog=Components.GENERAL_ACTIVITY,
+                           trigger=ComponentsTriggers.GENERAL_ACTIVITY)
+
+        elif dialog == Components.GENERAL_ACTIVITY:
+            logging.info('General activity completed, starting weekly reflection')
+            plan_and_store(user_id=self.user_id,
+                           dialog=Components.WEEKLY_REFLECTION,
+                           trigger=ComponentsTriggers.WEEKLY_REFLECTION)
+
+        elif dialog == Components.WEEKLY_REFLECTION:
+            logging.info('Weekly reflection completed')
+
+            today = date.today()
+
+            week = utils.get_execution_week(user_id=self.user_id, date=today)
+
+            # if in week 3 or 8 of the execution, run future self after
+            # completing the weekly reflection
+            if week in [3, 8]:
+                logging.info('Starting future self')
+                plan_and_store(user_id=self.user_id,
+                               dialog=Components.FUTURE_SELF,
+                               trigger=ComponentsTriggers.FUTURE_SELF)
+
+            # if in week 12, the execution is finished. Start the closing state
+            elif week == 12:
+                self.set_new_state(ClosingState(self.user_id))
+
+            # in the other weeks, plan the next execution of the weekly reflection
+            else:
+                schedule_next_execution(user_id=self.user_id,
+                                        dialog=Components.WEEKLY_REFLECTION,
+                                        trigger=ComponentsTriggers.WEEKLY_REFLECTION)
+
+        # after the completion of the future self, schedule the next weekly reflection
+        elif dialog == Components.FUTURE_SELF:
+            schedule_next_execution(user_id=self.user_id,
+                                    dialog=Components.WEEKLY_REFLECTION,
+                                    trigger=ComponentsTriggers.WEEKLY_REFLECTION)
 
     def run(self):
         print(self.state)
@@ -287,6 +325,7 @@ class RelapseState(State):
 
     def __init__(self, user_id):
         super().__init__(user_id)
+        self.user_id = user_id
         self.state = State.RELAPSE
 
     def run(self):
@@ -297,32 +336,26 @@ class ClosingState(State):
 
     def __init__(self, user_id):
         super().__init__(user_id)
+        self.user_id = user_id
         self.state = State.CLOSING
 
     def run(self):
         print(self.state)
+        # plan the execution of the closing dialog
 
+        component_id = utils.get_intervention_component(Components.CLOSING_DIALOG)
 
-def create_new_date(start_date: date, time_delta: int, hour: int, minute: int = 00) -> datetime:
-    """
-    Create a new timedate object from the date object. It adds a 'time_delta'
-    number of days to the starting date
+        closing_date = utils.get_preferred_date_time(
+            user_id=self.user_id,
+            intervention_component_id=component_id
+        )[0]
 
-    Args:
-        start_date: the date to start from
-        time_delta: the number of days to be added to the start_date
-        hour: the hour to be used in the new date
-        minute: the minute to be used in the new date
+        planned_date = utils.create_new_date(closing_date)
 
-    Returns:
-        A datetime object with the start_date + time_delta number of days and the
-        hour specified
-
-    """
-    new_date = start_date + timedelta(days=time_delta)
-    new_timedate = datetime(new_date.year, new_date.month, new_date.day, hour, minute)
-
-    return new_timedate
+        plan_and_store(user_id=self.user_id,
+                       dialog=Components.CLOSING_DIALOG,
+                       trigger=ComponentsTriggers.CLOSING_DIALOG,
+                       planned_date=planned_date)
 
 
 def plan_and_store(user_id: int, dialog: str, trigger: str, planned_date: datetime = None):
@@ -351,3 +384,25 @@ def plan_and_store(user_id: int, dialog: str, trigger: str, planned_date: dateti
                                      phase_id=1,
                                      planned_date=planned_date,
                                      task_uuid=str(task.task_id))
+
+
+def schedule_next_execution(user_id: int, dialog: str, trigger: str):
+    """
+    Get the next expected execution date for an intervention component,
+    and schedules it
+    Args:
+        user_id: id of the user
+        dialog: Name of the component
+        trigger: trigger of the component
+
+    """
+    component_id = utils.get_intervention_component(dialog)
+    planned_date = utils.get_next_planned_date(user_id=user_id,
+                                               intervention_component_id=component_id)
+
+    new_date = planned_date.replace(hour=10, minute=00)
+
+    plan_and_store(user_id=user_id,
+                   dialog=dialog,
+                   trigger=trigger,
+                   planned_date=new_date)

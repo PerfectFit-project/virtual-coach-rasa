@@ -1,30 +1,11 @@
 import os
 
+from const import DATABASE_URL, TIMEZONE
 from datetime import datetime, date, timedelta
 from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
-from virtual_coach_db.helper.definitions import (Components,
-                                                 ComponentsTriggers)
 from virtual_coach_db.helper.helper_functions import get_db_session
-
-DATABASE_URL = os.getenv('DATABASE_URL')
-TIMEZONE = tz.gettz("Europe/Amsterdam")
-
-# ordered lists of the intervention components
-preparation_components_order = [Components.PROFILE_CREATION,
-                                Components.MEDICATION_TALK,
-                                Components.COLD_TURKEY,
-                                Components.PLAN_QUIT_START_DATE,
-                                Components.FUTURE_SELF,
-                                Components.GOAL_SETTING]
-
-preparation_triggers_order = [ComponentsTriggers.PROFILE_CREATION.value,
-                              ComponentsTriggers.MEDICATION_TALK.value,
-                              ComponentsTriggers.COLD_TURKEY.value,
-                              ComponentsTriggers.PLAN_QUIT_START_DATE.value,
-                              ComponentsTriggers.FUTURE_SELF.value,
-                              ComponentsTriggers.GOAL_SETTING.value]
 
 
 def compute_next_day(selectable_days: list) -> date:
@@ -60,6 +41,28 @@ def compute_next_day(selectable_days: list) -> date:
     next_date = today + timedelta((next_weekday - today_weekday) % 7)
 
     return next_date
+
+
+def create_new_date(start_date: date, time_delta: int = 0, hour: int = 10, minute: int = 00) -> datetime:
+    """
+    Create a new timedate object from the date object. It adds a 'time_delta'
+    number of days to the starting date
+
+    Args:
+        start_date: the date to start from
+        time_delta: the number of days to be added to the start_date
+        hour: the hour to be used in the new date
+        minute: the minute to be used in the new date
+
+    Returns:
+        A datetime object with the start_date + time_delta number of days and the
+        hour specified
+
+    """
+    new_date = start_date + timedelta(days=time_delta)
+    new_timedate = datetime(new_date.year, new_date.month, new_date.day, hour, minute)
+
+    return new_timedate
 
 
 def get_last_component_state(user_id: int, intervention_component_id: int) -> UserInterventionState:
@@ -129,31 +132,6 @@ def get_current_phase(user_id: int) -> InterventionPhases:
     return phase
 
 
-def get_next_preparation_intervention_component(intervention_component: str):
-    """
-    Get the next intervention component to be administered in the preparation
-    phase, given the current completed intervention component.
-
-    Args:
-        intervention_component: the name of the currently completed component.
-                                The names are listed in virtual_coach_db.helper.definitions
-                                in the Components class
-
-    Returns:
-            The next intervention component to be administered
-
-    """
-    next_intervention_component = 0
-
-    current_index = preparation_components_order.index(intervention_component)
-    if current_index < len(preparation_components_order) - 1:
-        next_intervention_component = preparation_triggers_order[current_index + 1]
-    else:
-        next_intervention_component = None
-
-    return next_intervention_component
-
-
 def get_intervention_component(intervention_component_name: str) -> InterventionComponents:
     """
     Get the intervention component as stored in the DB from the
@@ -197,26 +175,17 @@ def get_next_planned_date(user_id: int, intervention_component_id: int) -> datet
 
     """
 
-    session = get_db_session(DATABASE_URL)
-    preferences = (
-        session.query(
-            UserPreferences
-        )
-        .filter(
-            UserPreferences.users_nicedayuid == user_id,
-            UserPreferences.intervention_component_id == intervention_component_id
-        )
-        .one()
-    )
+    date_time = get_preferred_date_time(user_id=user_id,
+                                        intervention_component_id=intervention_component_id)
 
-    days_str = preferences.week_days
-    days_list = list(map(int, days_str.split(',')))
+    # first element of the tuple is the list of days
+    pref_days = date_time[0]
+    # second element of the tuple is the time
+    pref_time = date_time[1]
 
-    preferred_time = preferences.preferred_time
+    next_day = compute_next_day(pref_days)
 
-    next_day = compute_next_day(days_list)
-
-    next_planned_date = datetime.combine(next_day, preferred_time)
+    next_planned_date = datetime.combine(next_day, pref_time)
 
     return next_planned_date
 
@@ -247,6 +216,37 @@ def get_phase_object(phase_name: str) -> InterventionPhases:
     )
 
     return phases[0]
+
+
+def get_preferred_date_time(user_id: int, intervention_component_id: int) -> tuple:
+    """
+    Gets the preferred day of the week and the preferred time of the day
+    set by the user
+    Args:
+        user_id: ID of the user
+        intervention_component_id: the id of the interventions component
+
+    Returns: the list of preferred days and time
+
+    """
+    session = get_db_session(DATABASE_URL)
+    preferences = (
+        session.query(
+            UserPreferences
+        )
+        .filter(
+            UserPreferences.users_nicedayuid == user_id,
+            UserPreferences.intervention_component_id == intervention_component_id
+        )
+        .one()
+    )
+
+    days_str = preferences.week_days
+    days_list = list(map(int, days_str.split(',')))
+
+    preferred_time = preferences.preferred_time
+
+    return days_list, preferred_time
 
 
 def store_intervention_component_to_db(state: UserInterventionState):
@@ -314,6 +314,24 @@ def get_quit_date(user_id: int) -> date:
     quit_date = selected.quit_date.date()
 
     return quit_date
+
+
+def get_execution_week(user_id: int, current_date: date) -> int:
+    """
+    Computes the current wek number of the execution phase
+    Args:
+        user_id: ID of the user
+        current_date: date for which the week has to be computed
+
+    Returns: the week number
+
+    """
+    quit_date = get_quit_date(user_id)
+
+    # +1 to start counting from week 1
+    week_number = int((current_date - quit_date).days / 7) + 1
+
+    return week_number
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

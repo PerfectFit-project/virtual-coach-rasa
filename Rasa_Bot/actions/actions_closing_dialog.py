@@ -1,3 +1,4 @@
+import datetime
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -203,3 +204,33 @@ class ActionGetPaGoalFromDb(Action):
         session.close()
 
         return [SlotSet("closing_pa_goal", pa_goal)]
+
+
+class ActionClosingDelayedMessageAfterSmokeLapse(Action):
+    """Gets a delay"""
+
+    def name(self):
+        return "action_closing_delayed_message_after_smoke_lapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        new_intent = 'EXTERNAL_delayed_message_smoke_lapse'
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, new_intent),
+                         eta=datetime.datetime.now() + datetime.timedelta(seconds=10))
+        return []
+
+
+class ActionClosingDelayedMessageAfterSmoke(Action):
+    """Gets a delay"""
+
+    def name(self):
+        return "action_closing_delayed_message_after_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        new_intent = 'EXTERNAL_delayed_message_smoke'
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, new_intent),
+                         eta=datetime.datetime.now() + datetime.timedelta(seconds=10))
+        return []

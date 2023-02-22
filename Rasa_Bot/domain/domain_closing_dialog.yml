@@ -2,6 +2,8 @@ version: "3.1"
 
 intents:
   - closing_dialog
+  - EXTERNAL_delayed_message_smoke_lapse
+  - EXTERNAL_delayed_message_smoke
 
 
 slots:
@@ -314,6 +316,8 @@ actions:
   - validate_closing_relapse_prevention_plan_two_done_form
   - validate_closing_evaluate_pf_form
   - action_get_pa_goal_from_db
+  - action_closing_delayed_message_after_smoke_lapse
+  - action_closing_delayed_message_after_smoke
 
 forms:
   closing_pa_evaluation_form:

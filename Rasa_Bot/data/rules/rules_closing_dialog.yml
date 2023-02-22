@@ -89,7 +89,12 @@ rules:
   - active_loop: null
   - action: utter_closing_smoke_succes_1
   - action: utter_closing_smoke_succes_2
-  - action: utter_closing_smoke_succes_3  # TODO: add delay of 10s for next utter
+  - action: utter_closing_smoke_succes_3
+  - action: action_closing_delayed_message_after_smoke
+
+- rule: closing after delayed message relapse
+  steps:
+  - intent: EXTERNAL_delayed_message_smoke
   - action: utter_closing_smoke_succes_4
   - action: utter_closing_smoke_succes_5
   - action: utter_closing_smoke_succes_6
@@ -114,13 +119,8 @@ rules:
   - action: utter_closing_smoke_lapse_3
   - action: utter_closing_smoke_lapse_4
   - action: utter_closing_smoke_lapse_5
-  - action: utter_closing_smoke_lapse_6  # TODO: wait about 10s before next utter
-  - action: utter_closing_smoke_lapse_7
-  - action: utter_closing_smoke_lapse_8
-  - action: utter_closing_smoke_lapse_9
-  - action: closing_reflection_smoke_done_form
-  - active_loop: closing_reflection_smoke_done_form
-  wait_for_user_input: false
+  - action: utter_closing_smoke_lapse_6
+  - action: action_closing_delayed_message_after_smoke_lapse
 
 ## 3c smoking had relapse
 - rule: resume smoking after pa relapse
@@ -134,7 +134,13 @@ rules:
   - action: utter_closing_smoke_lapse_3
   - action: utter_closing_smoke_lapse_4
   - action: utter_closing_smoke_lapse_5
-  - action: utter_closing_smoke_lapse_6  # TODO: wait about 10s before next utter
+  - action: utter_closing_smoke_lapse_6
+  - action: action_closing_delayed_message_after_smoke_lapse
+
+
+- rule: closing after delayed message relapse
+  steps:
+  - intent: EXTERNAL_delayed_message_smoke_lapse
   - action: utter_closing_smoke_lapse_7
   - action: utter_closing_smoke_lapse_8
   - action: utter_closing_smoke_lapse_9

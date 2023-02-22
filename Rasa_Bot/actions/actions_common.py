@@ -1,4 +1,5 @@
 import logging
+import os
 
 from celery import Celery
 from niceday_client import NicedayClient
@@ -57,7 +58,7 @@ class SendMetadata(Action):
         """
         id_file = tracker.get_slot("uploaded_file_id")
         dispatcher.utter_message(
-            json_message={"text": "image",
+            json_message={"text": "Klik op het plaatje",
                           "attachmentIds": [id_file]},
         )
         return[]
@@ -78,9 +79,22 @@ class UploadFile(Action):
         response = client.upload_file(user_id, filepath, file)
         file_id = response['id']
         logging.info(response)
-        logging.info(file_id)
 
         return[SlotSet("uploaded_file_id", file_id)]
+
+class DeleteFile(Action):
+    def name(self):
+        return "action_delete_file"
+
+    async def run(self, dispatcher, tracker, domain):
+        file_path = tracker.get_slot("upload_file_path")
+
+        try:
+            os.remove(file_path)
+        except FileNotFoundError:
+            logging.info("File to remove not found.")
+
+        return[]
 
 
 class SetFilePath(Action):
@@ -91,6 +105,6 @@ class SetFilePath(Action):
 
         # TODO: This is hardcoded for testing. Needs to be set according to the use case
 
-        filepath = '/app/tst.PNG'
+        filepath = '/app/chart.PNG'
 
         return[SlotSet("upload_file_path", filepath)]

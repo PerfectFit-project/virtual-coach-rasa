@@ -22,6 +22,9 @@ EVENING = (18, 24)
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5
 
+# Images for file sharing
+FILE_PATH_IMAGE_PA = '/app/hoe_intensief_beweeg_jij.jpg'
+
 # Opt policy for [want][prompts][need]
 # Start at 1, since database values start at 1.
 # 1 = commitment, 2 = consensus, 3 = no persuasion

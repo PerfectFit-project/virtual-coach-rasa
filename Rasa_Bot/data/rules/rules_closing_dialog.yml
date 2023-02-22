@@ -7,8 +7,7 @@ rules:
 - rule: congratulate user for closing dialog
   steps:
   - intent: closing_dialog  # For testing
-  - action: action_get_name_from_database
-  - action: utter_greet
+  - action: utter_greeting
   - action: utter_closing_congratualate_1
   - action: utter_closing_congratualate_2
   - action: utter_closing_congratualate_3
@@ -183,6 +182,12 @@ rules:
   - slot_was_set:
     - closing_smoking_status: 1
   - action: utter_closing_prevention_success_1
+  - action: utter_closing_prevention_success_2
+  - action: utter_closing_prevention_success_3
+  - action: utter_closing_prevention_success_4
+  - action: utter_closing_prevention_success_5
+  - action: utter_closing_prevention_success_6
+  - action: closing_continue_after_smoke
 
 # 4 relapse prevention plan - unsucces quiter
 - rule: relapse prevention plan unsucces quiter
@@ -195,3 +200,27 @@ rules:
   - slot_was_set:
     - closing_smoking_status: 2
   - action: utter_closing_prevention_lapse_1
+  - action: utter_closing_prevention_lapse_2
+  - action: utter_closing_prevention_lapse_3
+  - action: utter_closing_prevention_lapse_4
+  - action: utter_closing_prevention_lapse_5
+  - action: utter_closing_prevention_lapse_6
+  - action: utter_closing_prevention_lapse_7
+  - action: utter_closing_prevention_lapse_8
+  - action: closing_continue_after_smoke
+
+
+# 5 closing - closing
+- rule: resume smoking after pa
+  steps:
+  - action: utter_closing_closing_1
+  - action: utter_closing_closing_2
+  - action: utter_closing_closing_3
+  - action: utter_closing_closing_4
+  - action: utter_closing_closing_5
+  - action: closing_evaluate_pf_form
+  - active_loop: closing_evaluate_pf_form
+  - active_loop: null  # Store answers to db
+  - action: utter_closing_closing_6
+  - action: utter_closing_closing_7
+  - action: utter_closing_closing_8

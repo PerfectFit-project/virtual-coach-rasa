@@ -61,6 +61,24 @@ slots:
         conditions:
           - active_loop: closing_relapse_prevention_plan_two_done_form
 
+  closing_pf_grade:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_evaluate_pf_form
+            requested_slot: closing_pf_grade
+
+  closing_pf_evaluate:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_evaluate_pf_form
+            requested_slot: closing_pf_evaluate
+
 responses:
 # 1 Congratulating
   utter_closing_congratualate_1:
@@ -256,9 +274,13 @@ responses:
     - text: "Dan nog heel wat anders. Perfect Fit wordt steeds verbeterd. Het is heel waardevol om te weten hoe je het
              vond."
   utter_closing_closing_5:
+    - text: "Zou je een cijfer van 1 tot 10 wilen geven aan Perfect Fit? Een 10 is uitstekend, een 1 is waardeloos."
+  utter_closing_closing_6:
+    - text: "Dankjewel.🙏"
+  utter_closing_closing_7:
     - text: "Ik vond het leuk om samen met jou het Perfect Fit programma te doen.🤝 Ik hoop dat jij er ook veel aan hebt
              gehad."
-  utter_closing_closing_6:
+  utter_closing_closing_8:
     - text: "Je krijgt nog een e-mail, met het belangrijkste van ons gesprek van vandaag. Dan wens ik je nu alle
              goeds!😊"
 
@@ -268,17 +290,23 @@ responses:
     - text: "Typ 'klaar' als je klaar bent om verder te gaan."
   utter_ask_closing_relapse_prevention_plan_two_done:
     - text: "Typ 'klaar' als je klaar bent om verder te gaan."
-
-
+  utter_ask_closing_pf_grade:
+    - text: "Typ 1, 2, 3, 4, 5, 6, 7, 8, 9 of 10"
+  utter_ask_closing_pf_evaluate:
+    - text: "Heb je nog tips om Perfect Fit beter te maken?"
+  utter_please_answer_pf_eval:
+    - text: "Typ een getal tussen '1' en '10', om aan te geven wat je van Perfect Fit vindt."
 actions:
   - validate_closing_pa_evaluation_form
   - action_closing_get_smoking_status
   - closing_continue_after_pa
   - closing_continue_after_lapse_info_incorrect
+  - closing_continue_after_smoke
   - validate_closing_lapse_info_correct_form
   - validate_closing_reflection_smoke_done_form
   - validate_closing_relapse_prevention_plan_one_done_form
   - validate_closing_relapse_prevention_plan_two_done_form
+  - validate_closing_evaluate_pf_form
 
 forms:
   closing_pa_evaluation_form:
@@ -300,3 +328,8 @@ forms:
   closing_relapse_prevention_plan_two_done_form:
     required_slots:
       - closing_relapse_prevention_plan_two_done
+
+  closing_evaluate_pf_form:
+    required_slots:
+      - closing_pf_grade
+      - closing_pf_evaluate

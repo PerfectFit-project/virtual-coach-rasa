@@ -63,7 +63,7 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
 
     def validate_closing_lapse_info_correct(
             self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[str, Union[int, str]]:
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[str, None]:
         # pylint: disable=unused-argument
         """Validate form whether info on (re)lapse is correct"""
 
@@ -141,3 +141,46 @@ class ValidateClosingRelapsePreventionPlanTwoDoneForm(FormValidationAction):
             return {"closing_relapse_prevention_plan_two_done": None}
 
         return {"closing_relapse_prevention_plan_two_done": value}
+
+
+class ClosingContinueAfterSmoke(Action):
+    def name(self):
+        return "closing_continue_after_smoke"
+
+    async def run(self, dispatcher, tracker, domain):
+        # checks in which dialog the user is, and resumes the correct flow accordingly
+        return [FollowupAction('utter_closing_closing_1')]
+
+
+class ValidateClosingEvaluatePfForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_closing_evaluate_pf_form'
+
+    def validate_closing_pf_grade(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate closing pf grade"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_closing_pf_grade':
+            return {"closing_pf_grade": None}
+
+        if not validator.validate_number_in_range_response(1, 10, value):
+            dispatcher.utter_message(response="utter_please_answer_pf_eval")
+            return {"closing_pf_grade": None}
+
+        dispatcher.utter_message(text="Dankjewel!")
+        return {"closing_pf_grade": value}
+
+    def validate_closing_pf_evaluate(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate pf evaluate"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_closing_pf_evaluate':
+            return {"closing_pf_evaluate": None}
+
+        return {"closing_pf_evaluate": value}

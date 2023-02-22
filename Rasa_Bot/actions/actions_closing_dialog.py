@@ -1,16 +1,14 @@
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
-from virtual_coach_db.helper.definitions import (DialogExpectedDuration,
-                                                 ExecutionInterventionComponentsTriggers)
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any, List, Union
 from celery import Celery
 from . import validator
-from .definitions import REDIS_URL, MORNING, AFTERNOON, TIMEZONE
+from virtual_coach_db.dbschema.models import Users
+from virtual_coach_db.helper.helper_functions import get_db_session
+from .definitions import REDIS_URL, DATABASE_URL
 from .helper import get_latest_bot_utterance
-from .actions_rescheduling_dialog import get_reschedule_date
-import datetime
 
 
 celery = Celery(broker=REDIS_URL)
@@ -184,3 +182,24 @@ class ValidateClosingEvaluatePfForm(FormValidationAction):
             return {"closing_pf_evaluate": None}
 
         return {"closing_pf_evaluate": value}
+
+
+class ActionGetPaGoalFromDb(Action):
+    def name(self):
+        return "action_get_pa_goal_from_db"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        # Get sender ID from slot, this is a string
+        user_id = tracker.current_state()['sender_id']
+
+        # Creat session object to connect db
+        session = get_db_session(db_url=DATABASE_URL)
+
+        user_id = int(user_id)  # nicedayuid is an integer in the database
+        selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+        pa_goal = selected.long_term_pa_goal
+
+        session.close()
+
+        return [SlotSet("closing_pa_goal", pa_goal)]

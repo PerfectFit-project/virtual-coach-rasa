@@ -17,7 +17,8 @@ rules:
   - action: utter_closing_pa_2  # TODO: insert number of steps
   - action: utter_closing_pa_3
   - action: utter_closing_pa_4
-  - action: utter_closing_pa_5  # TODO: insert goal in utter
+  - action: action_get_pa_goal_from_db
+  - action: utter_closing_pa_5
   - action: closing_pa_evaluation_form
   - active_loop: closing_pa_evaluation_form
   wait_for_user_input: false
@@ -220,7 +221,7 @@ rules:
   - action: utter_closing_closing_5
   - action: closing_evaluate_pf_form
   - active_loop: closing_evaluate_pf_form
-  - active_loop: null  # Store answers to db
+  - active_loop: null  # TODO: Store answers to db
   - action: utter_closing_closing_6
   - action: utter_closing_closing_7
-  - action: utter_closing_closing_8
+  - action: utter_closing_closing_8  # TODO: email info to users?

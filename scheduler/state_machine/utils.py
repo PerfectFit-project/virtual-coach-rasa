@@ -1,8 +1,5 @@
-import os
-
 from const import DATABASE_URL, TIMEZONE
 from datetime import datetime, date, timedelta
-from dateutil import tz
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
@@ -316,22 +313,46 @@ def get_quit_date(user_id: int) -> date:
     return quit_date
 
 
-def get_execution_week(user_id: int, current_date: date) -> int:
+def get_execution_week(user_id: int) -> int:
     """
     Computes the current wek number of the execution phase
     Args:
         user_id: ID of the user
-        current_date: date for which the week has to be computed
 
     Returns: the week number
 
     """
-    quit_date = get_quit_date(user_id)
 
-    # +1 to start counting from week 1
-    week_number = int((current_date - quit_date).days / 7) + 1
+    session = get_db_session(DATABASE_URL)
+
+    selected = (session.query(Users)
+                .filter(Users.nicedayuid == user_id)
+                .one())
+
+    week_number = selected.execution_week
 
     return week_number
+
+
+def update_execution_week(user_id: int, week_number: int):
+    """
+    Computes the current wek number of the execution phase
+    Args:
+        user_id: ID of the user
+        week_number: execution week number
+
+    Returns: the week number
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (session.query(Users)
+                .filter(Users.nicedayuid == user_id)
+                .one())
+
+    selected.execution_week = week_number
+
+    session.commit()
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

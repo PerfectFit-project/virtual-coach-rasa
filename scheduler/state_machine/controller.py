@@ -2,7 +2,7 @@ import logging
 from celery import Celery
 from const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURATION,
                    PREPARATION_GA, MAX_PREPARATION_DURATION, EXECUTION_DURATION,
-                   REDIS_URL, DATABASE_URL, TRIGGER_COMPONENT, TIMEZONE)
+                   REDIS_URL, TRIGGER_COMPONENT)
 from datetime import date, datetime, timedelta
 from state_machine import utils
 from state_machine.state import State
@@ -289,9 +289,7 @@ class ExecutionRunState(State):
         elif dialog == Components.WEEKLY_REFLECTION:
             logging.info('Weekly reflection completed')
 
-            today = date.today()
-
-            week = utils.get_execution_week(user_id=self.user_id, date=today)
+            week = utils.get_execution_week(user_id=self.user_id)
 
             # if in week 3 or 8 of the execution, run future self after
             # completing the weekly reflection
@@ -317,6 +315,31 @@ class ExecutionRunState(State):
                                     dialog=Components.WEEKLY_REFLECTION,
                                     trigger=ComponentsTriggers.WEEKLY_REFLECTION)
 
+    def on_user_trigger(self, dialog: str):
+        # record that the dialog has been administered
+        utils.store_scheduled_dialog(user_id=self.user_id,
+                                     dialog=dialog,
+                                     phase_id=2)
+
+        if dialog == Components.RELAPSE_DIALOG:
+            self.set_new_state(RelapseState(self.user_id))
+
+    def on_new_day(self, current_date: datetime.date):
+
+        quit_date = utils.get_quit_date(self.user_id)
+
+        # in case the current day of the week is the same as the one set in the
+        # quit_date (and is not the same date), a new week started.
+        # Thus, the execution week must be updated
+        if (current_date > quit_date
+                and current_date.weekday() == quit_date.weekday()):
+
+            # get the current week number
+            week_number = utils.get_execution_week(self.user_id)
+
+            # increase the week number by one
+            utils.update_execution_week(self.user_id, week_number + 1)
+
     def run(self):
         print(self.state)
 
@@ -330,6 +353,50 @@ class RelapseState(State):
 
     def run(self):
         print(self.state)
+
+    def on_dialog_completed(self, dialog):
+        logging.info('A dialog has been completed  %s ', dialog)
+
+        utils.store_completed_dialog(user_id=self.user_id,
+                                     dialog=dialog,
+                                     phase_id=3)
+
+        if dialog in [Components.RELAPSE_DIALOG,
+                      Components.RELAPSE_DIALOG_HRS,
+                      Components.RELAPSE_DIALOG_LAPSE,
+                      Components.RELAPSE_DIALOG_RELAPSE,
+                      Components.RELAPSE_DIALOG_PA]:
+
+            logging.info('Relapse dialog completed ')
+
+            quit_date = utils.get_quit_date(self.user_id)
+            current_date = date.today()
+
+            # if the quit date is in the future, it has been reset
+            # during the relapse dialog
+            if quit_date > current_date:
+                # if a new quit date has been set, a notification on the day before
+                # and on the new date are planned. Then we go back to the buffer state
+                self.plan_new_date_notifications(quit_date)
+                self.set_new_state(BufferState(self.user_id))
+
+            else:
+                # if the quit date has not been changed, we go back to execution
+                logging.info('Relapse completed, back to execution')
+                self.set_new_state(ExecutionRunState(self.user_id))
+
+    def plan_new_date_notifications(self, quit_date):
+        # plan the notification for the day before the quit date
+        plan_and_store(user_id=self.user_id,
+                       dialog=Notifications.BEFORE_QUIT_NOTIFICATION,
+                       trigger=NotificationsTriggers.BEFORE_QUIT_NOTIFICATION,
+                       planned_date=quit_date-timedelta(days=1))
+
+        # plan the notification for the quit date
+        plan_and_store(user_id=self.user_id,
+                       dialog=Notifications.QUIT_DATE_NOTIFICATION,
+                       trigger=NotificationsTriggers.QUIT_DATE_NOTIFICATION,
+                       planned_date=quit_date)
 
 
 class ClosingState(State):
@@ -356,6 +423,19 @@ class ClosingState(State):
                        dialog=Components.CLOSING_DIALOG,
                        trigger=ComponentsTriggers.CLOSING_DIALOG,
                        planned_date=planned_date)
+
+    def on_dialog_completed(self, dialog):
+        logging.info('A dialog has been completed  %s ', dialog)
+
+        utils.store_completed_dialog(user_id=self.user_id,
+                                     dialog=dialog,
+                                     phase_id=2)
+
+        if dialog == Components.CLOSING_DIALOG:
+            logging.info('Closing dialog completed. Intervention finished')
+            plan_and_store(user_id=self.user_id,
+                           dialog=Components.GENERAL_ACTIVITY,
+                           trigger=ComponentsTriggers.GENERAL_ACTIVITY)
 
 
 def plan_and_store(user_id: int, dialog: str, trigger: str, planned_date: datetime = None):

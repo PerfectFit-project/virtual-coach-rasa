@@ -1,5 +1,5 @@
-from const import DATABASE_URL, TIMEZONE
 from datetime import datetime, date, timedelta
+from state_machine.const import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
@@ -288,7 +288,7 @@ def get_start_date(user_id: int) -> date:
                 .filter(Users.nicedayuid == user_id)
                 .one())
 
-    start_date = selected.start_date.date()
+    start_date = selected.start_date
 
     return start_date
 
@@ -376,20 +376,68 @@ def retrieve_intervention_day(user_id: int, current_date: date) -> int:
     return intervention_day
 
 
-def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
+def store_rescheduled_dialog(user_id: int,
+                             dialog_id: int,
+                             phase_id: int,
+                             planned_date: datetime,
+                             task_uuid: str = None):
+    """
+    This function marks when a dialog has been rescheduled, by update or creating
+    the entry in the DB
+    Args:
+        user_id: id of the user
+        dialog_id: db id of the dialog
+        phase_id: id of the intervention phase
+        planned_date: date when the dialog is to be delivered
+        task_uuid: celery task uuid
+
+    """
+    # get the id of the dialog
+    last_state = get_last_component_state(user_id=user_id,
+                                          intervention_component_id=dialog_id)
+
+    # update the dialog entry, setting a new date an uuid
+    if last_state is not None:
+        last_state.last_time = datetime.now().astimezone(TIMEZONE)
+        session = get_db_session(DATABASE_URL)
+        selected = (session.query(UserInterventionState)
+                    .filter(UserInterventionState.id == last_state.id)
+                    .one())
+
+        selected.next_planned_date = planned_date
+        selected.task_uuid = task_uuid
+
+        session.commit()
+
+    # if for any reason the dialog starting was not recorded in the DB, create the entry
+    else:
+        state = UserInterventionState(
+            users_nicedayuid=user_id,
+            intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
+            intervention_component_id=dialog_id,
+            completed=False,
+            last_time=datetime.now().astimezone(TIMEZONE),
+            last_part=0,
+            next_planned_date=planned_date,
+            task_uuid=task_uuid
+        )
+        # record the dialog completion in the DB
+        store_intervention_component_to_db(state)
+
+
+def store_completed_dialog(user_id: int, dialog_id: int, phase_id: int):
     """
     This function marks when a dialog has been completed, by update or creating
     the entry in the DB
     Args:
         user_id: id of the user
-        dialog: name of the dialog
+        dialog_id: db id of the dialog
         phase_id: id of the intervention phase
 
     """
     # get the id of the dialog
-    db_component = get_intervention_component(dialog)
     last_state = get_last_component_state(user_id=user_id,
-                                          intervention_component_id=db_component.intervention_component_id)
+                                          intervention_component_id=dialog_id)
 
     # update the dialog entry, setting the `completed` filed to true
     if last_state is not None:
@@ -407,7 +455,7 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
         state = UserInterventionState(
             users_nicedayuid=user_id,
             intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
-            intervention_component_id=db_component.intervention_component_id,
+            intervention_component_id=dialog_id,
             completed=True,
             last_time=datetime.now().astimezone(TIMEZONE),
             last_part=0,
@@ -419,7 +467,7 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
 
 
 def store_scheduled_dialog(user_id: int,
-                           dialog: str,
+                           dialog_id: int,
                            phase_id: int,
                            planned_date: datetime = datetime.now().astimezone(TIMEZONE),
                            task_uuid: str = None):
@@ -428,18 +476,18 @@ def store_scheduled_dialog(user_id: int,
     the entry in the DB
     Args:
         user_id: id of the user
-        dialog: name of the dialog
+        dialog_id: db id of the dialog
         phase_id: id of the intervention phase
         planned_date: date when the dialog is to be delivered
         task_uuid: celery task uuid
 
     """
     # get the id of the dialog
-    db_component = get_intervention_component(dialog)
+
     state = UserInterventionState(
         users_nicedayuid=user_id,
         intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
-        intervention_component_id=db_component.intervention_component_id,
+        intervention_component_id=dialog_id,
         completed=False,
         last_time=None,
         last_part=0,

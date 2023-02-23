@@ -40,9 +40,16 @@ class State(object):
         Args:
             dialog: the dialog that started
 
-        Returns:
-            The new state to be activated, or None if the state is
-            not to be changed
+        """
+        return None
+
+    def on_dialog_rescheduled(self, dialog, new_date):
+        """
+        Determines what happens when a dialog is rescheduled
+        Args:
+            dialog: the dialog that rescheduled
+            new_date: rescheduled date
+
         """
         return None
 
@@ -52,9 +59,6 @@ class State(object):
         Args:
             dialog: the dialog triggered
 
-        Returns:
-            The new state to be activated, or None if the state is
-            not to be changed
 
         """
 

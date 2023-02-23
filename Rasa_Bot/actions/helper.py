@@ -51,7 +51,7 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    selected.quit_date = quit_date
+    selected.quit_date = datetime.datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
 
 

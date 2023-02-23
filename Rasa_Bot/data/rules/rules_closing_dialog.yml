@@ -164,10 +164,18 @@ rules:
   - active_loop: closing_relapse_prevention_plan_one_done_form
   - active_loop: null
   - action: utter_closing_prevention_plan_5
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_closing_prevention_plan_6
-  - action: utter_closing_prevention_plan_7  # TODO: send lastige situaties bewegen
+  - action: utter_closing_prevention_plan_7
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_closing_prevention_plan_8
-  - action: utter_closing_prevention_plan_9  # TODO: send useful exercises
+  - action: utter_closing_prevention_plan_9  # TODO: send useful top 5 exercises
   - action: utter_closing_prevention_plan_10  # TODO: check if we can use email to participants
   - action: utter_closing_prevention_plan_11  # TODO: check if we can use email to participants
   - action: utter_closing_prevention_plan_12

@@ -170,7 +170,7 @@ class TriggerRelapseDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        celery.send_task('celery_tasks.relapse_dialog',
+        celery.send_task('celery_tasks.user_trigger_dialog',
                          (user_id, Components.RELAPSE_DIALOG))
 
         return []

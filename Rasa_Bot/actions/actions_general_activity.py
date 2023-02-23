@@ -16,6 +16,7 @@ from .definitions import (COMMITMENT, CONSENSUS,
                           REFLECTIVE_QUESTION_CONSENSUS)
 from .helper import (get_latest_bot_utterance, 
                      get_random_activities, 
+                     get_user_intervention_activity_inputs,
                      store_dialog_closed_answer_to_db)
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
@@ -450,22 +451,6 @@ def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
                     activity_rating=rating_value)
     )
     session.commit()
-
-
-def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
-    session = get_db_session(db_url=DATABASE_URL)
-
-    user_inputs = (
-        session.query(
-            InterventionActivitiesPerformed
-        )
-        .filter(
-            InterventionActivitiesPerformed.users_nicedayuid == user_id,
-            InterventionActivitiesPerformed.intervention_activity_id == activity_id
-        ).all()
-    )
-
-    return user_inputs
     
     
 class ValidatePersuasionReflectionForm(FormValidationAction):

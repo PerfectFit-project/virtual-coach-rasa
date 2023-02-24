@@ -7,7 +7,7 @@ rules:
 - rule: rescheduling query dialog now - activity dialog
   steps:
     - intent: EXTERNAL_trigger_reschedule_activity
-#    - action: utter_intro
+    - action: utter_intro
     - action: action_expected_time_next_part
     - action: rescheduling_now_or_later_form
     - active_loop: rescheduling_now_or_later_form
@@ -52,9 +52,9 @@ rules:
     - action: action_ask_new_time
     - action: pick_a_daypart_form
     - active_loop: pick_a_daypart_form
-      wait_for_user_input: false
+  wait_for_user_input: false
 
-- rule: reschedule
+- rule: reschedule the dialog
   condition:
   - active_loop: pick_a_daypart_form
   steps:

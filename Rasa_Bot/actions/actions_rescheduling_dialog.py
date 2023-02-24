@@ -30,7 +30,7 @@ class ActionContinueGeneralActivityDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
         celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, ExecutionInterventionComponentsTriggers.RESCHEDULE_ACTIVITY))
+                         (user_id, ExecutionInterventionComponentsTriggers.CONTINUE_GENERAL_ACTIVITY))
 
 
 class ActionContinueFutureSelfDialog(Action):
@@ -40,7 +40,7 @@ class ActionContinueFutureSelfDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
         celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, ExecutionInterventionComponentsTriggers.RESCHEDULE_ACTIVITY))
+                         (user_id, ExecutionInterventionComponentsTriggers.CONTINUE_FUTURE_SELF_ACTIVITY))
 
 
 class ActionResetReschedulingNowSlot(Action):
@@ -71,7 +71,7 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         if not now_or_later:
             dispatcher.utter_message(response="utter_please_answer_1_2")
 
-        return {"rescheduling_now": now_or_later}
+        return {"rescheduling_now": value}
 
 
 class ActionGetReschedulingOptionsList(Action):

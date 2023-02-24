@@ -4,7 +4,7 @@ from datetime import date, datetime, timedelta
 from state_machine import utils
 from state_machine.const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURATION,
                                  PREPARATION_GA, MAX_PREPARATION_DURATION, EXECUTION_DURATION,
-                                 REDIS_URL, TRIGGER_COMPONENT)
+                                 REDIS_URL, TRIGGER_COMPONENT, SCHEDULE_TRIGGER_COMPONENT)
 from state_machine.state import State
 from virtual_coach_db.helper.definitions import (ComponentsTriggers,
                                                  Components, Notifications)
@@ -497,7 +497,7 @@ def plan_and_store(user_id: int, dialog: str, planned_date: datetime = None):
                                      dialog_id=dialog_id,
                                      phase_id=1)
     else:
-        task = celery.send_task(TRIGGER_COMPONENT,
+        task = celery.send_task(SCHEDULE_TRIGGER_COMPONENT,
                                 (user_id, trigger),
                                 eta=planned_date)
 
@@ -523,7 +523,7 @@ def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: 
     dialog_id = component.intervention_component_id
     trigger = component.intervention_component_trigger
 
-    task = celery.send_task(TRIGGER_COMPONENT,
+    task = celery.send_task(SCHEDULE_TRIGGER_COMPONENT,
                             (user_id, trigger),
                             eta=planned_date)
 

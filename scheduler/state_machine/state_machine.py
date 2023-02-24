@@ -7,9 +7,51 @@ from state_machine.state import State
 import logging
 
 
+class DialogState:
+    running: bool
+    starting_time: datetime
+
+    def __init__(self):
+        self.running = False
+        self.starting_time = datetime.now()
+
+    def set_to_running(self):
+        """
+        Set the dialog status to running
+
+        """
+        self.running = True
+        self.starting_time = datetime.now()
+
+    def set_to_idle(self):
+
+        """
+        Set the dialog status to not running
+
+        """
+        self.running = False
+
+    def get_running_status(self):
+
+        """
+        Get the current status of the dialog
+
+        """
+        return self.running
+
+    def get_running_time(self):
+
+        """
+        Get the last time a dialog started
+
+        """
+        return self.starting_time
+
+
 class EventEnum(Enum):
     DIALOG_COMPLETED = 'dialog_completed'
     DIALOG_RESCHEDULED = 'dialog_rescheduled'
+    DIALOG_STARTED = 'dialog_started'
     NEW_DAY = 'new_day'
     USER_TRIGGER = 'user_trigger'
 
@@ -26,6 +68,7 @@ class StateMachine:
         self.state = state
         self.machine_id = self.state.user_id
         self.state.signal_new_event = self.new_state_callback
+        self.dialog_state = DialogState()
 
         logging.info('A FSM has been created with the ID %s', self.machine_id)
 
@@ -34,13 +77,20 @@ class StateMachine:
 
         if event.EventType == EventEnum.DIALOG_COMPLETED:
             logging.info('Dialog completed event received %s ', event.Descriptor)
+            self.dialog_state.set_to_idle()
             self.state.on_dialog_completed(event.Descriptor)
 
         if event.EventType == EventEnum.DIALOG_RESCHEDULED:
             logging.info('Dialog completed event received %s ', event.Descriptor)
+            self.dialog_state.set_to_idle()
             # in this case the descriptor is a tuple, where 0 is
             # the dialog and 1 the new date
             self.state.on_dialog_rescheduled(event.Descriptor[0], event.Descriptor[1])
+
+        if event.EventType == EventEnum.DIALOG_STARTED:
+            logging.info('Dialog started event received %s ', event.Descriptor)
+            # in this case we track that a dialog is running
+            self.dialog_state.set_to_running()
 
         elif event.EventType == EventEnum.NEW_DAY:
             logging.info('New day received %s: ', event.Descriptor)
@@ -51,6 +101,7 @@ class StateMachine:
 
         if event.EventType == EventEnum.USER_TRIGGER:
             logging.info('User trigger event received %s ', event.Descriptor)
+            self.dialog_state.set_to_running()
             self.state.on_user_trigger(event.Descriptor)
 
     def new_state_callback(self):

@@ -98,6 +98,34 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
     return selected
 
 
+def get_component_name(intervention_component_trigger: str) -> str:
+    """
+    Get the intervention component name from the intervention component's trigger.
+
+    Args:
+        intervention_component_trigger: the trigger of the intervention component.
+                                The names are listed in virtual_coach_db.helper.definitions
+                                in the Components class
+
+    Returns:
+            The intervention component name.
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (
+        session.query(
+            InterventionComponents
+        )
+        .filter(
+            InterventionComponents.intervention_component_trigger == intervention_component_trigger
+        )
+        .one
+    )
+
+    return selected.intervention_component_name
+
+
 def get_current_phase(user_id: int) -> InterventionPhases:
     """
     Get the current phase of the intervention of a user.

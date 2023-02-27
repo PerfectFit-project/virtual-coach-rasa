@@ -6,8 +6,7 @@ from state_machine.const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURAT
                                  PREPARATION_GA, MAX_PREPARATION_DURATION, EXECUTION_DURATION,
                                  REDIS_URL, TRIGGER_COMPONENT, SCHEDULE_TRIGGER_COMPONENT)
 from state_machine.state import State
-from virtual_coach_db.helper.definitions import (ComponentsTriggers,
-                                                 Components, Notifications)
+from virtual_coach_db.helper.definitions import (Components, Notifications)
 
 celery = Celery(broker=REDIS_URL)
 
@@ -63,10 +62,8 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in the preparation phase nothing can be triggered
-        # the central fallback mode is triggered instead
         plan_and_store(user_id=self.user_id,
-                       dialog=Components.FIRST_AID_KIT)
+                       dialog=dialog)
 
         return None
 
@@ -134,18 +131,15 @@ class TrackingState(State):
                           planned_date=new_date,
                           phase=1)
 
+    def on_user_trigger(self, dialog):
+        plan_and_store(user_id=self.user_id,
+                       dialog=dialog)
+
     def run(self):
         logging.info('Starting Tracking state')
 
         current_date = date.today()
         self.check_if_end_date(current_date)
-
-    def on_user_trigger(self, dialog):
-        # in the preparation phase nothing can be triggered
-        # the central fallback mode is triggered instead
-        celery.send_task(TRIGGER_COMPONENT,
-                         (self.user_id,
-                          ComponentsTriggers.FIRST_AID_KIT))
 
     def on_new_day(self, current_date: datetime.date):
         logging.info('current date: %s', current_date)
@@ -187,7 +181,7 @@ class GoalsSettingState(State):
             # phase can be planned
             self.plan_buffer_phase_dialogs()
 
-        elif dialog == Components.FIRST_AID_KIT:
+        elif dialog == Components.FIRST_AID_KIT_VIDEO:
             logging.info('First aid kit completed, starting buffering state')
             self.set_new_state(BufferState(self.user_id))
 
@@ -197,6 +191,10 @@ class GoalsSettingState(State):
                           dialog=dialog,
                           planned_date=new_date,
                           phase=1)
+
+    def on_user_trigger(self, dialog):
+        plan_and_store(user_id=self.user_id,
+                       dialog=dialog)
 
     def plan_buffer_phase_dialogs(self):
         quit_date = utils.get_quit_date(self.user_id)
@@ -281,12 +279,11 @@ class BufferState(State):
 
     def on_user_trigger(self, dialog: str):
         # record that the dialog has been administered
-        utils.store_scheduled_dialog(user_id=self.user_id,
-                                     dialog=dialog,
-                                     phase_id=1)
+        plan_and_store(user_id=self.user_id,
+                       dialog=dialog)
 
     def check_if_end_date(self, current_date: datetime.date):
-        quit_date = utils.get_start_date(self.user_id)
+        quit_date = utils.get_quit_date(self.user_id)
 
         if current_date == quit_date:
             logging.info('Buffer sate ended, starting execution state')
@@ -352,10 +349,10 @@ class ExecutionRunState(State):
 
     def on_user_trigger(self, dialog: str):
 
-        if dialog == Components.RELAPSE_DIALOG:
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.RELAPSE_DIALOG)
+        plan_and_store(user_id=self.user_id,
+                       dialog=dialog)
 
+        if dialog == Components.RELAPSE_DIALOG:
             self.set_new_state(RelapseState(self.user_id))
 
     def on_new_day(self, current_date: datetime.date):
@@ -418,6 +415,10 @@ class RelapseState(State):
                 logging.info('Relapse completed, back to execution')
                 self.set_new_state(ExecutionRunState(self.user_id))
 
+    def on_user_trigger(self, dialog):
+        plan_and_store(user_id=self.user_id,
+                       dialog=dialog)
+
     def plan_new_date_notifications(self, quit_date):
         # plan the notification for the day before the quit date
         plan_and_store(user_id=self.user_id,
@@ -453,6 +454,10 @@ class ClosingState(State):
         plan_and_store(user_id=self.user_id,
                        dialog=Components.CLOSING_DIALOG,
                        planned_date=planned_date)
+
+    def on_user_trigger(self, dialog):
+        plan_and_store(user_id=self.user_id,
+                       dialog=dialog)
 
     def on_dialog_completed(self, dialog):
         logging.info('A dialog has been completed  %s ', dialog)

@@ -120,7 +120,7 @@ def get_component_name(intervention_component_trigger: str) -> str:
         .filter(
             InterventionComponents.intervention_component_trigger == intervention_component_trigger
         )
-        .one
+        .first()
     )
 
     return selected.intervention_component_name
@@ -336,7 +336,7 @@ def get_quit_date(user_id: int) -> date:
                 .filter(Users.nicedayuid == user_id)
                 .one())
 
-    quit_date = selected.quit_date.date()
+    quit_date = selected.quit_date
 
     return quit_date
 
@@ -453,19 +453,20 @@ def store_rescheduled_dialog(user_id: int,
         store_intervention_component_to_db(state)
 
 
-def store_completed_dialog(user_id: int, dialog_id: int, phase_id: int):
+def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
     """
     This function marks when a dialog has been completed, by update or creating
     the entry in the DB
     Args:
         user_id: id of the user
-        dialog_id: db id of the dialog
+        dialog: name of the dialog
         phase_id: id of the intervention phase
 
     """
     # get the id of the dialog
+    dialog = get_intervention_component(dialog)
     last_state = get_last_component_state(user_id=user_id,
-                                          intervention_component_id=dialog_id)
+                                          intervention_component_id=dialog.intervention_component_id)
 
     # update the dialog entry, setting the `completed` filed to true
     if last_state is not None:
@@ -483,7 +484,7 @@ def store_completed_dialog(user_id: int, dialog_id: int, phase_id: int):
         state = UserInterventionState(
             users_nicedayuid=user_id,
             intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
-            intervention_component_id=dialog_id,
+            intervention_component_id=dialog.intervention_component_id,
             completed=True,
             last_time=datetime.now().astimezone(TIMEZONE),
             last_part=0,

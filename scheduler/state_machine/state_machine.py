@@ -1,15 +1,13 @@
-from datetime import date, datetime
 from dataclasses import dataclass
+from datetime import date, datetime
 from enum import Enum
 from typing import Any
-
 from state_machine.state import State
+
 import logging
 
 
 class DialogState:
-    running: bool
-    starting_time: datetime
 
     def __init__(self):
         self.running = False
@@ -22,6 +20,7 @@ class DialogState:
         """
         self.running = True
         self.starting_time = datetime.now()
+        logging.info("DIALOG STATUS SET TO TRUE")
 
     def set_to_idle(self):
 
@@ -30,6 +29,7 @@ class DialogState:
 
         """
         self.running = False
+        logging.info("DIALOG STATUS SET TO FALSE")
 
     def get_running_status(self):
 
@@ -51,6 +51,7 @@ class DialogState:
 class EventEnum(Enum):
     DIALOG_COMPLETED = 'dialog_completed'
     DIALOG_RESCHEDULED = 'dialog_rescheduled'
+    DIALOG_SCHEDULED_STARTED = 'dialog_scheduled_started'
     DIALOG_STARTED = 'dialog_started'
     NEW_DAY = 'new_day'
     USER_TRIGGER = 'user_trigger'
@@ -81,8 +82,7 @@ class StateMachine:
             self.state.on_dialog_completed(event.Descriptor)
 
         if event.EventType == EventEnum.DIALOG_RESCHEDULED:
-            logging.info('Dialog completed event received %s ', event.Descriptor)
-            self.dialog_state.set_to_idle()
+            logging.info('Dialog resheduled event received %s ', event.Descriptor)
             # in this case the descriptor is a tuple, where 0 is
             # the dialog and 1 the new date
             self.state.on_dialog_rescheduled(event.Descriptor[0], event.Descriptor[1])
@@ -91,6 +91,7 @@ class StateMachine:
             logging.info('Dialog started event received %s ', event.Descriptor)
             # in this case we track that a dialog is running
             self.dialog_state.set_to_running()
+            print("Status from FSM: ", self.dialog_state.get_running_status())
 
         elif event.EventType == EventEnum.NEW_DAY:
             logging.info('New day received %s: ', event.Descriptor)

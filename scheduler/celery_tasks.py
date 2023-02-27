@@ -23,6 +23,13 @@ state_machines = [{'machine': StateMachine(OnboardingState(TEST_USER)), 'id': TE
 
 
 @app.task
+def get_fsm(user_id: int):
+    # this is a placeholder for the creation of a new user. At the moment we initialize
+    # just one fsm with a test user
+    user_fsm = [print(item['machine'].state) for item in state_machines if item['id'] == user_id]
+
+
+@app.task
 def create_new_user(user_id: int):
     # this is a placeholder for the creation of a new user. At the moment we initialize
     # just one fsm with a test user
@@ -82,6 +89,9 @@ def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=u
         user_id: the ID if the user to send the trigger to
         trigger: the intent to be sent
     """
+
+    logging.info('Current machine state: %s', get_fsm(user_id).state.__state__())
+
     send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, None))
 
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
@@ -110,6 +120,12 @@ def trigger_scheduled_intervention_component(self, user_id, trigger):  # pylint:
 
     # if a dialog is not running or the time has expired (Rasa session reset)
     # send the trigger
+
+    logging.info("scheduled dialog trigger received")
+    logging.info("FSM status: %s", status)
+    logging.info("FSM time: %s", (now-last_time).seconds)
+    logging.info("FSM id: %s", user_fsm.machine_id)
+
     if not status or (now-last_time).seconds > MAXIMUM_DIALOG_DURATION:
         user_fsm.dialog_state.set_to_running()
         trigger_intervention_component.apply_async(args=[user_id, trigger])

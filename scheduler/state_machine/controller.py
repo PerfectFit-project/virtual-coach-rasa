@@ -46,9 +46,9 @@ class OnboardingState(State):
         elif dialog == Components.TRACK_BEHAVIOR:
             logging.info('Tack behavior completed, starting future self')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.FUTURE_SELF)
+                           dialog=Components.FUTURE_SELF_LONG)
 
-        elif dialog == Components.FUTURE_SELF:
+        elif dialog == Components.FUTURE_SELF_LONG:
             self.schedule_next_dialogs()
             # upon the completion of the future self dialog,
             # the new state can be triggered
@@ -83,7 +83,7 @@ class OnboardingState(State):
                                         time_delta=FUTURE_SELF_INTRO)
 
         plan_and_store(user_id=self.user_id,
-                       dialog=Components.FUTURE_SELF,
+                       dialog=Components.FUTURE_SELF_SHORT,
                        planned_date=fs_time)
 
     def schedule_tracking_notifications(self):
@@ -120,7 +120,7 @@ class TrackingState(State):
                                      dialog=dialog,
                                      phase_id=1)
 
-        if dialog == Components.FUTURE_SELF:
+        if dialog == Components.FUTURE_SELF_SHORT:
             logging.info('Future self completed')
             self.self_completed = True
 
@@ -176,10 +176,12 @@ class GoalsSettingState(State):
         if dialog == Components.GOAL_SETTING:
             logging.info('Goal setting completed, starting first aid kit')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.FIRST_AID_KIT)
+                           dialog=Components.FIRST_AID_KIT_VIDEO)
             # after the completion of the goal setting dialog, the execution
             # phase can be planned
             self.plan_buffer_phase_dialogs()
+            self.plan_execution_start_dialog()
+            self.activate_pa_notifications()
 
         elif dialog == Components.FIRST_AID_KIT_VIDEO:
             logging.info('First aid kit completed, starting buffering state')
@@ -229,7 +231,7 @@ class GoalsSettingState(State):
         first_date = date.today() + timedelta(days=1)
 
         # the time span to quit date
-        buffer_length = utils.get_quit_date(self.user_id) - first_date
+        buffer_length = (utils.get_quit_date(self.user_id) - first_date).days
 
         total_duration = buffer_length + EXECUTION_DURATION
         last_date = first_date + timedelta(days=total_duration)
@@ -285,7 +287,7 @@ class BufferState(State):
     def check_if_end_date(self, current_date: datetime.date):
         quit_date = utils.get_quit_date(self.user_id)
 
-        if current_date == quit_date:
+        if current_date >= quit_date:
             logging.info('Buffer sate ended, starting execution state')
             self.set_new_state(ExecutionRunState(self.user_id))
 
@@ -324,7 +326,7 @@ class ExecutionRunState(State):
             if week in [3, 8]:
                 logging.info('Starting future self')
                 plan_and_store(user_id=self.user_id,
-                               dialog=Components.FUTURE_SELF)
+                               dialog=Components.FUTURE_SELF_SHORT)
 
             # if in week 12, the execution is finished. Start the closing state
             elif week == 12:
@@ -336,7 +338,7 @@ class ExecutionRunState(State):
                                         dialog=Components.WEEKLY_REFLECTION)
 
         # after the completion of the future self, schedule the next weekly reflection
-        elif dialog == Components.FUTURE_SELF:
+        elif dialog == Components.FUTURE_SELF_SHORT:
             schedule_next_execution(user_id=self.user_id,
                                     dialog=Components.WEEKLY_REFLECTION)
 
@@ -362,13 +364,14 @@ class ExecutionRunState(State):
         # in case the current day of the week is the same as the one set in the
         # quit_date (and is not the same date), a new week started.
         # Thus, the execution week must be updated
-        if (current_date > quit_date
-                and current_date.weekday() == quit_date.weekday()):
+        print('This is the quit date: ', quit_date)
+        if utils.is_new_week(current_date, quit_date):
             # get the current week number
-            week_number = utils.get_execution_week(self.user_id)
+            week_number = utils.compute_spent_weeks(current_date, quit_date)
+            print('Week number: ', week_number)
 
             # increase the week number by one
-            utils.update_execution_week(self.user_id, week_number + 1)
+            utils.update_execution_week(self.user_id, week_number)
 
     def run(self):
         print(self.state)
@@ -442,11 +445,11 @@ class ClosingState(State):
         print(self.state)
         # plan the execution of the closing dialog
 
-        component_id = utils.get_intervention_component(Components.CLOSING_DIALOG)
+        component = utils.get_intervention_component(Components.CLOSING_DIALOG)
 
         closing_date = utils.get_preferred_date_time(
             user_id=self.user_id,
-            intervention_component_id=component_id
+            intervention_component_id=component.intervention_component_id
         )[0]
 
         planned_date = utils.create_new_date(closing_date)
@@ -468,8 +471,6 @@ class ClosingState(State):
 
         if dialog == Components.CLOSING_DIALOG:
             logging.info('Closing dialog completed. Intervention finished')
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.GENERAL_ACTIVITY)
 
     def on_dialog_rescheduled(self, dialog, new_date):
 

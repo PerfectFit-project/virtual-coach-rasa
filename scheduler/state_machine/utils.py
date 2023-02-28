@@ -269,7 +269,7 @@ def get_preferred_date_time(user_id: int, intervention_component_id: int) -> tup
     days_str = preferences.week_days
     days_list = list(map(int, days_str.split(',')))
 
-    preferred_time = preferences.preferred_time
+    preferred_time = preferences.preferred_time.time()
 
     return days_list, preferred_time
 
@@ -360,6 +360,43 @@ def get_execution_week(user_id: int) -> int:
     week_number = selected.execution_week
 
     return week_number
+
+
+def compute_spent_weeks(current_date: date, starting_date: date) -> int:
+    """
+    Compute the number of weeks between two dates
+    Args:
+        current_date: the current date
+        starting_date: the date from which to start the weeks counting
+
+    Returns: The number of weeks beetween the two dates
+
+    """
+    spent_days = (current_date - starting_date).days
+
+    spent_weeks = spent_days // 7
+
+    return spent_weeks
+
+
+def is_new_week(current_date: date, starting_date: date) -> bool:
+    """
+
+    Args:
+        current_date: the current date
+        starting_date: the date which to check against with if a new
+        week has started
+
+    Returns: True if the current_date is exctly at the beginning of a
+    new week, false otherwise
+
+    """
+    spent_days = (current_date - starting_date).days
+
+    if spent_days % 7 == 0:
+        return True
+
+    return False
 
 
 def update_execution_week(user_id: int, week_number: int):

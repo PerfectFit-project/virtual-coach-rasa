@@ -2,6 +2,7 @@ import logging
 import os
 import requests
 from celery import Celery
+from celery.signals import worker_ready
 from datetime import datetime, timedelta
 from state_machine.state_machine import StateMachine, EventEnum, Event
 from state_machine.const import REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION
@@ -19,6 +20,13 @@ state_machines = [{'machine': StateMachine(OnboardingState(TEST_USER)), 'id': TE
 
 
 # state_machines = []
+
+@worker_ready.connect
+def at_start(sender, **k):  # pylint: disable=unused-argument
+    """
+    When celery is ready, the watchdog for the new day notification is started
+    """
+    notify_new_day.apply_async(args=[datetime.today()])
 
 
 @app.task
@@ -73,10 +81,6 @@ def notify_new_day(self, current_date: datetime.date):  # pylint: disable=unused
     notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
 
 
-# TODO: implement a cleaner way to start the day counter
-notify_new_day.apply_async(args=[datetime.today()])
-
-
 @app.task(bind=True)
 def intervention_component_completed(self,  # pylint: disable=unused-argument
                                      user_id: int,
@@ -87,7 +91,7 @@ def intervention_component_completed(self,  # pylint: disable=unused-argument
         user_id: the ID of the user
         intervention_component_name: the component completed
     """
-    # triggered when a dialog has been completed
+
     logging.info('Celery received a dialog completion')
     send_fsm_event(user_id=user_id,
                    event=Event(EventEnum.DIALOG_COMPLETED, intervention_component_name))
@@ -102,7 +106,7 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
         intervention_component_name: the component rescheduled
         new_date: the date to which the component has to be rescheduled
     """
-    # triggered when a dialog is rescheduled
+
     logging.info('Celery received a dialog rescheduling')
     send_fsm_event(user_id=user_id,
                    event=Event(EventEnum.DIALOG_RESCHEDULED,
@@ -178,7 +182,6 @@ def get_fsm(user_id: int) -> StateMachine:
     Returns: The StateMachine object of a user
 
     """
-    # get the user state machine
     user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
     return user_fsm
 
@@ -191,6 +194,5 @@ def send_fsm_event(user_id: int, event: Event):
         event: the event that need to be sent
 
     """
-    # send event to the user state machine
     user_fsm = get_fsm(user_id)
     user_fsm.on_event(event)

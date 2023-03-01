@@ -2,7 +2,7 @@ import os
 from dateutil import tz
 
 # maximum duration of the dialog in seconds
-MAXIMUM_DIALOG_DURATION = 20
+MAXIMUM_DIALOG_DURATION = 60*60
 
 # intervention times (days)
 FUTURE_SELF_INTRO = 8

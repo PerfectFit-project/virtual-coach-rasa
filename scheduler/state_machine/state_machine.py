@@ -121,13 +121,15 @@ class StateMachine:
         Returns: the descriptor formatted as date
 
         """
-        if type(descriptor) == str:
+        format_date = None
+
+        if isinstance(descriptor, str):
             try:
                 format_date = datetime.strptime(descriptor, '%Y-%m-%dT%H:%M:%S').date()
             except:
-                format_date = descriptor
+                format_date = None
 
-        else:
+        elif isinstance(descriptor, date):
             format_date = descriptor
 
         return format_date

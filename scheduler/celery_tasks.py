@@ -7,7 +7,6 @@ from state_machine.state_machine import StateMachine, EventEnum, Event
 from state_machine.const import REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION
 from state_machine.controller import OnboardingState
 from state_machine.utils import get_component_name
-from virtual_coach_db.helper.definitions import Components
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
@@ -46,16 +45,17 @@ def start_user_intervention(user_id: int):
 
 
 @app.task(bind=True)
-def user_trigger_dialog(self,
+def user_trigger_dialog(self,  # pylint: disable=unused-argument
                         user_id: int,
-                        intervention_component_name: str):  # pylint: disable=unused-argument
+                        intervention_component_name: str):
     """
     This task is used when a dialog is triggered by the user.
     Args:
         user_id: the ID of the user to send the trigger to
         intervention_component_name: the intent to be sent
     """
-    send_fsm_event(user_id=user_id, event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
+    send_fsm_event(user_id=user_id,
+                   event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
 
 
 @app.task(bind=True)
@@ -65,7 +65,9 @@ def notify_new_day(self, current_date: datetime.date):  # pylint: disable=unused
     Args:
         current_date: the date to be sent to the state machines
     """
-    [send_fsm_event(user_id=item['id'], event=Event(EventEnum.NEW_DAY, current_date)) for item in state_machines]
+    for item in state_machines:
+        send_fsm_event(user_id=item['id'], event=Event(EventEnum.NEW_DAY, current_date))
+
     # schedule the task for tomorrow
     tomorrow = datetime.today() + timedelta(days=1)
     notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
@@ -76,9 +78,9 @@ notify_new_day.apply_async(args=[datetime.today()])
 
 
 @app.task(bind=True)
-def intervention_component_completed(self,
+def intervention_component_completed(self,  # pylint: disable=unused-argument
                                      user_id: int,
-                                     intervention_component_name: str):  # pylint: disable=unused-argument
+                                     intervention_component_name: str):
     """
     This task notifies the state machine that a dialog has been rescheduled.
     Args:
@@ -87,7 +89,8 @@ def intervention_component_completed(self,
     """
     # triggered when a dialog has been completed
     logging.info('Celery received a dialog completion')
-    send_fsm_event(user_id=user_id, event=Event(EventEnum.DIALOG_COMPLETED, intervention_component_name))
+    send_fsm_event(user_id=user_id,
+                   event=Event(EventEnum.DIALOG_COMPLETED, intervention_component_name))
 
 
 @app.task
@@ -102,7 +105,8 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
     # triggered when a dialog is rescheduled
     logging.info('Celery received a dialog rescheduling')
     send_fsm_event(user_id=user_id,
-                   event=Event(EventEnum.DIALOG_RESCHEDULED, (intervention_component_name, new_date)))
+                   event=Event(EventEnum.DIALOG_RESCHEDULED,
+                               (intervention_component_name, new_date)))
 
 
 @app.task(bind=True)
@@ -126,7 +130,8 @@ def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=u
 
 
 @app.task(bind=True)
-def trigger_scheduled_intervention_component(self, user_id, trigger):  # pylint: disable=unused-argument
+def trigger_scheduled_intervention_component(self, user_id,  # pylint: disable=unused-argument
+                                             trigger):
     """
     This task sends a trigger to Rasa after verifying that a dialog is not
     currently running for the user. If a dialog is running, it is rescheduled.
@@ -147,10 +152,10 @@ def trigger_scheduled_intervention_component(self, user_id, trigger):  # pylint:
 
     logging.info("scheduled dialog trigger received")
     logging.info("FSM status: %s", status)
-    logging.info("FSM time: %s", (now-last_time).seconds)
+    logging.info("FSM time: %s", (now - last_time).seconds)
     logging.info("FSM id: %s", user_fsm.machine_id)
 
-    if not status or (now-last_time).seconds > MAXIMUM_DIALOG_DURATION:
+    if not status or (now - last_time).seconds > MAXIMUM_DIALOG_DURATION:
         user_fsm.dialog_state.set_to_running()
         trigger_intervention_component.apply_async(args=[user_id, trigger])
 

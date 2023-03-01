@@ -1,7 +1,7 @@
 import datetime
 
 
-class State(object):
+class State:
     """
     Enum of possible states
     """
@@ -32,9 +32,8 @@ class State(object):
         Execute the actions when entering the state
 
         """
-        pass
 
-    def on_dialog_completed(self, dialog):
+    def on_dialog_completed(self, dialog):  # pylint: disable=unused-argument
         """
         Determines what happens when a dialog has been completed
         Args:
@@ -43,7 +42,7 @@ class State(object):
         """
         return None
 
-    def on_dialog_rescheduled(self, dialog, new_date):
+    def on_dialog_rescheduled(self, dialog, new_date):  # pylint: disable=unused-argument
         """
         Determines what happens when a dialog is rescheduled
         Args:
@@ -53,7 +52,7 @@ class State(object):
         """
         return None
 
-    def on_user_trigger(self, dialog):
+    def on_user_trigger(self, dialog):  # pylint: disable=unused-argument
         """
         Determines what happens when a dialog is triggered by the user
         Args:
@@ -64,12 +63,12 @@ class State(object):
 
         return None
 
-    def on_new_day(self, date: datetime.date):
+    def on_new_day(self, current_date: datetime.date):  # pylint: disable=unused-argument
         """
         Determines what happens when on the date change. The timing might
         trigger a state transition
         Args:
-            date: the current date
+            current_date: the current date
 
         """
         return None
@@ -81,7 +80,6 @@ class State(object):
         The state machine will receive this to update the state.
 
         """
-        pass
 
     def set_new_state(self, new_state):
         self.new_state = new_state

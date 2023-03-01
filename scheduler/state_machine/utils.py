@@ -40,7 +40,10 @@ def compute_next_day(selectable_days: list) -> date:
     return next_date
 
 
-def create_new_date(start_date: date, time_delta: int = 0, hour: int = 10, minute: int = 00) -> datetime:
+def create_new_date(start_date: date,
+                    time_delta: int = 0,
+                    hour: int = 10,
+                    minute: int = 00) -> datetime:
     """
     Create a new timedate object from the date object. It adds a 'time_delta'
     number of days to the starting date
@@ -502,8 +505,8 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
     """
     # get the id of the dialog
     dialog = get_intervention_component(dialog)
-    last_state = get_last_component_state(user_id=user_id,
-                                          intervention_component_id=dialog.intervention_component_id)
+    last_state = get_last_component_state(user_id,
+                                          dialog.intervention_component_id)
 
     # update the dialog entry, setting the `completed` filed to true
     if last_state is not None:

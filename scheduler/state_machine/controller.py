@@ -65,8 +65,6 @@ class OnboardingState(State):
         plan_and_store(user_id=self.user_id,
                        dialog=dialog)
 
-        return None
-
     def run(self):
         logging.info('Onboarding State running')
         # the first dialog is the introduction video
@@ -209,7 +207,8 @@ class GoalsSettingState(State):
                            planned_date=planned_date)
 
         if (quit_date - start_date).days == MAX_PREPARATION_DURATION:
-            planned_date = utils.create_new_date(start_date=start_date, time_delta=MAX_PREPARATION_DURATION)
+            planned_date = utils.create_new_date(start_date=start_date,
+                                                 time_delta=MAX_PREPARATION_DURATION)
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            planned_date=planned_date)
@@ -480,8 +479,8 @@ class ClosingState(State):
 
 def plan_and_store(user_id: int, dialog: str, planned_date: datetime = None):
     """
-    Program a celery task for the planned_date, or sends it immediately in case planned_date is None,
-    and stores the new component to the DB
+    Program a celery task for the planned_date, or sends it immediately in case
+    planned_date is None, and stores the new component to the DB
     Args:
         user_id:user id
         dialog: dialog to be triggered

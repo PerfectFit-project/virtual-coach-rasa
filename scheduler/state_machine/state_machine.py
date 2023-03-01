@@ -62,7 +62,6 @@ class DialogState:
 class EventEnum(Enum):
     DIALOG_COMPLETED = 'dialog_completed'
     DIALOG_RESCHEDULED = 'dialog_rescheduled'
-    DIALOG_SCHEDULED_STARTED = 'dialog_scheduled_started'
     DIALOG_STARTED = 'dialog_started'
     NEW_DAY = 'new_day'
     USER_TRIGGER = 'user_trigger'

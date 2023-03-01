@@ -12,14 +12,18 @@ class DialogState:
     def __init__(self):
         self.running = False
         self.starting_time = datetime.now()
+        self.current_dialog = None
 
-    def set_to_running(self):
+    def set_to_running(self, dialog: str):
         """
         Set the dialog status to running
+        Args:
+            dialog: the name of the last started dialog
 
         """
         self.running = True
         self.starting_time = datetime.now()
+        self.current_dialog = dialog
 
     def set_to_idle(self):
 
@@ -28,6 +32,15 @@ class DialogState:
 
         """
         self.running = False
+        self.current_dialog = None
+
+    def get_current_dialog(self):
+
+        """
+        Get the current last running dialog
+
+        """
+        return self.current_dialog
 
     def get_running_status(self):
 
@@ -88,7 +101,7 @@ class StateMachine:
         if event.EventType == EventEnum.DIALOG_STARTED:
             logging.info('Dialog started event received %s ', event.Descriptor)
             # in this case we track that a dialog is running
-            self.dialog_state.set_to_running()
+            self.dialog_state.set_to_running(event.Descriptor)
 
         elif event.EventType == EventEnum.NEW_DAY:
             logging.info('New day received %s: ', event.Descriptor)
@@ -99,7 +112,7 @@ class StateMachine:
 
         if event.EventType == EventEnum.USER_TRIGGER:
             logging.info('User trigger event received %s ', event.Descriptor)
-            self.dialog_state.set_to_running()
+            self.dialog_state.set_to_running(event.Descriptor)
             self.state.on_user_trigger(event.Descriptor)
 
     def new_state_callback(self):

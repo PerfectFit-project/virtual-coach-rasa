@@ -5,7 +5,8 @@ from celery import Celery
 from celery.signals import worker_ready
 from datetime import datetime, timedelta
 from state_machine.state_machine import StateMachine, EventEnum, Event
-from state_machine.const import REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION
+from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
+                                 NOT_RUNNING, RUNNING, EXPIRED)
 from state_machine.controller import OnboardingState
 from state_machine.utils import get_component_name
 
@@ -24,9 +25,11 @@ state_machines = [{'machine': StateMachine(OnboardingState(TEST_USER)), 'id': TE
 @worker_ready.connect
 def at_start(sender, **k):  # pylint: disable=unused-argument
     """
-    When celery is ready, the watchdog for the new day notification is started
+    When celery is ready, the watchdogs for the new day notification
+    and for the dialogs status check are started
     """
     notify_new_day.apply_async(args=[datetime.today()])
+    check_dialogs_status.apply_async()
 
 
 @app.task
@@ -41,44 +44,31 @@ def create_new_user(user_id: int):
     state_machines.append({'machine': StateMachine(OnboardingState(user_id)), 'id': user_id})
 
 
-@app.task
-def start_user_intervention(user_id: int):
-    """
-    This task runs the first state of the StateMachine for a give user.
-    Args:
-        user_id: the ID of the user
-    """
-    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
-    user_fsm.state.run()
-
-
 @app.task(bind=True)
-def user_trigger_dialog(self,  # pylint: disable=unused-argument
-                        user_id: int,
-                        intervention_component_name: str):
+def check_dialogs_status(self):  # pylint: disable=unused-argument
     """
-    This task is used when a dialog is triggered by the user.
-    Args:
-        user_id: the ID of the user to send the trigger to
-        intervention_component_name: the intent to be sent
+    This task verifies if there are uncompleted dialogs and, in case, reschedules them.
+    The task is rescheduled every maximum duration of the dialog time
     """
-    send_fsm_event(user_id=user_id,
-                   event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
+    logging.info("Checking the dialogs status")
 
+    for machine in state_machines:
+        fsm = machine['machine']
+        dialog_state = get_dialog_state(fsm)
 
-@app.task(bind=True)
-def notify_new_day(self, current_date: datetime.date):  # pylint: disable=unused-argument
-    """
-    This task notifies all the state machines that a day has begun.
-    Args:
-        current_date: the date to be sent to the state machines
-    """
-    for item in state_machines:
-        send_fsm_event(user_id=item['id'], event=Event(EventEnum.NEW_DAY, current_date))
+        if dialog_state == EXPIRED:
 
-    # schedule the task for tomorrow
-    tomorrow = datetime.today() + timedelta(days=1)
-    notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
+            dialog = fsm.dialog_state.get_current_dialog()
+
+            next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)
+
+            reschedule_dialog.apply_async(args=[fsm.machine_id,
+                                                dialog,
+                                                next_day])
+
+    # schedule the task every max_dialog_duration
+    next_execution_time = datetime.now() + timedelta(seconds=MAXIMUM_DIALOG_DURATION)
+    check_dialogs_status.apply_async(eta=next_execution_time)
 
 
 @app.task(bind=True)
@@ -97,6 +87,21 @@ def intervention_component_completed(self,  # pylint: disable=unused-argument
                    event=Event(EventEnum.DIALOG_COMPLETED, intervention_component_name))
 
 
+@app.task(bind=True)
+def notify_new_day(self, current_date: datetime.date):  # pylint: disable=unused-argument
+    """
+    This task notifies all the state machines that a day has begun.
+    Args:
+        current_date: the date to be sent to the state machines
+    """
+    for item in state_machines:
+        send_fsm_event(user_id=item['id'], event=Event(EventEnum.NEW_DAY, current_date))
+
+    # schedule the task for tomorrow
+    tomorrow = datetime.today() + timedelta(days=1)
+    notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
+
+
 @app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
     """
@@ -113,6 +118,17 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
                                (intervention_component_name, new_date)))
 
 
+@app.task
+def start_user_intervention(user_id: int):
+    """
+    This task runs the first state of the StateMachine for a give user.
+    Args:
+        user_id: the ID of the user
+    """
+    user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
+    user_fsm.state.run()
+
+
 @app.task(bind=True)
 def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=unused-argument
     """
@@ -123,8 +139,8 @@ def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=u
     """
 
     logging.info('Current machine state: %s', get_fsm(user_id).state.__state__())
-
-    send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, None))
+    name = get_component_name(trigger)
+    send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, name))
 
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
@@ -145,32 +161,74 @@ def trigger_scheduled_intervention_component(self, user_id,  # pylint: disable=u
     """
 
     user_fsm = get_fsm(user_id)
-    # get the current fsm status
-    status = user_fsm.dialog_state.get_running_status()
-    last_time = user_fsm.dialog_state.get_running_time()
 
-    now = datetime.now()
+    dialog_state = get_dialog_state(user_fsm)
+
+    # retrieve the name of the component
+    name = get_component_name(trigger)
 
     # if a dialog is not running or the time has expired (Rasa session reset)
     # send the trigger
 
     logging.info("scheduled dialog trigger received")
-    logging.info("FSM status: %s", status)
-    logging.info("FSM time: %s", (now - last_time).seconds)
-    logging.info("FSM id: %s", user_fsm.machine_id)
 
-    if not status or (now - last_time).seconds > MAXIMUM_DIALOG_DURATION:
-        user_fsm.dialog_state.set_to_running()
+    if dialog_state != RUNNING:
+        user_fsm.dialog_state.set_to_running(dialog=name)
         trigger_intervention_component.apply_async(args=[user_id, trigger])
 
     else:
         # if a dialog is running, reschedule the trigger
-        rescheduled_date = now + timedelta(minutes=MAXIMUM_DIALOG_DURATION)
-        # retrieve the name of the component
-        name = get_component_name(trigger)
+        rescheduled_date = datetime.now() + timedelta(minutes=MAXIMUM_DIALOG_DURATION)
         # send a rescheduling event
         send_fsm_event(user_id,
                        event=Event(EventEnum.DIALOG_RESCHEDULED, (name, rescheduled_date)))
+
+
+@app.task(bind=True)
+def user_trigger_dialog(self,  # pylint: disable=unused-argument
+                        user_id: int,
+                        intervention_component_name: str):
+    """
+    This task is used when a dialog is triggered by the user.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        intervention_component_name: the intent to be sent
+    """
+    send_fsm_event(user_id=user_id,
+                   event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
+
+
+def get_dialog_state(state_machine: StateMachine) -> int:
+    """
+    Gets the StateMachine object of a user
+    Args:
+        state_machine: Statemachine to check
+
+    Returns: the state of the dialog: 0: not running, 1: running, 2: expired
+
+    """
+    status = state_machine.dialog_state.get_running_status()
+    last_time = state_machine.dialog_state.get_running_time()
+
+    now = datetime.now()
+
+    logging.info("FSM status: %s", status)
+    logging.info("FSM time: %s", (now - last_time).seconds)
+    logging.info("FSM id: %s", state_machine.machine_id)
+
+    # dialog not running and completed
+    if not status:
+        dialog_state = NOT_RUNNING
+
+    else:
+        # dialog running and in the maximum allowed time
+        if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
+            dialog_state = RUNNING
+        else:
+            # dialog running but the maximum time elapsed
+            dialog_state = EXPIRED
+
+    return dialog_state
 
 
 def get_fsm(user_id: int) -> StateMachine:

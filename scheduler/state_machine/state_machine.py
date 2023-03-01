@@ -20,7 +20,6 @@ class DialogState:
         """
         self.running = True
         self.starting_time = datetime.now()
-        logging.info("DIALOG STATUS SET TO TRUE")
 
     def set_to_idle(self):
 
@@ -29,7 +28,6 @@ class DialogState:
 
         """
         self.running = False
-        logging.info("DIALOG STATUS SET TO FALSE")
 
     def get_running_status(self):
 
@@ -91,7 +89,6 @@ class StateMachine:
             logging.info('Dialog started event received %s ', event.Descriptor)
             # in this case we track that a dialog is running
             self.dialog_state.set_to_running()
-            print("Status from FSM: ", self.dialog_state.get_running_status())
 
         elif event.EventType == EventEnum.NEW_DAY:
             logging.info('New day received %s: ', event.Descriptor)
@@ -106,8 +103,6 @@ class StateMachine:
             self.state.on_user_trigger(event.Descriptor)
 
     def new_state_callback(self):
-        logging.info('I received a callback')
-
         self.state = self.state.new_state
         self.state.signal_new_event = self.new_state_callback
 

@@ -364,17 +364,15 @@ class ExecutionRunState(State):
         # in case the current day of the week is the same as the one set in the
         # quit_date (and is not the same date), a new week started.
         # Thus, the execution week must be updated
-        print('This is the quit date: ', quit_date)
         if utils.is_new_week(current_date, quit_date):
             # get the current week number
             week_number = utils.compute_spent_weeks(current_date, quit_date)
-            print('Week number: ', week_number)
 
             # increase the week number by one
             utils.update_execution_week(self.user_id, week_number)
 
     def run(self):
-        print(self.state)
+        logging.info("Running state %s", self.state)
 
 
 class RelapseState(State):
@@ -385,7 +383,7 @@ class RelapseState(State):
         self.state = State.RELAPSE
 
     def run(self):
-        print(self.state)
+        logging.info("Running state %s", self.state)
 
     def on_dialog_completed(self, dialog):
         logging.info('A dialog has been completed  %s ', dialog)
@@ -442,7 +440,7 @@ class ClosingState(State):
         self.state = State.CLOSING
 
     def run(self):
-        print(self.state)
+        logging.info("Running state %s", self.state)
         # plan the execution of the closing dialog
 
         component = utils.get_intervention_component(Components.CLOSING_DIALOG)

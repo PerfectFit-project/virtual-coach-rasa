@@ -23,16 +23,12 @@ state_machines = [{'machine': StateMachine(OnboardingState(TEST_USER)), 'id': TE
 
 
 @app.task
-def get_fsm(user_id: int):
-    # this is a placeholder for the creation of a new user. At the moment we initialize
-    # just one fsm with a test user
-    user_fsm = [print(item['machine'].state) for item in state_machines if item['id'] == user_id]
-
-
-@app.task
 def create_new_user(user_id: int):
-    # this is a placeholder for the creation of a new user. At the moment we initialize
-    # just one fsm with a test user
+    """
+    This task creates a new StateMachine for the user specified.
+    Args:
+        user_id: the ID of the user
+    """
     global state_machines
 
     state_machines.append({'machine': StateMachine(OnboardingState(user_id)), 'id': user_id})
@@ -40,7 +36,11 @@ def create_new_user(user_id: int):
 
 @app.task
 def start_user_intervention(user_id: int):
-    # run the first state
+    """
+    This task runs the first state of the StateMachine for a give user.
+    Args:
+        user_id: the ID of the user
+    """
     user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
     user_fsm.state.run()
 
@@ -48,12 +48,23 @@ def start_user_intervention(user_id: int):
 @app.task(bind=True)
 def user_trigger_dialog(self,
                         user_id: int,
-                        triggered_dialog: Components):  # pylint: disable=unused-argument
-    send_fsm_event(user_id=user_id, event=Event(EventEnum.USER_TRIGGER, triggered_dialog))
+                        intervention_component_name: str):  # pylint: disable=unused-argument
+    """
+    This task is used when a dialog is triggered by the user.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        intervention_component_name: the intent to be sent
+    """
+    send_fsm_event(user_id=user_id, event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
 
 
 @app.task(bind=True)
 def notify_new_day(self, current_date: datetime.date):  # pylint: disable=unused-argument
+    """
+    This task notifies all the state machines that a day has begun.
+    Args:
+        current_date: the date to be sent to the state machines
+    """
     [send_fsm_event(user_id=item['id'], event=Event(EventEnum.NEW_DAY, current_date)) for item in state_machines]
     # schedule the task for tomorrow
     tomorrow = datetime.today() + timedelta(days=1)
@@ -67,15 +78,28 @@ notify_new_day.apply_async(args=[datetime.today()])
 @app.task(bind=True)
 def intervention_component_completed(self,
                                      user_id: int,
-                                     completed_dialog: Components):  # pylint: disable=unused-argument
-
+                                     intervention_component_name: str):  # pylint: disable=unused-argument
+    """
+    This task notifies the state machine that a dialog has been rescheduled.
+    Args:
+        user_id: the ID of the user
+        intervention_component_name: the component completed
+    """
+    # triggered when a dialog has been completed
     logging.info('Celery received a dialog completion')
-    send_fsm_event(user_id=user_id, event=Event(EventEnum.DIALOG_COMPLETED, completed_dialog))
+    send_fsm_event(user_id=user_id, event=Event(EventEnum.DIALOG_COMPLETED, intervention_component_name))
 
 
 @app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
-
+    """
+    This task notifies the state machine that a dialog has been rescheduled.
+    Args:
+        user_id: the ID of the user
+        intervention_component_name: the component rescheduled
+        new_date: the date to which the component has to be rescheduled
+    """
+    # triggered when a dialog is rescheduled
     logging.info('Celery received a dialog rescheduling')
     send_fsm_event(user_id=user_id,
                    event=Event(EventEnum.DIALOG_RESCHEDULED, (intervention_component_name, new_date)))
@@ -86,7 +110,7 @@ def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=u
     """
     This task sends a trigger to Rasa immediately.
     Args:
-        user_id: the ID if the user to send the trigger to
+        user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
     """
 
@@ -107,7 +131,7 @@ def trigger_scheduled_intervention_component(self, user_id, trigger):  # pylint:
     This task sends a trigger to Rasa after verifying that a dialog is not
     currently running for the user. If a dialog is running, it is rescheduled.
     Args:
-        user_id: the ID if the user to send the trigger to
+        user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
     """
 
@@ -141,12 +165,27 @@ def trigger_scheduled_intervention_component(self, user_id, trigger):  # pylint:
 
 
 def get_fsm(user_id: int) -> StateMachine:
+    """
+    Gets the StateMachine object of a user
+    Args:
+        user_id: ID of the user
+
+    Returns: The StateMachine object of a user
+
+    """
     # get the user state machine
     user_fsm = next(item for item in state_machines if item['id'] == user_id)['machine']
     return user_fsm
 
 
 def send_fsm_event(user_id: int, event: Event):
+    """
+    Send an event to the StateMachine of a user
+    Args:
+        user_id: ID of the user
+        event: the event that need to be sent
+
+    """
     # send event to the user state machine
     user_fsm = get_fsm(user_id)
     user_fsm.on_event(event)

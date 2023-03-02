@@ -32,7 +32,6 @@ class DialogState:
 
         """
         self.running = False
-        self.current_dialog = None
 
     def get_current_dialog(self):
 
@@ -136,9 +135,11 @@ class StateMachine:
         format_date = None
 
         if isinstance(descriptor, str):
+            # get rid of milliseconds, in case they are present
+            trimmed_date = descriptor.split('.')[0]
             try:
-                format_date = datetime.strptime(descriptor, '%Y-%m-%dT%H:%M:%S').date()
-            except:
+                format_date = datetime.strptime(trimmed_date, '%Y-%m-%dT%H:%M:%S').date()
+            except ValueError:
                 format_date = None
 
         elif isinstance(descriptor, date):

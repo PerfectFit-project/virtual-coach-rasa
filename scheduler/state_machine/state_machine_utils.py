@@ -1,18 +1,13 @@
+from celery import Celery
 from datetime import datetime, date, timedelta
-from typing import List
-
-from state_machine.const import (DATABASE_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
-                                 NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
-from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
-                                      BufferState, ExecutionRunState, RelapseState, ClosingState)
-from state_machine.state import State
-from state_machine.state_machine import StateMachine, EventEnum, Event, DialogState
+from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
+                                 NOT_RUNNING, RUNNING, EXPIRED, TRIGGER_COMPONENT,
+                                 SCHEDULE_TRIGGER_COMPONENT)
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
-                                              InterventionPhases, InterventionComponents,
-                                              UserStateMachine)
+                                              InterventionPhases, InterventionComponents, )
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-import logging
+celery = Celery(broker=REDIS_URL)
 
 
 def compute_next_day(selectable_days: list) -> date:
@@ -75,140 +70,42 @@ def create_new_date(start_date: date,
     return new_timedate
 
 
-def get_dialog_state(state_machine: StateMachine) -> int:
+def get_dialog_completion_state(user_id: int, dialog_name: str) -> bool:
     """
-    Gets the StateMachine object of a user
-    Args:
-        state_machine: Statemachine to check
-
-    Returns: the state of the dialog: 0: not running, 1: running, 2: expired
-
-    """
-    status = state_machine.dialog_state.get_running_status()
-    last_time = state_machine.dialog_state.get_running_time()
-
-    now = datetime.now()
-
-    logging.info("FSM status: %s", status)
-    logging.info("FSM time: %s", (now - last_time).seconds)
-    logging.info("FSM id: %s", state_machine.machine_id)
-
-    # dialog not running and completed
-    if not status:
-        dialog_state = NOT_RUNNING
-
-    else:
-        # dialog running and in the maximum allowed time
-        if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
-            dialog_state = RUNNING
-        else:
-            # dialog running but the maximum time elapsed
-            dialog_state = EXPIRED
-
-    return dialog_state
-
-
-def get_all_fsm_from_db() -> List[UserStateMachine]:
-    """
-       Get a list of state machines as saved in the DB for all the users
-
-       Returns: A list of UserStateMachine objects representing the
-       user_state_machine table on the DB
-
-       """
-    session = get_db_session(DATABASE_URL)
-
-    fsm_db = (session.query(UserStateMachine).all())
-
-    return fsm_db
-
-
-def get_all_fsm() -> List[StateMachine]:
-    """
-    Get the state machines as saved in the DB for all the users and maps them
-    to a list of StateMachine objects
-
-    Returns: The list of UserStateMachine objects for all the users, representing
-    the user_state_machine table on the DB
-
-       """
-    fsm_list = get_all_fsm_from_db()
-    state_machines = [get_user_fsm(fsm.users_nicedayuid) for fsm in fsm_list]
-
-    return state_machines
-
-
-def get_user_fsm(user_id: int) -> StateMachine:
-    """
-    Get the state machine as saved in the DB for a single user and maps it
-    to a StateMachine object
+    Get the completion state of the last dialog occurrence in the DB
     Args:
         user_id: the id of the user
+        dialog_name: name of the dialog
 
-    Returns: The UserStateMachine object representing the user_state_machine table on the DB
-
-    """
-    fsm = get_user_fsm_from_db(user_id)
-
-    state_saved = fsm.state
-
-    if state_saved == State.ONBOARDING:
-        state = OnboardingState(user_id)
-
-    elif state_saved == State.TRACKING:
-        state = TrackingState(user_id)
-
-    elif state_saved == State.GOALS_SETTING:
-        state = GoalsSettingState(user_id)
-
-    elif state_saved == State.BUFFER:
-        state = BufferState(user_id)
-
-    elif state_saved == State.EXECUTION_RUN:
-        state = ExecutionRunState(user_id)
-
-    elif state_saved == State.RELAPSE:
-        state = RelapseState(user_id)
-
-    elif state_saved == State.CLOSING:
-        state = ClosingState(user_id)
-
-    else:
-        state = OnboardingState(user_id)
-
-    dialog_state = DialogState(running=fsm.dialog_running,
-                               starting_time=fsm.dialog_start_time,
-                               current_dialog=fsm.intervention_component.intervention_component_name)
-
-    user_fsm = StateMachine(state, dialog_state)
-
-    return user_fsm
-
-
-def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
-    """
-    Get the state machine as saved in the DB for a single user
-    Args:
-        user_id: the id of the user
-
-    Returns: The UserStateMachine object representing the user_state_machine table on the DB
+    Returns: True if the dialog has been completed, False otherwise
 
     """
+
+    component = get_intervention_component(dialog_name)
+
     session = get_db_session(DATABASE_URL)
 
-    fsm_db = (session.query(UserStateMachine)
-              .filter(UserStateMachine.users_nicedayuid == user_id)
-              .first())
+    selected = (
+        session.query(
+            UserInterventionState
+        )
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_id == component.intervention_component_id
+        )
+        .order_by(UserInterventionState.last_time.desc())  # order by descending date
+        .limit(1)  # get only the first result
+        .one()
+    )
 
-    return fsm_db
-
+    return selected.completed
 
 def get_last_component_state(user_id: int, intervention_component_id: int) -> UserInterventionState:
     """
     Gets the last state saved in the DB for an intervention component
 
     Args:
-        intervention_component_id:
+        intervention_component_id:id of the dialog
         user_id: the id of the user
         intervention_component_id: the id of the intervention component as
             saved in the DB
@@ -237,34 +134,6 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
         selected = None
 
     return selected
-
-
-def get_component_name(intervention_component_trigger: str) -> str:
-    """
-    Get the intervention component name from the intervention component's trigger.
-
-    Args:
-        intervention_component_trigger: the trigger of the intervention component.
-                                The names are listed in virtual_coach_db.helper.definitions
-                                in the Components class
-
-    Returns:
-            The intervention component name.
-
-    """
-    session = get_db_session(DATABASE_URL)
-
-    selected = (
-        session.query(
-            InterventionComponents
-        )
-        .filter(
-            InterventionComponents.intervention_component_trigger == intervention_component_trigger
-        )
-        .first()
-    )
-
-    return selected.intervention_component_name
 
 
 def get_current_phase(user_id: int) -> InterventionPhases:
@@ -703,3 +572,85 @@ def store_scheduled_dialog(user_id: int,
     )
     # record the dialog completion in the DB
     store_intervention_component_to_db(state)
+
+
+def plan_and_store(user_id: int, dialog: str, planned_date: datetime = None):
+    """
+    Program a celery task for the planned_date, or sends it immediately in case
+    planned_date is None, and stores the new component to the DB
+    Args:
+        user_id:user id
+        dialog: dialog to be triggered
+        planned_date: date when the dialog has to be triggered
+    Returns:
+
+    """
+
+    component = get_intervention_component(dialog)
+    dialog_id = component.intervention_component_id
+    trigger = component.intervention_component_trigger
+
+    if planned_date is None:
+        celery.send_task(TRIGGER_COMPONENT, (user_id, trigger))
+
+        store_scheduled_dialog(user_id=user_id,
+                               dialog_id=dialog_id,
+                               phase_id=1)
+    else:
+        task = celery.send_task(SCHEDULE_TRIGGER_COMPONENT,
+                                (user_id, trigger),
+                                eta=planned_date)
+
+        store_scheduled_dialog(user_id=user_id,
+                               dialog_id=dialog_id,
+                               phase_id=1,
+                               planned_date=planned_date,
+                               task_uuid=str(task.task_id))
+
+
+def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: int):
+    """
+    Program a new celery task for the planned_date and store the info in the db
+    Args:
+        user_id:user id
+        dialog: dialog to be triggered
+        planned_date: date when the dialog has to be triggered
+        phase: db id of the phase
+    Returns:
+
+    """
+    component = get_intervention_component(dialog)
+    dialog_id = component.intervention_component_id
+    trigger = component.intervention_component_trigger
+
+    task = celery.send_task(SCHEDULE_TRIGGER_COMPONENT,
+                            (user_id, trigger),
+                            eta=planned_date)
+
+    store_rescheduled_dialog(user_id=user_id,
+                             dialog_id=dialog_id,
+                             phase_id=phase,
+                             planned_date=planned_date,
+                             task_uuid=str(task.task_id))
+
+
+def schedule_next_execution(user_id: int, dialog: str):
+    """
+    Get the next expected execution date for an intervention component,
+    and schedules it
+    Args:
+        user_id: id of the user
+        dialog: Name of the component
+
+    """
+    component = get_intervention_component(dialog)
+    component_id = component.intervention_component_id
+
+    planned_date = get_next_planned_date(user_id=user_id,
+                                         intervention_component_id=component_id)
+
+    new_date = planned_date.replace(hour=10, minute=00)
+
+    plan_and_store(user_id=user_id,
+                   dialog=dialog,
+                   planned_date=new_date)

@@ -7,7 +7,8 @@ from datetime import datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED)
-from state_machine.utils import get_component_name, get_user_fsm, get_dialog_state, get_all_fsm
+from celery_utils import (get_component_name, get_user_fsm, get_dialog_state, get_all_fsm,
+                          save_state_machine_to_db, create_new_user_fsm, send_fsm_event)
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
@@ -34,9 +35,9 @@ def create_new_user(user_id: int):
     Args:
         user_id: the ID of the user
     """
-    # global state_machines
-    #
-    # state_machines.append({'machine': StateMachine(OnboardingState(user_id)), 'id': user_id})
+    new_fsm = create_new_user_fsm(user_id)
+
+    save_state_machine_to_db(new_fsm)
 
 
 @app.task(bind=True)
@@ -53,7 +54,6 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
         dialog_state = get_dialog_state(fsm)
 
         if dialog_state == EXPIRED:
-
             dialog = fsm.dialog_state.get_current_dialog()
 
             next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)
@@ -192,18 +192,3 @@ def user_trigger_dialog(self,  # pylint: disable=unused-argument
     """
     send_fsm_event(user_id=user_id,
                    event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
-
-
-def send_fsm_event(user_id: int, event: Event):
-    """
-    Send an event to the StateMachine of a user
-    Args:
-        user_id: ID of the user
-        event: the event that need to be sent
-
-    """
-
-    user_fsm = get_user_fsm(user_id)
-
-    logging.info('Current machine state: %s', user_fsm.state.__state__())
-    user_fsm.on_event(event)

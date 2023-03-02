@@ -9,10 +9,10 @@ import logging
 
 class DialogState:
 
-    def __init__(self):
-        self.running = False
-        self.starting_time = datetime.now()
-        self.current_dialog = None
+    def __init__(self, running: bool, starting_time: datetime, current_dialog: str):
+        self.running = running
+        self.starting_time = starting_time
+        self.current_dialog = current_dialog
 
     def set_to_running(self, dialog: str):
         """
@@ -75,11 +75,11 @@ class Event:
 
 class StateMachine:
 
-    def __init__(self, state: State):
+    def __init__(self, state: State, dialog_state: DialogState):
         self.state = state
         self.machine_id = self.state.user_id
         self.state.signal_new_event = self.new_state_callback
-        self.dialog_state = DialogState()
+        self.dialog_state = dialog_state
 
         logging.info('A FSM has been created with the ID %s', self.machine_id)
 

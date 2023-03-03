@@ -3,8 +3,6 @@ intents:
 - EXTERNAL_trigger_general_activity
 - EXTERNAL_weekly_reflection
 
-slots:
-
 responses:
   ##Utterances related to preparation phase
   utter_execution_introduction:

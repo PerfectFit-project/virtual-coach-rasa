@@ -12,8 +12,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.helper.helper_functions import get_db_session
-from virtual_coach_db.helper.definitions import (DialogQuestionsEnum,
-                                                 Components)
+from virtual_coach_db.helper.definitions import DialogQuestionsEnum
 from virtual_coach_db.dbschema.models import (Users, DialogOpenAnswers, 
                                               UserInterventionState,
                                               InterventionComponents)

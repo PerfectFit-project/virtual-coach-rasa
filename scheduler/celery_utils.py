@@ -164,6 +164,7 @@ def get_user_fsm(user_id: int) -> StateMachine:
     fsm = get_user_fsm_from_db(user_id)
 
     state_saved = fsm.state
+    component_saved = fsm.intervention_component
 
     if state_saved == State.ONBOARDING:
         state = OnboardingState(user_id)
@@ -191,7 +192,7 @@ def get_user_fsm(user_id: int) -> StateMachine:
 
     dialog_state = DialogState(running=fsm.dialog_running,
                                starting_time=fsm.dialog_start_time,
-                               current_dialog=fsm.intervention_component.intervention_component_name)
+                               current_dialog=component_saved.intervention_component_name)
 
     user_fsm = StateMachine(state, dialog_state)
 

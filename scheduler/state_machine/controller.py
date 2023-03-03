@@ -1,14 +1,11 @@
 import logging
 from datetime import date, datetime, timedelta
 from state_machine.state_machine_utils import (compute_spent_weeks, create_new_date,
-                                               get_execution_week,
-                                               get_intervention_component, get_next_planned_date,
-                                               get_preferred_date_time, get_quit_date,
-                                               get_start_date,
+                                               get_execution_week, get_intervention_component,
+                                               get_next_planned_date, get_quit_date, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
                                                retrieve_intervention_day, schedule_next_execution,
-                                               store_completed_dialog, store_rescheduled_dialog,
-                                               store_scheduled_dialog, update_execution_week,
+                                               store_completed_dialog, update_execution_week,
                                                get_dialog_completion_state)
 from state_machine.const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURATION,
                                  PREPARATION_GA, MAX_PREPARATION_DURATION, EXECUTION_DURATION)
@@ -400,6 +397,13 @@ class RelapseState(State):
                       Components.RELAPSE_DIALOG_PA]:
 
             logging.info('Relapse dialog completed ')
+
+            # When a specific branch of the relapse dialog has been completed,
+            # we need to mark the general relapse dialog as completed
+            if dialog != Components.RELAPSE_DIALOG:
+                store_completed_dialog(user_id=self.user_id,
+                                       dialog=Components.RELAPSE_DIALOG,
+                                       phase_id=3)
 
             quit_date = get_quit_date(self.user_id)
             current_date = date.today()

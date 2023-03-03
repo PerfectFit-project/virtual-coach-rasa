@@ -1,7 +1,7 @@
 from celery import Celery
 from datetime import datetime, date, timedelta
-from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
-                                 NOT_RUNNING, RUNNING, EXPIRED, TRIGGER_COMPONENT,
+from sqlalchemy.exc import NoResultFound
+from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT)
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
                                               InterventionPhases, InterventionComponents, )
@@ -100,6 +100,7 @@ def get_dialog_completion_state(user_id: int, dialog_name: str) -> bool:
 
     return selected.completed
 
+
 def get_last_component_state(user_id: int, intervention_component_id: int) -> UserInterventionState:
     """
     Gets the last state saved in the DB for an intervention component
@@ -130,7 +131,7 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
             .limit(1)  # get only the first result
             .one()
         )
-    except:
+    except NoResultFound:
         selected = None
 
     return selected

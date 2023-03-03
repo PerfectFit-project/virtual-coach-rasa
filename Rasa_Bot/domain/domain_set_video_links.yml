@@ -1,0 +1,24 @@
+intents:
+  - EXTERNAL_first_aid_kit_video
+  - EXTERNAL_trigger_future_self_long
+  - EXTERNAL_trigger_future_self_short
+  - EXTERNAL_trigger_execution_introduction
+  - EXTERNAL_trigger_preparation_introduction
+  - EXTERNAL_trigger_medication_talk
+  - EXTERNAL_trigger_track_behavior
+
+actions:
+  - action_set_slot_first_aid_kit_video
+  - action_set_fak_video_link
+  - action_set_slot_future_self_long
+  - action_set_future_self_long_video_link
+  - action_set_slot_future_self_short
+  - action_set_future_self_short_video_link
+  - action_set_slot_execution_introduction
+  - action_set_execution_introduction_video_link
+  - action_set_slot_preparation_introduction
+  - action_set_preparation_introduction_video_link
+  - action_set_slot_medication_talk
+  - action_set_medication_video_link
+  - action_set_slot_track_behavior
+  - action_set_track_behavior_video_link

@@ -3,7 +3,7 @@ import os
 import requests
 from celery import Celery
 from celery.signals import worker_ready
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED)
@@ -84,7 +84,7 @@ def intervention_component_completed(self,  # pylint: disable=unused-argument
 
 
 @app.task(bind=True)
-def notify_new_day(self, current_date: datetime.date):  # pylint: disable=unused-argument
+def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
     """
     This task notifies all the state machines that a day has begun.
     Args:
@@ -128,7 +128,9 @@ def start_user_intervention(user_id: int):
 
 
 @app.task(bind=True)
-def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=unused-argument
+def trigger_intervention_component(self,  # pylint: disable=unused-argument
+                                   user_id: int,
+                                   trigger: str):
     """
     This task sends a trigger to Rasa immediately.
     Args:
@@ -146,8 +148,9 @@ def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=u
 
 
 @app.task(bind=True)
-def trigger_scheduled_intervention_component(self, user_id,  # pylint: disable=unused-argument
-                                             trigger):
+def trigger_scheduled_intervention_component(self,  # pylint: disable=unused-argument
+                                             user_id: int,
+                                             trigger: str):
     """
     This task sends a trigger to Rasa after verifying that a dialog is not
     currently running for the user. If a dialog is running, it is rescheduled.

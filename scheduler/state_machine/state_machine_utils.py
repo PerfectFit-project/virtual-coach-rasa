@@ -656,13 +656,17 @@ def store_scheduled_dialog(user_id: int,
     store_intervention_component_to_db(state)
 
 
-def plan_and_store(user_id: int, dialog: str, planned_date: Optional[datetime] = None):
+def plan_and_store(user_id: int,
+                   dialog: str,
+                   phase_id: int,
+                   planned_date: Optional[datetime] = None):
     """
     Program a celery task for the planned_date, or sends it immediately in case
     planned_date is None, and stores the new component to the DB
     Args:
         user_id:user id
         dialog: dialog to be triggered
+        phase_id: db id of the phase
         planned_date: date when the dialog has to be triggered
     Returns:
 
@@ -677,7 +681,7 @@ def plan_and_store(user_id: int, dialog: str, planned_date: Optional[datetime] =
 
         store_scheduled_dialog(user_id=user_id,
                                dialog_id=dialog_id,
-                               phase_id=1)
+                               phase_id=phase_id)
     else:
         task = celery.send_task(SCHEDULE_TRIGGER_COMPONENT,
                                 (user_id, trigger),
@@ -685,7 +689,7 @@ def plan_and_store(user_id: int, dialog: str, planned_date: Optional[datetime] =
 
         store_scheduled_dialog(user_id=user_id,
                                dialog_id=dialog_id,
-                               phase_id=1,
+                               phase_id=phase_id,
                                planned_date=planned_date,
                                task_uuid=str(task.task_id))
 
@@ -726,13 +730,14 @@ def revoke_execution(task_uuid: str):
     celery.control.revoke(task_uuid)
 
 
-def schedule_next_execution(user_id: int, dialog: str, current_date: datetime):
+def schedule_next_execution(user_id: int, dialog: str, phase_id: int, current_date: datetime):
     """
     Get the next expected execution date for an intervention component,
     and schedules it
     Args:
         user_id: id of the user
         dialog: Name of the component
+        phase_id: db id of the phase
         current_date: the current date
 
     """
@@ -747,4 +752,5 @@ def schedule_next_execution(user_id: int, dialog: str, current_date: datetime):
 
     plan_and_store(user_id=user_id,
                    dialog=dialog,
-                   planned_date=new_date)
+                   planned_date=new_date,
+                   phase_id=phase_id)

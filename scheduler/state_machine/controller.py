@@ -32,24 +32,28 @@ class OnboardingState(State):
         if dialog == Components.PREPARATION_INTRODUCTION:
             logging.info('Prep completed, starting profile creation')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.PROFILE_CREATION)
+                           dialog=Components.PROFILE_CREATION,
+                           phase_id=1)
 
         elif dialog == Components.PROFILE_CREATION:
             logging.info('Profile creation completed, starting med talk')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.MEDICATION_TALK)
+                           dialog=Components.MEDICATION_TALK,
+                           phase_id=1)
 
         elif dialog == Components.MEDICATION_TALK:
             logging.info('Med talk completed, starting track behavior')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.TRACK_BEHAVIOR)
+                           dialog=Components.TRACK_BEHAVIOR,
+                           phase_id=1)
             # notifications for tracking have to be activated
             self.schedule_tracking_notifications()
 
         elif dialog == Components.TRACK_BEHAVIOR:
             logging.info('Tack behavior completed, starting future self')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.FUTURE_SELF_LONG)
+                           dialog=Components.FUTURE_SELF_LONG,
+                           phase_id=1)
 
         elif dialog == Components.FUTURE_SELF_LONG:
             self.schedule_next_dialogs()
@@ -66,13 +70,15 @@ class OnboardingState(State):
 
     def on_user_trigger(self, dialog):
         plan_and_store(user_id=self.user_id,
-                       dialog=dialog)
+                       dialog=dialog,
+                       phase_id=1)
 
     def run(self):
         logging.info('Onboarding State running')
         # the first dialog is the introduction video
         plan_and_store(user_id=self.user_id,
-                       dialog=Components.PREPARATION_INTRODUCTION)
+                       dialog=Components.PREPARATION_INTRODUCTION,
+                       phase_id=1)
 
     def schedule_next_dialogs(self):
         # get the data on which the user has started the intervention
@@ -85,7 +91,8 @@ class OnboardingState(State):
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.FUTURE_SELF_SHORT,
-                       planned_date=fs_time)
+                       planned_date=fs_time,
+                       phase_id=1)
 
     def schedule_tracking_notifications(self):
         """
@@ -101,7 +108,8 @@ class OnboardingState(State):
 
             plan_and_store(user_id=self.user_id,
                            dialog=Notifications.TRACK_NOTIFICATION,
-                           planned_date=planned_date)
+                           planned_date=planned_date,
+                           phase_id=1)
 
 
 class TrackingState(State):
@@ -130,7 +138,8 @@ class TrackingState(State):
 
     def on_user_trigger(self, dialog):
         plan_and_store(user_id=self.user_id,
-                       dialog=dialog)
+                       dialog=dialog,
+                       phase_id=1)
 
     def run(self):
         logging.info('Starting Tracking state')
@@ -138,7 +147,7 @@ class TrackingState(State):
         current_date = date.today()
         self.check_if_end_date(current_date)
 
-    def on_new_day(self, current_date: datetime.date):
+    def on_new_day(self, current_date: date):
         logging.info('current date: %s', current_date)
 
         # if it's time and the self dialog has been completed,
@@ -174,7 +183,8 @@ class GoalsSettingState(State):
         if dialog == Components.GOAL_SETTING:
             logging.info('Goal setting completed, starting first aid kit')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.FIRST_AID_KIT_VIDEO)
+                           dialog=Components.FIRST_AID_KIT_VIDEO,
+                           phase_id=1)
             # after the completion of the goal setting dialog, the execution
             # phase can be planned
             self.plan_buffer_phase_dialogs()
@@ -194,7 +204,8 @@ class GoalsSettingState(State):
 
     def on_user_trigger(self, dialog):
         plan_and_store(user_id=self.user_id,
-                       dialog=dialog)
+                       dialog=dialog,
+                       phase_id=1)
 
     def plan_buffer_phase_dialogs(self):
         quit_date = get_quit_date(self.user_id)
@@ -204,14 +215,16 @@ class GoalsSettingState(State):
             planned_date = create_new_date(start_date=start_date, time_delta=PREPARATION_GA)
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
-                           planned_date=planned_date)
+                           planned_date=planned_date,
+                           phase_id=1)
 
         if (quit_date - start_date).days == MAX_PREPARATION_DURATION:
             planned_date = create_new_date(start_date=start_date,
                                            time_delta=MAX_PREPARATION_DURATION)
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
-                           planned_date=planned_date)
+                           planned_date=planned_date,
+                           phase_id=1)
 
     def plan_execution_start_dialog(self):
         # this is the intro video to be sent the first time
@@ -221,7 +234,8 @@ class GoalsSettingState(State):
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.EXECUTION_INTRODUCTION,
-                       planned_date=planned_date)
+                       planned_date=planned_date,
+                       phase_id=1)
 
     def activate_pa_notifications(self):
         # the notifications start from the dey after the goal setting dialog has been completed
@@ -241,7 +255,8 @@ class GoalsSettingState(State):
 
             plan_and_store(user_id=self.user_id,
                            dialog=Notifications.PA_NOTIFICATION,
-                           planned_date=planned_date)
+                           planned_date=planned_date,
+                           phase_id=1)
 
     def run(self):
 
@@ -259,7 +274,8 @@ class GoalsSettingState(State):
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.GOAL_SETTING,
-                       planned_date=gs_time)
+                       planned_date=gs_time,
+                       phase_id=1)
 
 
 class BufferState(State):
@@ -275,15 +291,16 @@ class BufferState(State):
         # setting dialog, the buffer phase can also be immediately over
         self.check_if_end_date(date.today())
 
-    def on_new_day(self, current_date: datetime.date):
+    def on_new_day(self, current_date: date):
         self.check_if_end_date(current_date)
 
     def on_user_trigger(self, dialog: str):
         # record that the dialog has been administered
         plan_and_store(user_id=self.user_id,
-                       dialog=dialog)
+                       dialog=dialog,
+                       phase_id=1)
 
-    def check_if_end_date(self, current_date: datetime.date):
+    def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
 
         if current_date >= quit_date:
@@ -308,12 +325,14 @@ class ExecutionRunState(State):
         if dialog == Components.EXECUTION_INTRODUCTION:
             logging.info('Execution intro completed, starting general activity')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.GENERAL_ACTIVITY)
+                           dialog=Components.GENERAL_ACTIVITY,
+                           phase_id=2)
 
         elif dialog == Components.GENERAL_ACTIVITY:
             logging.info('General activity completed, starting weekly reflection')
             plan_and_store(user_id=self.user_id,
-                           dialog=Components.WEEKLY_REFLECTION)
+                           dialog=Components.WEEKLY_REFLECTION,
+                           phase_id=2)
 
         elif dialog == Components.WEEKLY_REFLECTION:
             logging.info('Weekly reflection completed')
@@ -325,7 +344,8 @@ class ExecutionRunState(State):
             if week in [3, 8]:
                 logging.info('Starting future self')
                 plan_and_store(user_id=self.user_id,
-                               dialog=Components.FUTURE_SELF_SHORT)
+                               dialog=Components.FUTURE_SELF_SHORT,
+                               phase_id=2)
 
             # if in week 12, the execution is finished. Start the closing state
             elif week == 12:
@@ -335,30 +355,33 @@ class ExecutionRunState(State):
             else:
                 schedule_next_execution(user_id=self.user_id,
                                         dialog=Components.WEEKLY_REFLECTION,
-                                        current_date=datetime.now())
+                                        current_date=datetime.now(),
+                                        phase_id=2)
 
         # after the completion of the future self, schedule the next weekly reflection
         elif dialog == Components.FUTURE_SELF_SHORT:
             schedule_next_execution(user_id=self.user_id,
                                     dialog=Components.WEEKLY_REFLECTION,
-                                    current_date=datetime.now())
+                                    current_date=datetime.now(),
+                                    phase_id=2)
 
     def on_dialog_rescheduled(self, dialog, new_date):
 
         reschedule_dialog(user_id=self.user_id,
                           dialog=dialog,
                           planned_date=new_date,
-                          phase=1)
+                          phase=2)
 
     def on_user_trigger(self, dialog: str):
 
         plan_and_store(user_id=self.user_id,
-                       dialog=dialog)
+                       dialog=dialog,
+                       phase_id=2)
 
         if dialog == Components.RELAPSE_DIALOG:
             self.set_new_state(RelapseState(self.user_id))
 
-    def on_new_day(self, current_date: datetime.date):
+    def on_new_day(self, current_date: date):
 
         quit_date = get_quit_date(self.user_id)
 
@@ -429,20 +452,26 @@ class RelapseState(State):
                 logging.info('Relapse completed, back to execution')
                 self.set_new_state(ExecutionRunState(self.user_id))
 
-    def on_user_trigger(self, dialog: date):
+    def on_user_trigger(self, dialog: str):
         plan_and_store(user_id=self.user_id,
-                       dialog=dialog)
+                       dialog=dialog,
+                       phase_id=3)
 
     def plan_new_date_notifications(self, quit_date: date):
         # plan the notification for the day before the quit date
+
+        quit_datetime = create_new_date(quit_date)
+
         plan_and_store(user_id=self.user_id,
                        dialog=Notifications.BEFORE_QUIT_NOTIFICATION,
-                       planned_date=quit_date - timedelta(days=1))
+                       planned_date=quit_datetime - timedelta(days=1),
+                       phase_id=3)
 
         # plan the notification for the quit date
         plan_and_store(user_id=self.user_id,
                        dialog=Notifications.QUIT_DATE_NOTIFICATION,
-                       planned_date=quit_date)
+                       planned_date=quit_datetime,
+                       phase_id=3)
 
     def reschedule_weekly_reflection(self, quit_date: date):
 
@@ -462,7 +491,8 @@ class RelapseState(State):
             # plan a new one
             schedule_next_execution(user_id=self.user_id,
                                     dialog=Components.WEEKLY_REFLECTION,
-                                    current_date=quit_date)
+                                    current_date=quit_datetime,
+                                    phase_id=2)
 
     def extend_pa_notifications(self, quit_date: date):
         # the notifications start from the dey after the goal setting dialog has been completed
@@ -483,7 +513,8 @@ class RelapseState(State):
 
             plan_and_store(user_id=self.user_id,
                            dialog=Notifications.PA_NOTIFICATION,
-                           planned_date=planned_date)
+                           planned_date=planned_date,
+                           phase_id=2)
 
 
 class ClosingState(State):
@@ -509,11 +540,13 @@ class ClosingState(State):
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.CLOSING_DIALOG,
-                       planned_date=planned_date)
+                       planned_date=planned_date,
+                       phase_id=2)
 
     def on_user_trigger(self, dialog):
         plan_and_store(user_id=self.user_id,
-                       dialog=dialog)
+                       dialog=dialog,
+                       phase_id=2)
 
     def on_dialog_completed(self, dialog):
         logging.info('A dialog has been completed  %s ', dialog)
@@ -529,4 +562,4 @@ class ClosingState(State):
         reschedule_dialog(user_id=self.user_id,
                           dialog=dialog,
                           planned_date=new_date,
-                          phase=1)
+                          phase=2)

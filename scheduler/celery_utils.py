@@ -136,8 +136,6 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
     """
     session = get_db_session(DATABASE_URL)
 
-    print("CELERY UTILS, GET COMPONENT: ", intervention_component_name)
-
     selected = (
         session.query(
             InterventionComponents

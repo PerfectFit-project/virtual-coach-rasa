@@ -10,7 +10,7 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 celery = Celery(broker=REDIS_URL)
 
 
-def compute_next_day(selectable_days: list) -> date:
+def compute_next_day(selectable_days: list, current_date: datetime) -> date:
     """
     Given a list of days in the week, returns the date of
     the closest future day among the ones provided in the list
@@ -19,13 +19,14 @@ def compute_next_day(selectable_days: list) -> date:
         selectable_days: a list of the week days among to search for.
                          The list is a list of int, each int represents
                          the day of the week (e.g., 1 = Monday
+        current_date: the date to start from
 
     Returns:
         The date of the next day available in the list, starting from
              current date.
     """
     # get the weekday number of current date
-    today = datetime.today()
+    today = current_date
     today_weekday = today.isoweekday()
 
     selectable_days.sort()
@@ -137,6 +138,81 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
     return selected
 
 
+def get_last_scheduled_occurrence(user_id: int,
+                                  intervention_component_id: int) -> UserInterventionState:
+    """
+    Gets the last planned intervention component occurrence
+
+    Args:
+        user_id: the id of the user
+        intervention_component_id: the id of the intervention component as
+            saved in the DB
+
+    Returns:
+            The next last occurrence saved in the user_intervention_state table in the DB for the
+            given user and intervention component. A UserInterventionState object is
+            returned. In case no entry is found, it returns None
+    """
+    session = get_db_session(DATABASE_URL)
+
+    try:
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid == user_id,
+                UserInterventionState.intervention_component_id == intervention_component_id
+            )
+            .order_by(UserInterventionState.next_planned_date.desc())  # order by descending date
+            .limit(1)  # get only the first result
+            .one()
+        )
+    except NoResultFound:
+        selected = None
+
+    return selected
+
+
+def get_next_scheduled_occurrence(user_id: int,
+                                  intervention_component_id: int,
+                                  current_date: datetime):
+    """
+    Gets the next planned intervention component occurrence
+
+    Args:
+        user_id: the id of the user
+        intervention_component_id: the id of the intervention component as
+            saved in the DB
+        current_date: the date after which look for the planned component
+
+    Returns:
+            The next planned occurrence saved in the user_intervention_state table in the DB for the
+            given user and intervention component. A UserInterventionState object is
+            returned. In case no entry is found, it returns None
+    """
+    session = get_db_session(DATABASE_URL)
+
+    try:
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid == user_id,
+                UserInterventionState.intervention_component_id == intervention_component_id,
+                UserInterventionState.next_planned_date > current_date
+            )
+            .order_by(UserInterventionState.next_planned_date.asc())  # order by ascending date
+            .limit(1)  # get only the first result
+            .one()
+        )
+    except NoResultFound:
+        selected = None
+
+    return selected
+
+
 def get_current_phase(user_id: int) -> InterventionPhases:
     """
     Get the current phase of the intervention of a user.
@@ -197,7 +273,9 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
     return selected[0]
 
 
-def get_next_planned_date(user_id: int, intervention_component_id: int) -> datetime:
+def get_next_planned_date(user_id: int,
+                          intervention_component_id: int,
+                          current_date: datetime) -> datetime:
     """
     Get the date planned for the administration of an intervention component, considering
     the user preferences saved in the DB.
@@ -205,6 +283,7 @@ def get_next_planned_date(user_id: int, intervention_component_id: int) -> datet
     Args:
         user_id: the id of the user
         intervention_component_id: the id of the interventions component
+        current_date: the current date
 
     Returns:
             The date planned for the execution of the component.
@@ -219,7 +298,7 @@ def get_next_planned_date(user_id: int, intervention_component_id: int) -> datet
     # second element of the tuple is the time
     pref_time = date_time[1]
 
-    next_day = compute_next_day(pref_days)
+    next_day = compute_next_day(pref_days, current_date)
 
     next_planned_date = datetime.combine(next_day, pref_time)
 
@@ -404,7 +483,7 @@ def is_new_week(current_date: date, starting_date: date) -> bool:
     """
     spent_days = (current_date - starting_date).days
 
-    if spent_days % 7 == 0:
+    if spent_days > 0 and spent_days % 7 == 0:
         return True
 
     return False
@@ -635,20 +714,32 @@ def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: 
                              task_uuid=str(task.task_id))
 
 
-def schedule_next_execution(user_id: int, dialog: str):
+def revoke_execution(task_uuid: str):
+    """
+    Revoke the execution of a planned task
+    Args:
+        task_uuid: the uuid of the celery task to be revoked
+
+    """
+    celery.control.revoke(task_uuid)
+
+
+def schedule_next_execution(user_id: int, dialog: str, current_date: datetime):
     """
     Get the next expected execution date for an intervention component,
     and schedules it
     Args:
         user_id: id of the user
         dialog: Name of the component
+        current_date: the current date
 
     """
     component = get_intervention_component(dialog)
     component_id = component.intervention_component_id
 
     planned_date = get_next_planned_date(user_id=user_id,
-                                         intervention_component_id=component_id)
+                                         intervention_component_id=component_id,
+                                         current_date=current_date)
 
     new_date = planned_date.replace(hour=10, minute=00)
 

@@ -1,13 +1,14 @@
 import logging
 from datetime import date, datetime, timedelta
-from state_machine.state_machine_utils import (compute_spent_weeks, create_new_date,
+from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
-                                               get_next_planned_date, get_quit_date, get_start_date,
-                                               is_new_week, plan_and_store, reschedule_dialog,
-                                               retrieve_intervention_day, schedule_next_execution,
-                                               store_completed_dialog, update_execution_week,
-                                               get_dialog_completion_state)
-from state_machine.const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURATION,
+                                               get_next_planned_date, get_next_scheduled_occurrence,
+                                               get_last_scheduled_occurrence, get_quit_date,
+                                               get_start_date, is_new_week, plan_and_store,
+                                               reschedule_dialog, retrieve_intervention_day,
+                                               revoke_execution, schedule_next_execution,
+                                               store_completed_dialog, update_execution_week)
+from state_machine.const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURATION, TIMEZONE,
                                  PREPARATION_GA, MAX_PREPARATION_DURATION, EXECUTION_DURATION)
 from state_machine.state import State
 from virtual_coach_db.helper.definitions import (Components, Notifications)
@@ -333,12 +334,14 @@ class ExecutionRunState(State):
             # in the other weeks, plan the next execution of the weekly reflection
             else:
                 schedule_next_execution(user_id=self.user_id,
-                                        dialog=Components.WEEKLY_REFLECTION)
+                                        dialog=Components.WEEKLY_REFLECTION,
+                                        current_date=datetime.now())
 
         # after the completion of the future self, schedule the next weekly reflection
         elif dialog == Components.FUTURE_SELF_SHORT:
             schedule_next_execution(user_id=self.user_id,
-                                    dialog=Components.WEEKLY_REFLECTION)
+                                    dialog=Components.WEEKLY_REFLECTION,
+                                    current_date=datetime.now())
 
     def on_dialog_rescheduled(self, dialog, new_date):
 
@@ -364,10 +367,12 @@ class ExecutionRunState(State):
         # Thus, the execution week must be updated
         if is_new_week(current_date, quit_date):
             # get the current week number
-            week_number = compute_spent_weeks(current_date, quit_date)
+            week_number = get_execution_week(self.user_id)
 
             # increase the week number by one
-            update_execution_week(self.user_id, week_number)
+            # we don't compute directly the number of weeks, because in case of relapse, the
+            # number of weeks doesn't increase
+            update_execution_week(self.user_id, week_number + 1)
 
     def run(self):
         logging.info("Running state %s", self.state)
@@ -411,8 +416,11 @@ class RelapseState(State):
             # if the quit date is in the future, it has been reset
             # during the relapse dialog
             if quit_date > current_date:
-                # if a new quit date has been set, a notification on the day before
-                # and on the new date are planned. Then we go back to the buffer state
+                # if a new quit date has been set, the weekly reflection might be rescheduled,
+                # a notification on the day before and on the new date are planned.
+                # Then we go back to the buffer state
+                self.reschedule_weekly_reflection(quit_date)
+                self.extend_pa_notifications(quit_date)
                 self.plan_new_date_notifications(quit_date)
                 self.set_new_state(BufferState(self.user_id))
 
@@ -421,11 +429,11 @@ class RelapseState(State):
                 logging.info('Relapse completed, back to execution')
                 self.set_new_state(ExecutionRunState(self.user_id))
 
-    def on_user_trigger(self, dialog):
+    def on_user_trigger(self, dialog: date):
         plan_and_store(user_id=self.user_id,
                        dialog=dialog)
 
-    def plan_new_date_notifications(self, quit_date):
+    def plan_new_date_notifications(self, quit_date: date):
         # plan the notification for the day before the quit date
         plan_and_store(user_id=self.user_id,
                        dialog=Notifications.BEFORE_QUIT_NOTIFICATION,
@@ -435,6 +443,47 @@ class RelapseState(State):
         plan_and_store(user_id=self.user_id,
                        dialog=Notifications.QUIT_DATE_NOTIFICATION,
                        planned_date=quit_date)
+
+    def reschedule_weekly_reflection(self, quit_date: date):
+
+        component = get_intervention_component(Components.WEEKLY_REFLECTION)
+
+        next_occurrence = get_next_scheduled_occurrence(
+            user_id=self.user_id,
+            intervention_component_id=component.intervention_component_id,
+            current_date=datetime.now()
+        )
+
+        quit_datetime = create_new_date(quit_date).astimezone(TIMEZONE)
+
+        if next_occurrence is not None and next_occurrence.next_planned_date < quit_datetime:
+            # revoke the planned task
+            revoke_execution(next_occurrence.task_uuid)
+            # plan a new one
+            schedule_next_execution(user_id=self.user_id,
+                                    dialog=Components.WEEKLY_REFLECTION,
+                                    current_date=quit_date)
+
+    def extend_pa_notifications(self, quit_date: date):
+        # the notifications start from the dey after the goal setting dialog has been completed
+        # and go on every day until the end of the intervention. The intervention end date
+        # is 12 weeks from the quit date.
+
+        tomorrow = date.today() + timedelta(days=1)
+        additional_days = (quit_date - tomorrow).days
+
+        component = get_intervention_component(Notifications.PA_NOTIFICATION)
+
+        last_planned = get_last_scheduled_occurrence(self.user_id,
+                                                     component.intervention_component_id)
+
+        for day in range(additional_days):
+            planned_date = create_new_date(start_date=last_planned.next_planned_date,
+                                           time_delta=day)
+
+            plan_and_store(user_id=self.user_id,
+                           dialog=Notifications.PA_NOTIFICATION,
+                           planned_date=planned_date)
 
 
 class ClosingState(State):
@@ -452,7 +501,8 @@ class ClosingState(State):
 
         closing_date = get_next_planned_date(
             user_id=self.user_id,
-            intervention_component_id=component.intervention_component_id
+            intervention_component_id=component.intervention_component_id,
+            current_date=datetime.now()
         )
 
         planned_date = create_new_date(closing_date)

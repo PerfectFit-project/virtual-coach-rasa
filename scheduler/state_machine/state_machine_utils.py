@@ -1,3 +1,5 @@
+from typing import Optional
+
 from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
@@ -535,7 +537,7 @@ def store_rescheduled_dialog(user_id: int,
                              dialog_id: int,
                              phase_id: int,
                              planned_date: datetime,
-                             task_uuid: str = None):
+                             task_uuid: Optional[str] = None):
     """
     This function marks when a dialog has been rescheduled, by update or creating
     the entry in the DB
@@ -626,7 +628,7 @@ def store_scheduled_dialog(user_id: int,
                            dialog_id: int,
                            phase_id: int,
                            planned_date: datetime = datetime.now().astimezone(TIMEZONE),
-                           task_uuid: str = None):
+                           task_uuid: Optional[str] = None):
     """
     This function marks when a dialog has been completed, by update or creating
     the entry in the DB
@@ -654,7 +656,7 @@ def store_scheduled_dialog(user_id: int,
     store_intervention_component_to_db(state)
 
 
-def plan_and_store(user_id: int, dialog: str, planned_date: datetime = None):
+def plan_and_store(user_id: int, dialog: str, planned_date: Optional[datetime] = None):
     """
     Program a celery task for the planned_date, or sends it immediately in case
     planned_date is None, and stores the new component to the DB

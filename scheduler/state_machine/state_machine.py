@@ -69,7 +69,7 @@ class EventEnum(Enum):
 @dataclass
 class Event:
     EventType: EventEnum
-    Descriptor: any
+    Descriptor: Any
 
 
 class StateMachine:
@@ -122,7 +122,7 @@ class StateMachine:
         self.state.run()
 
     @staticmethod
-    def descriptor_to_date(descriptor: Any) -> date:
+    def descriptor_to_date(descriptor: Any):
         """
         Convert the date format provided in the descriptor to
         the date format

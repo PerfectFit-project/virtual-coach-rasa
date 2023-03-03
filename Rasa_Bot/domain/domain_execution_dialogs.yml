@@ -2,30 +2,17 @@ intents:
 - EXTERNAL_trigger_execution_introduction
 - EXTERNAL_trigger_general_activity
 - EXTERNAL_weekly_reflection
-- EXTERNAL_daily_reflection
 
 slots:
-  current_intervention_component:
-    type: text
-    initial_value: 'NONE'
-    influence_conversation: false
-    mappings:
-    - type: custom
 
 responses:
   ##Utterances related to preparation phase
   utter_execution_introduction:
    - text: "Introducing execution phase..."
-  utter_general_activity:
-   - text: "General activity..."
   utter_weekly_reflection:
    - text: "Weekly reflection..."
-  utter_daily_reflection:
-   - text: "Daily reflection..."
 
 actions:
 ### Preparation Phase actions
 - action_set_slot_execution_introduction
-- action_set_slot_general_activity
 - action_set_slot_weekly_reflection
-- action_set_slot_daily_reflection

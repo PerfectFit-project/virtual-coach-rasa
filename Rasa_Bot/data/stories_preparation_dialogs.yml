@@ -25,16 +25,6 @@ stories:
    - action: mark_dialog_as_completed
    - action: action_end_dialog
 
-## Cold Turkey
-- story: Cold Turkey placeholder
-  steps:
-  - intent: EXTERNAL_trigger_cold_turkey
-  - action: action_set_slot_cold_turkey
-  - action: utter_cold_turkey
-  - intent: oke
-  - action: mark_dialog_as_completed
-  - action: action_end_dialog
-
 ## Plan Quit & Start Date
 - story: Plan Quit & Start Date placeholder
   steps:

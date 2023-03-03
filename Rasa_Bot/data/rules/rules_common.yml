@@ -17,25 +17,6 @@ rules:
   - action: utter_central_mode_options
   - action: action_end_dialog
 
-- rule: Ask for foreseen smoking HRS whenever this is externally triggered (by scheduler)
-  steps:
-  - intent: EXTERNAL_trigger_ask_foreseen_hrs
-  - action: utter_ask_foreseen_hrs
-
-- rule:  Return the number of smoked cigarettes when the user asks for it
-  steps:
-  - intent: request_tracked_cigarettes
-  - action: action_save_number_cigarettes
-  - action: action_get_number_cigarettes
-  - action: action_end_dialog
-
-- rule:  Set a tracker reminder when asked
-  steps:
-  - intent: request_tracker_reminder
-  - action: action_set_cigarettes_tracker_reminder
-  - action: utter_reminder_is_set
-  - action: action_end_dialog
-
 - rule: Activate user preferences form
   steps:
   - intent: submit_user_preferences
@@ -53,12 +34,3 @@ rules:
   - action: utter_confirm
   - action: action_store_user_preferences_to_db
   - action: utter_user_preferences
-
-- rule:  Test metadata
-  steps:
-  - intent: request_metadata
-  - action: action_set_file_path
-  - action: action_upload_file
-  - action: utter_file_sent
-  - action: action_send_metadata
-  - action: action_end_dialog

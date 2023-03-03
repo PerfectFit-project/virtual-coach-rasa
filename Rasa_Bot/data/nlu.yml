@@ -7,49 +7,6 @@ nlu:
     - "activiteit?"
     - "Activiteit"
     - "Laaste activiteit"
-
-- intent: request_plan_week
-  examples: |
-    - "Kan ik de agenda voor de week krijgen?"
-    - "Kun je de agenda voor de week opsturen?"
-    - "Wat is de agenda voor de komende week?"
-    - "Wat is er gepland voor de komende week?"
-    - "Kun je me de agenda voor de komende week vertellen?"
-    - "Hey, kun je me de agenda voor de week vertellen?"
-    - "Mag ik de planning?"
-    - "Mag ik de planning voor de week?"
-    - "Mag ik de agenda?"
-    - "Heb je de planning voor mij?"
-    
-- intent: confirm
-  examples: |
-    - Ja graag
-    - Zeker
-    - Natuurlijk
-    - Ja doe dat alsjeblieft
-    - Ja
-    - Dat zou fijn zijn
-    - Fijn
-    - Ah ja
-    - "Graag"
-    - Ja, klopt
-    
-- intent: deny
-  examples: |
-    - "Nee, dank je wel."
-    - "Nee, dank u wel."
-    - "Bedankt, maar dat hoeft niet."
-    - "Deze keer niet, dank je."
-    - "Dat hoeft niet."
-    - "Nee, bedankt."
-    - "Nee"
-    - Nee, klopt niet
-
-- intent: request_future_self_dialog
-  examples: |
-    - "Start future self dialog."
-    - "Ik wil future self dialog."
-    - "future self dialog."
     
 - intent: CENTRAL_get_first_aid_kit
   examples: |
@@ -62,13 +19,6 @@ nlu:
   examples: |
     - "dood"
     - "Ik ben depressief"
-- intent: request_tracked_cigarettes
-  examples: |
-    - "Hoeveel sigaretten heb ik vandaag gerookt?"
-
-- intent: request_tracker_reminder
-  examples: |
-    - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"
 
 - intent: EXTERNAL_watch_video_dialog
   examples: |
@@ -118,38 +68,17 @@ nlu:
   examples: |
     - "EXTERNAL_relapse_dialog_pa"
 
-
 - intent: relapse_dialog
   examples: |
-    - "relapse"
-    - "Relapse"
-    - "Having a relapse"
-    - "Ik heb een relapse"
-    - "Start relapse"
+    - "Help"
+    - "Hepl"
+    - "elp"
 
 - intent: EXTERNAL_done_with_video
   examples: |
     - "EXTERNAL_done_with_video"
 
-- intent: submit_user_preferences
-  examples: |
-    - "I would like to submit my user preferences"
-    - "User preferences"
-
 - intent: oke
   examples: |
     - "Oke"
     - "Ok"
-
-- intent: request_metadata
-  examples: |
-    - "Metadata"
-    - "Ik wil metadata"
-    - "metadata"
-    - "Dit is metadata"
-
-- intent: user_shares_image
-  examples: |
-    - "file"
-    - "File"
-    - "Start file"

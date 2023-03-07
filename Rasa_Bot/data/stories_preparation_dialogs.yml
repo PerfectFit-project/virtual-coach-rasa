@@ -15,16 +15,6 @@ stories:
     - action: mark_dialog_as_completed
     - action: action_end_dialog
 
-## Medication Talk
-- story: Medication Talk placeholder
-  steps:
-   - intent: EXTERNAL_trigger_medication_talk
-   - action: action_set_slot_medication_talk
-   - action: utter_medication_talk
-   - intent: oke
-   - action: mark_dialog_as_completed
-   - action: action_end_dialog
-
 ## Cold Turkey
 - story: Cold Turkey placeholder
   steps:

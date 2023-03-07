@@ -5,15 +5,6 @@ version: "3.1"
 
 stories:
 
- ## Execution phase introduction
-- story: Execution phase introduction placeholder
-  steps:
-    - intent: EXTERNAL_trigger_execution_introduction
-    - action: action_set_slot_execution_introduction
-    - action: utter_execution_introduction
-    - intent: oke
-    - action: mark_dialog_as_completed
-    - action: action_end_dialog
 
 ## General activity
 - story: General activity placeholder

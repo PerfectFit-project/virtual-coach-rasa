@@ -6,7 +6,7 @@ rules:
       - intent: EXTERNAL_first_aid_kit_video
       - action: action_set_slot_first_aid_kit_video
       - action: action_set_fak_video_link
-      - action: action_trigger_watch_video
+      - action: action_launch_watch_video_dialog
 
   - rule: Set video future self long
     steps:

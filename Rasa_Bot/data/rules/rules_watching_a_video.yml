@@ -44,3 +44,5 @@ rules:
   - action: utter_clear_confirmation
   - action: utter_finish_video_dialog
   - action: action_continue_after_video
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog

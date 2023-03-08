@@ -338,6 +338,14 @@ class ExecutionRunState(State):
             logging.info('Weekly reflection completed')
 
             week = get_execution_week(user_id=self.user_id)
+            
+            # on the first week, the execution of the general activity dialog 
+            # has to be planned for week 2
+            if week == 1:
+              schedule_next_execution(user_id=self.user_id,
+                                      dialog=Components.GENERAL_ACTIVITY,
+                                      current_date=datetime.now(),
+                                      phase_id=2)
 
             # if in week 3 or 8 of the execution, run future self after
             # completing the weekly reflection

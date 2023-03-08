@@ -177,8 +177,8 @@ rules:
   - action: utter_closing_prevention_plan_8a
   - action: utter_closing_prevention_plan_8b
   - action: utter_closing_prevention_plan_9  # TODO: send useful top 5 exercises
-  - action: utter_closing_prevention_plan_10  # TODO: check if we can use email to participants
-  - action: utter_closing_prevention_plan_11  # TODO: check if we can use email to participants
+  - action: utter_closing_prevention_plan_10
+  - action: utter_closing_prevention_plan_11
   - action: utter_closing_prevention_plan_12
   - action: utter_closing_prevention_plan_13
   - action: utter_closing_prevention_plan_14
@@ -239,4 +239,4 @@ rules:
   - active_loop: null  # TODO: Store answers to db
   - action: utter_closing_closing_6
   - action: utter_closing_closing_7
-  - action: utter_closing_closing_8  # TODO: email info to users?
+  - action: utter_closing_closing_8

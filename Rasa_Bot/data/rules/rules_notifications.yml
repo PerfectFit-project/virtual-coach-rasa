@@ -49,3 +49,10 @@ rules:
     - action: utter_notifications_step_goal_intensive_pa_1  # TODO: get goal from db
     - action: utter_notifications_step_goal_intensive_pa_2
     - action: utter_notifications_step_goal_intensive_pa_3
+
+## new quit date notification
+- rule: new quit date tomorrow notification  # TODO: trigger if user set new quit date, day of quitting
+  steps:
+    - intent: EXTERNAL_notifications_new_quit_date
+    - action: utter_notifications_new_quit_date_notification_1
+    - action: utter_notifications_new_quit_date_notification_2

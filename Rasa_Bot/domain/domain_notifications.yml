@@ -7,6 +7,7 @@ intents:
   - EXTERNAL_notifications_user_inactive
   - EXTERNAL_notifications_new_quit_date_tomorrow
   - EXTERNAL_notifications_step_goal_intensive_pa
+  - EXTERNAL_notifications_new_quit_date
 
 #slots:
 
@@ -73,6 +74,12 @@ responses:
   utter_notifications_step_goal_intensive_pa_3:
     - text: "Blijf doorzetten! 💪🏼"
 
+# New quit date notification
+  utter_notifications_new_quit_date_notification_1:
+    - text: "Hallo! Vandaag is je stop-dag. 📅 Stoppen met roken is niet altijd makkelijk, maar blijf doorzetten. Wees
+            lief voor jezelf en zet 'm op! Elke sigaret niet gerookt, is een overwinning. 🏆"
+  utter_notifications_new_quit_date_notification_1:
+    - text: "Je kunt mij ook altijd een berichtje sturen, mocht je me nodig hebben. Succes! 💪🏼"
 
 #forms:
 

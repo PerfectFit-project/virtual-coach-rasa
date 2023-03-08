@@ -215,7 +215,7 @@ slots:
 responses:
   # 1. Congratulate
   utter_congratulate_1:
-    - text: "Hallo [name user]" ##TODO Get the username and display it
+    - text: "Hallo {name}"
   utter_congratulate_2:
     - text: "Gefeliciteerd, de [load week number, see column D] week van het Perfect Fit programma zit erop! 🎉🎉" ##TODO Get week number and display it
   utter_congratulate_3:
@@ -556,7 +556,8 @@ responses:
   utter_predict_difficult_moments_1:
     - text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen." ##TODO show graph
   utter_predict_difficult_moments_2:
-    - text: "Vergelijk wat je komende week gaat doen met de situaties waarin je het eerder moeilijk vond om in beweging te komen."
+    - text: "Denk zoals eerder na over wat je komende week gaat doen. Niet alleen qua beweging, maar alles wat je komende week gaat doen.
+             Pak je agenda er weer bij als dat helpt 🗓️. Of pak het blaadje waar je eerder je activiteiten voor komende week op schreef 🖊️. "
   utter_predict_difficult_moments_3:
     - text: "Vergelijk wat je komende week gaat doen met de situaties waarin je het eerder moeilijk vond om in beweging te komen."
   utter_ask_difficult_moments_next_week:

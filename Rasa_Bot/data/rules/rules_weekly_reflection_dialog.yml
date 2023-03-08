@@ -173,7 +173,6 @@ rules:
   - action: utter_look_forward_3
   - action: utter_look_forward_4
   - action: utter_look_forward_5
-  - action: utter_look_forward_5
   - action: utter_look_forward_6
   - action: possible_smoking_situations_form
   - active_loop: possible_smoking_situations_form

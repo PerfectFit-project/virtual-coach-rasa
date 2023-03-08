@@ -180,7 +180,7 @@ class ValidateRefreshPreviousWeekForm(FormValidationAction):
 
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_refresh_previous_week':
-            return {"refresh_previous_weeks": None}
+            return {"refresh_previous_week": None}
 
         if not validator.validate_number_in_range_response(1, 2, value):
             dispatcher.utter_message(response="utter_did_not_understand")

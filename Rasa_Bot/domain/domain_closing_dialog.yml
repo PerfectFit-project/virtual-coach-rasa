@@ -209,7 +209,10 @@ responses:
     - text: "Het komt je vast bekend voor."
   utter_closing_prevention_plan_7:
     - text: "Hier zijn jouw lastige situaties voor bewegen🚶:"
-  utter_closing_prevention_plan_8:
+  utter_closing_prevention_plan_8a:
+    - text: "Als je wilt kun je deze plaatjes opslaan in de foto's op je telefoon. Klik dan op het plaatje, zodat je
+            het kunt opslaan."
+  utter_closing_prevention_plan_8b:
     - text: "Gelukkig kun je veel doen als het even moeilijk is!"
   utter_closing_prevention_plan_9:
     - text: "Hier zie je de oefeningen die jou het meest hebben geholpen. Die kun je natuurlijk blijven doen."

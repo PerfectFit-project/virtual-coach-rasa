@@ -1,9 +1,9 @@
 version: "3.1"
 
 intents:
-  - closing_dialog
   - EXTERNAL_delayed_message_smoke_lapse
   - EXTERNAL_delayed_message_smoke
+  - EXTERNAL_closing_dialog
 
 
 slots:

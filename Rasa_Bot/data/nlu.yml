@@ -118,6 +118,10 @@ nlu:
   examples: |
     - "EXTERNAL_relapse_dialog_pa"
 
+- intent: EXTERNAL_closing_dialog
+  examples: |
+    - "EXTERNAL_closing_dialog"
+
 
 - intent: relapse_dialog
   examples: |
@@ -153,11 +157,3 @@ nlu:
     - "file"
     - "File"
     - "Start file"
-
-- intent: closing_dialog
-  examples: |
-    - "closing dialog"
-    - "clsing dalg"
-    - "colsing dialgo"
-    - "closign dailog"
-    - "closin dialo"

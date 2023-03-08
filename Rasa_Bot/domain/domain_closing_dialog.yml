@@ -217,11 +217,11 @@ responses:
   utter_closing_prevention_plan_9:
     - text: "Hier zie je de oefeningen die jou het meest hebben geholpen. Die kun je natuurlijk blijven doen."
   utter_closing_prevention_plan_10:
-    - text: "Ik zal jouw moeilijke situaties en de 5 oefeningen die jij het meest nuttig vindt (uit je EHBO-doos) ook
-             naar je e-mailen als we klaar zijn.🧰"
+    - text: "Je kunt de uitleg van de oefeningen altijd terugvinden op de website van Perfect Fit:
+            https://perfectfit-onderzoek.nl/"
   utter_closing_prevention_plan_11:
-    - text: "Daar zit de tekst van de oefeningen bij, zodat je ze nog eens kunt doen. Als je in een oefening iets naar
-             mij hebt gestuurd, voeg ik dat ook toe."
+    - text: "Het is handig om even op te schrijven wat de beste oefeningen zijn voor jou. Je kunt er ook een
+             schermafbeelding (screenshot) van maken."
   utter_closing_prevention_plan_12:
     - text: "Er zijn vast nog andere dingen die jou hebben geholpen om niet te roken en meer te bewegen."
   utter_closing_prevention_plan_13:
@@ -279,8 +279,8 @@ responses:
   utter_closing_closing_2:
     - text: "Dankjewel voor jouw inzet!🙏"
   utter_closing_closing_3:
-    - text: "Ik zal je nog een e-mail sturen met wat we vandaag hebben besproken. En bewaar je eigen plan op een plek
-             waar je het makkelijk kunt vinden."
+    - text: "Je hebt net een plan gemaakt voor hoe je verder kunt gaan. Bewaar dat op een plek waar je het makkelijk
+            kunt vinden!"
   utter_closing_closing_4:
     - text: "Dan nog heel wat anders. Perfect Fit wordt steeds verbeterd. Het is heel waardevol om te weten hoe je het
              vond."
@@ -292,8 +292,7 @@ responses:
     - text: "Ik vond het leuk om samen met jou het Perfect Fit programma te doen.🤝 Ik hoop dat jij er ook veel aan hebt
              gehad."
   utter_closing_closing_8:
-    - text: "Je krijgt nog een e-mail, met het belangrijkste van ons gesprek van vandaag. Dan wens ik je nu alle
-             goeds!😊"
+    - text: "Dan wens ik je nu alle goeds!😊"
 
   utter_ask_closing_reflection_smoke_done:
     - text: "Typ 'klaar' als je klaar bent om verder te gaan."

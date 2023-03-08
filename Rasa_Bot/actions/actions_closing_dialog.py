@@ -182,6 +182,8 @@ class ValidateClosingEvaluatePfForm(FormValidationAction):
         if last_utterance != 'utter_ask_closing_pf_evaluate':
             return {"closing_pf_evaluate": None}
 
+        # Functions to store both slots to db
+
         return {"closing_pf_evaluate": value}
 
 

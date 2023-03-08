@@ -1,4 +1,6 @@
 import datetime
+import logging
+
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -9,7 +11,7 @@ from . import validator
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from .definitions import REDIS_URL, DATABASE_URL
-from .helper import get_latest_bot_utterance
+from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db)
 
 
 celery = Celery(broker=REDIS_URL)
@@ -182,8 +184,12 @@ class ValidateClosingEvaluatePfForm(FormValidationAction):
         if last_utterance != 'utter_ask_closing_pf_evaluate':
             return {"closing_pf_evaluate": None}
 
-        # Functions to store both slots to db
+        logging.info("validate closing pf comment")
 
+        # Store both grade and comment to db
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        grade = tracker.get_slot('closing_pf_grade')  # Get grade from slot
+        store_pf_evaluation_to_db(user_id, grade, value)  # Store to db
         return {"closing_pf_evaluate": value}
 
 

@@ -83,6 +83,24 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
     session.commit()  # Update database
 
 
+def store_pf_evaluation_to_db(user_id: int, pf_evaluation_grade: int, pf_evaluation_comment: str):
+    """
+    Stores a performance evaluation grade and comment for a user in the database.
+
+    Args:
+        user_id (int): The ID of the user to store the evaluation for.
+        pf_evaluation_grade (int): The grade of the performance evaluation, from 0 to 10.
+        pf_evaluation_comment (str): The comment accompanying the performance evaluation.
+
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.pf_evaluation_grade = pf_evaluation_grade
+    selected.pf_evaluation_comment = pf_evaluation_comment
+    session.commit()
+
+
 def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
     session = get_db_session(db_url=DATABASE_URL)
 

@@ -276,7 +276,7 @@ responses:
   utter_closing_closing_1:
     - text: "Dan was dit ons laatste gesprek. Je hebt hard gewerkt, en ik hoop dat Perfect Fit je heeft geholpen om
              dichter bij jouw doelen te komen."
-  utter_closing_closing_2:
+  utter_clo319-sing_closing_2:
     - text: "Dankjewel voor jouw inzet!🙏"
   utter_closing_closing_3:
     - text: "Je hebt net een plan gemaakt voor hoe je verder kunt gaan. Bewaar dat op een plek waar je het makkelijk

@@ -1,18 +1,40 @@
 version: "3.1"
 
 rules:
-  - rule: Set video first aid kit
+
+  - rule: Set video preparation introduction
     steps:
-      - intent: EXTERNAL_first_aid_kit_video
-      - action: action_set_slot_first_aid_kit_video
-      - action: action_set_fak_video_link
-      - action: action_launch_watch_video_dialog
+      - intent: EXTERNAL_trigger_preparation_introduction
+      - action: action_set_slot_preparation_introduction
+      - action: action_set_preparation_introduction_video_link
+      - action: action_launch_rescheduling_prep
+
+  - rule: Set video medication
+    steps:
+      - intent: EXTERNAL_trigger_medication_talk
+      - action: action_set_slot_medication_talk
+      - action: action_set_medication_video_link
+      - action: action_launch_rescheduling_prep
+
+  - rule: Set video tracking behavior
+    steps:
+      - intent: EXTERNAL_trigger_track_behavior
+      - action: action_set_slot_track_behavior
+      - action: action_set_track_behavior_video_link
+      - action: action_launch_rescheduling_prep
 
   - rule: Set video future self long
     steps:
       - intent: EXTERNAL_trigger_future_self_long
       - action: action_set_slot_future_self_long
       - action: action_set_future_self_long_video_link
+      - action: action_launch_rescheduling_prep
+
+  - rule: Set video first aid kit
+    steps:
+      - intent: EXTERNAL_first_aid_kit_video
+      - action: action_set_slot_first_aid_kit_video
+      - action: action_set_fak_video_link
       - action: action_launch_watch_video_dialog
 
   - rule: Set video future self short
@@ -27,25 +49,4 @@ rules:
       - intent: EXTERNAL_trigger_execution_introduction
       - action: action_set_slot_execution_introduction
       - action: action_set_execution_introduction_video_link
-      - action: action_launch_watch_video_dialog
-
-  - rule: Set video preparation introduction
-    steps:
-      - intent: EXTERNAL_trigger_preparation_introduction
-      - action: action_set_slot_preparation_introduction
-      - action: action_set_preparation_introduction_video_link
-      - action: action_launch_watch_video_dialog
-
-  - rule: Set video medication
-    steps:
-      - intent: EXTERNAL_trigger_medication_talk
-      - action: action_set_slot_medication_talk
-      - action: action_set_medication_video_link
-      - action: action_launch_watch_video_dialog
-
-  - rule: Set video tracking behavior
-    steps:
-      - intent: EXTERNAL_trigger_track_behavior
-      - action: action_set_slot_track_behavior
-      - action: action_set_track_behavior_video_link
       - action: action_launch_watch_video_dialog

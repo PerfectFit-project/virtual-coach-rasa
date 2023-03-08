@@ -20,7 +20,7 @@ nlu:
     - "Mag ik de planning voor de week?"
     - "Mag ik de agenda?"
     - "Heb je de planning voor mij?"
-    
+
 - intent: confirm
   examples: |
     - Ja graag
@@ -33,7 +33,7 @@ nlu:
     - Ah ja
     - "Graag"
     - Ja, klopt
-    
+
 - intent: deny
   examples: |
     - "Nee, dank je wel."
@@ -50,14 +50,14 @@ nlu:
     - "Start future self dialog."
     - "Ik wil future self dialog."
     - "future self dialog."
-    
+
 - intent: CENTRAL_get_first_aid_kit
   examples: |
     - "Get first aid kit"
     - "Ik wil first aid kit"
     - "First aid kit"
     - "EHBO doos"
-    
+
 - intent: urgent
   examples: |
     - "dood"
@@ -135,6 +135,14 @@ nlu:
 - intent: EXTERNAL_relapse_dialog_pa
   examples: |
     - "EXTERNAL_relapse_dialog_pa"
+
+- intent: EXTERNAL_watch_video_dialog
+  examples: |
+    - "EXTERNAL_watch_video_dialog"
+
+- intent: EXTERNAL_rescheduling_preparation_phase
+  examples: |
+    - "EXTERNAL_rescheduling_preparation_phase"
 
 
 - intent: relapse_dialog

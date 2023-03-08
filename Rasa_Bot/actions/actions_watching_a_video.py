@@ -5,7 +5,7 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import VideoLinks, ExecutionInterventionComponents
+from virtual_coach_db.helper.definitions import VideoLinks, ComponentsTriggers
 from . import validator
 from .definitions import REDIS_URL
 from .helper import get_latest_bot_utterance
@@ -21,7 +21,23 @@ class ActionLaunchWatchVideoDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # new_intent = ComponentsTriggers.WATCH_VIDEO
         new_intent = 'EXTERNAL_watch_video_dialog'
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, new_intent))
+        return []
+
+
+class ActionLaunchReschedulingPrep(Action):
+    """Trigger the preparation dialogs rescheduling"""
+
+    def name(self):
+        return "action_launch_rescheduling_prep"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
+        new_intent = 'EXTERNAL_rescheduling_preparation_phase'
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent))
         return []

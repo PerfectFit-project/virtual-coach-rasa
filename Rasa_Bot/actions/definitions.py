@@ -62,6 +62,15 @@ REFLECTIVE_QUESTION_COMMITMENT_IDENTITY = "Hoe helpt deze activiteit jou bij \
     jouw besluit om iemand te worden die gezonder leeft?"
 REFLECTIVE_QUESTION_CONSENSUS = "Hoe denk je dat deze activiteit iemand zoals \
     jou kan helpen om gezonder te gaan leven?"
+    
+# Accepted misspelled words for days of the weeks
+DAYS_OF_WEEK_ACCEPTED = ["maandag", "mandag", "maadag",
+                         "dinsdag", "diensdag",
+                         "woensday", "wonsdag", "wensdag", 
+                         "donderdag", "dondrdag", "dondedag",
+                         "vrijdag", "vridag", "vrida", "vrjdag", "vijdag",
+                         "zaterdag", "zatedag",
+                         "zondag", "zodag"]
 
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?

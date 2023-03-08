@@ -1,0 +1,194 @@
+# Rules related to the profile creation functionality
+version: "3.1"
+
+rules:
+## 1 + 2: Welcome and begin participant code
+- rule: Welcome profile creation dialog
+  steps:
+  - intent: EXTERNAL_trigger_profile_creation
+  - action: action_set_slot_profile_creation
+  - action: utter_profile_creation_start_1
+  - action: utter_profile_creation_start_2
+  - action: utter_profile_creation_start_3
+  - action: utter_profile_creation_code_1
+  - action: utter_profile_creation_code_2
+  - action: profile_creation_code_form
+  - active_loop: profile_creation_code_form
+  wait_for_user_input: false
+  
+## 2 + 3: Participant code and preferred day for contact
+- rule: Profile creation participant code
+  condition:
+    - active_loop: profile_creation_code_form
+  steps:
+  - action: profile_creation_code_form
+  - active_loop: null
+  - action: utter_profile_creation_code_3
+  - action: utter_profile_creation_preference_1
+  - action: utter_profile_creation_preference_2
+  - action: utter_profile_creation_preference_3
+  - action: profile_creation_day_form
+  - active_loop: profile_creation_day_form
+  wait_for_user_input: false
+ 
+## 3: Preferred day + preferred time 
+- rule: Profile creation preferred time
+  condition:
+    - active_loop: profile_creation_day_form
+  steps:
+  - action: profile_creation_day_form
+  - active_loop: null
+  - action: utter_profile_creation_preference_4
+  - action: utter_profile_creation_preference_5
+  - action: profile_creation_time_form
+  - active_loop: profile_creation_time_form
+  wait_for_user_input: false
+
+## 3: Preferred time + confirm preferences
+- rule: Profile creation confirm preferences
+  condition:
+    - active_loop: profile_creation_time_form
+  steps:
+  - action: profile_creation_time_form
+  - active_loop: null
+  - action: profile_creation_map_time_to_daypart
+  - action: utter_profile_creation_preference_6
+  - action: profile_creation_confirm_preference_form
+  - active_loop: profile_creation_confirm_preference_form
+  wait_for_user_input: false
+  
+## 3: Modify preferences
+- rule: Profile creation modify preferences
+  condition:
+    - active_loop: profile_creation_confirm_preference_form
+  steps:
+  - action: profile_creation_confirm_preference_form
+  - active_loop: null
+  - slot_was_set:
+    - profile_creation_confirm_preference_slot: 2
+  - action: profile_creation_confirm_preference_form
+  - active_loop: profile_creation_confirm_preference_form
+  wait_for_user_input: false
+  
+## 3 + 4: Confirm preferences and start running walking pref
+- rule: Profile creation confirm preferences
+  condition:
+    - active_loop: profile_creation_confirm_preference_form
+  steps:
+  - action: profile_creation_confirm_preference_form
+  - active_loop: null
+  - slot_was_set:
+    - profile_creation_confirm_preference_slot: 1
+  - action: utter_profile_creation_testim_1
+  - action: utter_profile_creation_testim_2
+  - action: profile_creation_run_walk_form
+  - active_loop: profile_creation_run_walk_form
+  wait_for_user_input: false
+  
+## 4: Enter running walking pref and start Godin light
+- rule: Profile creation enter running walking pref
+  condition:
+    - active_loop: profile_creation_run_walk_form
+  steps:
+  - action: profile_creation_run_walk_form
+  - active_loop: null
+  - action: utter_profile_creation_godin_1
+  - action: profile_creation_godin_light_form
+  - active_loop: profile_creation_godin_light_form
+  wait_for_user_input: false
+  
+## 4: Enter Godin light and start Godin moderate
+- rule: Profile creation enter Godin light
+  condition:
+    - active_loop: profile_creation_godin_light_form
+  steps:
+  - action: profile_creation_godin_light_form
+  - active_loop: null
+  - action: profile_creation_godin_moderate_form
+  - active_loop: profile_creation_godin_moderate_form
+  wait_for_user_input: false
+  
+## 4: Enter Godin moderate and start Godin intensive
+- rule: Profile creation enter Godin moderate
+  condition:
+    - active_loop: profile_creation_godin_moderate_form
+  steps:
+  - action: profile_creation_godin_moderate_form
+  - active_loop: null
+  - action: profile_creation_godin_intensive_form
+  - active_loop: profile_creation_godin_intensive_form
+  wait_for_user_input: false
+  
+## 4: Enter Godin intensive and start sim 1
+- rule: Profile creation enter Godin intensive
+  condition:
+    - active_loop: profile_creation_godin_intensive_form
+  steps:
+  - action: profile_creation_godin_intensive_form
+  - active_loop: null
+  - action: utter_profile_creation_godin_2
+  - action: utter_profile_creation_sim_1
+  - action: utter_profile_creation_sim_2
+  - action: profile_creation_sim_1_form
+  - active_loop: profile_creation_sim_1_form
+  wait_for_user_input: false
+  
+## 4: Enter sim 1 and start sim 2
+- rule: Profile creation enter sim 1
+  condition:
+    - active_loop: profile_creation_sim_1_form
+  steps:
+  - action: profile_creation_sim_1_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_3
+  - action: utter_profile_creation_sim_4
+  - action: profile_creation_sim_2_form
+  - active_loop: profile_creation_sim_2_form
+  wait_for_user_input: false
+  
+## 4: Enter sim 2 and start sim 3
+- rule: Profile creation enter sim 2
+  condition:
+    - active_loop: profile_creation_sim_2_form
+  steps:
+  - action: profile_creation_sim_2_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_5
+  - action: utter_profile_creation_sim_6
+  - action: profile_creation_sim_3_form
+  - active_loop: profile_creation_sim_3_form
+  wait_for_user_input: false
+  
+## 4: Enter sim 3 and start sim 4
+- rule: Profile creation enter sim 3
+  condition:
+    - active_loop: profile_creation_sim_3_form
+  steps:
+  - action: profile_creation_sim_3_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_7
+  - action: utter_profile_creation_sim_8
+  - action: profile_creation_sim_4_form
+  - active_loop: profile_creation_sim_4_form
+  wait_for_user_input: false
+
+## 4: Enter sim 4 and start conf 1
+- rule: Profile creation enter sim 4
+  condition:
+    - active_loop: profile_creation_sim_4_form
+  steps:
+  - action: profile_creation_sim_4_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_9
+  - action: utter_profile_creation_conf_1
+  - action: profile_creation_conf_1_form
+  - active_loop: profile_creation_conf_1_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 1 and start conf 2
+- rule: Profile creation enter sim 4
+  condition:
+    - active_loop: profile_creation_conf_1_form
+  steps:
+  - action: profile_creation_conf_1_form
+  - active_loop: null

@@ -4,6 +4,11 @@ intents:
   - weekly_reflection
 
 slots:
+  week_number:
+    type: text
+    mappings:
+      - type: custom
+
   how_went_non_smoke:
     type: categorical
     values:
@@ -217,7 +222,7 @@ responses:
   utter_congratulate_1:
     - text: "Hallo {name}"
   utter_congratulate_2:
-    - text: "Gefeliciteerd, de [load week number, see column D] week van het Perfect Fit programma zit erop! 🎉🎉" ##TODO Get week number and display it
+    - text: "Gefeliciteerd, de {week_number}e week van het Perfect Fit programma zit erop! 🎉🎉"
   utter_congratulate_3:
     - text: "Elke week die je afrondt is weer een stap verder. Daar mag je trots op zijn!"
 

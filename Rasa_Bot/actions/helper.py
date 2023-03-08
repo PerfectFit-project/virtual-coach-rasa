@@ -184,7 +184,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         user_id: niceday user id
         intervention_component: the name of the intervention component.
                                 The names are listed in virtual_coach_db.helper.definitions
-                                in the PreparationInterventionComponents class
+                                in the Components class
         phase: the name of the phase. The names are listed in virtual_coach_db.helper.definitions
                Phases class
 
@@ -396,6 +396,30 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     )
 
     return open_answers
+
+def get_user(user_id: int) -> Users:
+    """
+       Get the user column in the database
+        Args:
+                user_id: the user_id of the user to retrieve
+
+            Returns:
+                    The user info stored in the database
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    user_info = (
+        session.query(
+            Users
+        )
+        .filter(
+            Users.nicedayuid == user_id
+        )
+        .one()
+    )
+
+    return user_info
 
 def count_answers(answers: List[DialogClosedAnswers],
                   closed_answer_options: List[ClosedAnswers]) -> List[int]:

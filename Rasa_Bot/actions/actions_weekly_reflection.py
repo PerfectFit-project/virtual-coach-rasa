@@ -8,7 +8,7 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state)
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, get_user)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -35,6 +35,35 @@ class TriggerWeeklyReflectionDialog(Action):
                          (user_id, ExecutionInterventionComponents.WEEKLY_REFLECTION))
 
         return []
+
+class ActionSetSlotWeeklyReflection(Action):
+    def name(self):
+        return "action_set_slot_weekly_reflection"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        # update the user_intervention_state table
+
+        store_user_intervention_state(user_id,
+                                      ExecutionInterventionComponents.WEEKLY_REFLECTION,
+                                      Phases.LAPSE)
+
+        return [SlotSet('current_intervention_component',
+                        ExecutionInterventionComponents.WEEKLY_REFLECTION)]
+
+class GetWeekNumber(Action):
+    def name(self):
+        return "action_get_week_number"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        user_info = get_user(user_id)
+        exec_week = user_info.execution_week
+        if exec_week > 11:
+            return [FollowupAction('action_restart')]
+        return [SlotSet('week_number', str(exec_week))]
 
 class SelectPaGroup(Action):
     def name(self):

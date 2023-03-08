@@ -12,6 +12,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
   - action: utter_congratulate_1
   - action: utter_congratulate_2
   - action: utter_congratulate_3

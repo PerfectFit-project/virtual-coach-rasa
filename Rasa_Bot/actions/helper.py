@@ -4,6 +4,8 @@ Helper functions for rasa actions
 import datetime
 import secrets
 from typing import List, Optional, Any
+import plotly.graph_objects as go
+
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
                                               DialogOpenAnswers, 
@@ -12,8 +14,45 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              UserPreferences)
+                                              UserPreferences,
+                                              ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
+
+
+def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
+    """
+        Store a user's long-term physical activity (PA) goal in the database.
+
+        Args:
+            user_id (int): The id of the user.
+            long_term_pa_goal (str): The long-term PA goal.
+
+        Returns:
+            Nothing
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.long_term_pa_goal = long_term_pa_goal
+    session.commit()
+
+
+def store_quit_date_to_db(user_id: int, quit_date: str):
+    """
+    Store the quit date for a user in the database.
+
+    Args:
+        user_id (int): The id of the user.
+        quit_date (str): The quit date in the format 'dd-mm-yyyy'.
+
+    Returns:
+        Nothing
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.quit_date = quit_date
+    session.commit()
 
 
 def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_value: int):
@@ -281,6 +320,106 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
 
     return rnd_activities
 
+def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
+    """
+       Get the closed answer responses associated with the given user and question.
+        Args:
+                user_id: the user_id of the user to retrieve the answers for
+                question_id: the question_id for which the answers should be retrieved
+
+            Returns:
+                    All the answers that the user has given for the given question
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    closed_answers = (
+        session.query(
+            DialogClosedAnswers
+        )
+        .join(ClosedAnswers)
+        .filter(
+            DialogClosedAnswers.users_nicedayuid == user_id,
+            ClosedAnswers.question_id == question_id
+        )
+        .all()
+    )
+
+    return closed_answers
+
+def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
+    """
+       Get all the possible closed answers associated with a given question id.
+        Args:
+                question_id: the question_id for which the answers should be retrieved
+
+            Returns:
+                    All the possible answers to the question specified
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    closed_answers = (
+        session.query(
+            ClosedAnswers
+        )
+        .filter(
+            ClosedAnswers.question_id == question_id
+        )
+        .all()
+    )
+
+    return closed_answers
+
+def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
+    """
+       Get the open answer responses associated with the given user and question.
+        Args:
+                user_id: the user_id of the user to retrieve the answers for
+                question_id: the question_id for which the answers should be retrieved
+
+            Returns:
+                    The open answers that the user has given for the question
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    open_answers = (
+        session.query(
+            DialogOpenAnswers
+        )
+        .filter(
+            DialogOpenAnswers.users_nicedayuid == user_id,
+            DialogOpenAnswers.question_id == question_id
+        )
+        .all()
+    )
+
+    return open_answers
+
+def count_answers(answers: List[DialogClosedAnswers],
+                  closed_answer_options: List[ClosedAnswers]) -> List[int]:
+    """
+       Count up the closed_answer responses for each answer option.
+        Args:
+                answers: the answers of the user, retreived from the database
+                closed_answer_options: the answer options for the given question
+
+            Returns:
+                    An array of values, specifying the amount of occurences of an answer
+                    for the corresponding option, aligning with the index of the option.
+                    Example... [2, 1, 3] for ["At the gym", "At home", "Outside"]
+
+    """
+    result = [
+        len(
+            [answer for answer in answers if
+             answer.closed_answers_id == closed_answer.closed_answers_id]
+        ) for closed_answer in closed_answer_options
+    ]
+    return result
+
+
 
 def week_day_to_numerical_form(week_day):
     if week_day.lower() == "monday":
@@ -298,3 +437,58 @@ def week_day_to_numerical_form(week_day):
     if week_day.lower() == "sunday":
         return 7
     return -1
+
+def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
+    """
+       Add a barchart subplot to a given figure, with the following data.
+        Args:
+                fig: the figure to add a subplot to
+                x_axis: the x-axis of the added bar chart, corresponds to the answer options
+                data: the actual data, these are the values returned by count_answers
+                figure_specifics: minor specifications about the subplot to be added
+            Returns:
+                    An updated figure, with the new barchart subplot added in.
+    """
+    legends, row, column, showlegend = figure_specifics
+    for i, y_axis in enumerate(data):
+        legend, color = legends[i]
+        fig.add_trace(
+            go.Bar(legendgroup=legend, name=legend, x=x_axis, y=y_axis,
+                   showlegend=showlegend, marker_color=color, text=y_axis),
+            row=row, col=column
+        )
+    fig.update_yaxes(visible=False, showticklabels=False)
+    # Change the bar mode
+    return fig
+
+def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
+    """
+       Populate a given figure with the responses for the closed answers,
+       associated with the specific user.
+        Args:
+                fig: the figure to populate
+                question_ids: the questions to retrieve the responses to
+                user_id: the id of the user to retrieve the responses to
+                legends: the titles and colors for the plot
+            Returns:
+                    A plot, showing the accumulated results for each
+                    question specified by the parameters.
+    """
+    for i, question_ids_subset in enumerate(question_ids):
+        closed_answer_options = get_all_closed_answers(question_ids_subset[0][0])
+
+        data = []
+        for question_ids_list in question_ids_subset:
+            temp_data = [0] * len(closed_answer_options)
+            for question_id in question_ids_list:
+                closed_answers = get_all_closed_answers(question_id)
+                answers = get_closed_answers(user_id, question_id)
+                temp_data = [sum(x) for x in zip(temp_data, count_answers(answers, closed_answers))]
+            data.append(temp_data)
+
+        answer_descriptions = [answer.answer_description for answer in closed_answer_options]
+
+        figure_specifics = [legends, i + 1, 1, bool(i == 0)]
+        fig = add_subplot(fig, answer_descriptions, data, figure_specifics)
+
+    return fig

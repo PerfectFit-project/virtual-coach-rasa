@@ -6,7 +6,7 @@ import secrets
 from typing import List, Optional, Any
 import plotly.graph_objects as go
 
-from .definitions import DATABASE_URL, TIMEZONE
+from .definitions import DATABASE_URL, TIMEZONE, NUM_TOP_ACTIVITIES
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
                                               DialogOpenAnswers, 
                                               InterventionActivity,
@@ -15,7 +15,8 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionPhases,
                                               UserInterventionState,
                                               UserPreferences,
-                                              ClosedAnswers)
+                                              ClosedAnswers,
+                                              FirstAidKit)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -510,3 +511,47 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
         fig = add_subplot(fig, answer_descriptions, data, figure_specifics)
 
     return fig
+
+
+def get_faik_text(user_id):
+    session = get_db_session(db_url=DATABASE_URL)
+
+    selected = (
+        session.query(
+            FirstAidKit
+        )
+            .filter(
+            FirstAidKit.users_nicedayuid == user_id
+        )
+            .all()
+    )
+
+    kit_text = ""
+    filled = False  # Whether the first aid kit has content
+    activity_ids_list = []  # List of activity IDs
+
+    # the kit exists
+    if selected is not None:
+
+        # get the highest scored activities
+        top_five_activities = (
+            session.query(
+                FirstAidKit
+            ).order_by(FirstAidKit.activity_rating.desc())
+                .filter(
+                FirstAidKit.users_nicedayuid == user_id
+            )
+                .limit(NUM_TOP_ACTIVITIES).all()
+        )
+
+        for activity_idx, activity in enumerate(top_five_activities):
+            kit_text += str(activity_idx + 1) + ") "
+            kit_text += activity.intervention_activity.intervention_activity_title
+            kit_text += ": " + activity.intervention_activity.intervention_activity_description
+            if not activity_idx == len(top_five_activities) - 1:
+                kit_text += "\n"
+
+            activity_ids_list.append(activity.intervention_activity.intervention_activity_id)
+        filled = True
+
+    return kit_text, filled, activity_ids_list

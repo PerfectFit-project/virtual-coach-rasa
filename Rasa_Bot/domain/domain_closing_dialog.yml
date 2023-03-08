@@ -214,8 +214,10 @@ responses:
             het kunt opslaan."
   utter_closing_prevention_plan_8b:
     - text: "Gelukkig kun je veel doen als het even moeilijk is!"
-  utter_closing_prevention_plan_9:
+  utter_closing_prevention_plan_9a:
     - text: "Hier zie je de oefeningen die jou het meest hebben geholpen. Die kun je natuurlijk blijven doen."
+  utter_closing_prevention_plan_9b:
+    - text: "{first_aid_kit_text}"
   utter_closing_prevention_plan_10:
     - text: "Je kunt de uitleg van de oefeningen altijd terugvinden op de website van Perfect Fit:
             https://perfectfit-onderzoek.nl/"
@@ -276,7 +278,7 @@ responses:
   utter_closing_closing_1:
     - text: "Dan was dit ons laatste gesprek. Je hebt hard gewerkt, en ik hoop dat Perfect Fit je heeft geholpen om
              dichter bij jouw doelen te komen."
-  utter_clo319-sing_closing_2:
+  utter_closing_closing_2:
     - text: "Dankjewel voor jouw inzet!🙏"
   utter_closing_closing_3:
     - text: "Je hebt net een plan gemaakt voor hoe je verder kunt gaan. Bewaar dat op een plek waar je het makkelijk
@@ -320,6 +322,7 @@ actions:
   - action_get_pa_goal_from_db
   - action_closing_delayed_message_after_smoke_lapse
   - action_closing_delayed_message_after_smoke
+  - action_get_first_aid_kit_activities
 
 forms:
   closing_pa_evaluation_form:

@@ -9,6 +9,11 @@ slots:
     mappings:
       - type: custom
 
+  long_term_pa_goal:
+    type: text
+    mappings:
+      - type: custom
+
   how_went_non_smoke:
     type: categorical
     values:
@@ -220,7 +225,7 @@ slots:
 responses:
   # 1. Congratulate
   utter_congratulate_1:
-    - text: "Hallo {name}"
+    - text: "Hallo, 👋🏼"
   utter_congratulate_2:
     - text: "Gefeliciteerd, de {week_number}e week van het Perfect Fit programma zit erop! 🎉🎉"
   utter_congratulate_3:
@@ -489,7 +494,7 @@ responses:
   utter_steps_next_week_3:
     - text: "Je krijgt komende week elke dag weer een persoonlijk stappendoel aangepast op jouw eerdere stappen 🦶🏼.
              Het stappendoel wordt elke dag een beetje uitdagender. Zo kom je een stapje dichterbij je lange-termijn doel:
-             [retrieve long-term goal] " ## TODO Retrieve long term goal
+             {long_term_pa_goal} "
 
   # 7b Group 2: Gets advice to increase PA intensity
   utter_increase_intensity_1:
@@ -500,7 +505,7 @@ responses:
              hardlopen 🏃, fietsen 🚴 of een andere sport te doen 🏋️⚽🏀🎾. "
   utter_increase_intensity_3:
     - text: "Zo zal je je fitter gaan voelen en zal je conditie verbeteren. Dit helpt je om je lange-termijn doel te behalen:
-             [retrieve long-term goal]" ##TODO Retrieve long term goal
+             {long_term_pa_goal}"
   utter_increase_intensity_4:
     - text: "Wanneer je meer of intensiever gaat bewegen is het wel belangrijk om dit langzaam op te bouwen. Anders kan dat leiden tot blessures 🩹."
   utter_increase_intensity_5:
@@ -522,7 +527,7 @@ responses:
   utter_increase_intensity_10:
     - text: "Mooi 👍🏼."
   utter_increase_intensity_11:
-    - text: "Hieronder zie je een voorbeeld van verschillende sporten en hoe intensief deze sporten zijn: [Show image]" ##TODO send image
+    - text: "Hieronder zie je een voorbeeld van verschillende sporten en hoe intensief deze sporten zijn: "
   utter_increase_intensity_12:
     - text: "Alle lichamelijke activiteiten die onder te tekst 'matig intensief' of 'zwaar intensief' staan op het plaatje zijn goed.
              Dat zijn bijvoorbeeld balsporten zoals voetballen ⚽, basketballen 🏀 of tennissen 🎾,
@@ -626,6 +631,9 @@ responses:
 actions:
   - action_trigger_weekly_reflection
   - action_select_pa_group
+  - action_get_week_number
+  - action_get_long_term_pa_goal
+  - action_set_slot_weekly_reflection
   - validate_how_went_non_smoke_form
   - validate_specific_moments_form
   - validate_smoked_previous_week_form

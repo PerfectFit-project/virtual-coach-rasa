@@ -711,7 +711,7 @@ rules:
   wait_for_user_input: false
 
 ## User answered 1, yes, and so we prompt the next parts
-## TODO, show image and retrieve minutes
+## TODO retrieve minutes
 - rule: Intensity increase
   condition:
     - active_loop: if_doable_form
@@ -722,6 +722,9 @@ rules:
     - if_doable: 1
   - action: utter_increase_intensity_10
   - action: utter_increase_intensity_11
+  - action: action_set_file_path_pa_image
+  - action: action_upload_file
+  - action: action_send_metadata
   - action: utter_increase_intensity_12
   - action: utter_increase_intensity_13
   - action: utter_increase_intensity_14

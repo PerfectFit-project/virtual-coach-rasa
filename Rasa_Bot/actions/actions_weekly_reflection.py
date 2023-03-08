@@ -32,25 +32,29 @@ class TriggerWeeklyReflectionDialog(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         celery.send_task('celery_tasks.weekly_reflection_dialog',
-                         (user_id, ExecutionInterventionComponents.WEEKLY_REFLECTION))
+                         (user_id, Components.WEEKLY_REFLECTION))
 
         return []
 
-class ActionSetSlotWeeklyReflection(Action):
+class SetSlotWeeklyReflection(Action):
     def name(self):
         return "action_set_slot_weekly_reflection"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        # update the user_intervention_state table
-
-        store_user_intervention_state(user_id,
-                                      ExecutionInterventionComponents.WEEKLY_REFLECTION,
-                                      Phases.LAPSE)
 
         return [SlotSet('current_intervention_component',
-                        ExecutionInterventionComponents.WEEKLY_REFLECTION)]
+                        Components.WEEKLY_REFLECTION)]
+
+class GetLongTermPaGoal(Action):
+    def name(self):
+        return "action_get_long_term_pa_goal"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        user_info = get_user(user_id)
+        pa_goal = user_info.long_term_pa_goal
+        return [SlotSet('long_term_pa_goal', pa_goal)]
 
 class GetWeekNumber(Action):
     def name(self):
@@ -62,7 +66,7 @@ class GetWeekNumber(Action):
         user_info = get_user(user_id)
         exec_week = user_info.execution_week
         if exec_week > 11:
-            return [FollowupAction('action_restart')]
+            return [FollowupAction('action_end_dialog')]
         return [SlotSet('week_number', str(exec_week))]
 
 class SelectPaGroup(Action):

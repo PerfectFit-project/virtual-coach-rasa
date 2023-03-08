@@ -1,0 +1,51 @@
+version: "3.1"
+
+rules:
+## Tracking notification
+- rule: send tracking notification
+  steps:
+  - intent: EXTERNAL_notifications_tracking  # TODO: set trigger
+  - action: utter_notifications_tracking_1
+  - action: utter_notifications_tracking_2
+  - action: utter_notifications_tracking_3
+
+## Step goal notification
+- rule: send step goal notification
+  steps:
+  - intent: EXTERNAL_notifications_step_goal  # TODO: set trigger
+  - action: utter_notifications_step_goal_1  # TODO: get step goal from db
+  - action: utter_notifications_step_goal_2
+
+## finish dialog notification
+- rule: finish dialog notification
+  steps:
+  - intent: EXTERNAL_notifications_finish_dialog  # TODO: set trigger if user is inactive for 1hour
+  - action: utter_notifications_finish_dialog_1
+  - action: utter_notifications_finish_dialog_2
+
+## Inactive users notification
+- rule: inactive users notification
+  steps:
+  - intent: EXTERNAL_notifications_user_inactive  # TODO: set trigger if user inactive for 10 days
+  - action: utter_notifications_user_inactive_1
+  - action: utter_notifications_user_inactive_2
+  - action: utter_notifications_user_inactive_3
+  - action: utter_notifications_user_inactive_4
+  - action: utter_notifications_user_inactive_5
+  - action: utter_notifications_user_inactive_6
+  - action: utter_notifications_user_inactive_7  # TODO: implement form and continue
+
+## New quit date tomorrow notification
+- rule: new quit date tomorrow notification  # TODO: trigger if user set new quit date, day before date
+  steps:
+    - intent: EXTERNAL_notifications_new_quit_date_tomorrow
+    - action: utter_notifications_new_quit_date_tomorrow_1
+    - action: utter_notifications_new_quit_date_tomorrow_2
+
+## Step goal and intensive pa notification
+- rule: step goal and intensive pa notification  # TODO: set trigger
+  steps:
+    - intent: EXTERNAL_notifications_step_goal_intensive_pa
+    - action: utter_notifications_step_goal_intensive_pa_1  # TODO: get goal from db
+    - action: utter_notifications_step_goal_intensive_pa_2
+    - action: utter_notifications_step_goal_intensive_pa_3

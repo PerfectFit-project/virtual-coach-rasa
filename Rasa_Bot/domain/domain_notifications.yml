@@ -1,0 +1,81 @@
+version: "3.1"
+
+intents:
+  - EXTERNAL_notifications_tracking
+  - EXTERNAL_notifications_step_goal
+  - EXTERNAL_notifications_finish_dialog
+  - EXTERNAL_notifications_user_inactive
+  - EXTERNAL_notifications_new_quit_date_tomorrow
+  - EXTERNAL_notifications_step_goal_intensive_pa
+
+#slots:
+
+# Tracking notification
+responses:
+  utter_notifications_tracking_1:
+    - text: "Vergeet vandaag niet om je rookmomenten bij te houden! ✍🏽"
+  utter_notifications_tracking_2:
+    - text: "Je kunt (aan het einde van de dag) in de app invullen hoeveel je gerookt hebt. Uitleg over hoe je dit kunt
+            doen, kun je vinden in de handleiding die je gekregen hebt aan het begin van het Perfect Fit programma. 📋"
+  utter_notifications_tracking_3:
+    - text: "Vergeet ook niet om je horloge weer om te doen. ⌚ Ben je benieuwd hoe actief je vandaag bent? Dan hoef je
+            alleen maar op je horloge te kijken!"
+
+# Step goal notification
+  utter_notifications_step_goal_1:
+    - text: "Je stappendoel voor vandaag is: {daily_step_goal}. 🚶🏿 Zet 'm op weer!"
+  utter_notifications_step_goal_2:
+    - text: "Wil je weten hoeveel stappen je al gezet hebt, kijk dan op je horloge. ⌚"
+
+# Finish dialog notification
+  utter_notifications_finish_dialog_1:
+    - text: "Hoi! Je hebt al een tijdje niet geantwoord. Heb je misschien nog tijd om ons gesprek af te maken? ☺️ 
+            Je was al goed op weg!"
+  utter_notifications_finish_dialog_2:
+    - text: "Als je klaar bent om het gesprek af te maken, typ 'verder' in het gesprek."
+
+# Inactive users notification
+  utter_notifications_user_inactive_1:
+    - text: "Hallo! Ik heb je al een tijdje niet gesproken. Hopelijk gaat alles goed met je."
+  utter_notifications_user_inactive_2:
+    - text: "Mocht er iets aan de hand zijn, dan begrijp ik dat natuurlijk. Wil je hier met iemand over praten? Dan kun
+            je misschien met een goede vriend(in) praten of een afspraak maken met je huisarts. 🩺 Je kunt ook altijd
+            bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞 De Stoplijn is van maandag t/m vrijdag
+            bereikbaar van 9 tot 17 uur."
+  utter_notifications_user_inactive_3:
+    - text: "Je was goed bezig met het Perfect Fit programma. Mocht je dit weer op willen pakken, dan sta ik voor je
+            klaar! 😃 Je kunt me op ieder moment een berichtje sturen."
+  utter_notifications_user_inactive_4:
+    - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽"
+  utter_notifications_user_inactive_5:
+    - text: "Typ 'ehbo' als je je EHBO-doos wilt openen om een bewaarde oefening te bekijken of opnieuw te doen. 🧰
+            Wil je opnieuw uitleg over hoe de EHBO-doos werkt? Typ dan 'uitleg'. ℹ️ "
+  utter_notifications_user_inactive_6:
+    - text: "Typ 'oefening' als je een oefening wilt doen. 📱"
+  utter_notifications_user_inactive_7:
+    - text: "Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊"
+
+# New quit date tomorrow notification
+  utter_notifications_new_quit_date_tomorrow_1:
+    - text: "Hoi! Morgen is je stop-dag. 📅 Het kan helpen om alvast je sigaretten en asbakken weg te gooien of anderen
+            te vertellen dat je morgen stopt. Je kunt ook terugkijken naar jouw eigen plan. Als het goed is heb je 3
+            dingen opgeschreven die je kunt doen om jezelf te helpen bij het stoppen met roken. 📝 Heb je al deze dingen
+            kunnen doen?"
+  utter_notifications_new_quit_date_tomorrow_2:
+    - text: "Je kunt mij ook altijd een berichtje sturen. Ik sta voor je klaar! Alvast veel succes! 🍀"
+
+# Step goal and intensive pa notification
+  utter_notifications_step_goal_intensive_pa_1:
+    - text: "Deze week is je doel om elke dag 8000 stappen te zetten 🚶🏿 en minimaal {pa_intensity_goal} minuten intensief te bewegen. 🏊 🚴 🤸"
+  utter_notifications_step_goal_intensive_pa_2:
+    - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
+            je horloge. ⌚ "
+  utter_notifications_step_goal_intensive_pa_3:
+    - text: "Blijf doorzetten! 💪🏼"
+
+
+#forms:
+
+
+#actions:
+

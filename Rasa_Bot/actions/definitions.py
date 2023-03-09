@@ -64,13 +64,14 @@ REFLECTIVE_QUESTION_CONSENSUS = "Hoe denk je dat deze activiteit iemand zoals \
     jou kan helpen om gezonder te gaan leven?"
     
 # Accepted misspelled words for days of the weeks
-DAYS_OF_WEEK_ACCEPTED = ["maandag", "mandag", "maadag",
-                         "dinsdag", "diensdag",
-                         "woensday", "wonsdag", "wensdag", 
-                         "donderdag", "dondrdag", "dondedag",
-                         "vrijdag", "vridag", "vrida", "vrjdag", "vijdag",
-                         "zaterdag", "zatedag",
-                         "zondag", "zodag"]
+DAYS_OF_WEEK_ACCEPTED = {"maandag": ["maandag", "mandag", "maadag"],
+                         "diensdag": ["dinsdag", "diensdag", "diensdah"],
+                         "woensdag": ["woensdag", "wonsdag", "wensdag"],
+                         "donderdag": ["donderdag", "dondrdag", "dondedag"],
+                         "vrijdag": ["vrijdag", "vridag", "vrida", "vrjdag", 
+                                     "vijdag"],
+                         "zaterdag": ["zaterdag", "zatedag"],
+                         "zondag": ["zondag", "zodag", "sondag"]}
 
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?

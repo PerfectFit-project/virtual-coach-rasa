@@ -70,9 +70,10 @@ class ValidateProfileCreationCodeForm(FormValidationAction):
     
 
 def validate_days_of_week(value: str):
-    if value in DAYS_OF_WEEK_ACCEPTED:
-        return True
-    return False
+    for day_name in list(DAYS_OF_WEEK_ACCEPTED.keys()):
+        if value in DAYS_OF_WEEK_ACCEPTED[day_name]:
+            return True, day_name
+    return False, None
 
 
 class ValidateProfileCreationDayForm(FormValidationAction):
@@ -88,12 +89,14 @@ class ValidateProfileCreationDayForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_profile_creation_day_slot':
             return {"profile_creation_day_slot": None}
+        
+        validated, day_name = validate_days_of_week(value)
 
-        if not validate_days_of_week(value):
+        if not validated:
             dispatcher.utter_message(response="utter_profile_creation_day_not_valid")
             return {"profile_creation_day_slot": None}
 
-        return {"profile_creation_day_slot": value}
+        return {"profile_creation_day_slot": day_name}
     
 
 class ValidateProfileCreationTimeForm(FormValidationAction):
@@ -119,7 +122,7 @@ class ValidateProfileCreationTimeForm(FormValidationAction):
 
 
 class ProfileCreationMapTimeToDaypart(Action):
-    """Reset picked_words slot"""
+    """Map time number to daypart string"""
 
     def name(self):
         return "profile_creation_map_time_to_daypart"
@@ -553,3 +556,32 @@ class ValidateProfileCreationConf10Form(FormValidationAction):
             return {"profile_creation_conf_10_slot": None}
 
         return {"profile_creation_conf_10_slot": int(value)}
+
+
+class ProfileCreationSetConfLowHighSlot(Action):
+    """Set conf low high slot"""
+
+    def name(self):
+        return "profile_creation_set_conf_low_high_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        
+        conf_slots = ["profile_creation_conf_10_slot", "profile_creation_conf_9_slot",
+                      "profile_creation_conf_8_slot", "profile_creation_conf_7_slot",
+                      "profile_creation_conf_6_slot", "profile_creation_conf_5_slot",
+                      "profile_creation_conf_4_slot", "profile_creation_conf_3_slot",
+                      "profile_creation_conf_2_slot", "profile_creation_conf_1_slot"]
+        
+        # Find the conf slot we just set
+        conf = -1
+        for conf_slot in conf_slots:
+            conf = tracker.get_slot(conf_slot)
+            if conf > -1:
+                break
+        
+        low_high = 0
+        if conf > 1:
+            low_high = 1
+            
+        return [SlotSet("profile_creation_conf_low_high_slot", low_high)]

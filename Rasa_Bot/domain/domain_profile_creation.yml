@@ -24,7 +24,7 @@ slots:
         conditions:
           - active_loop: profile_creation_time_form
   profile_creation_time_daypart_slot:
-    type: float
+    type: text
     influence_conversation: false
     mappings:
       - type: custom
@@ -101,11 +101,20 @@ slots:
       - type: from_text
         conditions:
           - active_loop: profile_creation_sim_4_form
-          
+  
+  # Indicates whether value is 0 or 1 -> 0 vs. > 1 -> 1
+  profile_creation_conf_low_high_slot:
+    type: categorical
+    influence_conversation: true
+    values:
+      - 0
+      - 1
+    mappings:
+      - type: custom
   profile_creation_conf_1_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -113,7 +122,7 @@ slots:
   profile_creation_conf_2_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -121,7 +130,7 @@ slots:
   profile_creation_conf_3_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -129,7 +138,7 @@ slots:
   profile_creation_conf_4_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -137,7 +146,7 @@ slots:
   profile_creation_conf_5_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -145,7 +154,7 @@ slots:
   profile_creation_conf_6_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -153,7 +162,7 @@ slots:
   profile_creation_conf_7_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -161,7 +170,7 @@ slots:
   profile_creation_conf_8_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -169,7 +178,7 @@ slots:
   profile_creation_conf_9_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -177,7 +186,7 @@ slots:
   profile_creation_conf_10_slot:
     type: float
     influence_conversation: false
-    initial_value: 0
+    initial_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -294,7 +303,7 @@ responses:
   utter_profile_creation_time_not_valid:
   - text: "Typ a.u.b. één van de drie cijfers om aan te geven wanneer je meestal tijd hebt voor een gesprek op de gekozen dag."
   utter_profile_creation_preference_6:
-  - text: "Staat genoteerd. Wij gaan de komende tijd steeds op {profle_creation_day_slot} {profile_creation_time_daypart_slot} samen in gesprek."
+  - text: 'Staat genoteerd. Wij gaan de komende tijd steeds op {profile_creation_day_slot} {profile_creation_time_daypart_slot} samen in gesprek.'
   utter_ask_profile_creation_confirm_preference_slot:
   - text: "Typ '1' als dit klopt.\nTyp '2' als je je antwoord wilt aanpassen."
   
@@ -327,7 +336,7 @@ responses:
   utter_profile_creation_sim_3:
   - text: "Oké, duidelijk."
   utter_profile_creation_sim_4:
-  - text: "Dit is het tweede verhaal: 'Hallo, mijn naam is Jennifer, ik ben 57 jaar oud. Ik was bijna volledig arbeidsongeschikt, omdat ik problemen had met mijn knieën en mijn rug. Maar in het afgelopen jaar ben ik gaan zwemmen. Nu kan ik 800 meter lopen, 3 dagen per week.Ik heb dit bereikt door te starten met zwemmen, wat heeft geholpen om gewicht te verliezen.'"
+  - text: "Dit is het tweede verhaal: 'Hallo, mijn naam is Jennifer, ik ben 57 jaar oud. Ik was bijna volledig arbeidsongeschikt, omdat ik problemen had met mijn knieën en mijn rug. Maar in het afgelopen jaar ben ik gaan zwemmen. Nu kan ik 800 meter lopen, 3 dagen per week. Ik heb dit bereikt door te starten met zwemmen, wat heeft geholpen om gewicht te verliezen.'"
   utter_ask_profile_creation_sim_2_slot:
   - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 te geven (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
   utter_profile_creation_sim_5:
@@ -466,6 +475,8 @@ responses:
   - text: "Je profiel is nu aangemaakt. Dat betekent dat je officieel van start kunt met het Perfect Fit programma. 🏁"
   utter_profile_creation_closing_3:
   - text: "De volgende keer dat wij elkaar spreken gaan wij het hebben over bepaalde middelen die je kunnen helpen met het stoppen met roken."
+  utter_profile_creation_closing_4:
+  - text: "Graag tot dan! 👋"
 
 actions:
   - validate_profile_creation_code_form
@@ -496,3 +507,5 @@ actions:
   - validate_profile_creation_conf_8_form
   - validate_profile_creation_conf_9_form
   - validate_profile_creation_conf_10_form
+  
+  - profile_creation_set_conf_low_high_slot

@@ -132,6 +132,7 @@ rules:
   - action: profile_creation_sim_1_form
   - active_loop: profile_creation_sim_1_form
   wait_for_user_input: false
+
   
 ## 4: Enter sim 1 and start sim 2
 - rule: Profile creation enter sim 1
@@ -185,6 +186,23 @@ rules:
   - active_loop: profile_creation_conf_1_form
   wait_for_user_input: false
   
+## 4: Enter conf 1 and end since conf low
+- rule: Profile creation enter conf 1 and end
+  condition:
+    - active_loop: profile_creation_conf_1_form
+  steps:
+  - action: profile_creation_conf_1_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
 ## 4: Enter conf 1 and start conf 2
 - rule: Profile creation enter conf 1
   condition:
@@ -192,9 +210,29 @@ rules:
   steps:
   - action: profile_creation_conf_1_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_2_form
   - active_loop: profile_creation_conf_2_form
   wait_for_user_input: false
+  
+## 4: Enter conf 2 and end since conf low
+- rule: Profile creation enter conf 2 and end
+  condition:
+    - active_loop: profile_creation_conf_2_form
+  steps:
+  - action: profile_creation_conf_2_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
   
 ## 4: Enter conf 2 and start conf 3
 - rule: Profile creation enter conf 2
@@ -203,9 +241,29 @@ rules:
   steps:
   - action: profile_creation_conf_2_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_3_form
   - active_loop: profile_creation_conf_3_form
   wait_for_user_input: false
+  
+## 4: Enter conf 3 and end since conf low
+- rule: Profile creation enter conf 3 and end
+  condition:
+    - active_loop: profile_creation_conf_3_form
+  steps:
+  - action: profile_creation_conf_3_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
   
 ## 4: Enter conf 3 and start conf 4
 - rule: Profile creation enter conf 3
@@ -214,9 +272,29 @@ rules:
   steps:
   - action: profile_creation_conf_3_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_4_form
   - active_loop: profile_creation_conf_4_form
   wait_for_user_input: false
+  
+## 4: Enter conf 4 and end since conf low
+- rule: Profile creation enter conf 4 and end
+  condition:
+    - active_loop: profile_creation_conf_4_form
+  steps:
+  - action: profile_creation_conf_4_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
   
 ## 4: Enter conf 4 and start conf 5
 - rule: Profile creation enter conf 4
@@ -225,9 +303,29 @@ rules:
   steps:
   - action: profile_creation_conf_4_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_5_form
   - active_loop: profile_creation_conf_5_form
   wait_for_user_input: false
+  
+## 4: Enter conf 5 and end since conf low
+- rule: Profile creation enter conf 5 and end
+  condition:
+    - active_loop: profile_creation_conf_5_form
+  steps:
+  - action: profile_creation_conf_5_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
   
 ## 4: Enter conf 5 and start conf 6
 - rule: Profile creation enter conf 5
@@ -236,9 +334,29 @@ rules:
   steps:
   - action: profile_creation_conf_5_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_6_form
   - active_loop: profile_creation_conf_6_form
   wait_for_user_input: false
+  
+## 4: Enter conf 6 and end since conf low
+- rule: Profile creation enter conf 6 and end
+  condition:
+    - active_loop: profile_creation_conf_6_form
+  steps:
+  - action: profile_creation_conf_6_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
   
 ## 4: Enter conf 6 and start conf 7
 - rule: Profile creation enter conf 6
@@ -247,9 +365,29 @@ rules:
   steps:
   - action: profile_creation_conf_6_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_7_form
   - active_loop: profile_creation_conf_7_form
   wait_for_user_input: false
+  
+## 4: Enter conf 7 and end since conf low
+- rule: Profile creation enter conf 7 and end
+  condition:
+    - active_loop: profile_creation_conf_7_form
+  steps:
+  - action: profile_creation_conf_7_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
   
 ## 4: Enter conf 7 and start conf 8
 - rule: Profile creation enter conf 7
@@ -258,9 +396,29 @@ rules:
   steps:
   - action: profile_creation_conf_7_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_8_form
   - active_loop: profile_creation_conf_8_form
   wait_for_user_input: false
+  
+## 4: Enter conf 8 and end since conf low
+- rule: Profile creation enter conf 8 and end
+  condition:
+    - active_loop: profile_creation_conf_8_form
+  steps:
+  - action: profile_creation_conf_8_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
   
 ## 4: Enter conf 8 and start conf 9
 - rule: Profile creation enter conf 8
@@ -269,9 +427,29 @@ rules:
   steps:
   - action: profile_creation_conf_8_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_9_form
   - active_loop: profile_creation_conf_9_form
   wait_for_user_input: false
+  
+## 4: Enter conf 9 and end since conf low
+- rule: Profile creation enter conf 9 and end
+  condition:
+    - active_loop: profile_creation_conf_9_form
+  steps:
+  - action: profile_creation_conf_9_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
 
 ## 4: Enter conf 9 and start conf 10
 - rule: Profile creation enter conf 9
@@ -280,6 +458,9 @@ rules:
   steps:
   - action: profile_creation_conf_9_form
   - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
   - action: profile_creation_conf_10_form
   - active_loop: profile_creation_conf_10_form
   wait_for_user_input: false
@@ -295,5 +476,6 @@ rules:
   - action: utter_profile_creation_closing_1
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
   - action: mark_dialog_as_completed
   - action: action_end_dialog

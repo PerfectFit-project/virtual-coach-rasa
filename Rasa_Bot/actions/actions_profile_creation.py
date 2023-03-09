@@ -22,7 +22,6 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 celery = Celery(broker=REDIS_URL)
 
 
-
 def validate_participant_code(code: str):
     
     # Must have length 5
@@ -180,27 +179,6 @@ class ValidateProfileCreationRunWalkForm(FormValidationAction):
             return {"profile_creation_run_walk_slot": None}
 
         return {"profile_creation_run_walk_slot": int(value)}
-
-
-class ProfileCreationSetRunWalkSlots(Action):
-    """Reset picked_words slot"""
-
-    def name(self):
-        return "profile_creation_set_run_walk_slots"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        run_walk = tracker.get_slot("profile_creation_time_slot")
-        
-        # walking
-        if run_walk == 1:
-            verb = "lopen"
-        # running
-        else:
-            verb = "hardlopen"
-            
-        return [SlotSet("profile_creation_run_walk_verb_slot", verb),
-                SlotSet("profile_creation_conf_durations_slot"), [1, 2, 3, 4, 5]]
 
 
 class ValidateProfileCreationGodinLightForm(FormValidationAction):
@@ -377,3 +355,201 @@ class ValidateProfileCreationConf1Form(FormValidationAction):
             return {"profile_creation_conf_1_slot": None}
 
         return {"profile_creation_conf_1_slot": int(value)}
+
+
+class ValidateProfileCreationConf2Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_2_form'
+
+    def validate_profile_creation_conf_2_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_2_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_2_slot':
+            return {"profile_creation_conf_2_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_2_slot": None}
+
+        return {"profile_creation_conf_2_slot": int(value)}
+
+
+class ValidateProfileCreationConf3Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_3_form'
+
+    def validate_profile_creation_conf_3_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_3_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_3_slot':
+            return {"profile_creation_conf_3_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_3_slot": None}
+
+        return {"profile_creation_conf_3_slot": int(value)}
+
+
+class ValidateProfileCreationConf4Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_4_form'
+
+    def validate_profile_creation_conf_4_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_4_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_4_slot':
+            return {"profile_creation_conf_4_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_4_slot": None}
+
+        return {"profile_creation_conf_4_slot": int(value)}
+
+
+class ValidateProfileCreationConf5Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_5_form'
+
+    def validate_profile_creation_conf_5_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_5_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_5_slot':
+            return {"profile_creation_conf_5_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_5_slot": None}
+
+        return {"profile_creation_conf_5_slot": int(value)}
+   
+
+class ValidateProfileCreationConf6Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_6_form'
+
+    def validate_profile_creation_conf_6_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_6_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_6_slot':
+            return {"profile_creation_conf_6_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_6_slot": None}
+
+        return {"profile_creation_conf_6_slot": int(value)}
+
+
+class ValidateProfileCreationConf7Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_7_form'
+
+    def validate_profile_creation_conf_7_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_7_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_7_slot':
+            return {"profile_creation_conf_7_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_7_slot": None}
+
+        return {"profile_creation_conf_7_slot": int(value)}
+
+
+class ValidateProfileCreationConf8Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_8_form'
+
+    def validate_profile_creation_conf_8_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_8_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_8_slot':
+            return {"profile_creation_conf_8_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_8_slot": None}
+
+        return {"profile_creation_conf_8_slot": int(value)}
+
+
+class ValidateProfileCreationConf9Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_9_form'
+
+    def validate_profile_creation_conf_9_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_9_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_9_slot':
+            return {"profile_creation_conf_9_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_9_slot": None}
+
+        return {"profile_creation_conf_9_slot": int(value)}
+    
+
+class ValidateProfileCreationConf10Form(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_profile_creation_conf_10_form'
+
+    def validate_profile_creation_conf_10_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate profile_creation_conf_10_slot"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_profile_creation_conf_10_slot':
+            return {"profile_creation_conf_10_slot": None}
+
+        if not validator.validate_number_in_range_response(n_min = 0, n_max = 10, 
+                                                           response = value):
+            dispatcher.utter_message(response="utter_please_answer_0_to_10")
+            return {"profile_creation_conf_10_slot": None}
+
+        return {"profile_creation_conf_10_slot": int(value)}

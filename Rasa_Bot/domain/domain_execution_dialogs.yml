@@ -1,3 +1,5 @@
+version: "3.1"
+
 intents:
 - EXTERNAL_trigger_execution_introduction
 - EXTERNAL_trigger_general_activity

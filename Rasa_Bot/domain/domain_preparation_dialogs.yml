@@ -1,3 +1,5 @@
+version: "3.1"
+
 intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
 - EXTERNAL_trigger_profile_creation

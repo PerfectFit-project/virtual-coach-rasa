@@ -7,7 +7,7 @@ rules:
       - intent: EXTERNAL_trigger_preparation_introduction
       - action: action_set_slot_preparation_introduction
       - action: action_set_preparation_introduction_video_link
-      - action: action_launch_rescheduling_prep
+      - action: action_launch_watch_video_dialog
 
   - rule: Set video medication
     steps:

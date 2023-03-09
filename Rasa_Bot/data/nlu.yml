@@ -144,6 +144,14 @@ nlu:
   examples: |
     - "EXTERNAL_rescheduling_preparation_phase"
 
+- intent: EXTERNAL_watch_video_dialog
+  examples: |
+    - "EXTERNAL_watch_video_dialog"
+
+- intent: EXTERNAL_rescheduling_preparation_phase
+  examples: |
+    - "EXTERNAL_rescheduling_preparation_phase"
+
 
 - intent: relapse_dialog
   examples: |

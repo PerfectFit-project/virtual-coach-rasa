@@ -23,9 +23,12 @@ class ExpectedTimeNextPart(Action):
 
     async def run(self, dispatcher, tracker, domain):
         next_dialog = str(tracker.get_slot('current_intervention_component'))
-        expected_time_interval = DialogExpectedDuration[next_dialog].split(" ")
-        message = "Ik verwacht dat het volgende onderdeel " + expected_time_interval[0] + " tot " \
-                  + expected_time_interval[1] + " minuten zal duren.⏱️"
+        min_duration = DialogExpectedDuration[next_dialog][0]
+        max_duration = DialogExpectedDuration[next_dialog][1]
+
+        message = "Ik verwacht dat het volgende onderdeel " + str(min_duration) + " tot " \
+                  + str(max_duration) + " minuten zal duren.⏱️"
+
         dispatcher.utter_message(text=message)
         return []
 
@@ -89,12 +92,9 @@ class StartNextDialog(Action):
 
         # if the dialog is a video one, launch the watch a video dialog
         else:
-            # celery.send_task('celery_tasks.trigger_intervention_component',
-            #                  (user_id,
-            #                   ComponentsTriggers.WATCH_VIDEO))
             celery.send_task('celery_tasks.trigger_intervention_component',
                              (user_id,
-                              'EXTERNAL_watch_video_dialog'))
+                              ComponentsTriggers.WATCH_VIDEO))
 
 
 class Schedule_Next_Prep_Phase(Action):

@@ -5,7 +5,7 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import VideoLinks, ComponentsTriggers
+from virtual_coach_db.helper.definitions import VideoLinks, Components, ComponentsTriggers
 from . import validator
 from .definitions import REDIS_URL
 from .helper import get_latest_bot_utterance
@@ -21,8 +21,7 @@ class ActionLaunchWatchVideoDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        # new_intent = ComponentsTriggers.WATCH_VIDEO
-        new_intent = 'EXTERNAL_watch_video_dialog'
+        new_intent = ComponentsTriggers.WATCH_VIDEO
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent))
         return []
@@ -36,8 +35,8 @@ class ActionLaunchReschedulingPrep(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        # new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
-        new_intent = 'EXTERNAL_rescheduling_preparation_phase'
+        new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
+
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent))
         return []
@@ -132,7 +131,7 @@ class ContinueAfterVideo(Action):
         # checks in which dialog the user is, and resumes the correct flow accordingly
         current_dialog = tracker.get_slot('current_intervention_component')
 
-        if current_dialog == ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE:
+        if current_dialog == Components.RELAPSE_DIALOG_RELAPSE:
             # resumes the relapse dialog opening the ehbo_me_self_lapse_form.
             # The flow will then depend on the chosen option in the form
             return [FollowupAction('ehbo_me_self_lapse_form')]

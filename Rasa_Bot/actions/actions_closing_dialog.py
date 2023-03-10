@@ -10,7 +10,8 @@ from celery import Celery
 from . import validator
 from virtual_coach_db.dbschema.models import Users, FirstAidKit
 from virtual_coach_db.helper.helper_functions import get_db_session
-from virtual_coach_db.helper.definitions import ExecutionInterventionComponents, ExecutionInterventionComponentsTriggers
+from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents,
+                                                 ExecutionInterventionComponentsTriggers)
 from .definitions import REDIS_URL, DATABASE_URL, NUM_TOP_ACTIVITIES
 from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
 
@@ -99,7 +100,7 @@ class ValidateClosingReflectionSmokeDoneForm(FormValidationAction):
         if last_utterance != 'utter_ask_closing_reflection_smoke_done':
             return {"closing_reflection_smoke_done": None}
 
-        if value not in ['Klaar', 'klaar']:
+        if not validator.validate_klaar(value):
             return {"closing_reflection_smoke_done": None}
 
         return {"closing_reflection_smoke_done": value}
@@ -119,7 +120,7 @@ class ValidateClosingRelapsePreventionPlanOneDoneForm(FormValidationAction):
         if last_utterance != 'utter_ask_closing_relapse_prevention_plan_one_done':
             return {"closing_relapse_prevention_plan_one_done": None}
 
-        if value not in ['Klaar', 'klaar']:
+        if not validator.validate_klaar(value):
             return {"closing_relapse_prevention_plan_one_done": None}
 
         return {"closing_relapse_prevention_plan_one_done": value}
@@ -139,7 +140,7 @@ class ValidateClosingRelapsePreventionPlanTwoDoneForm(FormValidationAction):
         if last_utterance != 'utter_ask_closing_relapse_prevention_plan_two_done':
             return {"closing_relapse_prevention_plan_two_done": None}
 
-        if value not in ['Klaar', 'klaar']:
+        if not validator.validate_klaar(value):
             return {"closing_relapse_prevention_plan_two_done": None}
 
         return {"closing_relapse_prevention_plan_two_done": value}

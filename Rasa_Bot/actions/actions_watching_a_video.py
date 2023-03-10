@@ -80,16 +80,6 @@ class DelayedMessage(Action):
         return []
 
 
-class ActionReactToReminder(Action):
-    """Will ask user about the video after watching"""
-    def name(self):
-        return "action_thanks_for_watching"
-
-    async def run(self, dispatcher, tracker, domain):
-        dispatcher.utter_message(response="utter_thanks_for_watching")
-        return []
-
-
 class ValidateVideoClearForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_video_clear_form'

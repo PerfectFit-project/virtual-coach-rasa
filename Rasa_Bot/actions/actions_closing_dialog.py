@@ -10,6 +10,7 @@ from celery import Celery
 from . import validator
 from virtual_coach_db.dbschema.models import Users, FirstAidKit
 from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
 from .definitions import REDIS_URL, DATABASE_URL, NUM_TOP_ACTIVITIES
 from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
 
@@ -267,3 +268,12 @@ class ActionClosingGetTotalNumberSteps(Action):
         number_steps = 99  # Placeholder TODO: fill with number from database
 
         return [SlotSet('closing_total_steps_number', number_steps)]
+
+
+class SetSlotClosingDialog(Action):
+    def name(self):
+        return "action_set_slot_closing_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        ExecutionInterventionComponents.CLOSING_DIALOG]

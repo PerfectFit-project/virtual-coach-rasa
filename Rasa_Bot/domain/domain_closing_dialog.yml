@@ -336,6 +336,7 @@ actions:
   - action_closing_delayed_message_after_smoke
   - action_get_first_aid_kit_activities
   - action_closing_get_total_number_steps
+  - action_set_slot_closing_dialog
 
 forms:
   closing_pa_evaluation_form:

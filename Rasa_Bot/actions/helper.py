@@ -515,34 +515,22 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
 
 def get_faik_text(user_id):
     session = get_db_session(db_url=DATABASE_URL)
-
-    selected = (
-        session.query(
-            FirstAidKit
-        )
-            .filter(
-            FirstAidKit.users_nicedayuid == user_id
-        )
-            .all()
-    )
-
+    
     kit_text = ""
     filled = False  # Whether the first aid kit has content
     activity_ids_list = []  # List of activity IDs
 
-    # the kit exists
-    if selected is not None:
-
-        # get the highest scored activities
-        top_five_activities = (
-            session.query(
-                FirstAidKit
-            ).order_by(FirstAidKit.activity_rating.desc())
-                .filter(
-                FirstAidKit.users_nicedayuid == user_id
-            )
-                .limit(NUM_TOP_ACTIVITIES).all()
-        )
+    # get the highest scored activities
+    top_five_activities = (
+        session.query(
+              FirstAidKit
+         ).order_by(FirstAidKit.activity_rating.desc())
+             .filter(
+             FirstAidKit.users_nicedayuid == user_id
+         )
+             .limit(NUM_TOP_ACTIVITIES).all()
+     )
+     if top_five_activities is not None:
 
         for activity_idx, activity in enumerate(top_five_activities):
             kit_text += str(activity_idx + 1) + ") "

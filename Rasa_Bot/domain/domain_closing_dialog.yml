@@ -110,8 +110,8 @@ responses:
   utter_closing_pa_1:
     - text: "Laten we eerst kijken naar bewegen.🚶🏃"
   utter_closing_pa_2:
-    - text: "Je hebt steeds je stappen bijgehouden. In totaal heb je [insert total number of steps over entire Perfect
-             Fit program] stappen gezet tijdens Perfect Fit!🚶"  # TODO: insert number of steps
+    - text: "Je hebt steeds je stappen bijgehouden. In totaal heb je {total_steps_number} stappen gezet tijdens Perfect Fit!🚶"
+
   utter_closing_pa_3:
     - text: "Misschien zijn het er zelfs nog wel meer, als je de tracker niet altijd om had."
   utter_closing_pa_4:

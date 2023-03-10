@@ -157,9 +157,10 @@ responses:
   utter_closing_smoke_1:
     - text: "Maar eerst wil ik met je kijken naar stoppen-met-roken."
   utter_ask_closing_lapse_info_correct:
-    - text: "Als ik het goed zie, heb jij in de laatste 4 weken niet gerookt. Klopt dat?
-             Typ '1' voor JA, DAT KLOPT. 👍
+    - text: "Als ik het goed zie, heb jij in de laatste 4 weken niet gerookt. Klopt dat?\n
+             Typ '1' voor JA, DAT KLOPT. 👍\n
              Typ '2' voor NEE, DAT KLOPT NIET. 👎"
+
   utter_closing_smoke_succes_1:
     - text: "Het is je gelukt om te stoppen met roken!👏 Voortaan ben jij dus een niet-roker. Ontzettend knap gedaan."
   utter_closing_smoke_succes_2:

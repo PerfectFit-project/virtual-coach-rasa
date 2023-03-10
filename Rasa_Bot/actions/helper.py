@@ -530,8 +530,8 @@ def get_faik_text(user_id):
          )
              .limit(NUM_TOP_ACTIVITIES).all()
      )
-     if top_five_activities is not None:
 
+    if top_five_activities is not None:
         for activity_idx, activity in enumerate(top_five_activities):
             kit_text += str(activity_idx + 1) + ") "
             kit_text += activity.intervention_activity.intervention_activity_title

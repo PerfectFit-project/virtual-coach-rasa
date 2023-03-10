@@ -276,4 +276,4 @@ class SetSlotClosingDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.CLOSING_DIALOG]
+                        ExecutionInterventionComponents.CLOSING_DIALOG)]

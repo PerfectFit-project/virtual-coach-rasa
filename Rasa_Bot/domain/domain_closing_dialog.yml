@@ -125,9 +125,11 @@ responses:
   utter_closing_pa_5:
     - text: "Dit was jouw doel: {closing_pa_goal}"
   utter_ask_closing_pa_evaluation:
-    - text: "Hoe is het gegaan met dit doel? Typ '1' als je het doel hebt bereikt. 
-             Typ '2' als je het doel bijna hebt bereikt. 
+    - text: "Hoe is het gegaan met dit doel?\n 
+             Typ '1' als je het doel hebt bereikt.\n 
+             Typ '2' als je het doel bijna hebt bereikt.\n 
              Typ '3' als je het doel niet hebt bereikt."
+
   utter_closing_pa_6:
     - text: "Geweldig! Heel knap dat je je doel hebt bereikt en dat het is gelukt om meer te gaan bewegen.👏 "
   utter_closing_pa_7:

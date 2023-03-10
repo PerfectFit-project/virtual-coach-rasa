@@ -53,17 +53,6 @@ class SetMedicationVideoLink(Action):
                         VideoLinks.MEDICATION_VIDEO)]
 
 
-class SetSlotVideoLink(Action):
-    """ this is an example for setting the slot of the video link"""
-    def name(self):
-        return "action_set_slot_video_link"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        return [SlotSet("video_link",
-                        VideoLinks.TESTVIDEOLINK)]
-
-
 class DisplayVideoLink(Action):
     """Display a certain video link"""
 

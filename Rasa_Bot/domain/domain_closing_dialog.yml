@@ -41,7 +41,8 @@ slots:
 
   closing_reflection_smoke_done:
     type: text
-    influence_conversation: true
+    influence_conversation: false
+
     mappings:
       - type: from_text
         conditions:

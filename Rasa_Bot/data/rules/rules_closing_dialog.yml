@@ -14,7 +14,8 @@ rules:
   - action: utter_closing_congratualate_4
   - action: utter_closing_congratualate_5
   - action: utter_closing_pa_1
-  - action: utter_closing_pa_2  # TODO: insert number of steps
+  - action: action_closing_get_total_number_steps  # TODO: fix placeholder function
+  - action: utter_closing_pa_2
   - action: utter_closing_pa_3
   - action: utter_closing_pa_4
   - action: action_get_pa_goal_from_db

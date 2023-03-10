@@ -90,6 +90,12 @@ slots:
     mappings:
       - type: custom
 
+  closing_total_steps_number:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
 responses:
 # 1 Congratulating
   utter_closing_congratualate_1:
@@ -110,7 +116,7 @@ responses:
   utter_closing_pa_1:
     - text: "Laten we eerst kijken naar bewegen.🚶🏃"
   utter_closing_pa_2:
-    - text: "Je hebt steeds je stappen bijgehouden. In totaal heb je {total_steps_number} stappen gezet tijdens Perfect Fit!🚶"
+    - text: "Je hebt steeds je stappen bijgehouden. In totaal heb je {closing_total_steps_number} stappen gezet tijdens Perfect Fit!🚶"
 
   utter_closing_pa_3:
     - text: "Misschien zijn het er zelfs nog wel meer, als je de tracker niet altijd om had."
@@ -326,6 +332,7 @@ actions:
   - action_closing_delayed_message_after_smoke_lapse
   - action_closing_delayed_message_after_smoke
   - action_get_first_aid_kit_activities
+  - action_closing_get_total_number_steps
 
 forms:
   closing_pa_evaluation_form:

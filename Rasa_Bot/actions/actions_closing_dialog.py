@@ -255,3 +255,15 @@ class ActionGetFirstAidKitActivities(Action):
         kit_text, _, _ = get_faik_text(user_id)
 
         return [SlotSet('first_aid_kit_text', kit_text)]
+
+
+class ActionClosingGetTotalNumberSteps(Action):
+    """To get the first aid kit from the database."""
+
+    def name(self):
+        return "action_closing_get_total_number_steps"
+
+    async def run(self, dispatcher, tracker, domain):
+        number_steps = 99  # Placeholder TODO: fill with number from database
+
+        return [SlotSet('closing_total_steps_number', number_steps)]

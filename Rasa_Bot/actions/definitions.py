@@ -6,7 +6,7 @@ from enum import Enum
 
 from dateutil import tz
 
-# load database url and niceday_api_endopint variables
+# load database url and niceday_api_endpoint variables
 DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
@@ -18,6 +18,11 @@ REDIS_URL = os.getenv('REDIS_URL')
 MORNING = (6, 12)
 AFTERNOON = (12, 18)
 EVENING = (18, 24)
+
+# Times to start components during times
+MORNING_SEND_TIME = 7
+AFTERNOON_SEND_TIME = 15
+EVENING_SEND_TIME  = 20
 
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5
@@ -72,6 +77,9 @@ DAYS_OF_WEEK_ACCEPTED = {"maandag": ["maandag", "mandag", "maadag"],
                                      "vijdag"],
                          "zaterdag": ["zaterdag", "zatedag"],
                          "zondag": ["zondag", "zodag", "sondag"]}
+# List of days of week in Dutch
+DAYS_OF_WEEK = ["maandag", "diensdag", "woensdag", "donderdag", "vrijdag",
+                "zaterdag", "zondag"]
 
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?

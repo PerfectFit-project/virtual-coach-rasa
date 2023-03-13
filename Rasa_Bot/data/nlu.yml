@@ -131,11 +131,6 @@ nlu:
   examples: |
     - "EXTERNAL_done_with_video"
 
-- intent: submit_user_preferences
-  examples: |
-    - "I would like to submit my user preferences"
-    - "User preferences"
-
 - intent: oke
   examples: |
     - "Oke"

@@ -14,9 +14,46 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              UserPreferences,
                                               ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
+
+
+def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int, 
+                                      running_walking_pref: int, 
+                                      self_efficacy_pref: float,
+                                      sim_cluster_1: float, sim_cluster_3: float,
+                                      participant_code: str, week_days: str,
+                                      preferred_time):
+    """
+    Stores profile creation data for a user in the database.
+    Args:
+        user_id (int): The ID of the user to store the evaluation for.
+        godin_activity_level (int): Godin activity level (0,1, or 2).
+        runnin_walking_pref (int): Preference for walking (0) or running (1).
+        self_efficacy_pref (float): Self-efficacy for preference of walking or running
+                                    (between 0 and 100).
+        sim_cluster_1 (float): Mean similarity for cluster 1 (between -3 and 3).
+        sim_cluster_2 (float): Mean similarity for cluster 3 (between -3 and 3).
+        participant_code (str): Participant 5-character code.
+        week_days (str): String with numbers of preferred days for intervention
+                         (e.g., '1' for monday).
+        preferred_time: Preferred time of day for intervention.
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    selected.testim_godin_activity_level = godin_activity_level
+    selected.testim_running_walking_pref = running_walking_pref
+    selected.testim_self_efficacy_pref = self_efficacy_pref
+    selected.testim_sim_cluster_1 = sim_cluster_1
+    selected.testim_sim_cluster_3 = sim_cluster_3
+    selected.participant_code = participant_code
+    selected.week_days = week_days
+    selected.preferred_time = preferred_time
+    
+    session.commit()
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
@@ -145,34 +182,6 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
                               answer_value=answer_value,
                               datetime=datetime.datetime.now().astimezone(TIMEZONE))
     selected.dialog_open_answers.append(entry)
-    session.commit()  # Update database
-
-
-def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool,
-                                 week_days: str, preferred_time: datetime.datetime):
-    """
-    Updater the user_intervention_state table, adding a new row with the intervention_component
-
-    Args:
-        user_id: niceday user id
-        intervention_component_id: the id of the intervention component as store din the DB.
-        recursive: if true the activity is recursive, and will be reprogrammed after the completion
-        week_days: comma separated list of days
-        preferred_time: preferred time in the day to prompt the activity
-
-    Returns:
-            nothing
-
-    """
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-    entry = UserPreferences(users_nicedayuid=user_id,
-                            intervention_component_id=intervention_component_id,
-                            recursive=recursive,
-                            week_days=week_days,
-                            preferred_time=preferred_time)
-    selected.user_preferences.append(entry)
     session.commit()  # Update database
 
 
@@ -419,24 +428,6 @@ def count_answers(answers: List[DialogClosedAnswers],
     ]
     return result
 
-
-
-def week_day_to_numerical_form(week_day):
-    if week_day.lower() == "monday":
-        return 1
-    if week_day.lower() == "tuesday":
-        return 2
-    if week_day.lower() == "wednesday":
-        return 3
-    if week_day.lower() == "thursday":
-        return 4
-    if week_day.lower() == "friday":
-        return 5
-    if week_day.lower() == "saturday":
-        return 6
-    if week_day.lower() == "sunday":
-        return 7
-    return -1
 
 def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     """

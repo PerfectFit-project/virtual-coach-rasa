@@ -200,6 +200,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -231,6 +232,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -262,6 +264,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -293,6 +296,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -324,6 +328,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -355,6 +360,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -386,6 +392,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -417,6 +424,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
   
@@ -448,6 +456,7 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog
 
@@ -477,5 +486,6 @@ rules:
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3
   - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
   - action: mark_dialog_as_completed
   - action: action_end_dialog

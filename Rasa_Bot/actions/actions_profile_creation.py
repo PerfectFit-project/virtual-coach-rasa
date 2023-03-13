@@ -1,25 +1,21 @@
 import logging
+import numpy as np
 
 from . import validator
-from .definitions import (DATABASE_URL, DAYS_OF_WEEK_ACCEPTED,
-                          NUM_TOP_ACTIVITIES, REDIS_URL)
-from .helper import (get_latest_bot_utterance,
-                     get_user_intervention_activity_inputs,)
+from .definitions import (AFTERNOON_SEND_TIME, 
+                          DAYS_OF_WEEK, DAYS_OF_WEEK_ACCEPTED,
+                          EVENING_SEND_TIME,
+                          MORNING_SEND_TIME, TIMEZONE)
+from .helper import (store_profile_creation_data_to_db, 
+                     get_latest_bot_utterance)
 
-from celery import Celery
-from datetime import datetime, timedelta
+from datetime import datetime
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from virtual_coach_db.dbschema.models import (FirstAidKit,
-                                              InterventionActivity)
-from virtual_coach_db.helper.helper_functions import get_db_session
 
-
-
-celery = Celery(broker=REDIS_URL)
 
 
 def validate_participant_code(code: str):
@@ -71,7 +67,7 @@ class ValidateProfileCreationCodeForm(FormValidationAction):
 
 def validate_days_of_week(value: str):
     for day_name in list(DAYS_OF_WEEK_ACCEPTED.keys()):
-        if value in DAYS_OF_WEEK_ACCEPTED[day_name]:
+        if value.lower() in DAYS_OF_WEEK_ACCEPTED[day_name]:
             return True, day_name
     return False, None
 
@@ -585,3 +581,77 @@ class ProfileCreationSetConfLowHighSlot(Action):
             low_high = 1
             
         return [SlotSet("profile_creation_conf_low_high_slot", low_high)]
+    
+
+class ProfileCreationSaveToDB(Action):
+    """Save profile creation data to database"""
+
+    def name(self):
+        return "profile_creation_save_to_db"
+
+    async def run(self, dispatcher, tracker, domain):
+    
+        user_id = tracker.current_state()['sender_id']
+        
+        # Get confidence slots
+        conf = [tracker.get_slot("profile_creation_conf_" + str(i) + "_slot") for i in range(1, 11)]
+        # Replace -1 with 0 (-1 are values people never filled in because
+        # the confidence was already low for the previous amount of physical activity)
+        conf = [i if not i == -1 else 0 for i in conf]
+        # Compute average and multiply with 10 (we used a scale from 0 to 10,
+        # but the database uses a scale from 0 to 100)
+        conf_avg = np.mean(conf) * 10
+        
+        # Get the preference for walking or running from slot
+        # Deduct 1 since database stores 0 for walking and 1 for running.
+        walk_run_pref = tracker.get_slot("profile_creation_run_walk_slot") - 1
+        
+        # Compute Godin level based on Godin score
+        godin_light = tracker.get_slot("profile_creation_godin_light_slot")
+        godin_mod = tracker.get_slot("profile_creation_godin_moderate_slot")
+        godin_inten = tracker.get_slot("profile_creation_godin_intensive_slot")
+        godin_score = 9 * godin_inten + 5 * godin_mod + 3 * godin_light
+        godin_level = 0  # insufficiently active/sedentary
+        if godin_score >= 24: # 24 units or more is active
+            godin_level = 2
+        elif godin_score >= 14:  # 14-23 is moderately active
+            godin_level = 1
+            
+        # Compute the perceived similarity for the two clusters
+        # First for cluster 1
+        c1_1 = tracker.get_slot("profile_creation_sim_2_slot")
+        c1_2 = tracker.get_slot("profile_creation_sim_4_slot")
+        c1_mean = (c1_1 + c1_2) / 2
+        # Next for cluster 3
+        c3_1 = tracker.get_slot("profile_creation_sim_1_slot")
+        c3_2 = tracker.get_slot("profile_creation_sim_3_slot")
+        c3_mean = (c3_1 + c3_2) / 2
+        
+        # Get preferred day of the week
+        day = tracker.get_slot("profile_creation_day_slot")
+        day_idx = DAYS_OF_WEEK.index(day) + 1  # Start at 1 for db
+        
+        # Get preferred time
+        time_slot = tracker.get_slot("profile_creation_time_slot")
+        time_hour = MORNING_SEND_TIME
+        if time_slot == 2:
+            time_hour = AFTERNOON_SEND_TIME
+        elif time_slot == 3:
+            time_hour = EVENING_SEND_TIME
+        # year, month, day, hour, minute, second, microsecond
+        # We only care about the hours
+        preferred_time = datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
+        
+        # Get participant code
+        participant_code = tracker.get_slot("profile_creation_code_slot")
+        
+        # Get user ID
+        user_id = tracker.current_state()['sender_id']
+        
+        # Store to database
+        store_profile_creation_data_to_db(user_id, godin_level, walk_run_pref,
+                                          conf_avg, c1_mean, c3_mean, 
+                                          participant_code, str(day_idx), 
+                                          preferred_time)
+        
+        return []

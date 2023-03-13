@@ -39,6 +39,7 @@ slots:
         conditions:
           - active_loop: profile_creation_confirm_preference_form
     
+  # 1 is walk, 2 is run
   profile_creation_run_walk_slot:
     type: categorical
     values:
@@ -297,9 +298,9 @@ responses:
   utter_profile_creation_preference_4:
   - text: "Helder."
   utter_profile_creation_preference_5:
-  - text: "Op welk moment heb jij meestal tijd voor een gesprek?"
+  - text: "Op welk moment van de dag heb jij meestal tijd voor een gesprek?"
   utter_ask_profile_creation_time_slot:
-  - text: "Typ '1' als je in de ochtend (vóór 12 uur) tijd hebt. 🌅\nTyp '2' als je in de middag (tussen 12 en 17 uur) tijd hebt. ☀️\nTyp '3' als je in de avond (na 17 uur) tijd hebt. 🌕"
+  - text: "Typ '1' als je in de ochtend (vóór 12 uur) tijd hebt. 🌅\nTyp '2' als je in de middag (tussen 12 en 18 uur) tijd hebt. ☀️\nTyp '3' als je in de avond (na 18 uur) tijd hebt. 🌕"
   utter_profile_creation_time_not_valid:
   - text: "Typ a.u.b. één van de drie cijfers om aan te geven wanneer je meestal tijd hebt voor een gesprek op de gekozen dag."
   utter_profile_creation_preference_6:
@@ -509,3 +510,6 @@ actions:
   - validate_profile_creation_conf_10_form
   
   - profile_creation_set_conf_low_high_slot
+  
+  - profile_creation_save_to_db
+  

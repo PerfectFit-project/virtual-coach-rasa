@@ -61,12 +61,16 @@ class ValidatePickADaypartForm(FormValidationAction):
         # pylint: disable=unused-argument
         """validate pick a daypart form"""
         last_utterance = get_latest_bot_utterance(tracker.events)
+        print(last_utterance)
 
         if last_utterance != 'utter_ask_chosen_daypart':
+            print("in the if statement ", last_utterance)
             return {"chosen_daypart": None}
 
         correct_format = validator.validate_number_in_range_response(1, 4, value)
+        print(value)
         if not correct_format:
+            print("form is not correct")
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
 
         return {"chosen_daypart": value}

@@ -74,8 +74,6 @@ responses:
      - text: "Prima, ik stel voor om deze oefening snel te doen. Dit ondersteunt je bij het behalen van je doelen!"
      - text: "Prima, ik raad je aan om deze oefening zo snel mogelijk te doen. Dit helpt je bij het bereiken van je doelen!"
      - text: "Prima, ik stel voor om deze oefening zo snel mogelijk te doen. Dit ondersteunt je bij het behalen van je doelen!"
-  utter_ask_rescheduling_options_form_rescheduling_option:
-     - text: "Wanneer komt het beter uit? {rescheduling_options_string} Geef antwoord met 1, 2, 3, of 4."
   utter_rescheduling_option_chosen:
      - text: "Oké, ik spreek je dan weer! 🙋"
      - text: "Goed, tot later! 🙋"
@@ -87,9 +85,6 @@ responses:
 actions:
   - action_expected_time_next_part
   - validate_rescheduling_now_or_later_form
-  - action_reset_rescheduling_now_slot
-  - action_get_rescheduling_options_list
-  - validate_rescheduling_options_form
   - action_reset_rescheduling_option_slot
   - action_reschedule_dialog
   - action_set_continuation

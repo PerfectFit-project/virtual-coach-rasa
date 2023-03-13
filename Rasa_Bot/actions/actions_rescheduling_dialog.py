@@ -73,31 +73,6 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
 
         return {"rescheduling_now": value}
 
-
-class ActionGetReschedulingOptionsList(Action):
-    """Get the possible rescheduling options."""
-
-    def name(self):
-        return "action_get_rescheduling_options_list"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        options = get_reschedule_options_str()
-
-        # Create string of options to utter them
-        num_options = len(options)
-        rescheduling_options_string = ""
-        for o in range(num_options):
-            rescheduling_options_string += "(" + str(o + 1) + ") " + options[o] + "."
-            if not o == len(options) - 1:
-                rescheduling_options_string += " "
-
-        timestamp = datetime.datetime.timestamp(datetime.datetime.now())
-
-        return [SlotSet("rescheduling_options_string", rescheduling_options_string),
-                SlotSet("rescheduling_options_timestamp", timestamp)]
-
-
 class ActionResetReschedulingOptionSlot(Action):
     """Reset rescheduling_option slot"""
 
@@ -106,34 +81,6 @@ class ActionResetReschedulingOptionSlot(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("chosen_daypart", None)]
-
-
-class ValidateReschedulingOptionsForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_rescheduling_options_form'
-
-    def validate_rescheduling_option(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate rescheduling_option input."""
-
-        if not self._is_valid_input(value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-            return {"rescheduling_option": None}
-
-        return {"rescheduling_option": int(value)}
-
-    @staticmethod
-    def _is_valid_input(value):
-        try:
-            value = int(value)
-        except ValueError:
-            return False
-        if (value < 1) or (value > 4):
-            return False
-        return True
-
 
 class ActionRescheduleDialog(Action):
     """Reschedule the dialog at the chosen time"""
@@ -149,39 +96,6 @@ class ActionRescheduleDialog(Action):
         eta = get_reschedule_date(timestamp, chosen_option)
 
         celery.send_task('celery_tasks.reschedule_dialog', (user_id, dialog, eta))
-
-
-def get_reschedule_options_str() -> list:
-
-    options = ["In een uur"]
-
-    current_time = datetime.datetime.now().astimezone(TIMEZONE)
-
-    # In the morning
-    if MORNING[0] <= current_time.hour < MORNING[1]:
-        options += ["Vanmiddag, om 16:00",
-                    "Vanavond, om 21:00",
-                    "Morgenochtend om deze tijd"]
-
-    # In the afternoon
-    elif AFTERNOON[0] <= current_time.hour < AFTERNOON[1]:
-        options += ["Vanavond, om 21:00",
-                    "Morgenochtend, om 8:00",
-                    "Morgenmiddag om deze tijd"]
-
-    # In the evening
-    elif EVENING[0] <= current_time.hour < EVENING[1]:
-        options += ["Morgenochtend, om 8:00",
-                    "Morgenmiddag, om 16:00",
-                    "Morgenavond om deze tijd"]
-
-    # In the night
-    else:
-        options += ["Om 16:00",
-                    "Om 21:00",
-                    "Morgen om deze tijd"]
-
-    return options
 
 
 def get_reschedule_date(timestamp: float, choice: int) -> datetime.datetime:

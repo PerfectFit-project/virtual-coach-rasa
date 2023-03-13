@@ -2,9 +2,12 @@
 Helper functions for rasa actions
 """
 import datetime
-import secrets
-from typing import List, Optional, Any
+import logging
 import plotly.graph_objects as go
+import secrets
+
+from typing import List, Optional, Any
+
 
 from .definitions import DATABASE_URL, TIMEZONE
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
@@ -26,6 +29,7 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
                                       preferred_time):
     """
     Stores profile creation data for a user in the database.
+
     Args:
         user_id (int): The ID of the user to store the evaluation for.
         godin_activity_level (int): Godin activity level (0,1, or 2).
@@ -38,8 +42,12 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
         week_days (str): String with numbers of preferred days for intervention
                          (e.g., '1' for monday).
         preferred_time: Preferred time of day for intervention.
+    
+    Returns:
+        Nothing.
     """
 
+    logging.info("helper function started.")
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -53,7 +61,14 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
     selected.week_days = week_days
     selected.preferred_time = preferred_time
     
+    logging.info(str(selected.testim_godin_activity_level))
+    logging.info(str(selected.week_days))
+
     session.commit()
+    
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    
+    logging.info(str(selected.week_days))
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):

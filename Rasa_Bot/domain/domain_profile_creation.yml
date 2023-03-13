@@ -331,27 +331,27 @@ responses:
   utter_profile_creation_sim_1:
   - text: "Je krijgt nu vier korte verhalen te zien. 4️ Lees deze goed door. Daarna ga ik je vragen in hoeverre jij jezelf vindt lijken op deze mensen."
   utter_profile_creation_sim_2:
-  - text: "Dit is het eerste verhaal: 'Ik ben iemand die vaak alleen traint en ik doe meerdere dagen per week oefeningen thuis. Ook probeer ik gezond te eten. Mijn doel was om na elke avond maaltijd te gaan wandelen samen met mijn vriendin. Ik heb dit bereikt doordat we het samen deden en doordat we ons vasthielden aan de routine.'"
+  - text: "Dit is het eerste verhaal: 'Ik ben iemand die graag alleen traint, dus ik train thuis 6 dagen per week en richt me op de delen van mijn lichaam die ik wil verbeteren. Ook probeer ik gezond te eten.'"
   utter_ask_profile_creation_sim_1_slot:
-  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 te geven (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
   utter_profile_creation_sim_3:
   - text: "Oké, duidelijk."
   utter_profile_creation_sim_4:
-  - text: "Dit is het tweede verhaal: 'Hallo, mijn naam is Jennifer, ik ben 57 jaar oud. Ik was bijna volledig arbeidsongeschikt, omdat ik problemen had met mijn knieën en mijn rug. Maar in het afgelopen jaar ben ik gaan zwemmen. Nu kan ik 800 meter lopen, 3 dagen per week. Ik heb dit bereikt door te starten met zwemmen, wat heeft geholpen om gewicht te verliezen.'"
+  - text: "Dit is het tweede verhaal: 'Hallo, mijn naam is Jennifer, ik ben 57 jaar oud. Ik was bijna volledig arbeidsongeschikt, omdat ik problemen had met mijn knieën en mijn rug. Maar dit afgelopen jaar ben ik gaan zwemmen en ben ik wat gewicht verloren, dus nu kan ik 3 dagen per week lopen.'"
   utter_ask_profile_creation_sim_2_slot:
-  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 te geven (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
   utter_profile_creation_sim_5:
   - text: "Helder."
   utter_profile_creation_sim_6:
-  - text: "Dit is het derde verhaal: 'Hallo, ik ben Daniel. Ik ben altijd best sportief geweest, maar ben vorig jaar minder gaan bewegen door drukte op het werk. Mijn doel was om weer 3 tot 5 kilometer te kunnen hardlopen. Ik heb dit bereikt door consistent te zijn en tijd vrij te maken voor hardlopen.'"
+  - text: "Dit is het derde verhaal: 'Hallo, ik ben Daniel. Ik zorgde altijd min of meer voor mijn lichaam, door vrije lichaamstraining en cardio. Vorig jaar liet ik het gaan omdat ik altijd moe thuiskwam van het werk, maar ik heb de gewoonte van joggen en trainen weer opgepakt.'"
   utter_ask_profile_creation_sim_3_slot:
-  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 te geven (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
   utter_profile_creation_sim_7:
   - text: "Oké, bedankt."
   utter_profile_creation_sim_8:
-  - text: "Dit is het vierde en laatste verhaal: 'Hoi, ik hou van wandelen. Mijn doel is om dat 1 of 2 keer per dag te doen. Ik vind dit een lichte oefening die me gezond houdt. Tijd maken voor een wandeling helpt mij om mijn doel te bereiken. Waar ik woon zijn ook veel wandelpaden, dat helpt me echt en moedigt me aan. Zo kan ik gewoon het huis uitlopen en mijn wandeling beginnen.'"
+  - text: "Dit is het vierde en laatste verhaal: 'Ik geniet van wandelen, wat ik tenminste één keer per dag doe, soms zelfs twee keer. Ik vind dit een zachte oefening die me relatief fit houdt. Het hebben van wandelpaden waar ik woon helpt en moedigt me echt aan.'"
   utter_ask_profile_creation_sim_4_slot:
-  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 te geven (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
   utter_profile_creation_sim_9:
   - text: "Staat genoteerd."
   

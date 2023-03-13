@@ -36,7 +36,7 @@ The agent name is set in the "domain.yml"-file in the slot "agent_name." Changin
 All conversations are stored in memory, which means that they are lost once the Rasa server is restarted. It is possible to set up a tracker store so that the conversations persist. See [this page](https://rasa.com/docs/rasa/tracker-stores) for more information.
 
 ## Conversation Flow
-The agent is built for conversations whose flow is determined in stories and rules (see the "data"-folder).
+The agent is built for conversations whose flow is determined via stories and rules (see the "data"-folder).
 
 The timeout is currently set to 60 minutes (see the "session_expiration_time"-parameter in the "domain.yml"-file). This is the period of time after which the agent assumes that the current conversation is over. Sending a message from the user after this timeout period has passed then starts a new conversation. A new conversation can also explicitly be started by sending the message "/restart".
 

@@ -629,7 +629,7 @@ class ProfileCreationSaveToDB(Action):
         
         # Get preferred day of the week
         day = tracker.get_slot("profile_creation_day_slot")
-        day_idx = DAYS_OF_WEEK.index(day) + 1  # Start at 1 for db
+        day_idx = DAYS_OF_WEEK.index(day) + 1  # Start index at 1 for db
         
         # Get preferred time
         time_slot = tracker.get_slot("profile_creation_time_slot")
@@ -645,13 +645,14 @@ class ProfileCreationSaveToDB(Action):
         # Get participant code
         participant_code = tracker.get_slot("profile_creation_code_slot")
         
-        # Get user ID
-        user_id = tracker.current_state()['sender_id']
+        logging.info("Now calling helper action")
         
-        # Store to database
+        # Store in database
         store_profile_creation_data_to_db(user_id, godin_level, walk_run_pref,
                                           conf_avg, c1_mean, c3_mean, 
                                           participant_code, str(day_idx), 
                                           preferred_time)
+        
+        logging.info("Now done calling helper function")
         
         return []

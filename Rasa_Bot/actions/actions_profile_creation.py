@@ -645,14 +645,10 @@ class ProfileCreationSaveToDB(Action):
         # Get participant code
         participant_code = tracker.get_slot("profile_creation_code_slot")
         
-        logging.info("Now calling helper action")
-        
         # Store in database
         store_profile_creation_data_to_db(user_id, godin_level, walk_run_pref,
                                           conf_avg, c1_mean, c3_mean, 
                                           participant_code, str(day_idx), 
                                           preferred_time)
-        
-        logging.info("Now done calling helper function")
         
         return []

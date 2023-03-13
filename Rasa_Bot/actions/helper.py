@@ -61,14 +61,7 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
     selected.week_days = week_days
     selected.preferred_time = preferred_time
     
-    logging.info(str(selected.testim_godin_activity_level))
-    logging.info(str(selected.week_days))
-
     session.commit()
-    
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    
-    logging.info(str(selected.week_days))
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):

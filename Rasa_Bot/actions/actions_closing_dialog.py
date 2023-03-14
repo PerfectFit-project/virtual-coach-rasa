@@ -186,8 +186,6 @@ class ValidateClosingEvaluatePfForm(FormValidationAction):
         if last_utterance != 'utter_ask_closing_pf_evaluate':
             return {"closing_pf_evaluate": None}
 
-        logging.info("validate closing pf comment")
-
         # Store both grade and comment to db
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         grade = tracker.get_slot('closing_pf_grade')  # Get grade from slot

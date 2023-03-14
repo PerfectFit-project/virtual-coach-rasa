@@ -1,5 +1,5 @@
 """
-Helper functions for rasa actions
+Helper functions for rasa actions.
 """
 import datetime
 import logging
@@ -47,7 +47,6 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
         Nothing.
     """
 
-    logging.info("helper function started.")
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()

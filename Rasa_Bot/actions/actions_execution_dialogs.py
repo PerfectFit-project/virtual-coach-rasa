@@ -4,7 +4,7 @@ Contains custom actions related to the execution dialogs
 
 from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
-from virtual_coach_db.helper.definitions import ExecutionInterventionComponents
+from virtual_coach_db.helper.definitions import Components
 
 
 ### Slot-setting methods called for rasa to store current intervention component
@@ -14,7 +14,7 @@ class SetSlotExecutionIntroduction(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.EXECUTION_INTRODUCTION)]
+                        Components.EXECUTION_INTRODUCTION)]
 
 
 class SetSlotGeneralActivity(Action):
@@ -23,7 +23,7 @@ class SetSlotGeneralActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.GENERAL_ACTIVITY)]
+                        Components.GENERAL_ACTIVITY)]
 
 
 class SetSlotWeeklyReflection(Action):
@@ -32,7 +32,7 @@ class SetSlotWeeklyReflection(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.WEEKLY_REFLECTION)]
+                        Components.WEEKLY_REFLECTION)]
 
 
 class SetSlotDailyReflection(Action):
@@ -41,7 +41,7 @@ class SetSlotDailyReflection(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.DAILY_REFLECTION)]
+                        Components.DAILY_REFLECTION)]
 
 
 class SetSlotRelapseDialog(Action):
@@ -50,4 +50,4 @@ class SetSlotRelapseDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.RELAPSE_DIALOG)]
+                        Components.RELAPSE_DIALOG)]

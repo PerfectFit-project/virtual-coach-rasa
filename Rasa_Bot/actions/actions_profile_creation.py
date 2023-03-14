@@ -6,12 +6,12 @@ from .definitions import (AFTERNOON_SEND_TIME,
                           DAYS_OF_WEEK, DAYS_OF_WEEK_ACCEPTED,
                           EVENING_SEND_TIME,
                           MORNING_SEND_TIME, TIMEZONE)
-from .helper import (store_profile_creation_data_to_db, 
-                     get_latest_bot_utterance)
+from .helper import (get_latest_bot_utterance,
+                     store_profile_creation_data_to_db)
 
 from datetime import datetime
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import FollowupAction, SlotSet
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text

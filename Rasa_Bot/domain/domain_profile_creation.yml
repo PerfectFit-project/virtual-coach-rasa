@@ -116,6 +116,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -124,6 +125,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -132,6 +134,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -140,6 +143,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -148,6 +152,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -156,6 +161,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -164,6 +170,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -172,6 +179,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -180,6 +188,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:
@@ -188,6 +197,7 @@ slots:
     type: float
     influence_conversation: false
     initial_value: -1
+    min_value: -1
     mappings:
       - type: from_text
         conditions:

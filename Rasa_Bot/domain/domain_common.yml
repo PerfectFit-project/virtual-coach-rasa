@@ -18,14 +18,16 @@ slots:
     influence_conversation: false
     mappings:
     - type: custom
+
 actions:
+  - action_delete_file
   - action_end_dialog
-  - mark_dialog_as_completed
   - action_handle_urgent_intent
-  - action_upload_file
+  - action_launch_rescheduling_prep
   - action_send_metadata
   - action_set_file_path
-  - action_delete_file
+  - action_upload_file
+  - mark_dialog_as_completed
 
 
 responses:

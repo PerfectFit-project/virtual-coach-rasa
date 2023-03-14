@@ -8,7 +8,8 @@ rules:
   - intent: EXTERNAL_trigger_profile_creation
   - action: action_set_slot_profile_creation
   - action: action_launch_rescheduling_prep
-  # Since this will trigger an intent, we do need to wait for user input here
+  # Since this action above will trigger an intent, we need to wait 
+  # for user input here.
   
 ## 1 + 2: Welcome and begin participant code
 - rule: Profile creation welcome and begin participant code

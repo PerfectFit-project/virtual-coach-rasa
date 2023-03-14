@@ -6,7 +6,7 @@ rules:
 # Rules for congratulating
 - rule: congratulate user for closing dialog
   steps:
-  - intent: closing_dialog  # For testing
+  - intent: EXTERNAL_closing_dialog
   - action: action_set_slot_closing_dialog
   - action: utter_greeting
   - action: utter_closing_congratualate_1

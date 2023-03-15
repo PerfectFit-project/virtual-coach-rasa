@@ -13,7 +13,8 @@ rules:
 - rule: send step goal notification
   steps:
   - intent: EXTERNAL_notifications_step_goal  # TODO: set trigger
-  - action: utter_notifications_step_goal_1  # TODO: get step goal from db
+  - action: action_notifications_get_daily_step_goal_from_db
+  - action: utter_notifications_step_goal_1
   - action: utter_notifications_step_goal_2
 
 ## finish dialog notification
@@ -46,7 +47,8 @@ rules:
 - rule: step goal and intensive pa notification  # TODO: set trigger
   steps:
     - intent: EXTERNAL_notifications_step_goal_intensive_pa
-    - action: utter_notifications_step_goal_intensive_pa_1  # TODO: get goal from db
+    - action: action_notifications_weekly_intensity_minutes_from_db
+    - action: utter_notifications_step_goal_intensive_pa_1
     - action: utter_notifications_step_goal_intensive_pa_2
     - action: utter_notifications_step_goal_intensive_pa_3
 

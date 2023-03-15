@@ -9,7 +9,18 @@ intents:
   - EXTERNAL_notifications_step_goal_intensive_pa
   - EXTERNAL_notifications_new_quit_date
 
-#slots:
+slots:
+  notifications_daily_step_goal:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  notifications_pa_intensity_goal:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
 
 # Tracking notification
 responses:
@@ -24,7 +35,7 @@ responses:
 
 # Step goal notification
   utter_notifications_step_goal_1:
-    - text: "Je stappendoel voor vandaag is: {daily_step_goal}. 🚶🏿 Zet 'm op weer!"
+    - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm op weer!"
   utter_notifications_step_goal_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt, kijk dan op je horloge. ⌚"
 
@@ -67,7 +78,8 @@ responses:
 
 # Step goal and intensive pa notification
   utter_notifications_step_goal_intensive_pa_1:
-    - text: "Deze week is je doel om elke dag 8000 stappen te zetten 🚶🏿 en minimaal {pa_intensity_goal} minuten intensief te bewegen. 🏊 🚴 🤸"
+    - text: "Deze week is je doel om elke dag 8000 stappen te zetten 🚶🏿 en minimaal {notifications_pa_intensity_goal}
+             minuten intensief te bewegen. 🏊 🚴 🤸"
   utter_notifications_step_goal_intensive_pa_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
             je horloge. ⌚ "
@@ -78,11 +90,13 @@ responses:
   utter_notifications_new_quit_date_notification_1:
     - text: "Hallo! Vandaag is je stop-dag. 📅 Stoppen met roken is niet altijd makkelijk, maar blijf doorzetten. Wees
             lief voor jezelf en zet 'm op! Elke sigaret niet gerookt, is een overwinning. 🏆"
-  utter_notifications_new_quit_date_notification_1:
+  utter_notifications_new_quit_date_notification_2:
     - text: "Je kunt mij ook altijd een berichtje sturen, mocht je me nodig hebben. Succes! 💪🏼"
 
 #forms:
 
 
-#actions:
+actions:
+  - action_notifications_get_daily_step_goal_from_db
+  - action_notifications_weekly_intensity_minutes_from_db
 

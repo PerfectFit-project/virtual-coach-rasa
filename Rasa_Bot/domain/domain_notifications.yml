@@ -1,13 +1,13 @@
 version: "3.1"
 
 intents:
-  - EXTERNAL_notifications_tracking
-  - EXTERNAL_notifications_step_goal
-  - EXTERNAL_notifications_finish_dialog
-  - EXTERNAL_notifications_user_inactive
-  - EXTERNAL_notifications_new_quit_date_tomorrow
-  - EXTERNAL_notifications_step_goal_intensive_pa
-  - EXTERNAL_notifications_new_quit_date
+  - EXTERNAL_trigger_track_notification
+  - EXTERNAL_pa_step_goal_notification
+  - EXTERNAL_finish_dialog_notification
+  - EXTERNAL_inactive_user_notification
+  - EXTERNAL_before_quit_notification
+  - EXTERNAL_pa_intensity_notification
+  - EXTERNAL_quit_date_notification
 
 slots:
   notifications_daily_step_goal:

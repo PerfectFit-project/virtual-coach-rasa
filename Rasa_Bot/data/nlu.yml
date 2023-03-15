@@ -118,33 +118,33 @@ nlu:
   examples: |
     - "EXTERNAL_relapse_dialog_pa"
 
-- intent: EXTERNAL_notifications_tracking
+- intent: EXTERNAL_trigger_track_notification
   examples: |
-    - "EXTERNAL_notifications_tracking"
+    - "EXTERNAL_trigger_track_notification"
 
-- intent: EXTERNAL_notifications_step_goal
+- intent: EXTERNAL_pa_step_goal_notification
   examples: |
-    - "EXTERNAL_notifications_step_goal"
+    - "EXTERNAL_pa_step_goal_notification"
 
-- intent: EXTERNAL_notifications_finish_dialog
+- intent: EXTERNAL_finish_dialog_notification
   examples: |
-    - "EXTERNAL_notifications_finish_dialog"
+    - "EXTERNAL_finish_dialog_notification"
 
-- intent: EXTERNAL_notifications_user_inactive
+- intent: EXTERNAL_inactive_user_notification
   examples: |
-    - "EXTERNAL_notifications_user_inactive"
+    - "EXTERNAL_inactive_user_notification"
 
-- intent: EXTERNAL_notifications_new_quit_date_tomorrow
+- intent: EXTERNAL_before_quit_notification
   examples: |
-    - "EXTERNAL_notifications_new_quit_date_tomorrow"
+    - "EXTERNAL_before_quit_notification"
 
-- intent: EXTERNAL_notifications_step_goal_intensive_pa
+- intent: EXTERNAL_pa_intensity_notification
   examples: |
-    - "EXTERNAL_notifications_step_goal_intensive_pa"
+    - "EXTERNAL_pa_intensity_notification"
 
-- intent: EXTERNAL_notifications_new_quit_date
+- intent: EXTERNAL_quit_date_notification
   examples: |
-    - "EXTERNAL_notifications_new_quit_date"
+    - "EXTERNAL_quit_date_notification"
 
 
 - intent: relapse_dialog

@@ -118,6 +118,34 @@ nlu:
   examples: |
     - "EXTERNAL_relapse_dialog_pa"
 
+- intent: EXTERNAL_notifications_tracking
+  examples: |
+    - "EXTERNAL_notifications_tracking"
+
+- intent: EXTERNAL_notifications_step_goal
+  examples: |
+    - "EXTERNAL_notifications_step_goal"
+
+- intent: EXTERNAL_notifications_finish_dialog
+  examples: |
+    - "EXTERNAL_notifications_finish_dialog"
+
+- intent: EXTERNAL_notifications_user_inactive
+  examples: |
+    - "EXTERNAL_notifications_user_inactive"
+
+- intent: EXTERNAL_notifications_new_quit_date_tomorrow
+  examples: |
+    - "EXTERNAL_notifications_new_quit_date_tomorrow"
+
+- intent: EXTERNAL_notifications_step_goal_intensive_pa
+  examples: |
+    - "EXTERNAL_notifications_step_goal_intensive_pa"
+
+- intent: EXTERNAL_notifications_new_quit_date
+  examples: |
+    - "EXTERNAL_notifications_new_quit_date"
+
 
 - intent: relapse_dialog
   examples: |

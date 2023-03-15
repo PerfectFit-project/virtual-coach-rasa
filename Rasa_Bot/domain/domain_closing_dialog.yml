@@ -42,7 +42,6 @@ slots:
   closing_reflection_smoke_done:
     type: text
     influence_conversation: false
-
     mappings:
       - type: from_text
         conditions:
@@ -51,7 +50,6 @@ slots:
   closing_relapse_prevention_plan_one_done:
     type: text
     influence_conversation: false
-
     mappings:
       - type: from_text
         conditions:
@@ -60,7 +58,6 @@ slots:
   closing_relapse_prevention_plan_two_done:
     type: text
     influence_conversation: false
-
     mappings:
       - type: from_text
         conditions:

@@ -34,7 +34,7 @@ rules:
   - action: utter_notifications_user_inactive_4
   - action: utter_notifications_user_inactive_5
   - action: utter_notifications_user_inactive_6
-  - action: utter_notifications_user_inactive_7  # TODO: implement form and continue
+  - action: utter_notifications_user_inactive_7  # TODO: trigger list of commands rules/dialog
 
 ## New quit date tomorrow notification
 - rule: new quit date tomorrow notification  # TODO: trigger if user set new quit date, day before date

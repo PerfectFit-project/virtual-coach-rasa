@@ -7,8 +7,9 @@ from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED)
-from celery_utils import (get_component_name, get_user_fsm, get_dialog_state, get_all_fsm,
-                          save_state_machine_to_db, create_new_user_fsm, send_fsm_event)
+from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
+                          get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
+                          send_fsm_event)
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
@@ -35,9 +36,15 @@ def create_new_user(user_id: int):
     Args:
         user_id: the ID of the user
     """
-    new_fsm = create_new_user_fsm(user_id)
 
-    save_state_machine_to_db(new_fsm)
+    user_exists = check_if_user_exists(user_id)
+
+    if not user_exists:
+        new_fsm = create_new_user_fsm(user_id)
+        save_state_machine_to_db(new_fsm)
+
+    else:
+        logging.warning('The user already exists in the database')
 
 
 @app.task(bind=True)
@@ -57,7 +64,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             dialog = fsm.dialog_state.get_current_dialog()
             
             # the dialog is idle now
-            fms.dialog_state.set_to_idle()
+            fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm.machine_id)
 
             next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)

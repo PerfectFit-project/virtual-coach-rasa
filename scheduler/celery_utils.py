@@ -6,11 +6,28 @@ from state_machine.controller import (OnboardingState, TrackingState, GoalsSetti
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
-from virtual_coach_db.dbschema.models import InterventionComponents, UserStateMachine
+from virtual_coach_db.dbschema.models import InterventionComponents, Users, UserStateMachine
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 import logging
+
+
+def check_if_user_exists(user_id: int) -> bool:
+    """
+   Check if a user with the specified user_id exists already in the db.
+    Args:
+        user_id: the ID of the user
+    Returns: True if the user exists, false otherwise
+    """
+    session = get_db_session(DATABASE_URL)
+
+    users = (session.query(Users).filter(Users.nicedayuid == user_id).all())
+
+    if len(users > 0):
+        return True
+
+    return False
 
 
 def create_new_user_fsm(user_id: int) -> StateMachine:

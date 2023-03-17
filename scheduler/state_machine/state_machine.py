@@ -90,13 +90,13 @@ class StateMachine:
             self.dialog_state.set_to_idle()
             self.state.on_dialog_completed(event.Descriptor)
 
-        if event.EventType == EventEnum.DIALOG_RESCHEDULED:
+        elif event.EventType == EventEnum.DIALOG_RESCHEDULED:
             logging.info('Dialog resheduled event received %s ', event.Descriptor)
             # in this case the descriptor is a tuple, where 0 is
             # the dialog and 1 the new date
             self.state.on_dialog_rescheduled(event.Descriptor[0], event.Descriptor[1])
 
-        if event.EventType == EventEnum.DIALOG_STARTED:
+        elif event.EventType == EventEnum.DIALOG_STARTED:
             logging.info('Dialog started event received %s ', event.Descriptor)
             # in this case we track that a dialog is running
             self.dialog_state.set_to_running(event.Descriptor)
@@ -108,7 +108,7 @@ class StateMachine:
 
             self.state.on_new_day(event.Descriptor)
 
-        if event.EventType == EventEnum.USER_TRIGGER:
+        elif event.EventType == EventEnum.USER_TRIGGER:
             logging.info('User trigger event received %s ', event.Descriptor)
             self.dialog_state.set_to_running(event.Descriptor)
             self.state.on_user_trigger(event.Descriptor)

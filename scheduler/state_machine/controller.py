@@ -342,7 +342,8 @@ class ExecutionRunState(State):
             # on the first week, the execution of the general activity dialog 
             # has to be planned for week 2
             if week == 1:
-              schedule_next_execution(user_id=self.user_id,
+                schedule_next_execution(user_id=self.user_id,
+
                                       dialog=Components.GENERAL_ACTIVITY,
                                       current_date=datetime.now(),
                                       phase_id=2)

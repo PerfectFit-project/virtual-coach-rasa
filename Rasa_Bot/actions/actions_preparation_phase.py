@@ -63,7 +63,6 @@ class ValidatePickADaypartForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
 
         if last_utterance != 'utter_ask_chosen_daypart':
-            print("in the if statement ", last_utterance)
             return {"chosen_daypart": None}
 
         correct_format = validator.validate_number_in_range_response(1, 4, value)

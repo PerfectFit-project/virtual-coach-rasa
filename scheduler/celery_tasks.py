@@ -148,14 +148,17 @@ def trigger_intervention_component(self,  # pylint: disable=unused-argument
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
     """
-    name = get_component_name(trigger)
-    send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, name))
 
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
-    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    response = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+
+    if response.status_code == 200:
+        # if the request succeeded, update the fsm
+        name = get_component_name(trigger)
+        send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, name))
 
 
 @app.task(bind=True)

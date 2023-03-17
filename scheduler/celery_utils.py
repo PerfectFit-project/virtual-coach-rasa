@@ -24,7 +24,7 @@ def check_if_user_exists(user_id: int) -> bool:
 
     users = (session.query(Users).filter(Users.nicedayuid == user_id).all())
 
-    if len(users > 0):
+    if len(users) > 0:
         return True
 
     return False

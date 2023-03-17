@@ -67,7 +67,6 @@ class ValidatePickADaypartForm(FormValidationAction):
 
         correct_format = validator.validate_number_in_range_response(1, 4, value)
         if not correct_format:
-            print("form is not correct")
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
 
         return {"chosen_daypart": value}

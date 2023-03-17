@@ -335,7 +335,7 @@ def get_phase_object(phase_name: str) -> InterventionPhases:
     return phases[0]
 
 
-def get_preferred_date_time(user_id: int, intervention_component_id: int) -> tuple:
+def get_preferred_date_time(user_id: int) -> tuple:
     """
     Gets the preferred day of the week and the preferred time of the day
     set by the user

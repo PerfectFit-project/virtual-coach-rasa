@@ -5,8 +5,8 @@ from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
 from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT)
-from virtual_coach_db.dbschema.models import (Users, UserInterventionState, UserPreferences,
-                                              InterventionPhases, InterventionComponents, )
+from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
+                                              InterventionComponents)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -347,21 +347,20 @@ def get_preferred_date_time(user_id: int, intervention_component_id: int) -> tup
 
     """
     session = get_db_session(DATABASE_URL)
-    preferences = (
+    users = (
         session.query(
-            UserPreferences
+            Users
         )
         .filter(
-            UserPreferences.users_nicedayuid == user_id,
-            UserPreferences.intervention_component_id == intervention_component_id
+            Users.users_nicedayuid == user_id
         )
         .one()
     )
 
-    days_str = preferences.week_days
+    days_str = users.week_days
     days_list = list(map(int, days_str.split(',')))
 
-    preferred_time = preferences.preferred_time.time()
+    preferred_time = users.preferred_time.time()
 
     return days_list, preferred_time
 

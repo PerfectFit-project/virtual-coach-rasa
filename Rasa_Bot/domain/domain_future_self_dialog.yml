@@ -1,6 +1,5 @@
 intents:
   - request_future_self_dialog
-  - EXTERNAL_trigger_continue_future_self_activity
 
 slots:
   # Whether the user has done the first step before

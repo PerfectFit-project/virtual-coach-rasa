@@ -16,26 +16,7 @@ rules:
     - active_loop: null
     - action: utter_user_chose_now
     - action: action_set_continuation
-    - slot_was_set:
-      - dialog_to_continue: general_activity
     - action: action_continue_with_general_activity
-
-- rule: rescheduling query dialog now - future self dialog
-  steps:
-    - intent: EXTERNAL_trigger_reschedule_activity
-    - action: utter_intro
-    - action: action_expected_time_next_part
-    - action: rescheduling_now_or_later_form
-    - active_loop: rescheduling_now_or_later_form
-    - slot_was_set:
-      - rescheduling_now: 1
-    - active_loop: null
-    - action: utter_user_chose_now
-    - action: action_set_continuation
-    - slot_was_set:
-      - dialog_to_continue: future_self_preparation
-    - action: action_continue_with_future_self_dialog_after_rescheduling_query
-
 
 # Rescheduling query - later
 - rule: rescheduling query dialog later
@@ -55,9 +36,6 @@ rules:
     - active_loop: null
     - action: action_reschedule_dialog
     - action: utter_rescheduling_option_chosen
-    - action: action_reset_rescheduling_option_slot
-    - slot_was_set:
-      - rescheduling_option: null
     - action: action_end_dialog
     # TODO: what are we going to do at the end of the dialog if the user types something again?
     # Maybe a ConversationPaused() event from custom action?

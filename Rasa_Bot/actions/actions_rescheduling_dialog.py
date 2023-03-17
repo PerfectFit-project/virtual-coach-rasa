@@ -33,16 +33,6 @@ class ActionContinueGeneralActivityDialog(Action):
                          (user_id, ExecutionInterventionComponentsTriggers.CONTINUE_GENERAL_ACTIVITY))
 
 
-class ActionContinueFutureSelfDialog(Action):
-    def name(self) -> Text:
-        return "action_continue_with_future_self_dialog_after_rescheduling_query"
-
-    async def run(self, dispatcher, tracker, domain):
-        user_id = tracker.current_state()['sender_id']
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, ExecutionInterventionComponentsTriggers.CONTINUE_FUTURE_SELF_ACTIVITY))
-
-
 class ActionResetReschedulingNowSlot(Action):
     """Reset rescheduling_now slot"""
 
@@ -72,15 +62,6 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2")
 
         return {"rescheduling_now": value}
-
-class ActionResetReschedulingOptionSlot(Action):
-    """Reset rescheduling_option slot"""
-
-    def name(self):
-        return "action_reset_rescheduling_option_slot"
-
-    async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("chosen_daypart", None)]
 
 class ActionRescheduleDialog(Action):
     """Reschedule the dialog at the chosen time"""

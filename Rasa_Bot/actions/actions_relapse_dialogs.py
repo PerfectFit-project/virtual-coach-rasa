@@ -64,6 +64,35 @@ class ActionResetOneOrTwoSlot(Action):
         return [SlotSet('one_or_two_slot', None)]
 
 
+
+
+class ActionSetSlotsSmokeHrsAfterFak1(Action):
+    def name(self):
+        return "action_set_slots_smoke_hrs_after_fak1"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('crave_lapse_relapse', 1)]
+
+class ActionSetSlotsSmokeHrsAfterFak2(Action):
+    def name(self):
+        return "action_set_slots_smoke_hrs_after_fak2"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('smoke_or_pa', 1)]
+
+
+class ActionSetSlotWeeklyOrRelapse(Action):
+    def name(self):
+        return "action_set_slot_weekly_or_relapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        intervention_component = tracker.get_slot('current_intervention_component')
+
+        if intervention_component == Components.WEEKLY_REFLECTION:
+            return [SlotSet('weekly_or_relapse', 2)]
+
+        return [SlotSet('weekly_or_relapse', 1)]
+
 class ActionSetSlotRelapseDialog(Action):
     def name(self):
         return "action_set_slot_relapse_dialog_hrs"

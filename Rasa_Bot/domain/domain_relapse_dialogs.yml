@@ -342,6 +342,15 @@ slots:
     mappings:
       - type: custom
 
+  weekly_or_relapse:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: custom
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -689,6 +698,9 @@ actions:
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa
   - action_set_slot_relapse_dialog_relapse
+  - action_set_slot_weekly_or_relapse
+  - action_set_slots_smoke_hrs_after_fak1
+  - action_set_slots_smoke_hrs_after_fak2
   - action_trigger_relapse
   - populate_coping_activities_list
   - populate_coping_activities_list_pa

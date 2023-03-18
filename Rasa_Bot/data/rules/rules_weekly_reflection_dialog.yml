@@ -213,17 +213,13 @@ rules:
   - action: utter_difficult_moments_11
   - action: utter_difficult_moments_12
   - action: utter_difficult_moments_13
-  ## TODO Leave dialog for part of relapse then come back
-  - action: utter_look_forward_1
-  - action: utter_look_forward_2
-  - action: utter_look_forward_3
-  - action: utter_look_forward_4
-  - action: utter_look_forward_5
-  - action: utter_look_forward_5
-  - action: utter_look_forward_6
-  - action: possible_smoking_situations_form
-  - active_loop: possible_smoking_situations_form
+  - action: utter_hrs_reasons_4
+  - action: hrs_situation_form
+  - active_loop: hrs_situation_form
   wait_for_user_input: false
+
+  ## TODO Leave dialog for part of relapse then come back
+
 
 ## User answered 2 then 2
 ## TODO Figure out how to leave dialog and come back to same part

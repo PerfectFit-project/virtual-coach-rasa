@@ -160,8 +160,8 @@ rules:
   - action: action_send_metadata
   - action: action_delete_file
   - action: action_set_slot_weekly_or_relapse
-  - action: action_set_slots_smoke_hrs_after_fak1
-  - action: action_set_slots_smoke_hrs_after_fak2
+  - action: action_set_slot_crave_lapse_relapse_1
+  - action: action_set_slot_smoke_or_pa_1
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false
@@ -397,6 +397,9 @@ rules:
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
+  - action: action_set_slot_weekly_or_relapse
+  - action: action_set_slot_smoke_or_pa_1
+  - action: action_set_slot_crave_lapse_relapse_2
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false
@@ -416,8 +419,32 @@ rules:
   - action: utter_smoke_lapse_16
   - action: utter_smoke_lapse_17
   - action: utter_smoke_lapse_18
+  - slot_was_set:
+    - weekly_or_relapse: 1
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
+  wait_for_user_input: false
+
+
+- rule: smoke lapse 4, return to weekly reflection
+  condition:
+    - active_loop: reflect_bar_chart_form
+  steps:
+  - action: reflect_bar_chart_form
+  - active_loop: null
+  - slot_was_set: # smoke branch
+    - smoke_or_pa: 1
+  - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
+    - crave_lapse_relapse: 2
+  - action: store_reflect_barchart
+  - action: utter_smoke_lapse_15
+  - action: utter_smoke_lapse_16
+  - action: utter_smoke_lapse_17
+  - action: utter_smoke_lapse_18
+  - slot_was_set:
+    - weekly_or_relapse: 2
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
   wait_for_user_input: false
 #  checkpoint: ehbo_me_self_lapse_checkpoint
 
@@ -643,6 +670,7 @@ rules:
   - action: utter_smoke_relapse_6
   - action: utter_smoke_relapse_7
   - action: utter_smoke_relapse_8
+  - action: action_set_slot_weekly_or_relapse
   - action: relapse_medication_info_form
   - active_loop: relapse_medication_info_form
   wait_for_user_input: false  # checkpoint: relapse_medication_info_checkpoint.
@@ -667,6 +695,11 @@ rules:
   - active_loop: null
   - slot_was_set:
     - medication_info_slot: 1
+  - or:
+      - slot_was_set:
+          - weekly_or_relapse: 1
+      - slot_was_set:
+          - weekly_or_relapse: 2
   - action: action_set_medication_video_link # set the video link to the medication video
   - action: action_launch_watch_video_dialog # launch the video dialog
 #  - action: ehbo_me_self_lapse_form
@@ -681,9 +714,25 @@ rules:
   - active_loop: null
   - slot_was_set:
     - medication_info_slot: 2
+  - slot_was_set:
+      - weekly_or_relapse: 1
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false # checkpoint: relapse_ehbo_checkpoint
+
+- rule: smoke relapse decide not to get medication info, return to weekly reflection # checkpoint: relapse_medication_info_checkpoint.
+  condition:
+    - active_loop: relapse_medication_info_form
+  steps:
+  - action: relapse_medication_info_form
+  - active_loop: null
+  - slot_was_set:
+    - medication_info_slot: 2
+  - slot_was_set:
+      - weekly_or_relapse: 2
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
 
 - rule: smoke lapse open ehbo #  checkpoint: ehbo_me_self_lapse_checkpoint
   condition:

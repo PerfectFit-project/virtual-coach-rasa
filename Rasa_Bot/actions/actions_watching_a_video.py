@@ -116,9 +116,11 @@ class ContinueAfterVideo(Action):
         # checks in which dialog the user is, and resumes the correct flow accordingly
         current_dialog = tracker.get_slot('current_intervention_component')
 
-        if current_dialog == ExecutionInterventionComponents.RELAPSE_DIALOG_RELAPSE:
+        if current_dialog == Components.RELAPSE_DIALOG_RELAPSE:
             # resumes the relapse dialog opening the ehbo_me_self_lapse_form.
             # The flow will then depend on the chosen option in the form
             return [FollowupAction('ehbo_me_self_lapse_form')]
+        if current_dialog == Components.WEEKLY_REFLECTION:
+            return [FollowupAction('possible_smoking_situations_form')]
         # TODO: add the other possible cases
         return [FollowupAction('utter_test_utterance')]

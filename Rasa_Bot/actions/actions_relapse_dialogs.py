@@ -66,19 +66,34 @@ class ActionResetOneOrTwoSlot(Action):
 
 
 
-class ActionSetSlotsSmokeHrsAfterFak1(Action):
+class ActionSetSlotsCraveLapseRelapse1(Action):
     def name(self):
-        return "action_set_slots_smoke_hrs_after_fak1"
+        return "action_set_slot_crave_lapse_relapse_1"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('crave_lapse_relapse', 1)]
 
-class ActionSetSlotsSmokeHrsAfterFak2(Action):
+class ActionSetSlotSmokeOrPa1(Action):
     def name(self):
-        return "action_set_slots_smoke_hrs_after_fak2"
+        return "action_set_slot_smoke_or_pa_1"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('smoke_or_pa', 1)]
+
+
+class ActionSetSlotCraveLapseRelapse2(Action):
+    def name(self):
+        return "action_set_slot_crave_lapse_relapse_2"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('crave_lapse_relapse', 2)]
+
+class ActionSetSlotCraveLapseRelapse3(Action):
+    def name(self):
+        return "action_set_slot_crave_lapse_relapse_3"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('crave_lapse_relapse', 3)]
 
 
 class ActionSetSlotWeeklyOrRelapse(Action):

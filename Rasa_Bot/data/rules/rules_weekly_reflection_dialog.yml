@@ -195,7 +195,6 @@ rules:
   wait_for_user_input: false
 
 ## User answered 2 then 1
-## TODO Figure out how to leave dialog and come back to same part
 - rule: Difficult moments but did not smoke
   condition:
     - active_loop: smoked_previous_week_form
@@ -218,9 +217,6 @@ rules:
   - active_loop: hrs_situation_form
   wait_for_user_input: false
 
-  ## TODO Leave dialog for part of relapse then come back
-
-
 ## User answered 2 then 2
 ## TODO Figure out how to leave dialog and come back to same part
 - rule: Difficult moments but did not smoke
@@ -231,9 +227,10 @@ rules:
   - active_loop: null
   - slot_was_set:
     - smoked_previous_week: 2
-  ##TODO Leave dialog for part of relapse then come back
-  - action: possible_smoking_situations_form
-  - active_loop: possible_smoking_situations_form
+  - action: utter_smoke_lapse_1
+  - action: action_set_slot_crave_lapse_relapse_2
+  - action: type_and_number_smoke_form
+  - active_loop: type_and_number_smoke_form
   wait_for_user_input: false
 
 ## User answered 2 then 3
@@ -246,9 +243,10 @@ rules:
   - active_loop: null
   - slot_was_set:
     - smoked_previous_week: 3
-  ##TODO Leave dialog for part of relapse then come back
-  - action: possible_smoking_situations_form
-  - active_loop: possible_smoking_situations_form
+  - action: utter_smoke_lapse_1
+  - action: action_set_slot_crave_lapse_relapse_3
+  - action: type_and_number_smoke_form
+  - active_loop: type_and_number_smoke_form
   wait_for_user_input: false
 
 ## 5. Look forward to new week

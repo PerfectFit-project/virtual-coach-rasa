@@ -399,7 +399,6 @@ rules:
   - action: action_delete_file
   - action: action_set_slot_weekly_or_relapse
   - action: action_set_slot_smoke_or_pa_1
-  - action: action_set_slot_crave_lapse_relapse_2
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false

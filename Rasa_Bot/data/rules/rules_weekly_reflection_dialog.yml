@@ -503,8 +503,8 @@ rules:
   - action: utter_difficult_moments_pa_4
   - slot_was_set:
     - completed_hrs: 2
-  - action: refresh_previous_week_form
-  - active_loop: refresh_previous_week_form
+  - action: met_expectations_form
+  - active_loop: met_expectations_form
   wait_for_user_input: false
 
 - rule: Refresh previous week

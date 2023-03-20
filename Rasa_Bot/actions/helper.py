@@ -16,6 +16,7 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               UserInterventionState,
                                               ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.definitions import Components
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
@@ -415,12 +416,12 @@ def get_user(user_id: int) -> Users:
 
 def get_user_intervention_state(user_id: int) -> List[UserInterventionState]:
     """
-       Get the intervention activities that the user has completed
+       Get the user intervention state
         Args:
                 user_id: the user_id of the user to retrieve the data for
 
             Returns:
-                    The intervention activities performed
+                    The intervention state
 
     """
     session = get_db_session(db_url=DATABASE_URL)
@@ -429,9 +430,37 @@ def get_user_intervention_state(user_id: int) -> List[UserInterventionState]:
         session.query(
             UserInterventionState
         )
-        .join(InterventionComponents)
         .filter(
             UserInterventionState.users_nicedayuid == user_id
+        )
+        .all()
+    )
+
+    return intervention_state
+
+def get_user_intervention_state_hrs(user_id: int) -> List[UserInterventionState]:
+    """
+       Get the user intervention state for the hrs dialogs
+        Args:
+                user_id: the user_id of the user to retrieve the data for
+
+            Returns:
+                    The intervention state for the hrs dialogs
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    hrs_components = [Components.RELAPSE_DIALOG_HRS, Components.RELAPSE_DIALOG_RELAPSE,
+                      Components.RELAPSE_DIALOG_LAPSE]
+
+    intervention_state = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            InterventionComponents.intervention_component_name in hrs_components
         )
         .all()
     )

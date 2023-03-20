@@ -11,17 +11,14 @@ from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
                      store_dialog_closed_answer_list_to_db, store_user_intervention_state, get_user,
-                     get_user_intervention_state)
+                     get_user_intervention_state_hrs)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from virtual_coach_db.helper.definitions import (Components,
-                                                 DialogQuestionsEnum, Phases)
-from virtual_coach_db.helper.helper_functions import get_db_session
-from virtual_coach_db.dbschema.models import InterventionActivity
+from virtual_coach_db.helper.definitions import Components
 
 celery = Celery(broker=REDIS_URL)
 
@@ -34,7 +31,7 @@ class TriggerWeeklyReflectionDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        celery.send_task('celery_tasks.weekly_reflection_dialog',
+        celery.send_task('celery_tasks.user_trigger_dialog',
                          (user_id, Components.WEEKLY_REFLECTION))
 
         return []
@@ -67,18 +64,14 @@ class UserCompletedHrsSinceLastWeek(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        intervention_state = get_user_intervention_state(user_id)
+        intervention_state = get_user_intervention_state_hrs(user_id)
 
         current_time = datetime.datetime.now()
 
-        hrs_components = [Components.RELAPSE_DIALOG_HRS, Components.RELAPSE_DIALOG_RELAPSE,
-                          Components.RELAPSE_DIALOG_LAPSE]
-
         for state in intervention_state:
-            if state.completed and state.intervention_component_name in hrs_components:
-                time_since_complete = relativedelta(current_time, state.last_time).days
-                if time_since_complete < 7:
-                    return [SlotSet('completed_hrs', 1)]
+            time_since_complete = relativedelta(current_time, state.last_time).days
+            if state.completed and time_since_complete < 7:
+                return [SlotSet('completed_hrs', 1)]
 
         return [SlotSet('completed_hrs', 2)]
 

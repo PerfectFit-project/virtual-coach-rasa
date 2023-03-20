@@ -292,8 +292,7 @@ def get_next_planned_date(user_id: int,
 
     """
 
-    date_time = get_preferred_date_time(user_id=user_id,
-                                        intervention_component_id=intervention_component_id)
+    date_time = get_preferred_date_time(user_id=user_id)
 
     # first element of the tuple is the list of days
     pref_days = date_time[0]

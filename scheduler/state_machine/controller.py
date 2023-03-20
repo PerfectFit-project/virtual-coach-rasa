@@ -541,7 +541,6 @@ class ClosingState(State):
 
         closing_date = get_next_planned_date(
             user_id=self.user_id,
-            intervention_component_id=component.intervention_component_id,
             current_date=datetime.now()
         )
 

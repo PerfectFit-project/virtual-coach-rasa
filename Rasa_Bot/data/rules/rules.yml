@@ -1,13 +1,6 @@
 version: "3.1"
 
 rules:
-- rule: Give user central mode options when they send a message with low NLU confidence
-  steps:
-  - intent: nlu_fallback
-  - action: utter_default
-  - action: utter_central_mode_options
-  - action: action_end_dialog
-
 # Only applies at start of conversation
 - rule: Process when people talk about urgent things that we cannot handle
   conversation_start: true

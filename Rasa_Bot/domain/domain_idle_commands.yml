@@ -1,0 +1,59 @@
+responses:
+  # Fallback for low NLU confidence and low next action confidence
+  # For low next action confidence, "utter_default" is automatically called.
+  # For low NLU confidence, we have defined a rule.
+  utter_default:
+    - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
+
+  # We present the user with the options from the central mode
+  utter_central_mode_options:
+    - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽
+
+            Typ 'ehbo' als je je EHBO-doos wilt openen om een bewaarde oefening te bekijken of opnieuw te doen. 🧰
+            Wil je opnieuw uitleg over hoe de EHBO-doos werkt? Typ dan 'uitleg'. ℹ️
+
+            Typ 'oefening' als je een oefening wilt doen. 📱
+
+            Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊
+
+            Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
+            Je kunt ook altijd bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞
+            De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
+
+nlu:
+- intent: help_intent
+  examples: |
+    - "help"
+    - "hepl"
+    - "elp"
+
+- intent: ehbo_intent
+  examples: |
+    - "ehbo"
+    - "ebho"
+    - "eobh"
+
+- intent: uitleg_intent
+  examples: |
+    - "uilteg"
+    - "uileg"
+    - "uitleg"
+
+- intent: oefening_intent
+  examples: |
+    - "oefning"
+    - "oefenin"
+    - "oefening"
+
+- intent: medicijn_intent
+  examples: |
+    - "medicati"
+    - "medicijnen"
+    - "medicijn"
+
+actions:
+  - action_trigger_relapse_dialog
+  - action_trigger_first_aid_dialog
+  - action_trigger_explanation_first_aid_video_dialog
+  - action_trigger_general_activity_dialog
+  - action_trigger_video_medicine_dialog

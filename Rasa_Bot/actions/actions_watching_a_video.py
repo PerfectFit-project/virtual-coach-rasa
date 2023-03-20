@@ -5,7 +5,7 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import VideoLinks, ExecutionInterventionComponents
+from virtual_coach_db.helper.definitions import VideoLinks, Components
 from . import validator
 from .definitions import REDIS_URL
 from .helper import get_latest_bot_utterance

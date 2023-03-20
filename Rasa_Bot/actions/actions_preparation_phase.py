@@ -1,7 +1,7 @@
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from virtual_coach_db.helper.definitions import (DialogExpectedDuration,
-                                                 ExecutionInterventionComponentsTriggers)
+                                                 ComponentsTriggers)
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
@@ -12,8 +12,8 @@ from .helper import get_latest_bot_utterance
 from .actions_rescheduling_dialog import get_reschedule_date
 import datetime
 
-
 celery = Celery(broker=REDIS_URL)
+
 
 class ExpectedTimeNextPart(Action):
     """Give expected time of next part"""
@@ -50,6 +50,7 @@ class ValidateNowOrLaterForm(FormValidationAction):
 
         return {"now_or_later": value}
 
+
 class ValidatePickADaypartForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_pick_a_daypart_form"
@@ -70,20 +71,24 @@ class ValidatePickADaypartForm(FormValidationAction):
 
         return {"chosen_daypart": value}
 
+
 class StartNextDialog(Action):
     """set trigger for next dialog"""
+
     def name(self) -> Text:
         return "action_start_next_dialog"
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
         nextDialog = tracker.get_slot('current_intervention_component').upper()
-        celery.send_task('celery_tasks.trigger_intervention_component', 
-                        (user_id, 
-                        ExecutionInterventionComponentsTriggers[nextDialog].value))
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id,
+                          ComponentsTriggers[nextDialog].value))
+
 
 class Schedule_Next_Prep_Phase(Action):
     """ reschedule the dialog for another time """
+
     def name(self) -> Text:
         return "action_schedule_next_preparation_phase"
 
@@ -95,6 +100,7 @@ class Schedule_Next_Prep_Phase(Action):
         eta = get_reschedule_date(timestamp, chosen_option)
 
         celery.send_task('celery_tasks.reschedule_dialog', (user_id, dialog, eta))
+
 
 def get_daypart_options_str() -> list:
     options = []
@@ -129,8 +135,8 @@ class AskNewTime(Action):
     async def run(self, dispatcher, tracker, domain):
         options = get_daypart_options_str()
 
-        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende"\
-                 "onderdeel over 1 uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3'"\
+        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende" \
+                 "onderdeel over 1 uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3'" \
                  " als je het {1} wilt doen. En typ '4' als " \
                  "je het {2} wilt doen. "
         utterance = prompt.format(*options)

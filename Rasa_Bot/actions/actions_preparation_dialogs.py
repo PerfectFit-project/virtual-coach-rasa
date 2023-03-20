@@ -8,7 +8,7 @@ from rasa_sdk import Tracker, FormValidationAction, Action
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from virtual_coach_db.helper.definitions import PreparationInterventionComponents
+from virtual_coach_db.helper.definitions import Components
 
 from .helper import (store_user_preferences_to_db, get_intervention_component_id,
                      week_day_to_numerical_form)
@@ -17,13 +17,24 @@ YES_OR_NO = ["yes", "no"]
 ALLOWED_WEEK_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 ### Slot-setting methods called for rasa to store current intervention component
+
+
+class SetSlotPreparationIntro(Action):
+    def name(self):
+        return "action_set_slot_preparation_intro"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        Components.PREPARATION_INTRODUCTION)]
+
+
 class SetSlotProfileCreation(Action):
     def name(self):
         return "action_set_slot_profile_creation"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        PreparationInterventionComponents.PROFILE_CREATION)]
+                        Components.PROFILE_CREATION)]
 
 
 class SetSlotMedicationTalk(Action):
@@ -32,7 +43,16 @@ class SetSlotMedicationTalk(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        PreparationInterventionComponents.MEDICATION_TALK)]
+                        Components.MEDICATION_TALK)]
+
+
+class SetSlotTrackBehavior(Action):
+    def name(self):
+        return "action_set_slot_track_behavior"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        Components.TRACK_BEHAVIOR)]
 
 
 class SetSlotColdTurkey(Action):
@@ -41,7 +61,7 @@ class SetSlotColdTurkey(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        PreparationInterventionComponents.COLD_TURKEY)]
+                        Components.COLD_TURKEY)]
 
 
 class SetSlotPlanQuitStartDate(Action):
@@ -50,7 +70,7 @@ class SetSlotPlanQuitStartDate(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        PreparationInterventionComponents.PLAN_QUIT_START_DATE)]
+                        Components.PLAN_QUIT_START_DATE)]
 
 
 class SetSlotMentalContrasting(Action):
@@ -59,7 +79,7 @@ class SetSlotMentalContrasting(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        PreparationInterventionComponents.FUTURE_SELF)]
+                        Components.FUTURE_SELF)]
 
 
 class SetSlotGoalSetting(Action):
@@ -68,7 +88,7 @@ class SetSlotGoalSetting(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        PreparationInterventionComponents.GOAL_SETTING)]
+                        Components.GOAL_SETTING)]
 
 class ValidateUserPreferencesForm(FormValidationAction):
     def name(self) -> Text:

@@ -1,118 +1,113 @@
 import logging
 import os
 import requests
-import utils
-
 from celery import Celery
-from datetime import datetime
-from dateutil import tz
-from virtual_coach_db.dbschema.models import UserPreferences, UserInterventionState
-from virtual_coach_db.helper.definitions import Phases
-from virtual_coach_db.helper.helper_functions import get_db_session
-
-DATABASE_URL = os.getenv('DATABASE_URL')
-REDIS_URL = os.getenv('REDIS_URL')
-
-TIMEZONE = tz.gettz("Europe/Amsterdam")
+from celery.signals import worker_ready
+from datetime import date, datetime, timedelta
+from state_machine.state_machine import EventEnum, Event
+from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
+                                 RUNNING, EXPIRED)
+from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
+                          get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
+                          send_fsm_event)
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
 
+TEST_USER = int(os.getenv('TEST_USER_ID'))
+
+
+@worker_ready.connect
+def at_start(sender, **k):  # pylint: disable=unused-argument
+    """
+    When celery is ready, the watchdogs for the new day notification
+    and for the dialogs status check are started
+    """
+    notify_new_day.apply_async(args=[datetime.today()])
+    check_dialogs_status.apply_async()
+
 
 @app.task
-def intervention_component_completed(user_id: int, intervention_component_name: str):
-    logging.info(intervention_component_name)
-    phase = utils.get_current_phase(user_id)
-    intervention_component = utils.get_intervention_component(intervention_component_name)
-    intervention_id = intervention_component.intervention_component_id
+def create_new_user(user_id: int):
+    """
+    This task creates a new StateMachine for the user specified.
+    Args:
+        user_id: the ID of the user
+    """
 
-    next_intervention_component = None
+    user_exists = check_if_user_exists(user_id)
 
-    if phase.phase_name == Phases.PREPARATION:
-
-        state = UserInterventionState(
-            users_nicedayuid=user_id,
-            intervention_phase_id=phase.phase_id,
-            intervention_component_id=intervention_id,
-            completed=True,
-            last_time=datetime.now().astimezone(TIMEZONE),
-            last_part=0,
-            next_planned_date=None,
-            task_uuid=None
-        )
-        utils.store_intervention_component_to_db(state)
-
-        next_intervention_component = \
-            utils.get_next_preparation_intervention_component(intervention_component_name)
-
-        if next_intervention_component is not None:
-            trigger_intervention_component.apply_async(
-                args=[user_id, next_intervention_component])
-
-        else:
-            logging.info("PREPARATION PHASE ENDED")
-            plan_execution_dialogs(user_id)
-
-    elif phase.phase_name == Phases.EXECUTION:
-
-        trigger = intervention_component.intervention_component_trigger
-        next_planned_date = utils.get_next_planned_date(user_id, intervention_id)
-
-        # schedule the task
-        task_uuid = trigger_intervention_component.apply_async(
-            args=[user_id, trigger],
-            eta=next_planned_date)
-
-        state = UserInterventionState(
-            users_nicedayuid=user_id,
-            intervention_phase_id=phase.phase_id,
-            intervention_component_id=intervention_id,
-            completed=True,
-            last_time=datetime.now().astimezone(TIMEZONE),
-            last_part=0,
-            next_planned_date=next_planned_date,
-            task_uuid=str(task_uuid)
-        )
-
-        utils.store_intervention_component_to_db(state)
+    if not user_exists:
+        new_fsm = create_new_user_fsm(user_id)
+        save_state_machine_to_db(new_fsm)
 
     else:
-        state = UserInterventionState(
-            users_nicedayuid=user_id,
-            intervention_phase_id=phase.phase_id,
-            intervention_component_id=intervention_id,
-            completed=True,
-            last_time=datetime.now().astimezone(TIMEZONE),
-            last_part=0,
-            next_planned_date=None,
-            task_uuid=None
-        )
-
-        utils.store_intervention_component_to_db(state)
+        logging.warning('The user already exists in the database')
 
 
-@app.task
-def relapse_dialog(user_id: int, intervention_component_name: str):
-    phase = utils.get_phase_object(Phases.LAPSE.value)
-    component = utils.get_intervention_component(intervention_component_name)
+@app.task(bind=True)
+def check_dialogs_status(self):  # pylint: disable=unused-argument
+    """
+    This task verifies if there are uncompleted dialogs and, in case, reschedules them.
+    The task is rescheduled every maximum duration of the dialog time
+    """
+    logging.info("Checking the dialogs status")
 
-    state = UserInterventionState(
-        users_nicedayuid=user_id,
-        intervention_phase_id=phase.phase_id,
-        intervention_component_id=component.intervention_component_id,
-        completed=False,
-        last_time=datetime.now().astimezone(TIMEZONE),
-        last_part=0,
-        next_planned_date=None,
-        task_uuid=None
-    )
+    state_machines = get_all_fsm()
 
-    utils.store_intervention_component_to_db(state)
+    for fsm in state_machines:
+        dialog_state = get_dialog_state(fsm)
 
-    trigger_intervention_component.apply_async(
-        args=[user_id, 'EXTERNAL_relapse_dialog'])
+        if dialog_state == EXPIRED:
+            dialog = fsm.dialog_state.get_current_dialog()
+            
+            # the dialog is idle now
+            fsm.dialog_state.set_to_idle()
+            save_state_machine_to_db(fsm.machine_id)
+
+            next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)
+
+            reschedule_dialog.apply_async(args=[fsm.machine_id,
+                                                dialog,
+                                                next_day])
+
+    # schedule the task every max_dialog_duration
+    next_execution_time = datetime.now() + timedelta(seconds=MAXIMUM_DIALOG_DURATION)
+    check_dialogs_status.apply_async(eta=next_execution_time)
+
+
+@app.task(bind=True)
+def intervention_component_completed(self,  # pylint: disable=unused-argument
+                                     user_id: int,
+                                     intervention_component_name: str):
+    """
+    This task notifies the state machine that a dialog has been rescheduled.
+    Args:
+        user_id: the ID of the user
+        intervention_component_name: the component completed
+    """
+
+    logging.info('Celery received a dialog completion')
+    send_fsm_event(user_id=user_id,
+                   event=Event(EventEnum.DIALOG_COMPLETED, intervention_component_name))
+
+
+@app.task(bind=True)
+def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
+    """
+    This task notifies all the state machines that a day has begun.
+    Args:
+        current_date: the date to be sent to the state machines
+    """
+    state_machines = get_all_fsm()
+    for item in state_machines:
+        send_fsm_event(user_id=item.machine_id, event=Event(EventEnum.NEW_DAY, current_date))
+
+    # schedule the task for tomorrow
+    tomorrow = datetime.today() + timedelta(days=1)
+    notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
 
 
 @app.task
@@ -170,75 +165,100 @@ def step_advice_component(user_id: int, intervention_component_name: str):
 
 @app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
-    intervention_component = utils.get_intervention_component(intervention_component_name)
-    intervention_component_id = intervention_component.intervention_component_id
+    """
+    This task notifies the state machine that a dialog has been rescheduled.
+    Args:
+        user_id: the ID of the user
+        intervention_component_name: the component rescheduled
+        new_date: the date to which the component has to be rescheduled
+    """
 
-    phase = utils.get_current_phase(user_id)
+    logging.info('Celery received a dialog rescheduling')
+    send_fsm_event(user_id=user_id,
+                   event=Event(EventEnum.DIALOG_RESCHEDULED,
+                               (intervention_component_name, new_date)))
 
-    # schedule the task
-    task_uuid = trigger_intervention_component.apply_async(
-        args=[user_id, intervention_component.intervention_component_trigger],
-        eta=new_date)
 
-    last_state = utils.get_last_component_state(user_id, intervention_component_id)
+@app.task
+def start_user_intervention(user_id: int):
+    """
+    This task runs the first state of the StateMachine for a give user.
+    Args:
+        user_id: the ID of the user
+    """
 
-    state = UserInterventionState(
-        users_nicedayuid=user_id,
-        intervention_phase_id=phase.phase_id,
-        intervention_component_id=intervention_component_id,
-        completed=True,
-        last_time=last_state.last_time,
-        last_part=last_state.last_part,
-        next_planned_date=new_date,
-        task_uuid=str(task_uuid)
-    )
-
-    utils.store_intervention_component_to_db(state)
+    user_fsm = get_user_fsm(user_id)
+    user_fsm.state.run()
 
 
 @app.task(bind=True)
-def trigger_intervention_component(self, user_id, trigger):  # pylint: disable=unused-argument
+def trigger_intervention_component(self,  # pylint: disable=unused-argument
+                                   user_id: int,
+                                   trigger: str):
+    """
+    This task sends a trigger to Rasa immediately.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
+    """
+
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
-    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    response = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+
+    if response.status_code == 200:
+        # if the request succeeded, update the fsm
+        name = get_component_name(trigger)
+        send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, name))
 
 
-def plan_execution_dialogs(user_id: int):
+@app.task(bind=True)
+def trigger_scheduled_intervention_component(self,  # pylint: disable=unused-argument
+                                             user_id: int,
+                                             trigger: str):
     """
-        Get the preferences of a user and plan the execution of
-         all the intervention components
+    This task sends a trigger to Rasa after verifying that a dialog is not
+    currently running for the user. If a dialog is running, it is rescheduled.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
     """
-    session = get_db_session(db_url=DATABASE_URL)
 
-    preferences = (
-        session.query(UserPreferences)
-        .filter(UserPreferences.users_nicedayuid == user_id)
-        .all()
-    )
+    user_fsm = get_user_fsm(user_id)
 
-    for preference in preferences:
-        intervention_id = preference.intervention_component_id
-        trigger = preference.intervention_component.intervention_component_trigger
-        next_planned_date = utils.get_next_planned_date(user_id, intervention_id)
+    dialog_state = get_dialog_state(user_fsm)
 
-        # schedule the task
-        task_uuid = trigger_intervention_component.apply_async(
-            args=[user_id, trigger],
-            eta=next_planned_date)
+    # retrieve the name of the component
+    name = get_component_name(trigger)
 
-        phase = utils.get_phase_object(Phases.EXECUTION.value)
+    # if a dialog is not running or the time has expired (Rasa session reset)
+    # send the trigger
 
-        # update the DB
-        state = UserInterventionState(
-            users_nicedayuid=user_id,
-            intervention_phase_id=phase.phase_id,
-            intervention_component_id=intervention_id,
-            completed=False,
-            last_time=None,
-            last_part=0,
-            next_planned_date=next_planned_date,
-            task_uuid=str(task_uuid)
-        )
-        utils.store_intervention_component_to_db(state)
+    logging.info("scheduled dialog trigger received")
+
+    if dialog_state != RUNNING:
+        user_fsm.dialog_state.set_to_running(dialog=name)
+        trigger_intervention_component.apply_async(args=[user_id, trigger])
+
+    else:
+        # if a dialog is running, reschedule the trigger
+        rescheduled_date = datetime.now() + timedelta(minutes=MAXIMUM_DIALOG_DURATION)
+        # send a rescheduling event
+        send_fsm_event(user_id,
+                       event=Event(EventEnum.DIALOG_RESCHEDULED, (name, rescheduled_date)))
+
+
+@app.task(bind=True)
+def user_trigger_dialog(self,  # pylint: disable=unused-argument
+                        user_id: int,
+                        intervention_component_name: str):
+    """
+    This task is used when a dialog is triggered by the user.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        intervention_component_name: the intent to be sent
+    """
+    send_fsm_event(user_id=user_id,
+                   event=Event(EventEnum.USER_TRIGGER, intervention_component_name))

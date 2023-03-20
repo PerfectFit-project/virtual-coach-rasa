@@ -14,7 +14,6 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              UserPreferences,
                                               ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -166,14 +165,6 @@ def store_user_preferences_to_db(user_id: int, intervention_component_id: int, r
     """
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-    entry = UserPreferences(users_nicedayuid=user_id,
-                            intervention_component_id=intervention_component_id,
-                            recursive=recursive,
-                            week_days=week_days,
-                            preferred_time=preferred_time)
-    selected.user_preferences.append(entry)
-    session.commit()  # Update database
 
 
 def store_user_intervention_state(user_id: int, intervention_component: str, phase: str):
@@ -420,6 +411,32 @@ def get_user(user_id: int) -> Users:
     )
 
     return user_info
+
+
+def get_user_intervention_state(user_id: int) -> List[UserInterventionState]:
+    """
+       Get the intervention activities that the user has completed
+        Args:
+                user_id: the user_id of the user to retrieve the data for
+
+            Returns:
+                    The intervention activities performed
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    intervention_state = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id
+        )
+        .all()
+    )
+
+    return intervention_state
 
 def count_answers(answers: List[DialogClosedAnswers],
                   closed_answer_options: List[ClosedAnswers]) -> List[int]:

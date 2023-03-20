@@ -4,6 +4,15 @@ intents:
   - weekly_reflection
 
 slots:
+  completed_hrs:
+    type: categorical
+    values:
+      - 1
+      - 2
+    mappings:
+      - type: custom
+
+
   week_number:
     type: text
     mappings:
@@ -634,6 +643,7 @@ actions:
   - action_get_week_number
   - action_get_long_term_pa_goal
   - action_set_slot_weekly_reflection
+  - action_user_completed_hrs
   - validate_how_went_non_smoke_form
   - validate_specific_moments_form
   - validate_smoked_previous_week_form

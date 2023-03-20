@@ -426,6 +426,7 @@ rules:
     - how_went_pa: 4
   - action: utter_how_went_2
   - action: utter_how_went_3
+  - action: action_user_completed_hrs
   - action: difficult_moments_form
   - active_loop: difficult_moments_form
   wait_for_user_input: false
@@ -441,6 +442,7 @@ rules:
     - how_went_pa: 5
   - action: utter_how_went_2
   - action: utter_how_went_3
+  - action: action_user_completed_hrs
   - action: difficult_moments_form
   - active_loop: difficult_moments_form
   wait_for_user_input: false
@@ -453,6 +455,7 @@ rules:
   - action: free_reflect_3_form
   - active_loop: null
   - action: utter_how_went_1
+  - action: action_user_completed_hrs
   - action: difficult_moments_form
   - active_loop: difficult_moments_form
   wait_for_user_input: false
@@ -465,14 +468,14 @@ rules:
   - action: free_reflect_4_form
   - active_loop: null
   - action: utter_how_went_1
+  - action: action_user_completed_hrs
   - action: difficult_moments_form
   - active_loop: difficult_moments_form
   wait_for_user_input: false
 
 ## 6d Were there difficult moments?
 ## User answered 2, yes
-## TODO check if user has completed HRS dialog, if yes then this rule, if not cut it short
-- rule: Difficult moments
+- rule: Difficult moments, user has completed hrs
   condition:
     - active_loop: difficult_moments_form
   steps:
@@ -481,8 +484,25 @@ rules:
   - slot_was_set:
     - difficult_moments: 2
   - action: utter_difficult_moments_pa_4
+  - slot_was_set:
+    - completed_hrs: 1
   - action: utter_difficult_moments_pa_5
   - action: utter_difficult_moments_pa_6
+  - action: refresh_previous_week_form
+  - active_loop: refresh_previous_week_form
+  wait_for_user_input: false
+
+- rule: Difficult moments, user has not completed hrs
+  condition:
+    - active_loop: difficult_moments_form
+  steps:
+  - action: difficult_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments: 2
+  - action: utter_difficult_moments_pa_4
+  - slot_was_set:
+    - completed_hrs: 2
   - action: refresh_previous_week_form
   - active_loop: refresh_previous_week_form
   wait_for_user_input: false

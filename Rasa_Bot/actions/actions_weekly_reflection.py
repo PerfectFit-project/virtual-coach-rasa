@@ -4,18 +4,21 @@ Contains custom actions related to the weekly reflection dialogue
 
 import logging
 
+import datetime
+from dateutil.relativedelta import relativedelta
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, get_user)
+                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, get_user,
+                     get_user_intervention_state)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents,
+from virtual_coach_db.helper.definitions import (Components,
                                                  DialogQuestionsEnum, Phases)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
@@ -36,14 +39,15 @@ class TriggerWeeklyReflectionDialog(Action):
 
         return []
 
+
 class SetSlotWeeklyReflection(Action):
     def name(self):
         return "action_set_slot_weekly_reflection"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [SlotSet('current_intervention_component',
                         Components.WEEKLY_REFLECTION)]
+
 
 class GetLongTermPaGoal(Action):
     def name(self):
@@ -55,6 +59,29 @@ class GetLongTermPaGoal(Action):
         user_info = get_user(user_id)
         pa_goal = user_info.long_term_pa_goal
         return [SlotSet('long_term_pa_goal', pa_goal)]
+
+
+class UserCompletedHrsSinceLastWeek(Action):
+    def name(self):
+        return "action_user_completed_hrs"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        intervention_state = get_user_intervention_state(user_id)
+
+        current_time = datetime.datetime.now()
+
+        hrs_components = [Components.RELAPSE_DIALOG_HRS, Components.RELAPSE_DIALOG_RELAPSE,
+                          Components.RELAPSE_DIALOG_LAPSE]
+
+        for state in intervention_state:
+            if state.completed and state.intervention_component_name in hrs_components:
+                time_since_complete = relativedelta(current_time, state.last_time).days
+                if time_since_complete < 7:
+                    return [SlotSet('completed_hrs', 1)]
+
+        return [SlotSet('completed_hrs', 2)]
+
 
 class GetWeekNumber(Action):
     def name(self):
@@ -69,6 +96,7 @@ class GetWeekNumber(Action):
             return [FollowupAction('action_end_dialog')]
         return [SlotSet('week_number', str(exec_week))]
 
+
 class SelectPaGroup(Action):
     def name(self):
         return "action_select_pa_group"
@@ -81,6 +109,7 @@ class SelectPaGroup(Action):
         if steps_bool:
             return [SlotSet('pa_group', 1)]
         return [SlotSet('pa_group', 2)]
+
 
 class ValidateHowWentNonSmokeForm(FormValidationAction):
     def name(self) -> Text:
@@ -102,6 +131,7 @@ class ValidateHowWentNonSmokeForm(FormValidationAction):
 
         return {"how_went_non_smoke": value}
 
+
 class ValidateSpecificMomentsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_specific_moments_form'
@@ -121,6 +151,7 @@ class ValidateSpecificMomentsForm(FormValidationAction):
             return {"specific_moments": None}
 
         return {"specific_moments": value}
+
 
 class ValidateSmokedPreviousWeekForm(FormValidationAction):
     def name(self) -> Text:
@@ -142,6 +173,7 @@ class ValidateSmokedPreviousWeekForm(FormValidationAction):
 
         return {"smoked_previous_week": value}
 
+
 class ValidatePossibleSmokingSituationsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_possible_smoking_situations_form'
@@ -161,6 +193,7 @@ class ValidatePossibleSmokingSituationsForm(FormValidationAction):
             return {"possible_smoking_situations": None}
 
         return {"possible_smoking_situations": value}
+
 
 class ValidateHowWentPaForm(FormValidationAction):
     def name(self) -> Text:
@@ -182,6 +215,7 @@ class ValidateHowWentPaForm(FormValidationAction):
 
         return {"how_went_pa": value}
 
+
 class ValidateDifficultMomentsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_difficult_moments_form'
@@ -201,6 +235,7 @@ class ValidateDifficultMomentsForm(FormValidationAction):
             return {"difficult_moments": None}
 
         return {"difficult_moments": value}
+
 
 class ValidateRefreshPreviousWeekForm(FormValidationAction):
     def name(self) -> Text:
@@ -222,6 +257,7 @@ class ValidateRefreshPreviousWeekForm(FormValidationAction):
 
         return {"refresh_previous_week": value}
 
+
 class ValidateMetExpectationsForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_met_expectations_form'
@@ -242,6 +278,7 @@ class ValidateMetExpectationsForm(FormValidationAction):
 
         return {"met_expectations": value}
 
+
 class ValidateIfDoableForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_if_doable_form'
@@ -261,6 +298,7 @@ class ValidateIfDoableForm(FormValidationAction):
             return {"if_doable": None}
 
         return {"if_doable": value}
+
 
 class ValidateDifficultMomentsNextWeekForm(FormValidationAction):
     def name(self) -> Text:
@@ -303,6 +341,7 @@ class ValidateFreeReflect1Form(FormValidationAction):
 
         return {"free_reflect_1": value}
 
+
 class ValidateFreeReflect2Form(FormValidationAction):
     def name(self) -> Text:
         return 'validate_free_reflect_2_form'
@@ -322,6 +361,7 @@ class ValidateFreeReflect2Form(FormValidationAction):
             return {"free_reflect_2": None}
 
         return {"free_reflect_2": value}
+
 
 class ValidateFreeReflect3Form(FormValidationAction):
     def name(self) -> Text:
@@ -343,6 +383,7 @@ class ValidateFreeReflect3Form(FormValidationAction):
 
         return {"free_reflect_3": value}
 
+
 class ValidateFreeReflect4Form(FormValidationAction):
     def name(self) -> Text:
         return 'validate_free_reflect_4_form'
@@ -362,6 +403,7 @@ class ValidateFreeReflect4Form(FormValidationAction):
             return {"free_reflect_4": None}
 
         return {"free_reflect_4": value}
+
 
 class ValidateUserReady1Form(FormValidationAction):
     def name(self) -> Text:
@@ -383,6 +425,7 @@ class ValidateUserReady1Form(FormValidationAction):
 
         return {"user_ready_1": value}
 
+
 class ValidateUserReady2Form(FormValidationAction):
     def name(self) -> Text:
         return 'validate_user_ready_2_form'
@@ -402,6 +445,7 @@ class ValidateUserReady2Form(FormValidationAction):
             return {"user_ready_2": None}
 
         return {"user_ready_2": value}
+
 
 class ValidateUserReady3Form(FormValidationAction):
     def name(self) -> Text:
@@ -423,6 +467,7 @@ class ValidateUserReady3Form(FormValidationAction):
 
         return {"user_ready_3": value}
 
+
 class ValidateUserReady4Form(FormValidationAction):
     def name(self) -> Text:
         return 'validate_user_ready_4_form'
@@ -442,6 +487,7 @@ class ValidateUserReady4Form(FormValidationAction):
             return {"user_ready_4": None}
 
         return {"user_ready_4": value}
+
 
 class ValidateHowAreYou(FormValidationAction):
     def name(self) -> Text:

@@ -202,6 +202,10 @@ rules:
   - action: utter_look_forward_2
   - action: utter_look_forward_3
   - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_look_forward_5
   - action: utter_look_forward_5
   - action: utter_look_forward_6

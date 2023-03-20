@@ -137,7 +137,6 @@ rules:
 ## 4b Were there difficult moments?
 
 ## User answered 1
-## TODO Figure out how to show barchart from before
 - rule: No difficult moments
   condition:
     - active_loop: specific_moments_form
@@ -151,6 +150,10 @@ rules:
   - action: utter_look_forward_2
   - action: utter_look_forward_3
   - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_look_forward_5
   - action: utter_look_forward_5
   - action: utter_look_forward_6
@@ -159,7 +162,6 @@ rules:
   wait_for_user_input: false
 
 ## User answered 3
-## TODO Figure out how to show barchart from before
 - rule: Not sure if difficult moments
   condition:
     - active_loop: specific_moments_form
@@ -174,6 +176,10 @@ rules:
   - action: utter_look_forward_2
   - action: utter_look_forward_3
   - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_look_forward_5
   - action: utter_look_forward_6
   - action: possible_smoking_situations_form
@@ -542,6 +548,10 @@ rules:
   - action: utter_steps_next_week_2
   - action: utter_steps_next_week_3
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: utter_predict_difficult_moments_3
   - action: difficult_moments_next_week_form
@@ -567,6 +577,10 @@ rules:
   - action: utter_steps_next_week_2
   - action: utter_steps_next_week_3
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: utter_predict_difficult_moments_3
   - action: difficult_moments_next_week_form
@@ -589,6 +603,10 @@ rules:
   - action: utter_steps_next_week_2
   - action: utter_steps_next_week_3
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: utter_predict_difficult_moments_3
   - action: difficult_moments_next_week_form
@@ -610,6 +628,10 @@ rules:
   - action: utter_steps_next_week_2
   - action: utter_steps_next_week_3
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: utter_predict_difficult_moments_3
   - action: difficult_moments_next_week_form

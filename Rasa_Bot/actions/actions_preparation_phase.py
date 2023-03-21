@@ -97,7 +97,7 @@ class StartNextDialog(Action):
                               ComponentsTriggers.WATCH_VIDEO))
 
 
-class Schedule_Next_Prep_Phase(Action):
+class ScheduleNextPrepPhase(Action):
     """ reschedule the dialog for another time """
 
     def name(self) -> Text:

@@ -103,14 +103,36 @@ nlu:
 - intent: EXTERNAL_watch_video_dialog
   examples: |
     - EXTERNAL_watch_video_dialog
+### preparation phase
+- intent: EXTERNAL_trigger_preparation_introduction
+  examples: |
+    - "EXTERNAL_trigger_preparation_introduction"
 
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
     - "EXTERNAL_trigger_profile_creation"
 
-- intent: EXTERNAL_trigger_mental_contrasting
+- intent: EXTERNAL_trigger_medication_talk
   examples: |
-    - "EXTERNAL_trigger_mental_contrasting"
+    - "EXTERNAL_trigger_medication_talk"
+
+- intent: EXTERNAL_trigger_track_behavior
+  examples: |
+    - "EXTERNAL_trigger_track_behavior" 
+
+###
+
+- intent: EXTERNAL_trigger_cold_turkey
+  examples: |
+    - "EXTERNAL_trigger_cold_turkey"
+
+- intent: EXTERNAL_trigger_plan_quit_start
+  examples: |
+    - "EXTERNAL_trigger_plan_quit_start"
+
+- intent: EXTERNAL_trigger_future_self
+  examples: |
+    - "EXTERNAL_trigger_future_self"
 
 - intent: EXTERNAL_trigger_goal_setting
   examples: |
@@ -174,6 +196,8 @@ nlu:
   examples: |
     - "Oke"
     - "Ok"
+    - "Oks"
+    - "Oki"
 
 - intent: request_metadata
   examples: |

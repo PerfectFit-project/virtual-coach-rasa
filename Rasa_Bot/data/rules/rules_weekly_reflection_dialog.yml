@@ -224,7 +224,6 @@ rules:
   wait_for_user_input: false
 
 ## User answered 2 then 2
-## TODO Figure out how to leave dialog and come back to same part
 - rule: Difficult moments but did not smoke
   condition:
     - active_loop: smoked_previous_week_form
@@ -240,7 +239,6 @@ rules:
   wait_for_user_input: false
 
 ## User answered 2 then 3
-## TODO Figure out how to leave dialog and come back to same part
 - rule: Difficult moments but did not smoke
   condition:
     - active_loop: smoked_previous_week_form
@@ -276,8 +274,6 @@ rules:
   - active_loop: user_ready_1_form
   wait_for_user_input: false
 
-- rule: User ready, no possible smoking situations
-
     ## TODO Figure out how to handle splitting into groups, 88 excel file
 
 ## User responded 2, yes to smoking situations form
@@ -294,7 +290,6 @@ rules:
   - action: utter_look_forward_16
   - action: utter_look_forward_17
   - action: utter_look_forward_18
-  - action: utter_look_forward_19
   - action: user_ready_2_form
   - active_loop: user_ready_2_form
   wait_for_user_input: false
@@ -841,6 +836,7 @@ rules:
   - action: user_ready_4_form
   - active_loop: null
   - action: utter_predict_difficult_moments_16
+  - action: utter_predict_difficult_moments_17
   - action: utter_closing_1
   - action: utter_closing_2
   - action: utter_closing_3

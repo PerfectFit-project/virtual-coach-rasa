@@ -239,23 +239,45 @@ responses:
     - text: "Gefeliciteerd, de {week_number}e week van het Perfect Fit programma zit erop! 🎉🎉"
   utter_congratulate_3:
     - text: "Elke week die je afrondt is weer een stap verder. Daar mag je trots op zijn!"
+    - text: "Elke week die je achter de rug hebt is een prestatie. Daar mag je trots op zijn!"
+    - text: "Elke week die je afmaakt is een stap vooruit. Je mag daar trots op zijn!"
 
   # 2. Explanation Reflection
   utter_explain_reflection_1:
     - text: "Vandaag bespreken we hoe het deze week is gegaan met niet roken en meer bewegen."
+    - text: "Vandaag praten we over hoe het is gegaan met niet roken en meer bewegen deze week"
+    - text: "Vandaag kijken we naar hoe het ging met het niet roken en het bewegen deze week."
   utter_explain_reflection_2:
     - text: "⬅️ Terugkijken is belangrijk want het helpt je begrijpen wanneer het goed en
              minder goed lukt om te bewegen en niet te roken."
+    - text: "⬅️ Het is belangrijk om terug te kijken omdat je dan beter begrijpt wanneer het lukt
+             om te bewegen en niet te roken en wanneer het minder lukt."
+    - text: "⬅️ Als je terugkijkt, kun je beter zien wanneer het goed en minder goed gaat met
+             het bewegen en niet roken."
+    - text: "⬅️ Door terug te kijken, begrijp je beter wanneer het lukt en wanneer het
+             moeilijker is om te bewegen en niet te roken."
+    - text: "⬅️ Terugkijken maakt het mogelijk om beter te begrijpen wanneer het goed gaat
+             met het bewegen en niet roken en wanneer het minder goed gaat."
   utter_explain_reflection_3:
     - text: "Als je begrijpt wanneer het goed gaat wordt het makkelijker om vol te houden en
              je doelen te bereiken. En als je begrijpt wanneer het minder goed gaat, dan kun
              je daarvan leren zodat het de volgende keer anders kan."
+    - text: "Door te begrijpen wanneer het goed gaat, is het makkelijker om vol te houden en je
+             doelen te bereiken. Door te weten wanneer het minder goed gaat, kun je ervan leren
+             en het de volgende keer anders doen."
+    - text: "Door te begrijpen wanneer het goed gaat, wordt het makkelijker om je doelen te bereiken.
+             Als je weet wanneer het minder goed gaat, kun je daarvan leren en het volgende keer anders doen."
 
   # 3. How are you?
   utter_ask_how_are_you:
     - text: "Allereerst. Hoe gaat het nu met je?"
+    - text: "Hoe voel je je vandaag?"
+    - text: "Allereerst. Hoe is het met je?"
+    - text: "Hoe gaat het op dit moment met je?"
   utter_how_are_you_1:
     - text: "Bedankt voor het delen."
+    - text: "Dank je voor het vertellen."
+    - text: "Bedankt voor het laten"
 
   # 4. Reflection on Non-Smoking
   # 4a How did the non-smoking go?
@@ -274,6 +296,8 @@ responses:
     - text: "Dankjewel voor het delen. Mooi dat je dit weet te herkennen."
   utter_reflect_non_smoke_3:
     - text: "Oké 😐. Niet fantastisch maar het ging dus ook niet slecht."
+    - text: "Oké 😐. Het ging niet geweldig, maar het ging ook niet slecht."
+    - text: "Oké 😐. Het ging niet super, maar het ging dus ook niet slecht."
   utter_ask_free_reflect_2:
     - text: "Wat maakt dat niet-roken oké ging?"
   utter_reflect_non_smoke_4:
@@ -281,7 +305,14 @@ responses:
   utter_reflect_non_smoke_5:
     - text: "Vervelend om te horen 🙁."
   utter_reflect_non_smoke_6:
-    - text: "Stoppen met roken is niet makkelijk. Dat hoort erbij en je kunt ervan leren. Goed dat je de app weer hebt opgezocht."
+    - text: "Stoppen met roken is niet makkelijk. Dat hoort erbij en je kunt ervan leren. Goed dat je de app
+             weer hebt opgezocht."
+    - text: "Het is niet simpel om te stoppen met roken. Dat hoort erbij en je kunt erdoor groeien.
+             Fijn dat je de app weer hebt gevonden."
+    - text: "Stoppen met roken is geen makkelijk doel. Dat is onderdeel van het proces en je kunt ervan leren.
+             Goed dat je de app weer hebt opgestart."
+    - text: "Stoppen met roken is lastig. Dat hoort erbij en je kunt er van leren. Mooi dat je de app weer
+             hebt opgezocht."
 
   # 4b Were there difficult moments?
   utter_ask_specific_moments:
@@ -289,15 +320,47 @@ responses:
              Typ '1' voor nee. 
              Typ '2' voor ja. 
              Typ '3' als je het niet weet. "
+    - text: "Heb je de afgelopen week momenten gehad waarop je de drang om te roken moeilijk kon weerstaan? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
+    - text: "Was het afgelopen week moeilijk om niet te roken op sommige momenten? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
+    - text: "Ben je afgelopen week op bepaalde momenten in de verleiding gekomen om te roken? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
   utter_difficult_moments_1:
     - text: "Dat is mooi! 👍🏼"
+    - text: "Dat klinkt goed! 👍🏼"
+    - text: "Wat leuk om te horen! 👍🏼"
   utter_difficult_moments_2:
     - text: "Dat is niet erg."
+    - text: "Geen probleem."
+    - text: "Geen zorgen."
   utter_difficult_moments_3:
     - text: "Als er komende weken wel een moment is waarop het moeilijk is om niet te roken,
              typ dan het woord 'help' in het gesprek 🗨️. Ik help je dan door het moeilijke moment heen."
+    - text: "Mocht je de komende weken moeite hebben om niet te roken, typ dan 'help' in het gesprek 🗨️.
+             Ik ben er om je te ondersteunen."
+    - text: "Laat me weten als je in de komende weken een moment hebt waarop je hulp nodig hebt om
+             niet te roken. Typ dan 'help' in het gesprek 🗨️."
+    - text: "Als je merkt dat het de komende weken moeilijk wordt om niet te roken, laat het me dan
+             weten door 'help' te typen in het gesprek 🗨️. Ik zal er zijn om je te helpen."
+    - text: "Mocht je het de komende weken lastig vinden om niet te roken, laat het me dan weten door
+             'help' te typen in het gesprek 🗨️. Ik zal er zijn om je te ondersteunen."
+    - text: "Als er de komende weken een moment komt waarop je hulp nodig hebt om niet te roken,
+             laat het me dan weten door 'help' te typen in het gesprek 🗨️.
+             Ik zal er zijn om je door het moeilijke moment heen te loodsen."
   utter_difficult_moments_4:
     - text: "Dat zal niet makkelijk geweest zijn maar het is begrijpelijk dat er soms moeilijke momenten war❤️‍🩹."
+    - text: "Het is begrijpelijk dat je soms moeilijke momenten hebt gehad ❤️‍🩹. Dat zal niet makkelijk zijn geweest."
+    - text: "Het is oké als je af en toe moeite hebt gehad ❤️‍🩹. Dat is begrijpelijk en normaal."
+    - text: "Het is normaal dat je soms moeilijke momenten hebt ❤️‍🩹. Het is begrijpelijk dat het niet altijd gemakkelijk is."
+    - text: "Het is begrijpelijk dat er soms moeilijke momenten zijn geweest ❤️‍🩹. Het is niet altijd eenvoudig om niet te roken."
+
   utter_ask_smoked_previous_week:
     - text: "Heb je afgelopen week gerookt? 
              Typ '1' als je wel zin had om te roken maar niet hebt gerook1️⃣. 
@@ -305,44 +368,129 @@ responses:
              Typ '3' als je op meerdere dagen hebt gerookt 3️⃣."
   utter_difficult_moments_5:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid."
+    - text: "Fijn dat je dit met me deelt! Bedankt dat je eerlijk bent."
+    - text: "Het is goed dat je erover praat! Bedankt voor je eerlijkheid."
+    - text: "Ik ben blij dat je open bent! Bedankt voor het delen."
+    - text: "Bedankt dat je dit deelt met me! Ik vind het fijn dat je eerlijk bent."
   utter_difficult_moments_6:
     - text: "Het is vervelend, maar wel heel logisch dat je nog zin hebt om te roken als je net bent gestopt."
+    - text: "Het is begrijpelijk dat je nog verlangt naar een sigaret na het stoppen."
+    - text: "Het is niet ongebruikelijk dat je nog steeds zin hebt om te roken na het stoppen."
+    - text: "Het is begrijpelijk dat je nog trek hebt in een sigaret na het stoppen."
+    - text: "Het is een normaal onderdeel van het stoppen met roken dat je nog steeds verlangt naar een sigaret."
   utter_difficult_moments_7:
     - text: "Heftige trek kan je soms overspoelen en dan weet je even niet hoe je kan omgaan met deze trek."
   utter_difficult_moments_8:
     - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt?"
   utter_difficult_moments_9:
     - text: "Eerst is het heel heftig, maar na een paar minuten wordt het vanzelf minder."
+    - text: "In het begin kan het overweldigend zijn, maar het wordt geleidelijk minder heftig na een paar minuten."
+    - text: "Het kan erg intens zijn in het begin, maar het gevoel zal afnemen na enkele minuten."
+    - text: "Hoewel het in eerste instantie hevig kan zijn, neemt de intensiteit geleidelijk af."
+    - text: "Het kan heftig beginnen, maar het gevoel zal afzwakken na een paar minuten."
   utter_difficult_moments_10:
-    - text: "Je kan erop vertrouwen dat de trek vanzelf weer minder wordt."
+    - text: "Je kan erop vertrouwen dat de trek vanzelf weer minder wordt ↘️."
+    - text: "De trek zal vanzelf afnemen, je kunt erop rekenen. ↘️"
+    - text: "Vertrouw erop dat de trek vanzelf minder wordt. ↘️"
+    - text: "De trek zal vanzelf minder worden, daar kun je op vertrouwen. ↘️"
+    - text: "Je hoeft je geen zorgen te maken, de trek zal vanzelf minder worden. ↘️"
+    - text: "Binnenkort zal de trek minder worden, je kunt erop vertrouwen. ↘️"
   utter_difficult_moments_11:
     - text: "Het kan je in de toekomst helpen om te begrijpen waarom je zin kreeg om te roken."
+    - text: "Door te begrijpen waarom je zin kreeg om te roken, kan je in de toekomst beter omgaan met deze behoefte."
+    - text: "Het begrijpen van de reden waarom je zin kreeg om te roken kan in de toekomst van pas komen."
+    - text: "Het begrijpen van waarom je zin kreeg om te roken kan je in de toekomst helpen."
   utter_difficult_moments_12:
     - text: "Daarom wil ik je wat vragen stellen over de situatie 📍 waarin je was toen je zin kreeg om te roken."
+    - text: "Om je beter te helpen, zou ik graag willen weten in welke situatie je zat toen je zin kreeg om te roken. 📍"
+    - text: "Ik zou graag meer willen weten over de situatie waarin je zat toen je de drang voelde om te roken. 📍"
   utter_difficult_moments_13:
     - text: "Denk terug aan een moment waarop je afgelopen week zin kreeg om te roken."
+    - text: "Herinner je een moment van afgelopen week waarop je zin had om te roken."
+    - text: "Probeer terug te denken aan een moment in de afgelopen week waarop je de behoefte voelde om te roken."
+    - text: "Ga terug naar een moment van afgelopen week waarin je de drang voelde om te roken."
+    - text: "Denk eens na over een specifiek moment van afgelopen week waarop je zin kreeg om te roken."
+    - text: "Kun je je een situatie van afgelopen week voorstellen waarin je zin had om te roken?"
 
   # 5. Look forward to new week
   utter_look_forward_1:
     - text: "⬅️ We hebben net besproken hoe de afgelopen week is gegaan."
+    - text: "Net hebben we besproken hoe de afgelopen week is verlopen. ⬅️"
+    - text: "We hebben zojuist besproken hoe het de afgelopen week met je is gegaan. ⬅️"
+    - text: "Net hebben we het gehad over hoe het de afgelopen week ging. ⬅️"
+    - text: "We hebben zojuist besproken hoe de afgelopen week is geweest. ⬅️"
+    - text: "Zojuist hebben we doorgenomen hoe het de afgelopen week met je ging. ⬅️"
   utter_look_forward_2:
     - text: "Elke week is verschillend. Komende week kan heel anders gaan of
              voelen dan afgelopen week, zelfs als je min of meer dezelfde dingen doet 🔀."
+    - text: "Geen enkele week is hetzelfde. Volgende week kan heel anders verlopen of
+             aanvoelen dan afgelopen week, zelfs als je min of meer dezelfde dingen doet. 🔀"
+    - text: "Elke week is anders. De komende week kan heel anders zijn of aanvoelen dan
+             afgelopen week, ook al doe je min of meer dezelfde dingen. 🔀"
+    - text: "Iedere week is uniek. De komende week kan heel anders verlopen of aanvoelen
+             dan afgelopen week, zelfs als je min of meer dezelfde dingen doet. 🔀"
+    - text: "Elke week is anders. De komende week kan heel anders verlopen of voelen
+             dan afgelopen week, zelfs als je min of meer dezelfde dingen onderneemt. 🔀"
   utter_look_forward_3:
     - text: "Het is daarom goed om ook vooruit te kijken naar komende wee➡️. Op deze
              manier ben je alvast voorbereid op wat er gaat komen."
+    - text: "Daarom is het verstandig om vooruit te kijken naar de komende week,
+             zodat je alvast voorbereid bent op wat er gaat gebeuren."
+    - text: "Het is slim om vooruit te kijken voor de komende week, zodat je
+             voorbereid bent op wat er gaat komen."
+    - text: "Door vooruit te kijken naar de komende week, kun je jezelf voorbereiden
+             op wat er gaat komen."
+    - text: "Het is aan te raden om alvast vooruit te denken naar volgende week, zodat
+             je niet voor verrassingen komt te staan"
+    - text: "Het is slim om vooruit te denken naar de volgende week, zodat je je kunt
+             voorbereiden op wat komen gaat."
   utter_look_forward_4:
     - text: "Eerder hebben wij gezien dat jij het in deze situaties moeilijk vond om niet te roken."
+    - text: "In het verleden hebben we gemerkt dat je het lastig vond om niet te roken in deze situaties."
+    - text: "We hebben eerder gemerkt dat het moeilijk voor je was om niet te roken in deze omstandigheden."
+    - text: "Eerder hebben we gemerkt dat je het moeilijk vond om niet te roken in deze situaties."
+    - text: "Het is ons opgevallen dat je het in het verleden moeilijk vond om niet te roken in deze omstandigheden."
+    - text: "We hebben eerder gezien dat je het lastig had om niet te roken in deze situaties."
   utter_look_forward_5:
     - text: "Denk nu eens na over wat je komende week gaat doen. Misschien ga je werken 💼, thuis klussen
              🛠️ of het huishouden doen 🧹. Misschien heb je een verjaardag 🎉, afspraak bij de kapper 💇‍♂️ 
              of andere bezoekjes 👥. Pak je agenda erbij als dat helpt 🗓️. Schrijf anders ergens op wat 
              je komende week gaat doen 🖊️."
+    - text: "Bedenk nu wat je volgende week gaat doen. Misschien ga je naar je werk 💼, thuis wat klussen
+             🛠️ of het huishouden doen 🧹. Misschien heb je een verjaardagsfeestje 🎉, afspraak bij de kapper
+             💇‍♂️ of andere afspraken 👥. Als je het handig vindt, kun je je agenda erbij pakken 🗓️.
+             Als dat niet zo is, kun je ergens anders opschrijven wat je volgende week gaat doen 🖊️."
+    - text: "Probeer nu te bedenken wat je komende week gaat doen. Misschien moet je werken 💼,
+             thuis wat klusjes opknappen 🛠️ of het huishouden doen 🧹. Misschien heb je een verjaardagsfeestje 🎉,
+             afspraak bij de kapper 💇‍♂️ of andere afspraken 👥. Je kunt je agenda erbij pakken om het makkelijker
+             te maken 🗓️. Zo niet, dan kun je opschrijven wat je volgende week gaat doen 🖊️."
+    - text: "Denk even na over wat je komende week op de planning hebt staan. Misschien moet je naar je werk 💼,
+             thuis klussen 🛠️ of het huishouden doen 🧹. Misschien heb je een verjaardag 🎉, afspraak bij de kapper 💇‍♂
+          ️ of andere afspraken 👥. Je kunt je agenda gebruiken om het overzichtelijker te maken 🗓️. Als je geen agenda hebt,
+             kun je het ook ergens anders opschrijven 🖊️."
+    - text: "Denk eens na over de activiteiten die je volgende week gepland hebt. Misschien ga je werken 💼,
+             thuis klussen 🛠️ of het huishouden doen 🧹. Misschien heb je een verjaardagsfeestje 🎉,
+             afspraak bij de kapper 💇‍♂️ of andere afspraken 👥. Als je het nodig hebt, kun je je agenda erbij nemen 🗓️.
+             Als dat niet zo is, kun je het opschrijven op een ander plekje 🖊️."
   utter_look_forward_6:
     - text: "Vergelijk nu wat je komende week gaat doen met de situaties waarin je het eerder moeilijk vond om niet te roken."
+    - text: "Bekijk de activiteiten die je komende week gepland hebt en vergelijk deze met de momenten waarop je het in het
+             verleden moeilijk vond om niet te roken."
+    - text: "Denk na over de momenten waarop je eerder moeite had om niet te roken en kijk of deze zich komende week weer kunnen voordoen."
+    - text: "Vergelijk de momenten waarop je het in het verleden moeilijk had om niet te roken met de geplande activiteiten voor komende week."
+    - text: "Kijk eens naar wat je volgende week van plan bent en bedenk of er momenten zijn waarop je het in het verleden lastig had om niet te roken."
   utter_ask_possible_smoking_situations:
     - text: "Als je dit zo vergelijkt, denk je dat er komende week moeilijke momenten gaan komen 🛑? Momenten waarop jij
              trek gaat krijgen in roken? 
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Als je deze vergelijking maakt, verwacht je dan dat er momenten zullen zijn waarop je graag wilt roken? 🛑 
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Als je deze vergelijking maakt, verwacht je dan dat er komende week uitdagingen zullen zijn waarop je behoefte hebt aan een sigaret? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Als je dit zo bekijkt, denk je dan dat er momenten zullen zijn waarop  je behoefte hebt aan een sigaret? 🛑
              Typ '1' voor nee. 
              Typ '2' voor ja. "
   utter_look_forward_7:
@@ -364,26 +512,107 @@ responses:
              bedacht. Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren. Je kan anders ook een
              foto maken van het papier en deze terugzoeken in je fotogalerij 📱."
   utter_look_forward_14:
-    - text: "Oké. Komende week wordt het soms misschien lastig om niet te roken. Knap dat je dit van jezelf weet en eerlijk zegt. "
+    - text: "Oké. Komende week wordt het soms misschien lastig om niet te roken. Knap dat je dit van
+             jezelf weet en eerlijk zegt. "
+    - text: "Goed om te horen dat je weet dat het komende week misschien lastig zal zijn om niet te roken.
+             Het is knap dat je hier eerlijk over bent."
+    - text: "Het is goed dat je inziet dat het komende week wel eens lastig kan worden om niet te roken.
+             Het is knap dat je hier eerlijk over bent."
+    - text: "Goed dat je beseft dat het komende week wellicht moeilijk zal zijn om niet te roken.
+             Het is belangrijk dat je dit van jezelf weet en er open over bent."
+    - text: "Het is goed dat je voor jezelf aangeeft dat het komende week soms lastig zal zijn om niet te roken.
+             Het is knap dat je hier eerlijk over bent."
+    - text: "Het is goed dat je je realiseert dat het komende week misschien niet altijd even makkelijk zal zijn
+             om niet te roken. Het is knap dat je hier open en eerlijk over bent."
   utter_look_forward_15:
     - text: "Het is handig om alvast te bedenken hoe je gaat zorgen dat je komende week niet rookt 🚭. "
+    - text: "Het is slim om alvast te bedenken hoe je ervoor gaat zorgen dat je komende week niet gaat roken 🚭."
+    - text: "Denk alvast na over hoe je ervoor gaat zorgen dat je komende week niet rookt 🚭. Dat kan heel handig zijn."
+    - text: "Het kan handig zijn om alvast te bedenken hoe je komende week gaat voorkomen dat je gaat roken 🚭."
+    - text: "Als je bedenkt hoe je ervoor gaat zorgen dat je komende week niet gaat roken 🚭, dan ben je goed voorbereid."
+    - text: "Het is verstandig om alvast te bedenken hoe je komende week gaat voorkomen dat je gaat roken 🚭."
+    - text: "Als je nu al bedenkt hoe je gaat zorgen dat je komende week niet rookt 🚭, dan kan dit je straks
+             helpen om niet te gaan roken."
   utter_look_forward_16:
     - text: "Door nu alvast een plan te maken hoef je op het moment zelf niet meer na te denken.
              Je hoeft dan alleen maar te doen wat je hebt bedacht 📓."
+    - text: "Als je nu alvast een plan maakt, hoef je op het moment zelf niet meer na te denken.
+             Dan weet je precies wat je moet doen 📓."
+    - text: "Als je vooraf een plan maakt, hoef je op het moment zelf niet meer na te denken.
+             Dat kan het makkelijker maken 📓."
+    - text: "Door van tevoren een plan te maken, hoef je niet meer na te denken op het moment zelf.
+             Dan weet je al wat je moet doen 📓."
+    - text: "Een plan maken vooraf kan ervoor zorgen dat je op het moment zelf niet meer hoeft na te denken.
+             Je hoeft dan alleen nog maar uit te voeren wat je bedacht hebt 📓."
+    - text: "Het kan erg handig zijn om vooraf een plan te maken.
+             Zo hoef je op het moment zelf niet meer na te denken en kun je gaan doen wat je hebt bedacht 📓."
+    - text: "Als je nu al bedenkt wat je gaat doen, hoef je op het moment zelf niet meer na te denken.
+             Dan kun je gewoon doen wat je hebt gepland 📓."
   utter_look_forward_17:
-    - text: "Een voorbeeld is: 'Wanneer ik trek krijg in roken vraag ik mijn Perfect Fit coach om hulp door 'help' te typen in het gesprek'. "
+    - text: "Een voorbeeld is: 'Wanneer ik trek krijg in roken vraag ik mijn Perfect Fit coach om hulp door
+             'help' te typen in het gesprek'. "
+    - text: "Hier is een voorbeeld: 'Als ik de behoefte voel om te roken, vraag ik mijn Perfect Fit coach om hulp
+             door 'help' te typen in ons gesprek'."
+    - text: "Een voorbeeld is: 'Als ik zin krijg om te roken, dan vraag ik mijn Perfect Fit coach om hulp door
+             'help' in te typen in ons gesprek'."
+    - text: "Hier is een voorbeeld: 'Als ik behoefte voel om te roken, dan stuur ik mijn Perfect Fit coach een
+             bericht met 'help' erin, zodat de coach mij kan helpen'."
+    - text: "Een voorbeeld van wat je kunt doen is: 'Als ik trek krijg in roken, vraag ik mijn Perfect Fit coach
+             om hulp door 'help' te typen in ons gesprek'."
+    - text: "Hier is een voorbeeld van wat je zou kunnen doen: 'Als ik zin krijg om te roken, dan vraag ik mijn
+             Perfect Fit coach om hulp door 'help' te typen in ons gesprek'."
   utter_look_forward_18:
     - text: "Een ander voorbeeld is: 'Ik ga voorkomen dat ik rook door een rondje te lopen en een familielid te bellen'."
-  utter_look_forward_19:
+    - text: "Hier is nog een voorbeeld: 'Als ik wil roken, dan ga ik een rondje lopen en bel ik een familielid om te
+             voorkomen dat ik ga roken'."
+    - text: "Een ander voorbeeld is: 'Om te voorkomen dat ik ga roken, loop ik een rondje en bel ik een familielid als
+             ik trek krijg om te roken'."
+    - text: "Hier is nog een voorbeeld van wat je kunt doen: 'Wanneer ik behoefte voel om te roken, dan loop ik een rondje
+             en bel ik een familielid om te voorkomen dat ik ga roken'."
+    - text: "Hier is nog een voorbeeld van hoe je het roken kunt voorkomen: 'Wanneer ik trek krijg om te roken,
+             dan loop ik een rondje en bel ik een familielid om te voorkomen dat ik ga roken'."
+    - text: "Nog een voorbeeld is: 'Als ik de behoefte voel om te roken, dan loop ik een rondje en bel ik een familielid
+             om te zorgen dat ik niet ga roken'."
+  utter_ask_user_ready_2:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week gaat doen als je zin
              krijgt om te roken. Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
-  utter_ask_user_ready_2:
-    - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
+    - text: "Schrijf met pen en papier op wat je gaat doen als je trek krijgt om te roken komende week.
+             Neem even de tijd om hierover na te denken. Typ 'klaar' als je klaar bent."
+    - text: "Schrijf op papier wat je gaat doen als je zin hebt om te roken volgende week.
+             Neem de tijd om na te denken en schrijf dan één of twee dingen op. Typ 'klaar' als je klaar bent."
+    - text: "Neem pen en papier en bedenk wat je gaat doen als je de drang voelt om te roken volgende week.
+             Schrijf één of twee dingen op en neem hier de tijd voor. Typ 'klaar' als je klaar bent."
+    - text: "Schrijf op wat je gaat doen als je de zin hebt om te roken komende week. Neem pen en papier en
+             noteer één of twee dingen. Neem de tijd om erover na te denken. Typ 'klaar' als je klaar bent."
+    - text: "Pak pen en papier en schrijf op wat je gaat doen als je de behoefte hebt om te roken volgende week.
+             Neem even de tijd om hierover na te denken en noteer dan één of twee dingen. Typ 'klaar' als je klaar bent."
   utter_look_forward_20:
-    - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je er op een moeilijk moment snel bij kan. Je kan het papier
-             bijvoorbeeld in het hoesje van je telefoon bewaren. Je kan anders ook een foto maken van het papier en deze terugzoeken in je fotogalerij 📱."
+    - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je er op een moeilijk moment snel bij kan.
+             Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren. Je kan anders ook een foto maken
+             van het papier en deze terugzoeken in je fotogalerij 📱."
+    - text: "Geweldig! Het is slim om je plan altijd in de buurt te hebben, voor het geval je het op een lastig
+             moment nodig hebt. Je kunt het papier bijvoorbeeld bewaren in het hoesje van je telefoon. 
+             Of je maakt een foto van het papier en zoekt deze later op in je fotogalerij 📷."
+    - text: "Goed! Het is handig om je plan bij de hand te hebben voor het geval je het snel nodig hebt.
+             Je kunt het papier bijvoorbeeld in het hoesje van je telefoon bewaren, of je maakt een foto
+             van het papier en slaat deze op in je fotogalerij 📸."
+    - text: "Fijn! Om ervoor te zorgen dat je altijd je plan bij de hand hebt wanneer je het nodig hebt,
+             kun je het papier bijvoorbeeld in het hoesje van je telefoon bewaren. Je kunt ook een foto maken
+             van het papier en deze later terugvinden in je fotogalerij 📷."
+    - text: "Geweldig! Het is handig om je plan altijd binnen handbereik te hebben, voor het geval dat je het
+             op een lastig moment nodig hebt. Je kunt het papier in het hoesje van je telefoon bewaren,
+             of je maakt een foto van het papier en slaat deze op in je fotogalerij 📱."
+    - text: "Super! Het is slim om je plan altijd bij je te hebben, zodat je er snel bij kunt als je het nodig hebt.
+             Je kunt het papier bijvoorbeeld in het hoesje van je telefoon bewaren,
+             of een foto maken van het papier en deze opslaan in je fotogalerij 📸."
+    - text: "Goed! Zorg ervoor dat je je plan altijd binnen handbereik hebt, voor het geval je het op een
+             lastig moment nodig hebt. Je kunt het papier in het hoesje van je telefoon bewaren,
+             of een foto maken van het papier en deze opslaan in je fotogalerij 📷."
   utter_look_forward_21:
     - text: "Met dit plan heb je nog meer kans dat het komende week lukt om niet te roken. "
+    - text: "Als je dit plan volgt, is de kans nog groter dat je komende week niet rookt."
+    - text: "Dit plan vergroot de kans dat je de komende week niet zult roken."
+    - text: "Dit plan vergroot je de kans om de komende week niet te roken."
 
   # 6. Reflection on physical activity
   # 6a Overview physical activity group 1
@@ -391,20 +620,61 @@ responses:
     - text: "⬅️ Laten wij nu terugkijken op je beweging van afgelopen week. Je kreeg elke dag een nieuw stappendoel 🦶🏼.
              Dit doel was aangepast op het aantal stappen dat je in de dagen daarvoor zette. Zo had je elke dag een persoonlijk 
              stappendoel die haalbaar en ook een beetje uitdagend was."
+    - text: "Laten we eens terugkijken naar je beweging van afgelopen week. Elke dag kreeg je een nieuw doel voor het aantal stappen 🦶🏼.
+             Dit doel werd aangepast op basis van de stappen die je de dagen ervoor had gezet.
+             Zo had je elke dag een persoonlijk stappendoel dat haalbaar en uitdagend was."
+    - text: "Laten we even terugkijken naar je bewegingsactiviteiten van afgelopen week. Elke dag kreeg je een nieuw stappendoel 🦶🏼.
+             Dit doel werd aangepast op basis van de stappen die je de voorgaande dagen had gezet.
+             Zo had je elke dag een persoonlijk stappendoel dat haalbaar en uitdagend was."
+    - text: "Laten we even terugkijken op je beweging van afgelopen week. Je kreeg elke dag een nieuw doel voor het aantal stappen 🦶🏼,
+             dat werd aangepast op basis van het aantal stappen dat je de dagen ervoor had gezet.
+             Hierdoor had je elke dag een persoonlijk stappendoel dat uitdagend en toch haalbaar was."
   utter_overview_group1_2:
     - text: "Dit is het overzicht van jouw gezette stappen en persoonlijk stappendoel van afgelopen week: " ## TODO Show step overview
+    - text: "Hier is een overzicht van het aantal stappen dat je de afgelopen week hebt gezet en je persoonlijke stappendoel: "
+    - text: "Bekijk hier je voortgang van afgelopen week: het aantal stappen dat je hebt gezet en je persoonlijke stappendoel: "
+    - text: "Hier zie je hoeveel stappen je hebt gezet en wat je persoonlijke stappendoel was voor de afgelopen week: "
+    - text: "Dit overzicht toont het aantal stappen dat je hebt gezet en je persoonlijke stappendoel van de afgelopen week: "
+    - text: "Bekijk hier je resultaten van afgelopen week: het aantal stappen dat je hebt gezet en je persoonlijke stappendoel: "
   utter_overview_group1_3:
     - text: "Je hebt op [insert number of days step goal was met] dagen je stappendoel gehaald." ## TODO Insert number of days
   utter_overview_group1_4:
     - text: "Fantastisch gedaan! 👏 Actiever worden is niet makkelijk. Knap dat je afgelopen week zo actief bent geweest."
+    - text: "Geweldig gedaan! 👏 Het is niet gemakkelijk om actiever te worden, dus het is fantastisch om te zien dat je
+             afgelopen week zo actief bent geweest."
+    - text: "Goed gedaan! 👏 Het is niet makkelijk om meer te bewegen, dus het is fantastisch om te zien dat je afgelopen
+             week zo actief bent geweest."
+    - text: "Geweldige prestatie! 👏 Actiever worden is een uitdaging, dus het is geweldig om te zien dat je afgelopen
+             week zo actief bent geweest."
+    - text: "Fantastisch werk! 👏 Het is niet eenvoudig om actiever te worden, dus het is goed om te zien dat je
+             afgelopen week zo actief bent geweest."
+    - text: "Super gedaan! 👏 Het is niet eenvoudig om actiever te worden, dus het is fantastisch om te zien dat
+             je afgelopen week zo actief bent geweest."
   utter_overview_group1_5:
     - text: "Meer bewegen is niet makkelijk. Toch ben jij op de meeste dagen lichamelijk actief geweest 🦶🏼."
+    - text: "Het is niet gemakkelijk om meer te bewegen, maar je bent er toch in geslaagd om op de meeste dagen fysiek actief te zijn 🦶🏼."
+    - text: "Het kan lastig zijn om meer te bewegen, maar je hebt het toch voor elkaar gekregen om op de meeste dagen actief te zijn 🦶🏼."
+    - text: "Meer bewegen is een uitdaging, maar je hebt het toch gedaan op de meeste dagen 🦶🏼."
+    - text: "Het is niet makkelijk om meer te bewegen, maar je bent op de meeste dagen wel lichamelijk actief geweest 🦶🏼."
+    - text: "Het is niet makkelijk om meer te bewegen, maar het is fantastisch om te zien dat je toch op de meeste dagen actief bent geweest 🦶🏼."
+    - text: "Meer bewegen kan lastig zijn, maar je hebt het voor elkaar gekregen om op de meeste dagen lichamelijk actief te zijn 🦶🏼."
   utter_overview_group1_6:
     - text: "Goed gedaan!"
+    - text: "Knap gedaan!"
+    - text: "Top gedaan!"
   utter_overview_group1_7:
     - text: "Actiever worden is niet makkelijk. Soms lukt het goed en soms wat minder goed 🦶🏼."
+    - text: "Meer bewegen is een uitdaging. Het gaat soms goed en soms minder goed 🦶🏼."
+    - text: "Actiever worden is niet gemakkelijk, dus het is normaal dat het soms minder goed gaat 🦶🏼."
+    - text: "Het kan moeilijk zijn om meer te bewegen, soms gaat het goed en soms minder goed 🦶🏼."
+    - text: "Het is begrijpelijk dat actiever worden niet altijd even makkelijk gaat, het is een proces 🦶🏼."
+    - text: "Meer bewegen kan een uitdaging zijn, maar vergeet niet dat elk stapje telt, ook als het soms wat minder goed gaat 🦶🏼."
   utter_overview_group1_8:
     - text: "Dat hoort erbij. Nieuwe week, nieuwe kansen. Hou vol!"
+    - text: "Het is begrijpelijk. Begin de nieuwe week met frisse moed en blijf volhouden!"
+    - text: "Geen zorgen, het is een proces. Je hebt nieuwe kansen deze week, blijf positief!"
+    - text: "Het kan gebeuren. Herpak jezelf en maak er een nieuwe week vol kansen van, blijf ervoor gaan!"
+    - text: "Dat is oké. Laat de afgelopen week achter je en kijk uit naar de nieuwe week. Blijf volhouden om je doel te bereiken!"
 
   # 6b Overview physical activity group 2
   utter_overview_group2_1:
@@ -414,19 +684,53 @@ responses:
   utter_overview_group2_2:
     - text: "Dit is het overzicht van jouw gezette stappen, persoonlijk stappendoel en intensieve bewegingsminuten
              van afgelopen week: " ## TODO Show step overview
+    - text: "Hier is een overzicht van de stappen die je hebt gezet, je persoonlijke stappendoel en het aantal
+             intensieve bewegingsminuten van de afgelopen week:"
+    - text: "Je kunt hier zien hoeveel stappen je hebt gezet, je persoonlijke stappendoel en hoeveel intensieve
+             bewegingsminuten je hebt gemaakt afgelopen week:"
+    - text: "Dit is een overzicht van jouw stappen, persoonlijk stappendoel en intensieve bewegingsminuten van de afgelopen week:"
+    - text: "Bekijk hier je stappen, persoonlijk stappendoel en intensieve bewegingsminuten van de afgelopen week:"
+    - text: "Een overzicht van je stappen, persoonlijk stappendoel en intensieve bewegingsminuten van afgelopen week vind je hier: "
   utter_overview_group2_3:
     - text: "Je hebt op [insert number of days step goal was met] dagen je stappendoel gehaald en [insert number of intensive PA minutes]
              minuten intensief bewogen." ## TODO Insert minutes
   utter_overview_group2_4:
     - text: "Fantastisch gedaan! 👏 Actiever worden is niet makkelijk. Knap dat je afgelopen week zo actief bent geweest.  "
+    - text: "Geweldig gedaan! 👏 Het is niet gemakkelijk om actiever te worden, dus petje af dat je afgelopen week zo actief bent geweest."
+    - text: "Knap gedaan! 👏 Actiever worden kan lastig zijn, dus het is knap dat je afgelopen week zo actief bent geweest."
+    - text: "Goed gedaan! 👏 Actiever worden vraagt om inzet en doorzettingsvermogen, dus het is fantastisch dat je afgelopen week zo actief bent geweest."
+    - text: "Wat goed! 👏 Actiever worden is een uitdaging, dus het is geweldig dat je afgelopen week zo actief bent geweest."
+    - text: "Je bent geweldig bezig! 👏 Actiever worden kan moeilijk zijn, dus het is fantastisch dat je afgelopen week zo actief bent geweest."
+    - text: "Applaus voor jou! 👏 Actiever worden vraagt om inzet, dus het is fantastisch dat je afgelopen week zo actief bent geweest."
   utter_overview_group2_5:
     - text: "Meer bewegen is niet makkelijk. Toch ben jij op de meeste dagen lichamelijk actief geweest 🦶🏼☀️. "
+    - text: "Meer bewegen is niet altijd makkelijk, maar je hebt het goed gedaan! 🦶🏼☀️ Je bent de meeste dagen
+             lichamelijk actief geweest."
+    - text: "Het is niet eenvoudig om meer te bewegen, maar jij hebt het voor elkaar gekregen!
+             🦶🏼☀️ De meeste dagen ben je lichamelijk actief geweest."
+    - text: "Op de meeste dagen ben je lichamelijk actief geweest, ondanks dat meer bewegen niet makkelijk is.
+             🦶🏼☀️ Dat is fantastisch!"
+    - text: "Je hebt het goed gedaan ondanks dat meer bewegen niet altijd even gemakkelijk is.
+             🦶🏼☀️ Op de meeste dagen ben je lichamelijk actief geweest en daar mag je trots op zijn!"
+    - text: "Het is knap dat je ondanks de uitdagingen toch op de meeste dagen lichamelijk actief bent geweest.
+             🦶🏼☀️ Meer bewegen is niet makkelijk, maar jij hebt het voor elkaar gekregen!"
   utter_overview_group2_6:
     - text: "Goed gedaan!"
+    - text: "Goed bezig!"
+    - text: "Knap gedaan!"
   utter_overview_group2_7:
     - text: "Actiever worden is niet makkelijk. Soms lukt het goed en soms wat minder goed 🦶🏼☀️. "
+    - text: "Meer bewegen kan uitdagend zijn en dat is oké! 🦶🏼☀️ Het ene moment gaat het goed, het andere moment minder goed."
+    - text: "Het is normaal dat actiever worden soms lastig is. 🦶🏼☀️ Soms gaat het goed en soms wat minder goed, en dat is oké."
+    - text: "Actiever worden is een uitdaging, maar geef niet op! 🦶🏼☀️ Soms gaat het goed en soms wat minder goed, en dat is normaal."
+    - text: "Het is begrijpelijk dat actiever worden niet altijd even makkelijk is. 🦶🏼☀️ Soms lukt het goed en soms wat minder goed, en dat is oké."
+    - text: "Meer bewegen is niet altijd eenvoudig, maar blijf volhouden! 🦶🏼☀️ Het ene moment gaat het goed, het andere moment wat minder goed, en dat is normaal."
+    - text: "Het kan een uitdaging zijn om actiever te worden, maar geef niet op! 🦶🏼☀️ Soms gaat het goed en soms wat minder goed, en dat is heel begrijpelijk."
   utter_overview_group2_8:
     - text: "Dat hoort erbij. Nieuwe week, nieuwe kansen. Hou vol!"
+    - text: "Soms gaat het niet zoals gepland, en dat is oké. 🤷‍♀️🤷‍♂️ Er staat een nieuwe week voor de deur, dus blijf volhouden!"
+    - text: "Het kan gebeuren dat het niet altijd lukt zoals je wilt. 🤷‍♀️🤷‍♂️ Maar maak je geen zorgen, er komt een nieuwe week aan met nieuwe kansen. Hou vol!"
+    - text: "Geef niet op als iets niet gaat zoals gepland. 🤷‍♀️🤷‍♂️ Nieuwe week, nieuwe kansen. Blijf volhouden!"
 
   #6c How did you think it went?
   utter_ask_how_went_pa:
@@ -437,17 +741,77 @@ responses:
              Typ '3' als het oké ging 😐. 
              Typ '4' als het niet zo goed ging 🙁. 
              Typ '5' als het slecht ging 😞. "
+    - text: "Wat vond je van je lichamelijke beweging van afgelopen week? Denk hierbij niet alleen aan wandelen of hardlopen,
+             maar ook aan andere activiteiten zoals huishoudelijke klusjes en sporten. 
+             Typ '1' als het heel goed ging 😄. 
+             Typ '2' als het goed ging 🙂. 
+             Typ '3' als het oké ging 😐. 
+             Typ '4' als het niet zo goed ging 🙁. 
+             Typ '5' als het slecht ging 😞. "
+    - text: "Laten we eens kijken naar je lichamelijke beweging van afgelopen week. Hoe ging het?
+             Denk hierbij aan alles wat je hebt gedaan, van sporten tot huishoudelijke taken. 
+             Typ '1' als het heel goed ging 😄. 
+             Typ '2' als het goed ging 🙂. 
+             Typ '3' als het oké ging 😐. 
+             Typ '4' als het niet zo goed ging 🙁. 
+             Typ '5' als het slecht ging 😞. "
+    - text: "Hoeveel beweging heb je afgelopen week gehad? Denk hierbij niet alleen aan wandelen of hardlopen,
+             maar ook aan andere activiteiten zoals sporten of het doen van klusjes in huis.
+             Typ '1' als het heel goed ging 😄. 
+             Typ '2' als het goed ging 🙂. 
+             Typ '3' als het oké ging 😐. 
+             Typ '4' als het niet zo goed ging 🙁. 
+             Typ '5' als het slecht ging 😞. "
+    - text: "Wat voor soort lichamelijke beweging heb je afgelopen week gedaan? Denk hierbij aan sporten, wandelen,
+             huishoudelijke taken en alles wat daartussenin zit.
+             Typ '1' als het heel goed ging 😄. 
+             Typ '2' als het goed ging 🙂. 
+             Typ '3' als het oké ging 😐. 
+             Typ '4' als het niet zo goed ging 🙁. 
+             Typ '5' als het slecht ging 😞. "
+    - text: "Hoe was jouw lichamelijke beweging van afgelopen week?
+             Bedenk hierbij dat beweging niet alleen gaat om wandelen of hardlopen,
+             maar ook om andere activiteiten zoals sporten en klusjes in huis.
+             Typ '1' als het heel goed ging 😄. 
+             Typ '2' als het goed ging 🙂. 
+             Typ '3' als het oké ging 😐. 
+             Typ '4' als het niet zo goed ging 🙁. 
+             Typ '5' als het slecht ging 😞."
   utter_ask_free_reflect_3:
     - text: "Mooi! 😊 Wat maakt dat het zo goed ging met bewegen?"
+    - text: "Goed gedaan! 😊 Wat denk jij dat heeft geholpen bij het actief zijn afgelopen week?"
+    - text: "Geweldig! 😊 Kun je bedenken waarom het zo goed ging met jouw beweging deze week?"
+    - text: "Fantastisch! 😊 Wat denk je dat jou heeft geholpen om zo actief te zijn afgelopen week?"
+    - text: "Geweldig gedaan! 😊 Wat denk je dat ervoor heeft gezorgd dat je zo goed bent geweest in bewegen deze week?"
   utter_ask_free_reflect_4:
     - text: "Oké 😐. Wat maakt dat het oké ging met bewegen?"
+    - text: "Begrijpelijk 😐. Wat denk je dat ervoor heeft gezorgd dat het 'oké' ging met bewegen deze week?"
+    - text: "Oké😐. Kun je bedenken waarom het oké ging met jouw beweging deze week?"
+    - text: "Oké 😐. Kun je bedenken waarom het niet zo actief was als je had gewild?"
+    - text: "Geen probleem 😐. Wat denk je dat jou heeft belemmerd om meer te bewegen afgelopen week"
+    - text: "Dat is begrijpelijk 😐. Wat denk je dat de reden was dat je niet zo actief bent geweest als je had gewild?"
   utter_how_went_1:
     - text: "Dankjewel voor het delen. Mooi dat je dit weet te vertellen."
+    - text: "Bedankt voor het delen. Fijn dat je open bent over je ervaringen."
+    - text: "Bedankt voor het delen! Wat goed dat je dit kan vertellen. "
   utter_how_went_2:
     - text: "Vervelend om te horen 🙁."
+    - text: "Dat is jammer om te horen 🙁."
+    - text: "Dat is niet leuk om te horen 🙁"
+    - text: "Wat vervelend 🙁."
+    - text: "Wat vervelend om te horen 🙁."
   utter_how_went_3:
     - text: "Lichamelijk actiever worden is niet makkelijk. Op sommige momenten gaat het makkelijker dan op andere momenten.
              Dat hoort erbij en je kunt ervan leren. Goed dat je de app weer hebt opgezocht."
+    - text: "Bewegen kan soms een uitdaging zijn, en dat is oké. Het is goed dat je de app weer hebt opgepakt"
+    - text: "Het is begrijpelijk dat het soms lastig is om actief te zijn. Het belangrijkste is dat je ervan leert
+             en de app weer hebt opgestart."
+    - text: "Lichamelijk actiever worden is niet altijd even eenvoudig. Het is goed dat je de app weer hebt gevonden
+             en blijft proberen."
+    - text: "Het is begrijpelijk dat het niet altijd even gemakkelijk is om meer te bewegen. Het belangrijkste is dat je
+             blijft proberen en dat je de app weer hebt geopend."
+    - text: "Beweging kan soms lastig zijn, maar blijf je best doen. Het is goed dat je de app weer hebt geopend en blijft proberen."
+    - text: "Het is normaal dat het soms moeilijk is om meer te bewegen. Het is goed dat je de app weer hebt opgestart en niet opgeeft."
 
   #6d Were there difficult moments?
   utter_ask_difficult_moments:
@@ -455,51 +819,147 @@ responses:
              Typ '1' voor nee. 
              Typ '2' voor ja. 
              Typ '3' als je het niet weet. "
+    - text: "Heb je afgelopen week momenten gehad waarop het lastig was om te bewegen? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
+    - text: "Was het afgelopen week soms moeilijk om actief te zijn? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
+    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte omin beweging te komen? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
+    - text: "Heb je momenten gehad waarop je afgelopen week het lastig vond om te gaan bewegen? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
+    - text: "Waren er momenten afgelopen week waarop het niet zo makkelijk was om in beweging te komen? 🛑
+             Typ '1' voor nee. 
+             Typ '2' voor ja. 
+             Typ '3' als je het niet weet. "
   utter_difficult_moments_pa_1:
     - text: "Dat is mooi! 👍🏼"
+    - text: "Geweldig! 👍🏼"
+    - text: "Fantastisch! 👍🏼"
+    - text: "Super! 👍🏼"
+    - text: "Fijn om te horen! 👍🏼"
+    - text: "Dat is top! 👍🏼"
   utter_difficult_moments_pa_2:
     - text: "Dat is niet erg. "
+    - text: "Geen probleem."
+    - text: "Dat geeft niet."
+    - text: "Het is oké."
+    - text: "Niet erg hoor."
+    - text: "Geen zorgen."
   utter_difficult_moments_pa_3:
     - text: "Als er komende weken wel een moment is waarop het moeilijk is om in beweging te komen,
              typ dan het woord 'help' in het gesprek 🗨️. Ik help je dan door het moeilijke moment heen. "
+    - text: "Mocht het de komende weken lastig worden om in beweging te komen, typ dan gerust het woord
+             'help' in het gesprek 🗨️. Ik sta voor je klaar om je door het moeilijke moment heen te helpen."
+    - text: "Als je de komende weken merkt dat het lastiger is om in beweging te komen, aarzel dan niet om
+             'help' in te typen in het gesprek 🗨️. Ik ben er om je te ondersteunen."
+    - text: "Indien je de komende weken een moment hebt waarop het lastiger is om te bewegen, laat het me
+             weten door het woord 'help' in te typen 🗨️. Samen kunnen we ervoor zorgen dat je toch in beweging komt."
+    - text: "Als er de komende weken een moment is waarop het lastiger is om te bewegen, laat het me dan weten door
+             'help' in te typen 🗨️. Ik help je graag om weer in beweging te komen."
+    - text: "Mocht je de komende weken merken dat het lastiger wordt om in beweging te komen, twijfel dan niet
+             om 'help' in te typen in het gesprek 🗨️. Ik ben er om je te helpen."
+    - text: "Als er de komende weken momenten zijn waarop het lastig is om in beweging te komen, laat het me
+             dan weten door het woord 'help' in te typen 🗨️. Samen kunnen we op zoek gaan naar manieren om
+             meer in beweging te komen."
   utter_difficult_moments_pa_4:
     - text: "Lastig maar moeilijke momenten horen erbij. "
+    - text: "Iedereen heeft wel eens momenten waarop het moeilijk is om meer te bewegen."
+    - text: "Het is begrijpelijk dat het niet altijd makkelijk is om in beweging te komen."
+    - text: "Wees niet te hard voor jezelf, moeilijke momenten zijn normaal."
+    - text: "Het is normaal dat het af en toe moeilijk is, blijf gemotiveerd en houd vol!"
   utter_difficult_moments_pa_5:
     - text: "Door vaker te kijken naar situaties 📍 waarin je geen zin hebt om in beweging te komen,
              kun je leren patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een
              volgende keer dat je in die situatie zit. "
+    - text: "Door te kijken naar momenten waarop je geen zin had om te bewegen, kun je patronen ontdekken."
+    - text: "Je kunt leren van situaties waarin je geen zin had om in beweging te komen door er bewust bij stil te staan."
+    - text: "Door vaker stil te staan bij momenten waarop je niet gemotiveerd was om te bewegen, kun je patronen herkennen
+             en hiervan leren."
+    - text: "Het is goed om te kijken naar situaties waarin je geen zin had om te bewegen, zodat je deze situaties in de
+             toekomst beter kunt aanpakken."
+    - text: "Het kan helpen om bewust stil te staan bij situaties waarin je geen zin had om te bewegen, zodat je met deze
+             situaties in de toekomst beter om kunt gaan."
   utter_difficult_moments_pa_6:
     - text: "Wij hebben dit eerder deze week al gedaan dus ik geef jou de keuze."
+    - text: "We hebben dit al eerder besproken, dus jij mag kiezen wat je wilt doen"
+    - text: "Deze vraag hebben we al eens behandeld. Wat wil je nu doen?"
   utter_ask_refresh_previous_week:
     - text: "Typ '1' als je wel graag nogmaals terugkijkt naar je moeilijke situaties van afgelopen week 🛑. 
              Typ '2' als het niet nodig is om nog een keer terug te kijken op je moeilijke situaties van afgelopen week 🙅‍♂️."
+    - text: "Als je behoefte hebt om nogmaals terug te kijken naar je moeilijke situaties van afgelopen week, typ dan '1'. Anders kun je '2' typen."
+    - text: "Wil je nog een keer terugkijken op je moeilijke situaties van afgelopen week? Typ dan '1'. Als dat niet nodig is, kun je '2' typen."
+    - text: "Laat me weten of je nogmaals wilt terugkijken op je moeilijke situaties van afgelopen week. Typ '1' als dat het geval is, of typ '2' als dat niet nodig is."
+    - text: "Heb je de behoefte om nog eens terug te kijken naar je moeilijke situaties van afgelopen week? Typ '1'. Zo niet, dan kun je '2' typen."
+    - text: "Laten we de keuze aan jou overlaten. Typ '1' als je terug wilt kijken op je moeilijke situaties van afgelopen week. Typ anders '2' om verder te gaan"
   utter_ask_met_expectations:
     - text: "Was het specifiek deze week moeilijk in om beweging te komen of gaat bewegen in het algemeen minder goed dan je zou willen? 
+             Typ '1' als het vooral afgelopen week moeilijk ging. 
+             Typ '2' als bewegen over het algemeen minder goed gaat dan je zou willen.   "
+    - text: "Heeft afgelopen week meer moeite gekost dan normaal om in beweging te komen? 
+             Typ '1' als het vooral afgelopen week moeilijk ging. 
+             Typ '2' als bewegen over het algemeen minder goed gaat dan je zou willen.   "
+    - text: "Is bewegen in het algemeen een uitdaging voor jou of was het vooral afgelopen week lastig?
              Typ '1' als het vooral afgelopen week moeilijk ging. 
              Typ '2' als bewegen over het algemeen minder goed gaat dan je zou willen.   "
   utter_type_1_or_2_difficult_moments:
     - text: "Typ 1 of 2 om aan te geven of bewegen nu even wat minder makkelijk ging of dat het vaker niet gaat"
   utter_difficult_moments_pa_7:
     - text: "Hoe vervelend ook, het kan dus gebeuren dat in beweging komen even niet lukt.  "
+    - text: "Soms gaat het even niet zoals je wilt en dat kan gebeuren. /Het kan voorkomen dat het
+             niet altijd is gelukt om in beweging te komen, dat is normaal."
+    - text: "Soms is het lastig om in beweging te komen, maar dat is geen reden om op te geven."
   utter_difficult_moments_pa_8:
     - text: "Wees dus niet te hard voor jezelf ❤️. Daardoor kun je je rot voelen en dan krijg je minder zin om te gaan."
+    - text: "Wees lief voor jezelf ❤️. Te hard zijn voor jezelf kan ervoor zorgen dat je je rot voelt en dan krijg je minder zin om te gaan bewegen."
+    - text: "Vergeet niet om vriendelijk te zijn voor jezelf ❤️. Te kritisch zijn kan je een slecht gevoel geven en je motivatie om te bewegen verminderen."
+    - text: "Wees niet te streng voor jezelf ❤️. Als je te hard bent voor jezelf, kun je je slechter voelen en minder gemotiveerd zijn om te bewegen."
+    - text: "Onthoud dat het oké is als het niet perfect gaat ❤️. Wees vriendelijk voor jezelf en geef jezelf de ruimte om te groeien en te leren."
+    - text: "Blijf vriendelijk voor jezelf ❤️. Dit kan je helpen gemotiveerd te blijven en het meer bewegen op de lange termijn vol te houden."
   utter_difficult_moments_pa_9:
     - text: "En je kunt het ook positief bekijken: er zijn momenten geweest dat je wel in beweging kwam. Dat is heel goed! 🙂"
+    - text: "Laten we de focus leggen op de momenten waarop het wel gelukt is om in beweging te komen. Dat is al een mooie prestatie! 😊"
+    - text: "Probeer te onthouden dat er ook momenten waren waarop het wél lukte om te bewegen. Dat geeft aan dat je het kunt! 💪🏼"
+    - text: "Vergeet niet dat er ook momenten waren waarop het wel goed ging met bewegen. Probeer daarop te focussen en de motivatie terug te vinden. 🏃‍♂️"
+    - text: "Het is belangrijk om niet alleen te kijken naar de momenten waarop het niet lukte om te bewegen. Er zijn namelijk ook momenten geweest waarop het wel goed ging. 🌞"
+    - text: "Probeer je te focussen op de momenten waarop het wel lukte om in beweging te komen. Dat zijn de momenten waarop je vooruitgang boekt en daar mag je trots op zijn! 🎉"
+    - text: "Het is begrijpelijk dat het niet altijd lukt om in beweging te komen, maar vergeet niet dat er ook momenten waren waarop het wél lukte. Richt je op die momenten en gebruik ze als motivatie om door te gaan! 💪"
   utter_difficult_moments_pa_10:
     - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen zin hebt om in beweging te komen."
+    - text: "Door te begrijpen waarom je geen zin had om te bewegen, kun je manieren bedenken om hier beter mee om te gaan."
+    - text: "Door bewust te zijn van de momenten waarop het moeilijk is om in beweging te komen, kun je hier beter mee omgaan."
   utter_difficult_moments_pa_11:
     - text: "Daarom wil ik je wat vragen stellen over situaties 📍 waarin het moeilijk was om in beweging te komen."
+    - text: "Ik zou graag wat meer willen weten over de momenten waarop je het lastig vond om in beweging te komen."
+    - text: "Om je beter te kunnen helpen, is het fijn om te weten in welke situaties het lastig was om in beweging te komen."
+    - text: "Om je verder te kunnen helpen, zou ik graag willen weten in welke situaties je het moeilijk vond om in beweging te komen."
   utter_difficult_moments_pa_12:
     - text: "Denk terug aan één moment deze week dat het niet lukte om in beweging te komen."
+    - text: "Probeer terug te denken aan één specifiek moment van afgelopen week waarin het moeilijk was om in beweging te komen."
 
   # 7. Look forward to new week
   # 7a Steps next week
   utter_steps_next_week_1:
     - text: "⬅️ We hebben net besproken hoe de afgelopen week is gegaan met bewegen en of er momenten waren
              waarop je het moeilijk vond om in beweging te komen. "
+    - text: "Zojuist hebben we gesproken over jouw beweging van afgelopen week en of je wel eens momenten hebt gehad waarop het lastig was om in beweging te komen"
+    - text: "We hebben het zojuist gehad over hoe het afgelopen week met jouw beweging ging en of er momenten waren waarop het wat moeilijker was om in beweging te komen."
+    - text: "We hebben net besproken hoe het afgelopen week ging met jouw beweging en of er momenten waren waarop het lastig was om in beweging te komen."
+    - text: "We hebben zojuist besproken hoe het afgelopen week ging met jouw beweging en of er momenten waren waarop het moeilijk was om in beweging te komen."
   utter_steps_next_week_2:
     - text: "Ook voor het bewegen is het slim om alvast vooruit te kijken naar komende week ➡️. 
              Op deze manier ben je voorbereid op wat er gaat komen.  "
+    - text: " Op deze manier ben je voorbereid op wat er gaat komen./Het kan ook handig zijn om alvast vooruit te kijken naar de komende week als het gaat om bewegen➡️."
+    - text: "Zo kun je jezelf voorbereiden op wat er komen gaat./ Het is ook verstandig om vooruit te kijken naar de komende week als het gaat om bewegen ➡️. Zo kun je plannen maken en ervoor zorgen dat je voldoende beweging krijgt."
+    - text: "Door ook vooruit te kijken naar het bewegen voor de komende week ➡️, kun je ervoor zorgen dat je op tijd begint met plannen en jezelf voorbereidt op mogelijk moeilijkere momenten."
+    - text: "Het is ook een goed idee om vooruit te kijken naar het bewegen voor de komende week ➡️. Op die manier kun je jezelf uitdagen en ervoor zorgen dat je aan je doelen werkt. "
   utter_steps_next_week_3:
     - text: "Je krijgt komende week elke dag weer een persoonlijk stappendoel aangepast op jouw eerdere stappen 🦶🏼.
              Het stappendoel wordt elke dag een beetje uitdagender. Zo kom je een stapje dichterbij je lange-termijn doel:
@@ -508,18 +968,35 @@ responses:
   # 7b Group 2: Gets advice to increase PA intensity
   utter_increase_intensity_1:
     - text: "Afgelopen week heb jij heel veel stappen gezet. Indrukwekkend! Echt heel knap gedaan! 👏 Hou dit vol!"
+    - text: "Wat goed zeg, vorige week heb je echt veel stappen gezet! Ik vind het heel knap van je, ga zo door! 👍"
+    - text: "Geweldig! Je hebt vorige week veel stappen gezet, dat is heel indrukwekkend. Blijf zo doorgaan! 💪"
+    - text: "Je hebt echt heel veel stappen gezet afgelopen week, dat is heel knap! Ga zo door met deze inspanning. 👏"
+    - text: "Ik ben onder de indruk, vorige week heb je enorm veel stappen gezet. Geweldig! Blijf zo gemotiveerd! 💯"
+    - text: "Fantastisch gedaan, vorige week heb je ontzettend veel stappen gezet. Dat is echt indrukwekkend. Blijf volhouden! 👌"
+    - text: "Je hebt vorige week zoveel stappen gezet, dat is echt geweldig! Goed bezig, blijf zo doorgaan met deze gezonde gewoonte. 👏"
   utter_increase_intensity_2:
     - text: "Ik denk dat je er klaar voor bent om wat intensiever te gaan bewegen ☀️. Dus, de tijd dat je intensief
              beweegt en je hartslag flink omhoog gaat per week te verhogen ❤️. Dat kan door bijvoorbeeld te zwemmen 🏊, 
              hardlopen 🏃, fietsen 🚴 of een andere sport te doen 🏋️⚽🏀🎾. "
+    - text: "Ik denk dat je er klaar voor bent om je lichaam wat meer uit te dagen met intensievere activiteiten ☀️. Dus de tijd dat je intensief beweegt en je hartslag flink omhoog gaat per week te verhogen❤️. Je kan bijvoorbeeld gaan zwemmen 🏊, hardlopen 🏃, fietsen 🚴 of een andere sport gaan doen 🏋️⚽🏀🎾."
+    - text: "Het lijkt me dat je klaar bent om een stapje intensiever te gaan bewegen ☀️. Misschien kun je proberen om wat meer intensieve activiteiten te doen die je hartslag flink verhogen ❤️, zoals zwemmen 🏊, hardlopen 🏃, fietsen 🚴 of een andere sport beoefenen 🏋️⚽🏀🎾 ."
+    - text: "Ik denk dat het tijd is om wat meer intensieve activiteiten toe te voegen aan je bewegingsdoelen ☀️. Heb je er ooit aan gedacht om te zwemmen 🏊, hardlopen 🏃, fietsen 🚴 of een andere sport te beoefenen 🏋️⚽🏀🎾 om je hartslag flink omhoog te laten gaan ❤️?"
+    - text: "Het lijkt erop dat je nu klaar bent voor wat meer uitdaging in het bewegen ☀️. Wat denk je ervan om wat meer tijd te besteden aan intensieve activiteiten die je harslag flink omhoog brengen ❤️, zoals zwemmen 🏊, hardlopen 🏃, fietsen 🚴 of een andere sport te beoefenen 🏋️⚽🏀🎾?"
   utter_increase_intensity_3:
     - text: "Zo zal je je fitter gaan voelen en zal je conditie verbeteren. Dit helpt je om je lange-termijn doel te behalen:
              {long_term_pa_goal}"
   utter_increase_intensity_4:
     - text: "Wanneer je meer of intensiever gaat bewegen is het wel belangrijk om dit langzaam op te bouwen. Anders kan dat leiden tot blessures 🩹."
+    - text: "Het is wel belangrijk om langzaam te beginnen wanneer je meer of intensiever gaat bewegen, anders loop je het risico op blessures 🩹."
+    - text: "Voorkom blessures 🩹 door wel langzaam op te bouwen wanneer je meer of intensiever gaat bewegen."
+    - text: "Als je meer of intensiever gaat bewegen, is het wel verstandig om dit rustig op te bouwen om blessures 🩹 te voorkomen."
+    - text: "Wanneer je meer of intensiever gaat bewegen, is het belangrijk om dit geleidelijk op te bouwen om blessures 🩹 te voorkomen."
+    - text: "Voorkom blessures 🩹 door wel stap voor stap meer of intensiever te gaan bewegen, bouw dit langzaam op. "
   utter_increase_intensity_5:
     - text: "Als je te snel te intensief gaat bewegen kan het ook zorgen dat je na een paar keer geen zin
              meer hebt en helemaal stopt met bewegen. Dat willen wij natuurlijk voorkomen. "
+    - text: "Als je te snel en te intensief begint met bewegen, kan dat ook ervoor zorgen dat je na een paar keer geen motivatie meer hebt en helemaal stopt. Dat willen we natuurlijk voorkomen."
+    - text: "Het is belangrijk om niet te snel en te intensief te beginnen met bewegen, omdat je anders na een paar keer misschien geen zin meer hebt en helemaal stopt. Dit willen we natuurlijk voorkomen."
   utter_increase_intensity_6:
     - text: "Ik stel dus voor dat je komende week naast je stappen ook minimaal [insert previous goal intensive minutes
              + 15 minutes with a maximum of 150 minutes] intensief gaat bewegen.  "
@@ -527,32 +1004,81 @@ responses:
     - text: "Zie jij dit zitten? 
              Typ '1' voor ja. 
              Typ '2' voor nee. "
+    - text: "Lijkt dit iets voor jou?
+             Typ '1' voor ja. 
+             Typ '2' voor nee. "
+    - text: "Zou je dit willen proberen?
+             Typ '1' voor ja. 
+             Typ '2' voor nee. "
   utter_increase_intensity_7:
     - text: "Helemaal goed 👍🏼."
+    - text: "Helemaal prima 👍🏼."
   utter_increase_intensity_8:
     - text: "Het is niet verplicht om intensiever te gaan bewegen."
+    - text: "Je hoeft niet per se intensiever te gaan bewegen."
+    - text: "Je bent niet verplicht om intensiever te bewegen."
+    - text: "Het is geen verplichting om intensiever te gaan bewegen."
+    - text: "Intensiever bewegen is niet verplicht."
   utter_increase_intensity_9:
     - text: "Je beweegdoel blijft hetzelfde als vorige week. Hou vol wat je nu doet, je bent heel goed op weg naar een actiever en fitter leven!"
+    - text: "Je beweegdoel blijft hetzelfde als vorige week. Ga zo door, je bent heel goed bezig om een actiever en fitter leven te leiden!"
   utter_increase_intensity_10:
     - text: "Mooi 👍🏼."
+    - text: "Fantastisch 👍🏼."
+    - text: "Perfect👍🏼."
+    - text: "Wat goed👍🏼."
   utter_increase_intensity_11:
     - text: "Hieronder zie je een voorbeeld van verschillende sporten en hoe intensief deze sporten zijn: "
+    - text: "Kijk hieronder voor een voorbeeld van verschillende sporten en hun intensiteit"
+    - text: "Hieronder vind je een voorbeeld van verschillende sporten en hun intensiteit"
+    - text: "Bekijk hieronder verschillende sporten en hun intensiteit als voorbeeld"
+    - text: "Zie hieronder een voorbeeld van verschillende sporten en hun intensiteit"
+    - text: "Hieronder vind je een overzicht van verschillende sporten en hoe intensief ze zijn"
+    - text: "Neem hieronder een kijkje naar een voorbeeld van verschillende sporten en hun intensiteit"
   utter_increase_intensity_12:
     - text: "Alle lichamelijke activiteiten die onder te tekst 'matig intensief' of 'zwaar intensief' staan op het plaatje zijn goed.
              Dat zijn bijvoorbeeld balsporten zoals voetballen ⚽, basketballen 🏀 of tennissen 🎾,
              maar ook wielrennen 🚴, touwtje springen of zwemmen  🏊. "
+    - text: "Alle activiteiten die onder 'matig intensief' of 'zwaar intensief' vallen op het plaatje zijn goed. Denk aan balsporten zoals voetbal ⚽, basketbal 🏀 en tennis 🎾, maar ook wielrennen 🚴, touwtjespringen en zwemmen 🏊."
+    - text: "Balsporten zoals voetbal ⚽, basketbal 🏀 en tennis 🎾 zijn voorbeelden van matig of zwaar intensieve activiteiten die goed zijn. Andere activiteiten zijn bijvoorbeeld wielrennen 🚴, touwtjespringen en zwemmen 🏊."
+    - text: "Activiteiten die als 'matig intensief' of 'zwaar intensief' worden aangegeven op het plaatje zijn goed. Denk bijvoorbeeld aan balsporten zoals voetbal ⚽, basketbal 🏀 en tennis 🎾, of aan wielrennen 🚴, touwtjespringen en zwemmen 🏊."
+    - text: "Als een activiteit op het plaatje als 'matig intensief' of 'zwaar intensief' wordt aangegeven, dan is het goed voor je. Voorbeelden zijn balsporten zoals voetbal ⚽, basketbal 🏀 en tennis 🎾, maar ook wielrennen 🚴, touwtjespringen en zwemmen 🏊."
+    - text: "Balsporten zoals voetbal ⚽, basketbal 🏀 en tennis 🎾 vallen onder 'matig intensief' of 'zwaar intensief' op het plaatje en zijn daarom goed. Ook wielrennen 🚴, touwtjespringen en zwemmen 🏊 zijn goede activiteiten."
+    - text: "Matig of zwaar intensieve activiteiten op het plaatje zijn goed, zoals balsporten zoals voetbal ⚽, basketbal 🏀 en tennis 🎾, of andere activiteiten zoals wielrennen 🚴, touwtjespringen en zwemmen 🏊."
   utter_increase_intensity_13:
     - text: "Wil je weten of je intensief genoeg aan het bewegen bent? Houd dan je adem 💨 en hartslag ❤️ in de gaten."
+    - text: "Benieuwd of je intensief genoeg aan het bewegen bent? Houd dan je ademhaling en hartslag in de gaten!"
+    - text: "Wil je weten of je voldoende intensief beweegt? Let dan op je ademhaling en hartslag!"
+    - text: "Ben je benieuwd of je bewegingsactiviteit intensief genoeg is? Houd dan je ademhaling en hartslag in de gaten!"
+    - text: "Benieuwd of je bewegingsactiviteiten intensief genoeg zijn? Houd dan je ademhaling en hartslag in de gaten!"
   utter_increase_intensity_14:
     - text: "Wanneer je hartslag omhoog gaat en je sneller gaat ademen waardoor het lastiger wordt om een gesprek te hebben, dan beweeg je intensief."
+    - text: "Als je hartslag versnelt en je sneller begint te ademen waardoor praten moeilijk wordt, ben je intensief aan het bewegen."
+    - text: "Wanneer je hartslag toeneemt en je ademhaling versnelt, waardoor praten lastiger wordt, betekent dit dat je intensief aan het bewegen bent."
+    - text: "Als je merkt dat je hartslag omhoog gaat en je ademhaling versnelt, waardoor het moeilijker wordt om te praten, dan ben je flink aan het bewegen."
+    - text: "Wanneer je hartslag verhoogt en je ademhaling versnelt, zodat praten lastiger wordt, dan ben je op een intensieve manier aan het bewegen."
+    - text: "Als je hartslag stijgt en je ademhaling sneller wordt, waardoor het moeilijker is om te praten, dan ben je bezig met intensieve beweging."
+    - text: "Wanneer je hartslag omhoog gaat en je sneller begint te ademen, wat het moeilijk maakt om te praten, dan ben je intensief aan het bewegen."
   utter_increase_intensity_15:
     - text: "Laten wij nu een plan maken voor hoe jij komende week naast je dagelijkse stappendoel ook [intensity minutes for this week]
              minuten intensief gaat bewegen ⏱️." ## TODO get minutes for this week
   utter_increase_intensity_16:
     - text: "Zoals ik eerder zei is het het belangrijk om langzaam op te bouwen 🐌. Als je een keer meer wilt doen is dat geen probleem.
              Maar let er wel op dat je niet te veel, te snel doet. Het is beter om iedere dag ietsje meer te doen dan in één  keer heel veel."
+    - text: "Zoals ik eerder aangaf, is het belangrijk om rustig op te bouwen 🐌. Het is prima om af en toe een tandje bij te zetten, maar wees voorzichtig dat je niet te veel hooi op je vork neemt. Dagelijks iets meer doen is beter dan in één keer te veel."
+    - text: "Zoals ik al eerder benadrukte, is het belangrijk om geleidelijk te starten 🐌. Het is oké om af en toe wat extra's te doen, maar pas op dat je niet te snel te veel doet. Het is beter om elke dag een beetje meer te doen dan in één keer te veel te willen."
+    - text: "Zoals eerder gezegd, is het belangrijk om rustig op te bouwen 🐌. Als je een keer meer wilt doen is dat oké, maar let erop dat je niet te veel, te snel wilt. Het is beter om dagelijks een beetje meer te doen dan in één keer heel veel te willen doen."
+    - text: "Zoals ik al eerder zei, is het belangrijk om langzaam te beginnen 🐌. Als je een keer meer wilt doen is dat geen probleem, maar wees voorzichtig dat je niet te veel in één keer doet. Het is beter om dagelijks iets meer te doen dan in één keer te veel te willen doen."
   utter_increase_intensity_17:
     - text: "Het is handig om je plan op te schrijven. 🖊️ Pak pen en papier en schrijf op: 
+             1. Welke intensieve beweging of sport ga jij komende week doen (bijvoorbeeld hardlopen, voetballen, touwtje springen, wielrennen)?"
+    - text: "Schrijf je doelen op! 🖊️ Haal een pen en papier tevoorschijn en schrijf op:
+             1. Wat voor intensieve beweging of sport ga je komende week doen? (bijvoorbeeld hardlopen, voetballen, touwtje springen, wielrennen)"
+    - text: "Zet je plannen op papier! 🖊️ Pak een pen en een stuk papier en schrijf op:
+             1. Welke vorm van intensieve beweging ga je deze week doen? (bijvoorbeeld hardlopen, voetballen, touwtje springen, wielrennen)"
+    - text: "Maak een plan en schrijf het op! 🖊️ Pak een pen en papier en schrijf op:
+             1. Welke intensieve lichaamsbeweging ga jij komende week doen? (bijvoorbeeld hardlopen, voetballen, touwtje springen, wielrennen)"
+    - text: "Noteer je plan! 🖊️ Haal een pen en papier tevoorschijn en schrijf op:
              1. Welke intensieve beweging of sport ga jij komende week doen (bijvoorbeeld hardlopen, voetballen, touwtje springen, wielrennen)?"
   utter_increase_intensity_18:
     - text: "2. Hoe lang ga je dit doen? Je kan de [insert intensity minutes intensity minutes for this week] minuten bijvoorbeeld
@@ -560,82 +1086,221 @@ responses:
              Anders heb je alsnog niet zoveel voordeel van je beweging. " ##TODO get minutes for the week
   utter_increase_intensity_19:
     - text: "3. Wanneer ga je de intensieve beweging of sport doen? "
+    - text: "3. Op welk moment van de week ga je de intensieve beweging of sport doen?"
+    - text: "3. Wanneer staat de intensieve beweging of sport op de planning?"
+    - text: "3. Wanneer plan je om de intensieve beweging of sport uit te voeren?"
+    - text: "3. Op welke dag ga je de intensieve beweging of sport doen?"
   utter_increase_intensity_20:
     - text: "4. Waar ga je dit doen? "
   utter_increase_intensity_21:
     - text: "5. Ga je dit met iemand samen doen of alleen? "
+    - text: "5. Ga je de beweging alleen doen of samen met iemand anders? "
+    - text: "5. Ben je van plan om de intensieve beweging alleen te doen of samen met iemand anders?"
+    - text: "5. Doe je deze beweging alleen of ben je van plan om iemand mee te nemen?"
+    - text: "5. Weet je iemand om samen met jou de activiteit te doen of doe je deze alleen?"
   utter_ask_have_equipment:
     - text: "6. Heb je alle spullen voor je intensieve beweging of moet je eerst nog iets halen?"
+    - text: "6. Zijn alle dingen die je nodig hebt voor de intensieve beweging aanwezig of moet je nog iets halen?"
+    - text: "6. Heb je alle spullen die je nodig hebt voor de intensieve beweging of moet je nog iets halen?"
+    - text: "6. Heb je alles wat je nodig hebt voor de intensieve beweging of moet je nog iets halen of kopen?"
   utter_increase_intensity_22:
     - text: "Mooi. Nu heb je concrete beweegdoelen voor komende week. "
+    - text: "Goed gedaan! Je hebt nu duidelijke beweegdoelen voor de komende week."
+    - text: "Geweldig, je hebt nu duidelijke doelen voor je beweging voor de aankomende week."
+    - text: "Fantastisch, je hebt nu specifieke bewegingsdoelen voor de komende week."
+    - text: "Perfect, je hebt nu concrete doelen voor jouw lichaamsbeweging voor de komende week."
+    - text: "Super, je hebt nu duidelijke doelen voor jouw bewegingsdoelen voor de aankomende week."
+    - text: "Uitstekend, je hebt nu duidelijke beweegdoelen voor de komende week."
   utter_increase_intensity_23:
     - text: "Een goede voorbereiding is het halve werk! ✔"
+    - text: "Een goede voorbereiding is al de helft van het werk! ✔️"
+    - text: "Een goede voorbereiding brengt je dichterbij je doelen! ✔️"
+    - text: "Een goede voorbereiding is erg belangrijk voor succes! ✔️"
 
   # 7c Will there be difficult moments this week?
   utter_predict_difficult_moments_1:
     - text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen." ##TODO show graph
+    - text: "Zoals eerder gezien, zijn dit de situaties waar jij moeite mee hebt 📍. In deze situaties vond jij het moeilijk om actief te worden"
+    - text: "Zoals we eerder hebben besproken, zijn dit jouw uitdagende situaties 📍. Je vond het in deze situaties moeilijk om actief te zijn"
+    - text: "We hebben eerder gezien dat dit jouw lastige situaties zijn 📍. In deze situaties was het voor jou moeilijk om in beweging te komen."
+    - text: "We hebben al eerder gezien dat dit jouw uitdagende momenten zijn 📍. Je vond het in deze situaties moeilijk om in beweging te komen."
+    - text: "Zoals we eerder hebben gezien, zijn dit de situaties die jij lastig vindt 📍. In deze situaties vond je het moeilijk om actief te worden."
   utter_predict_difficult_moments_2:
     - text: "Denk zoals eerder na over wat je komende week gaat doen. Niet alleen qua beweging, maar alles wat je komende week gaat doen.
              Pak je agenda er weer bij als dat helpt 🗓️. Of pak het blaadje waar je eerder je activiteiten voor komende week op schreef 🖊️. "
+    - text: "Denk opnieuw na over wat je de komende week gaat doen, niet alleen qua beweging, maar alles wat er op de planning staat. Gebruik je agenda als hulpmiddel 🗓️, of het papiertje waarop je eerder je activiteiten voor de week hebt genoteerd 🖊️."
+    - text: "Bekijk opnieuw wat je deze week gaat doen, niet alleen qua beweging, maar met alles wat er gepland staat. Gebruik je agenda als referentie als het helpt 🗓️, of bekijk het stuk papier waarop je eerder je weekactiviteiten hebt opgeschreven 🖊️."
+    - text: "Bedenk opnieuw wat je deze week gaat doen, niet alleen op het gebied van beweging, maar met alles wat op de planning staat. Als je het handig vindt, gebruik dan je agenda 🗓️ of bekijk het papier waarop je eerder je weekactiviteiten hebt opgeschreven 🖊️."
+    - text: "Neem opnieuw de tijd om te bedenken wat je de komende week gaat doen, niet alleen op het gebied van beweging, maar met alles wat er gepland staat. Gebruik je agenda als hulpmiddel als dat nodig is 🗓️, of kijk naar het papiertje waarop je eerder je weekactiviteiten hebt opgeschreven 🖊️."
+    - text: "Denk opnieuw na over wat je komende week gaat doen, niet alleen qua beweging, maar met alles wat er op de agenda staat. Pak je agenda erbij als je dat helpt 🗓️, of gebruik het papier waarop je eerder je weekactiviteiten hebt opgeschreven 🖊️."
+    - text: "Bedenk opnieuw wat je deze week gaat doen, niet alleen qua beweging, maar met alles wat er gepland staat. Gebruik je agenda als dat helpt 🗓️, of kijk naar het papier waarop je eerder je weekactiviteiten hebt genoteerd 🖊️."
   utter_predict_difficult_moments_3:
     - text: "Vergelijk wat je komende week gaat doen met de situaties waarin je het eerder moeilijk vond om in beweging te komen."
+    - text: "Kijk eens goed naar je planning voor komende week en vergelijk deze met de situaties waarin je eerder moeite had om in beweging te komen."
+    - text: "Ga voor jezelf na of er activiteiten op je planning staan die vergelijkbaar zijn met de situaties waarin je het eerder moeilijk vond om te bewegen."
+    - text: "Probeer de activiteiten die je komende week gaat doen te vergelijken met de situaties waarin het eerder lastig was om in beweging te komen."
+    - text: "Neem even de tijd om te bedenken of er activiteiten op je planning staan vergelijkbaar met situaties waarin je het eerder moeilijk vond om te bewegen."
+    - text: "Denk eens na over of de activiteiten die je komende week gaat doen vergelijkbaar zijn met situaties waarin je het eerder moeilijk vond om in beweging te komen."
+    - text: "Bekijk je planning voor komende week en kijk of er situaties zijn waarin je het lastig denkt te krijgen om in beweging te komen, zoals je eerder hebt ervaren."
   utter_ask_difficult_moments_next_week:
     - text: "Als je dit zo vergelijkt, denk je dat er komende week moeilijke momenten gaan komen 🛑?
              Momenten waarop jij het lastig gaat vinden om in beweging te komen? 
              Typ '1' voor nee. 
              Typ '2' voor ja. "
+    - text: "Na het vergelijken van je activiteiten en eerdere moeilijke situaties, denk je dat er momenten kunnen zijn waarop het lastig gaat zijn om in beweging te komen?
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Nu je je activiteiten voor komende week hebt vergeleken met eerdere moeilijke situaties, verwacht je dat er momenten zullen zijn waarop je het lastig vindt om in beweging te komen?
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Op basis van je vergelijking, denk je dat er momenten zullen zijn komende week waarop je het moeilijk zult hebben om in beweging te komen?
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Heb je na het vergelijken van je activiteiten voor komende week met eerdere moeilijke situaties, momenten gevonden waarop je het misschien lastig gaat vinden om in beweging te komen?
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Kijkend naar de vergelijking van je activiteiten voor komende week met eerdere moeilijke situaties, denk je dat er momenten zullen zijn waarop het moeilijk zal zijn om in beweging te komen?
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
+    - text: "Nu je je activiteiten voor komende week hebt vergeleken met eerdere moeilijke situaties, zie je dan  momenten waarop je het lastig gaat hebben om in beweging te komen?
+             Typ '1' voor nee. 
+             Typ '2' voor ja. "
   utter_predict_difficult_moments_4:
     - text: "Geweldig! 😊"
+    - text: "Fantastisch! 😃"
+    - text: "Dat is goed nieuws! 😁"
+    - text: "Super! 🎉"
   utter_predict_difficult_moments_5:
     - text: "Zelfs als je geen moeilijke momenten voorspelt is handig om te bedenken hoe je het komende week gaat volhouden om te bewegen."
+    - text: "Ook al zie je geen moeilijke momenten aankomen, is het goed om te bedenken hoe je de komende week gemotiveerd blijft om te bewegen."
+    - text: "Zelfs als je geen moeilijke momenten verwacht, kan het goed zijn om te bedenken hoe je de komende week gemotiveerd blijft om te bewegen."
+    - text: "Het kan geen kwaad om alvast te bedenken hoe je de komende week gemotiveerd blijft om te blijven bewegen, ook als je geen moeilijke momenten verwacht."
   utter_predict_difficult_moments_6:
     - text: "Door nu een plan te maken ben je goed voorbereid op een actieve nieuwe week 📓."
+    - text: "Met een plan ben je goed voorbereid op een week vol beweging! 🏋️‍♀️"
+    - text: "Het maken van een plan zorgt ervoor dat je klaar bent voor een nieuwe week vol beweging! 🚶‍♂️"
+    - text: "Door nu een plan te maken, ben je goed voorbereid op een week vol beweging! 💪"
+    - text: "Door nu een plan te maken, ga je een actieve nieuwe week tegemoet! 🤸‍♂️"
   utter_predict_difficult_moments_7:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week nieuw of opnieuw gaat doen om in beweging
              te komen en je beweegdoelen te halen.  "
+    - text: "Schrijf op wat jij komende week kunt doen om actief te blijven en je beweegdoelen te behalen."
+    - text: "Schrijf 1 of 2 dingen op die je de komende week wilt doen om in beweging te komen en je doelen te halen."
+    - text: "Maak een lijst van nieuwe of herhaalde activiteiten die je komende week kunt doen om in beweging te komen en je doelen te bereiken."
+    - text: "Zet op papier welke acties je komende week gaat ondernemen om actief te blijven en je beweegdoelen te behalen."
+    - text: "Bedenk 1 of 2 dingen die je komende week kunt doen om jezelf in beweging te krijgen en schrijf deze op. Zo kun je jouw beweegdoelen halen!"
   utter_predict_difficult_moments_8:
     - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
+    - text: "Je zou bijvoorbeeld kunnen opschrijven: 'Ik ga deze week elke avond 20 minuten yoga doen om te ontspannen en te bewegen.'"
+    - text: "Bedenk iets wat je al een tijdje wilde proberen, zoals 'Ik ga deze week voor het eerst een online dansles volgen om mijn hartslag omhoog te krijgen en te genieten van beweging.'"
+    - text: "Schrijf op wat je leuk vindt om te doen: 'Komende week ga ik op zondagochtend met vrienden voetballen in het park.'"
+    - text: "Maak het specifiek: 'Ik ga deze week 3 keer 30 minuten hardlopen in het park om mijn conditie te verbeteren.'"
+    - text: "Kies voor iets wat gemakkelijk in je dagelijkse routine past, zoals: 'Elke ochtend ga ik 10 minuten touwtje springen voordat ik naar mijn werk ga.'"
   utter_predict_difficult_moments_9:
     - text: "Een ander voorbeeld is: 'Komende week zet ik opnieuw mijn hardloopschoenen bij de deur zodat ik meteen ga als ik terug kom van werk.'"
+    - text: "Een andere idee is om komende week na het avondeten een wandeling te maken van 20 minuten."
+    - text: "Een andere mogelijkheid is om komende week een fietsrit te maken naar je werk in plaats van met de auto te gaan."
   utter_ask_user_ready_3:
     - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent."
+    - text: "Wanneer je dit hebt gedaan, typ dan 'klaar' om verder te gaan."
+    - text: "Ben je klaar om verder te gaan? Typ 'klaar'!"
+    - text: "Wanneer je klaar bent, kun je verder gaan door 'klaar' te typen."
+    - text: "Laat me weten wanneer je klaar bent door 'klaar' te typen."
+    - text: "Typ 'klaar' als je er klaar voor bent om verder te gaan."
+    - text: "Zodra je klaar bent, kun je verder gaan door 'klaar' te typen."
   utter_predict_difficult_moments_10:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je altijd even kan terugkijken wat je had bedacht.
              Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren.
              Je kan anders ook een foto maken van het papier en deze terugzoeken in je fotogalerij 📱."
+    - text: "Goed bezig! Zorg ervoor dat je je plan ergens bij de hand hebt, zodat je altijd weet wat je moet doen. Zo kan je bijvoorbeeld het papier in je hoesje van je telefoon bewaren of er een foto van maken zodat je dit altijd terug kan vinden in je fotogalerij 📱. "
   utter_predict_difficult_moments_11:
     - text: "Oké. Komende week wordt het soms misschien lastig om in beweging te komen. Knap dat je dit van jezelf weet en eerlijk zegt."
+    - text: "Het is goed dat je eerlijk bent over mogelijke uitdagingen komende week."
+    - text: "Het is goed dat je je bewust bent van de uitdagingen die deze week met zich mee kan brengen."
+    - text: "Het is goed dat je van jezelf weet dat het komende week soms lastig kan worden om in beweging te komen. Knap dat je dit eerlijk zegt. "
   utter_predict_difficult_moments_12:
     - text: "Het is handig om alvast te bedenken hoe je gaat zorgen dat je komende week je beweegdoelen haalt."
+    - text: "Laten we samen nadenken over hoe je ervoor kunt zorgen dat je je beweegdoelen haalt komende week."
+    - text: "Het is goed om alvast een manier te bedenken om je beweegdoelen komende week te behalen."
+    - text: "Om je doelen te behalen, is het slim om nu alvast na te denken over hoe je komende week actief kunt blijven."
+    - text: "Laten we een plan bedenken om ervoor te zorgen dat je komende week je beweegdoelen behaalt."
   utter_predict_difficult_moments_13:
     - text: "Door nu alvast een plan te maken hoef je op het moment zelf niet meer na te denken. Je hoeft dan alleen maar te doen wat je hebt bedacht 📓."
+    - text: "Een plan maakt het makkelijker om in beweging te komen. Je hoeft niet meer te bedenken wat je gaat doen, dat heb je al gedaan."
+    - text: "Door een plan te maken ben je beter voorbereid op moeilijke momenten. Je weet dan wat je moet doen om toch in beweging te komen."
+    - text: "Met een plan hoef je niet meer na te denken op het moment dat je in beweging moet komen. Dat scheelt weer energie!"
+    - text: "Een plan kan je helpen om gemotiveerd te blijven. Het is fijn om te weten wat je gaat doen en waarom je het doet."
   utter_predict_difficult_moments_14:
     - text: "Een voorbeeld is: 'Komende week ga ik elke dag 10 minuten wandelen tijdens de lunchpauze'."
+    - text: "Een idee kan zijn om tijdens je lunchpauze 10 minuten te gaan wandelen, zodat je even in beweging komt."
+    - text: "Een suggestie is om komende week je fiets te pakken in plaats van de auto voor kortere afstanden."
+    - text: "Een idee is om tijdens het televisiekijken te gaan wandelen op de loopband of te fietsen op een hometrainer."
   utter_predict_difficult_moments_15:
     - text: "Een ander voorbeeld is: 'Ik ga lopend of met de fiets boodschappen doen'."
+    - text: "Een extra voorbeeld: 'Ik ga elke avond na het eten een korte wandeling maken om mijn beweegdoelen te halen'."
+    - text: "Een andere idee kan zijn: 'Ik ga twee keer per week meedoen aan een groepsles in de sportschool'."
+    - text: "Een andere optie: 'Ik ga elke dag de trap nemen in plaats van de lift'."
+    - text: "Nog een mogelijkheid: 'Ik ga op mijn vrije dag een lange wandeling maken in de natuur'."
   utter_ask_user_ready_4:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week gaat doen om te zorgen dat je actief bent en blijft.
              Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
+    - text: "Schrijf even kort op wat je komende week gaat doen om in beweging te blijven. Het hoeft niet ingewikkeld te zijn. Typ 'klaar' als je klaar bent."
+    - text: "Pak pen en papier en schrijf op welke activiteiten je gaat doen om actief te blijven komende week. Zorg dat het haalbare doelen zijn en het liefst ook leuk om te doen. Typ 'klaar' als je klaar bent."
+    - text: "Wat ga jij komende week doen om actief te blijven? Schrijf het op papier zodat je het niet vergeet en je jezelf eraan kunt herinneren. Typ 'klaar' als je klaar bent."
+    - text: "Denk even na over wat je deze week gaat doen om actief te blijven. Schrijf je ideeën op en houdt het bij de hand. Zo kun je altijd even terugkijken en jezelf eraan herinneren. Typ 'klaar' als je klaar bent."
   utter_predict_difficult_moments_16:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je er op een moeilijk moment snel bij kan.
              Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren.
              Je kan anders ook een foto maken van het papier en deze terugzoeken in je fotogalerij 📱."
+    - text: "Goed gedaan! Door je plan bij de hand te houden, kan je jezelf eraan herinneren wat je wilde doen om actief te blijven."
+    - text: "Geweldig! Als je je plan op een zichtbare plek hangt, kan je jezelf eraan herinneren om actief te blijven, zelfs op dagen dat het moeilijk lijkt."
   utter_type_1_2_difficult_moments:
     - text: "Typ 1 of 2 om aan te geven of je denkt dat er komende week moeilijke momenten gaan zijn"
+  utter_predict_difficult_moments_17:
+    - text: "Met dit plan heb je nog meer kans dat het komende week lukt om je beweegdoelen te halen. "
+    - text: "Het hebben van een plan vergroot de kans dat je deze week actief blijft en je beweegdoelen haalt."
+    - text: "Met dit plan ben je goed op weg om deze week actief te zijn en je beweegdoelen te behalen."
+    - text: "Door vooraf na te denken, sta je sterker om je beweegdoelen te halen deze week."
+    - text: "Door dit plan te maken, vergroot je de kans om je beweegdoelen te behalen komende week. "
 
   # 8. Closing
   utter_closing_1:
     - text: "⬅️ Wij hebben net teruggekeken op afgelopen week en besproken hoe het is gegaan met niet-roken en bewegen."
+    - text: "We hebben zojuist de afgelopen week geëvalueerd en gekeken hoe het ging met niet-roken en bewegen."
+    - text: "Terugblikkend op afgelopen week hebben we besproken hoe het ging met niet-roken en bewegen."
+    - text: "We hebben net besproken hoe het afgelopen week is gegaan met niet-roken en bewegen."
+    - text: "Zojuist hebben we de afgelopen week geanalyseerd en bekeken hoe het ging met niet-roken en bewegen."
+    - text: "We hebben het net gehad over afgelopen week en besproken hoe het ging met niet-roken en bewegen."
+    - text: "Net hebben we teruggekeken op afgelopen week en de voortgang besproken op het gebied van niet-roken en bewegen."
   utter_closing_2:
     - text: "Wij hebben ook alvast vooruit gekeken naar komende week en een plan gemaakt die je gaat helpen niet te roken en in beweging te komen ➡️."
+    - text: "Samen hebben we een plan opgesteld om ervoor te zorgen dat je de komende week actief blijft en niet rookt ➡️."
+    - text: "We hebben ook een plan gemaakt om je te helpen de komende week actief te blijven en niet te roken ➡️."
+    - text: "En we hebben een plan opgesteld om je te helpen de komende week actief te blijven en niet te roken ➡️."
   utter_closing_3:
     - text: "Dit zijn goede en belangrijke stappen gezet om te zorgen dat jij kunt blijven volhouden en je doelen kunt halen. Goed gedaan! 👏"
+    - text: "Super gedaan! Met deze stappen maak je het mogelijk om door te gaan en je doelen te behalen."
+    - text: "Top gedaan! Het is geweldig om te zien dat je blijft werken aan je doelen en zo je doelen kunt halen."
+    - text: "Goed gedaan! Je zet hele goede stappen om door te gaan en je doelen te bereiken."
+    - text: "Geweldig werk! Door deze stappen te zetten, help je jezelf om door te blijven gaan en je doelen te bereiken."
   utter_closing_4:
     - text: "Wij spreken elkaar binnenkort weer."
+    - text: "We praten snel weer bij."
   utter_closing_5:
     - text: "Weet dat ik er altijd voor je ben als je tussendoor een oefening wilt doen of hulp nodig hebt."
+    - text: "Je kunt op mij rekenen als je tussendoor hulp nodig hebt bij het bereiken van je doelen."
+    - text: "Aarzel niet om mij te benaderen als je extra ondersteuning nodig hebt bij het uitvoeren van je plan."
+    - text: "Ik sta altijd klaar om je te helpen bij het behalen van je doelen, dus aarzel niet om mij te benaderen."
+    - text: "Weet dat ik er voor je ben als je extra motivatie nodig hebt om je plan uit te voeren."
+    - text: "Voel je vrij om contact op te nemen als je extra oefeningen wilt doen of vragen hebt."
   utter_closing_6:
     - text: "Ik geloof in jou. Zet hem op komende week! 💪🏼"
+    - text: "Ik weet zeker dat je het kunt. Veel succes volgende week! 💪🏼"
+    - text: "Ik heb er alle vertrouwen in dat je het gaat halen. Go for it! 💪🏼"
+    - text: "Komende week gaat het je lukken, ik geloof in je! 💪🏼"
+    - text: "Jij kunt dit, ik sta achter je. Zet hem op! 💪🏼"
+    - text: "Ik ben ervan overtuigd dat je je doelen gaat halen komende week. Keep up the good work! 💪🏼"
+    - text: "Laat je niet ontmoedigen, blijf ervoor gaan. Ik steun je 100%. 💪🏼"
 
 actions:
   - action_trigger_weekly_reflection
@@ -661,6 +1326,7 @@ actions:
   - validate_user_ready_1_form
   - validate_user_ready_2_form
   - validate_user_ready_3_form
+  - validate_user_ready_4_form
   - validate_how_are_you_form
 
 forms:

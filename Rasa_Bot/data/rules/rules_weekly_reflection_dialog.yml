@@ -558,7 +558,6 @@ rules:
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
 
-##TODO figure out how to leave dialog and come back, excel file 156
 - rule: Show steps next week group1, 2
   condition:
     - active_loop: met_expectations_form
@@ -573,18 +572,9 @@ rules:
   - action: utter_difficult_moments_pa_12
   - slot_was_set:
     - pa_group: 1
-  - action: utter_steps_next_week_1
-  - action: utter_steps_next_week_2
-  - action: utter_steps_next_week_3
-  - action: utter_predict_difficult_moments_1
-  - action: show_barchart_difficult_situations_pa
-  - action: action_upload_file
-  - action: action_send_metadata
-  - action: action_delete_file
-  - action: utter_predict_difficult_moments_2
-  - action: utter_predict_difficult_moments_3
-  - action: difficult_moments_next_week_form
-  - active_loop: difficult_moments_next_week_form
+  - action: action_set_slot_smoke_or_pa_2
+  - action: pa_type_together_why_fail_form
+  - active_loop: pa_type_together_why_fail_form
   wait_for_user_input: false
 
 - rule: Show steps next week group1, 3

@@ -860,6 +860,35 @@ rules:
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false
 
+- rule: Relapse phase triggered PA 5, return to weekly reflection
+  condition:
+  - active_loop: reflect_bar_chart_form
+  steps:
+  - action: reflect_bar_chart_form
+  - active_loop: null
+  - slot_was_set: # PA branch
+    - smoke_or_pa: 2
+  - slot_was_set: # slot for smoke branching not set
+    - crave_lapse_relapse: null
+  - action: store_reflect_barchart
+  - action: action_set_slot_weekly_or_relapse
+  - action: utter_hrs_look_back_3
+  - slot_was_set:
+    - weekly_or_relapse: 2
+  - action: utter_steps_next_week_1
+  - action: utter_steps_next_week_2
+  - action: utter_steps_next_week_3
+  - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_predict_difficult_moments_2
+  - action: utter_predict_difficult_moments_3
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
+  wait_for_user_input: false
+
 - rule: pa open ehbo #
   condition:
     - active_loop: ehbo_me_self_lapse_form

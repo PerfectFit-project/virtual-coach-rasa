@@ -700,6 +700,7 @@ actions:
   - action_set_slot_relapse_dialog_relapse
   - action_set_slot_weekly_or_relapse
   - action_set_slot_smoke_or_pa_1
+  - action_set_slot_smoke_or_pa_2
   - action_set_slot_crave_lapse_relapse_1
   - action_set_slot_crave_lapse_relapse_2
   - action_set_slot_crave_lapse_relapse_3

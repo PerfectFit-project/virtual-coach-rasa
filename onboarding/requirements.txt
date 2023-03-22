@@ -1,2 +1,2 @@
-git+https://github.com/PerfectFit-project/virtual-coach-db@v.0.1.12
+git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.13
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.3

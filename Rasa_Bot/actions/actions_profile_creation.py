@@ -2,10 +2,11 @@ import logging
 import numpy as np
 
 from . import validator
-from .definitions import (AFTERNOON_SEND_TIME, 
-                          DAYS_OF_WEEK, DAYS_OF_WEEK_ACCEPTED,
+from .definitions import (AFTERNOON_SEND_TIME, DAYPART_NAMES_DUTCH,
+                          DAYS_OF_WEEK,
                           EVENING_SEND_TIME,
-                          MORNING_SEND_TIME, TIMEZONE)
+                          MORNING_SEND_TIME, PROFILE_CREATION_CONF_SLOTS,
+                          TIMEZONE)
 from .helper import (get_latest_bot_utterance,
                      store_profile_creation_data_to_db)
 
@@ -15,33 +16,6 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-
-
-
-def validate_participant_code(code: str):
-    
-    # Must have length 5
-    if len(code) != 5:
-        return False
-    # Check if code contains only letters and numbers
-    if not code.isalnum():
-        return False
-    # Second and fourth character must be numbers
-    if not (code[1].isnumeric() and code[3].isnumeric()):
-        return False
-    # First, third and fifth character must be letters
-    if not (code[0].isalpha() and code[2].isalpha() and code[4].isalpha()):
-        return False
-    # Number 0 is not used
-    if "0" in code:
-        return False
-    # Second number must be larger than the first
-    if not code[3] > code[1]:
-        return False
-    # Later letters must come later in the alphabet
-    if not (code[4].lower() > code[2].lower() and code[2].lower() > code[0].lower()):
-        return False
-    return True
     
 
 class ValidateProfileCreationCodeForm(FormValidationAction):
@@ -58,18 +32,11 @@ class ValidateProfileCreationCodeForm(FormValidationAction):
         if last_utterance != 'utter_ask_profile_creation_code_slot':
             return {"profile_creation_code_slot": None}
 
-        if not validate_participant_code(value):
+        if not validator.validate_participant_code(value):
             dispatcher.utter_message(response="utter_profile_creation_code_not_valid")
             return {"profile_creation_code_slot": None}
 
         return {"profile_creation_code_slot": value}
-    
-
-def validate_days_of_week(value: str):
-    for day_name in list(DAYS_OF_WEEK_ACCEPTED.keys()):
-        if value.lower() in DAYS_OF_WEEK_ACCEPTED[day_name]:
-            return True, day_name
-    return False, None
 
 
 class ValidateProfileCreationDayForm(FormValidationAction):
@@ -86,7 +53,7 @@ class ValidateProfileCreationDayForm(FormValidationAction):
         if last_utterance != 'utter_ask_profile_creation_day_slot':
             return {"profile_creation_day_slot": None}
         
-        validated, day_name = validate_days_of_week(value)
+        validated, day_name = validator.validate_days_of_week(value)
 
         if not validated:
             dispatcher.utter_message(response="utter_profile_creation_day_not_valid")
@@ -127,11 +94,7 @@ class ProfileCreationMapTimeToDaypart(Action):
 
         time = tracker.get_slot("profile_creation_time_slot")
         
-        daypart = "ochtend"
-        if time == 2:
-            daypart = "middag"
-        elif time == 3:
-            daypart = "avond"
+        daypart = DAYPART_NAMES_DUTCH[time - 1]
             
         return [SlotSet("profile_creation_time_daypart_slot", daypart)]
 
@@ -562,16 +525,9 @@ class ProfileCreationSetConfLowHighSlot(Action):
 
     async def run(self, dispatcher, tracker, domain):
         
-        
-        conf_slots = ["profile_creation_conf_10_slot", "profile_creation_conf_9_slot",
-                      "profile_creation_conf_8_slot", "profile_creation_conf_7_slot",
-                      "profile_creation_conf_6_slot", "profile_creation_conf_5_slot",
-                      "profile_creation_conf_4_slot", "profile_creation_conf_3_slot",
-                      "profile_creation_conf_2_slot", "profile_creation_conf_1_slot"]
-        
         # Find the conf slot we just set
         conf = -1
-        for conf_slot in conf_slots:
+        for conf_slot in PROFILE_CREATION_CONF_SLOTS:
             conf = tracker.get_slot(conf_slot)
             if conf > -1:
                 break
@@ -594,7 +550,7 @@ class ProfileCreationSaveToDB(Action):
         user_id = tracker.current_state()['sender_id']
         
         # Get confidence slots
-        conf = [tracker.get_slot("profile_creation_conf_" + str(i) + "_slot") for i in range(1, 11)]
+        conf = [tracker.get_slot(slot_name) for slot_name in PROFILE_CREATION_CONF_SLOTS]
         # Replace -1 with 0 (-1 are values people never filled in because
         # the confidence was already low for the previous amount of physical activity)
         conf = [i if not i == -1 else 0 for i in conf]

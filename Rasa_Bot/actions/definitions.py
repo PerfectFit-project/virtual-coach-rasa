@@ -24,6 +24,12 @@ MORNING_SEND_TIME = 7
 AFTERNOON_SEND_TIME = 15
 EVENING_SEND_TIME  = 20
 
+# Daypart names in Dutch
+DAYPART_NAMES_DUTCH = ["ochtend", "middag", "avond"]
+
+# Confidence slots in profile creation dialog
+PROFILE_CREATION_CONF_SLOTS = ["profile_creation_conf_" + str(i) + "_slot" for i in range(1, 11)]
+    
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5
 

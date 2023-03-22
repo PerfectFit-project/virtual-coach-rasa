@@ -10,8 +10,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from virtual_coach_db.helper.definitions import Components
 
-from .helper import (store_user_preferences_to_db, get_intervention_component_id,
-                     week_day_to_numerical_form)
+from .helper import week_day_to_numerical_form
 
 YES_OR_NO = ["yes", "no"]
 ALLOWED_WEEK_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
@@ -168,31 +167,11 @@ class StoreUserPreferencesToDb(Action):
         return "action_store_user_preferences_to_db"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = tracker.current_state()['sender_id']
 
-        recursive = tracker.get_slot("recursive_reminder")
         week_days = tracker.get_slot("week_days")
-        preferred_time_string = tracker.get_slot("time_stamp")
-
-        recursive_bool = False
-        if recursive in ('yes', 'Yes'):
-            recursive_bool = True
 
         week_days_numbers = ""
         week_days_list = week_days.split(", ")
         for weekday in week_days_list:
             week_days_numbers += str(week_day_to_numerical_form(weekday))
             week_days_numbers += ","
-
-        ##TODO Set the slot in rasa
-        # When calling this in the right context, the intervention component slot should have
-        # a value.Uncomment the next two lines and remove the one under those two to switch
-        # from a hardcoded intervention component to the one decided by the slot.
-        ##intervention_component_string = tracker.get_slot("current_intervention_component")
-        ##intervention_component = get_intervention_component_id(intervention_component_string)
-        intervention_component = get_intervention_component_id("profile_creation")
-
-        datetime_format = datetime.strptime(preferred_time_string, '%H:%M:%S')
-
-        store_user_preferences_to_db(user_id, intervention_component, recursive_bool,
-                                week_days_numbers.rstrip(week_days_numbers[-1]), datetime_format)

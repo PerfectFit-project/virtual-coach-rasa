@@ -276,7 +276,6 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
 
 
 def get_next_planned_date(user_id: int,
-                          intervention_component_id: int,
                           current_date: datetime) -> datetime:
     """
     Get the date planned for the administration of an intervention component, considering
@@ -284,7 +283,6 @@ def get_next_planned_date(user_id: int,
 
     Args:
         user_id: the id of the user
-        intervention_component_id: the id of the interventions component
         current_date: the current date
 
     Returns:
@@ -739,11 +737,8 @@ def schedule_next_execution(user_id: int, dialog: str, phase_id: int, current_da
         current_date: the current date
 
     """
-    component = get_intervention_component(dialog)
-    component_id = component.intervention_component_id
 
     planned_date = get_next_planned_date(user_id=user_id,
-                                         intervention_component_id=component_id,
                                          current_date=current_date)
 
     new_date = planned_date.replace(hour=10, minute=00)

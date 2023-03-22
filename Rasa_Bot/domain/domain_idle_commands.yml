@@ -1,3 +1,10 @@
+intents:
+  - help_intent
+  - ehbo_intent
+  - uitleg_intent
+  - oefening_intent
+  - medicijn_intent
+
 responses:
   # Fallback for low NLU confidence and low next action confidence
   # For low next action confidence, "utter_default" is automatically called.
@@ -19,37 +26,6 @@ responses:
             Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
             Je kunt ook altijd bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞
             De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
-
-nlu:
-- intent: help_intent
-  examples: |
-    - "help"
-    - "hepl"
-    - "elp"
-
-- intent: ehbo_intent
-  examples: |
-    - "ehbo"
-    - "ebho"
-    - "eobh"
-
-- intent: uitleg_intent
-  examples: |
-    - "uilteg"
-    - "uileg"
-    - "uitleg"
-
-- intent: oefening_intent
-  examples: |
-    - "oefning"
-    - "oefenin"
-    - "oefening"
-
-- intent: medicijn_intent
-  examples: |
-    - "medicati"
-    - "medicijnen"
-    - "medicijn"
 
 actions:
   - action_trigger_relapse_dialog

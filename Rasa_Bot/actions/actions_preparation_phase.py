@@ -91,10 +91,9 @@ class StartNextDialog(Action):
             return [FollowupAction('action_end_dialog')]
 
         # if the dialog is a video one, launch the watch a video dialog
-        else:
-            celery.send_task('celery_tasks.trigger_intervention_component',
-                             (user_id,
-                              ComponentsTriggers.WATCH_VIDEO))
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id,
+                          ComponentsTriggers.WATCH_VIDEO))
 
 
 class ScheduleNextPrepPhase(Action):

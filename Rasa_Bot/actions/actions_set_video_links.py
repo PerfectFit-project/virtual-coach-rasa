@@ -88,8 +88,6 @@ class SetSlotFakVideo(Action):
         return "action_set_slot_first_aid_kit_video"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         return [SlotSet('current_intervention_component',
                         Components.FIRST_AID_KIT_VIDEO)]
 
@@ -99,8 +97,6 @@ class SetSlotFSLongVideo(Action):
         return "action_set_slot_future_self_long"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         return [SlotSet('current_intervention_component',
                         Components.FUTURE_SELF_LONG)]
 
@@ -110,8 +106,6 @@ class SetSlotFSShortVideo(Action):
         return "action_set_slot_future_self_short"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         return [SlotSet('current_intervention_component',
                         Components.FUTURE_SELF_LONG)]
 
@@ -121,8 +115,6 @@ class SetSlotExecutionIntroduction(Action):
         return "action_set_slot_execution_introduction"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         return [SlotSet('current_intervention_component',
                         Components.EXECUTION_INTRODUCTION)]
 
@@ -132,8 +124,6 @@ class SetSlotPreparationIntroduction(Action):
         return "action_set_slot_preparation_introduction"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         return [SlotSet('current_intervention_component',
                         Components.PREPARATION_INTRODUCTION)]
 
@@ -143,8 +133,6 @@ class SetSlotMedication(Action):
         return "action_set_slot_medication_talk"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         return [SlotSet('current_intervention_component',
                         Components.MEDICATION_TALK)]
 
@@ -154,7 +142,5 @@ class SetSlotTrackBehavior(Action):
         return "action_set_slot_track_behavior"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         return [SlotSet('current_intervention_component',
                         Components.TRACK_BEHAVIOR)]

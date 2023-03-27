@@ -15,8 +15,8 @@ from .actions_rescheduling_dialog import get_reschedule_date
 
 import datetime
 
-
 celery = Celery(broker=REDIS_URL)
+
 
 class ExpectedTimeNextPart(Action):
     """Give expected time of next part"""
@@ -53,6 +53,7 @@ class ValidateNowOrLaterForm(FormValidationAction):
 
         return {"now_or_later": value}
 
+
 class ValidatePickADaypartForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_pick_a_daypart_form"
@@ -72,6 +73,7 @@ class ValidatePickADaypartForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
 
         return {"chosen_daypart": value}
+
 
 class StartNextDialog(Action):
     """set trigger for next dialog"""
@@ -93,8 +95,10 @@ class StartNextDialog(Action):
                              (user_id,
                               ComponentsTriggers.WATCH_VIDEO))
 
+
 class Schedule_Next_Prep_Phase(Action):
     """ reschedule the dialog for another time """
+
     def name(self) -> Text:
         return "action_schedule_next_preparation_phase"
 
@@ -106,6 +110,7 @@ class Schedule_Next_Prep_Phase(Action):
         eta = get_reschedule_date(timestamp, chosen_option)
 
         celery.send_task('celery_tasks.reschedule_dialog', (user_id, dialog, eta))
+
 
 def get_daypart_options_str() -> list:
     options = []
@@ -140,8 +145,8 @@ class AskNewTime(Action):
     async def run(self, dispatcher, tracker, domain):
         options = get_daypart_options_str()
 
-        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende"\
-                 "onderdeel over 1 uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3'"\
+        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende" \
+                 "onderdeel over 1 uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3'" \
                  " als je het {1} wilt doen. En typ '4' als " \
                  "je het {2} wilt doen. "
         utterance = prompt.format(*options)

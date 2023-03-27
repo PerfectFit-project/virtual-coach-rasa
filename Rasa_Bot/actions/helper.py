@@ -1,15 +1,18 @@
 """
 Helper functions for rasa actions.
 """
-import datetime
 import numpy as np
 import plotly.graph_objects as go
 import secrets
 
+from datetime import datetime
 from typing import List, Optional, Any
 
 
-from .definitions import (DATABASE_URL, PROFILE_CREATION_CONF_SLOTS,
+from .definitions import (AFTERNOON_SEND_TIME,
+                          DATABASE_URL, EVENING_SEND_TIME,
+                          MORNING_SEND_TIME, 
+                          PROFILE_CREATION_CONF_SLOTS,
                           TIMEZONE)
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
                                               DialogOpenAnswers, 
@@ -70,6 +73,24 @@ def compute_mean_confidence(tracker) -> float:
     conf_avg = np.mean(conf) * 10
     
     return conf_avg
+
+
+def compute_preferred_time(tracker):
+    "Compute a person's preferred time for intervention components."
+    
+    # Get preferred time
+    time_slot = tracker.get_slot("profile_creation_time_slot")
+    time_hour = MORNING_SEND_TIME
+    if time_slot == 2:
+        time_hour = AFTERNOON_SEND_TIME
+    elif time_slot == 3:
+        time_hour = EVENING_SEND_TIME
+
+    # year, month, day, hour, minute, second, microsecond
+    # We only care about the hours
+    preferred_time = datetime.datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
+    
+    return preferred_time
 
 
 def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int, 

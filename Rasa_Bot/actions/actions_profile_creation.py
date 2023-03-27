@@ -1,17 +1,14 @@
 from . import validator
-from .definitions import (AFTERNOON_SEND_TIME, DAYPART_NAMES_DUTCH,
+from .definitions import (DAYPART_NAMES_DUTCH,
                           DAYS_OF_WEEK,
-                          EVENING_SEND_TIME,
-                          MORNING_SEND_TIME,
-                          PROFILE_CREATION_CONF_SLOTS,
-                          TIMEZONE)
+                          PROFILE_CREATION_CONF_SLOTS)
 from .helper import (compute_godin_level, 
                      compute_mean_cluster_similarity_ratings, 
                      compute_mean_confidence,
+                     compute_preferred_time,
                      get_latest_bot_utterance,
                      store_profile_creation_data_to_db)
 
-from datetime import datetime
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
@@ -568,15 +565,7 @@ class ProfileCreationSaveToDB(Action):
         day_idx = DAYS_OF_WEEK.index(day) + 1  # Start index at 1 for db
         
         # Get preferred time
-        time_slot = tracker.get_slot("profile_creation_time_slot")
-        time_hour = MORNING_SEND_TIME
-        if time_slot == 2:
-            time_hour = AFTERNOON_SEND_TIME
-        elif time_slot == 3:
-            time_hour = EVENING_SEND_TIME
-        # year, month, day, hour, minute, second, microsecond
-        # We only care about the hours
-        preferred_time = datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
+        preferred_time = compute_preferred_time(tracker)
         
         # Get participant code
         participant_code = tracker.get_slot("profile_creation_code_slot")

@@ -5,6 +5,16 @@ version: "3.1"
 
 stories:
 
+## Preparation introduction
+- story: Preparation introduction
+  steps:
+    - intent: EXTERNAL_trigger_preparation_introduction
+    - action: action_set_slot_preparation_intro
+    - action: utter_ask_preparation_intro
+    - intent: oke
+    - action: mark_dialog_as_completed
+    - action: action_end_dialog
+
 ## Medication Talk
 - story: Medication Talk placeholder
   steps:
@@ -14,6 +24,18 @@ stories:
    - intent: oke
    - action: mark_dialog_as_completed
    - action: action_end_dialog
+
+## Track behavior
+- story: Track behavior placeholder
+  steps:
+   - intent: EXTERNAL_trigger_track_behavior
+   - action: action_set_slot_track_behavior
+   - action: utter_track_behavior
+   - intent: oke
+   - action: mark_dialog_as_completed
+   - action: action_end_dialog
+
+
 
 ## Cold Turkey
 - story: Cold Turkey placeholder
@@ -38,7 +60,7 @@ stories:
 ## Mental-contrasting
 - story: Mental-contrasting placeholder
   steps:
-  - intent: EXTERNAL_trigger_mental_contrasting
+  - intent: EXTERNAL_trigger_future_self
   - action: action_set_slot_mental_contrasting
   - action: utter_mental_contrasting
   - intent: oke

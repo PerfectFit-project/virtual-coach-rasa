@@ -147,7 +147,7 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    selected.quit_date = quit_date
+    selected.quit_date = datetime.datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
 
 
@@ -252,7 +252,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         user_id: niceday user id
         intervention_component: the name of the intervention component.
                                 The names are listed in virtual_coach_db.helper.definitions
-                                in the PreparationInterventionComponents class
+                                in the Components class
         phase: the name of the phase. The names are listed in virtual_coach_db.helper.definitions
                Phases class
 

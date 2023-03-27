@@ -2,19 +2,26 @@ version: "3.1"
 
 intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
+- EXTERNAL_trigger_preparation_introduction
 - EXTERNAL_trigger_profile_creation
 - EXTERNAL_trigger_medication_talk
+- EXTERNAL_trigger_track_behavior
 - EXTERNAL_trigger_cold_turkey
 - EXTERNAL_trigger_plan_quit_start
-- EXTERNAL_trigger_mental_contrasting
+- EXTERNAL_trigger_future_self
 - EXTERNAL_trigger_goal_setting
 - oke
 
 
 responses:
   ##Utterances related to preparation phase
+  utter_ask_preparation_intro:
+   - text: "Welcome to the intro..."
   utter_medication_talk:
    - text: "Conducting medical talk..."
+  utter_track_behavior:
+   - text: "Track your behaviors..."
+
   utter_cold_turkey:
    - text: "Cold turkey talk..."
   utter_plan_quit_start:
@@ -26,8 +33,10 @@ responses:
 
 actions:
 ### Preparation Phase actions
+- action_set_slot_preparation_intro
 - action_set_slot_profile_creation
 - action_set_slot_medication_talk
+- action_set_slot_track_behavior
 - action_set_slot_cold_turkey
 - action_set_slot_plan_quit_start_date
 - action_set_slot_mental_contrasting

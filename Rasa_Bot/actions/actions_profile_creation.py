@@ -1,13 +1,14 @@
-import logging
-import numpy as np
-
 from . import validator
 from .definitions import (AFTERNOON_SEND_TIME, DAYPART_NAMES_DUTCH,
                           DAYS_OF_WEEK,
                           EVENING_SEND_TIME,
-                          MORNING_SEND_TIME, PROFILE_CREATION_CONF_SLOTS,
+                          MORNING_SEND_TIME,
+                          PROFILE_CREATION_CONF_SLOTS,
                           TIMEZONE)
-from .helper import (get_latest_bot_utterance,
+from .helper import (compute_godin_level, 
+                     compute_mean_cluster_similarity_ratings, 
+                     compute_mean_confidence,
+                     get_latest_bot_utterance,
                      store_profile_creation_data_to_db)
 
 from datetime import datetime
@@ -537,7 +538,7 @@ class ProfileCreationSetConfLowHighSlot(Action):
             low_high = 1
             
         return [SlotSet("profile_creation_conf_low_high_slot", low_high)]
-    
+
 
 class ProfileCreationSaveToDB(Action):
     """Save profile creation data to database"""
@@ -549,39 +550,18 @@ class ProfileCreationSaveToDB(Action):
     
         user_id = tracker.current_state()['sender_id']
         
-        # Get confidence slots
-        conf = [tracker.get_slot(slot_name) for slot_name in PROFILE_CREATION_CONF_SLOTS]
-        # Replace -1 with 0 (-1 are values people never filled in because
-        # the confidence was already low for the previous amount of physical activity)
-        conf = [i if not i == -1 else 0 for i in conf]
-        # Compute average and multiply with 10 (we used a scale from 0 to 10,
-        # but the database uses a scale from 0 to 100)
-        conf_avg = np.mean(conf) * 10
+        # Compute mean confidence
+        conf_avg = compute_mean_confidence(tracker)
         
         # Get the preference for walking or running from slot
         # Deduct 1 since database stores 0 for walking and 1 for running.
         walk_run_pref = tracker.get_slot("profile_creation_run_walk_slot") - 1
         
         # Compute Godin level based on Godin score
-        godin_light = tracker.get_slot("profile_creation_godin_light_slot")
-        godin_mod = tracker.get_slot("profile_creation_godin_moderate_slot")
-        godin_inten = tracker.get_slot("profile_creation_godin_intensive_slot")
-        godin_score = 9 * godin_inten + 5 * godin_mod + 3 * godin_light
-        godin_level = 0  # insufficiently active/sedentary
-        if godin_score >= 24: # 24 units or more is active
-            godin_level = 2
-        elif godin_score >= 14:  # 14-23 is moderately active
-            godin_level = 1
+        godin_level = compute_godin_level(tracker)
             
-        # Compute the perceived similarity for the two clusters
-        # First for cluster 1
-        c1_1 = tracker.get_slot("profile_creation_sim_2_slot")
-        c1_2 = tracker.get_slot("profile_creation_sim_4_slot")
-        c1_mean = (c1_1 + c1_2) / 2
-        # Next for cluster 3
-        c3_1 = tracker.get_slot("profile_creation_sim_1_slot")
-        c3_2 = tracker.get_slot("profile_creation_sim_3_slot")
-        c3_mean = (c3_1 + c3_2) / 2
+        # Compute the perceived similarity for the two clusters of testimonials
+        c1_mean, c3_mean = compute_mean_cluster_similarity_ratings(tracker)
         
         # Get preferred day of the week
         day = tracker.get_slot("profile_creation_day_slot")

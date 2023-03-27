@@ -88,10 +88,10 @@ class StartNextDialog(Action):
             return [FollowupAction('utter_profile_creation_start_1')]
 
         # if the dialog is a video one, launch the watch a video dialog
-        else:
-            celery.send_task('celery_tasks.trigger_intervention_component',
-                             (user_id,
-                              ComponentsTriggers.WATCH_VIDEO))
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id,
+                          ComponentsTriggers.WATCH_VIDEO))
+
 
 class Schedule_Next_Prep_Phase(Action):
     """ reschedule the dialog for another time """

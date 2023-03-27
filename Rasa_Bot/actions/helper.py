@@ -2,14 +2,15 @@
 Helper functions for rasa actions.
 """
 import datetime
-import logging
+import numpy as np
 import plotly.graph_objects as go
 import secrets
 
 from typing import List, Optional, Any
 
 
-from .definitions import DATABASE_URL, TIMEZONE
+from .definitions import (DATABASE_URL, PROFILE_CREATION_CONF_SLOTS,
+                          TIMEZONE)
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
                                               DialogOpenAnswers, 
                                               InterventionActivity,
@@ -21,12 +22,63 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
+def compute_godin_level(tracker) -> int:
+    "Compute the Godin activity level (0-2)."
+    
+    godin_light = tracker.get_slot("profile_creation_godin_light_slot")
+    godin_mod = tracker.get_slot("profile_creation_godin_moderate_slot")
+    godin_inten = tracker.get_slot("profile_creation_godin_intensive_slot")
+
+    godin_score = 9 * godin_inten + 5 * godin_mod + 3 * godin_light
+
+    godin_level = 0  # insufficiently active/sedentary
+    if godin_score >= 24: # 24 units or more is active
+        godin_level = 2
+    elif godin_score >= 14:  # 14-23 is moderately active
+        godin_level = 1
+ 
+    return godin_level
+
+
+def compute_mean_cluster_similarity_ratings(tracker):
+    "Compute mean similarity ratings for testimonial clusters."
+    
+    # First for cluster 1
+    c1_1 = tracker.get_slot("profile_creation_sim_2_slot")
+    c1_2 = tracker.get_slot("profile_creation_sim_4_slot")
+    c1_mean = (c1_1 + c1_2) / 2
+    # Next for cluster 3
+    c3_1 = tracker.get_slot("profile_creation_sim_1_slot")
+    c3_2 = tracker.get_slot("profile_creation_sim_3_slot")
+    c3_mean = (c3_1 + c3_2) / 2
+    
+    return c1_mean, c3_mean
+
+
+def compute_mean_confidence(tracker) -> float:
+    "Compute mean confidence."
+    
+    # Get confidence slots from tracker
+    conf = [tracker.get_slot(slot_name) for slot_name in PROFILE_CREATION_CONF_SLOTS]
+    
+    # Replace -1 with 0 (-1 are values people never filled in because
+    # the confidence was already low for the previous amount of physical activity)
+    conf = [i if not i == -1 else 0 for i in conf]
+    
+    # Compute average and multiply with 10 (we used a scale from 0 to 10,
+    # but the database uses a scale from 0 to 100)
+    conf_avg = np.mean(conf) * 10
+    
+    return conf_avg
+
+
 def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int, 
                                       running_walking_pref: int, 
                                       self_efficacy_pref: float,
                                       sim_cluster_1: float, sim_cluster_3: float,
                                       participant_code: str, week_days: str,
                                       preferred_time):
+    #pylint: disable=too-many-arguments
     """
     Stores profile creation data for a user in the database.
 

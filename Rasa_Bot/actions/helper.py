@@ -88,7 +88,7 @@ def compute_preferred_time(tracker):
 
     # year, month, day, hour, minute, second, microsecond
     # We only care about the hours
-    preferred_time = datetime.datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
+    preferred_time = datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
     
     return preferred_time
 
@@ -168,7 +168,7 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    selected.quit_date = datetime.datetime.strptime(quit_date, '%d-%m-%Y')
+    selected.quit_date = datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
 
 
@@ -195,7 +195,7 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
     answer_id = answer_value + question_id * 100
 
     entry = DialogClosedAnswers(closed_answers_id=answer_id,
-                                datetime=datetime.datetime.now().astimezone(TIMEZONE))
+                                datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_closed_answers.append(entry)
     session.commit()  # Update database
 
@@ -260,7 +260,7 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
 
     entry = DialogOpenAnswers(question_id=question_id,
                               answer_value=answer_value,
-                              datetime=datetime.datetime.now().astimezone(TIMEZONE))
+                              datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_open_answers.append(entry)
     session.commit()  # Update database
 
@@ -312,7 +312,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         intervention_phase_id=phases[0].phase_id,
         intervention_component_id=components[0].intervention_component_id,
         completed=False,
-        last_time=datetime.datetime.now().astimezone(TIMEZONE),
+        last_time=datetime.now().astimezone(TIMEZONE),
         last_part=0,
         next_planned_date=None,
         task_uuid=None

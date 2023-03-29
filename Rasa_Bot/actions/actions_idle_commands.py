@@ -2,6 +2,7 @@ from celery import Celery
 from rasa_sdk import Action
 from virtual_coach_db.helper.definitions import Components
 from .definitions import REDIS_URL
+
 celery = Celery(broker=REDIS_URL)
 
 
@@ -38,7 +39,8 @@ class ActionTriggerExplainFirstAidVideoDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
 
-        celery.send_task('celery_tasks.user_trigger_dialog', (user_id, Components.FIRST_AID_KIT_VIDEO))
+        celery.send_task('celery_tasks.user_trigger_dialog', (user_id,
+                                                              Components.FIRST_AID_KIT_VIDEO))
 
 
 class ActionTriggerGeneralActivityDialog(Action):
@@ -63,4 +65,3 @@ class ActionTriggerMedicineVideoDialog(Action):
         user_id = tracker.current_state()['sender_id']
 
         celery.send_task('celery_tasks.user_trigger_dialog', (user_id, Components.MEDICATION_TALK))
-

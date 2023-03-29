@@ -14,7 +14,6 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              UserPreferences,
                                               ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -51,7 +50,7 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    selected.quit_date = quit_date
+    selected.quit_date = datetime.datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
 
 
@@ -148,34 +147,6 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
     session.commit()  # Update database
 
 
-def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool,
-                                 week_days: str, preferred_time: datetime.datetime):
-    """
-    Updater the user_intervention_state table, adding a new row with the intervention_component
-
-    Args:
-        user_id: niceday user id
-        intervention_component_id: the id of the intervention component as store din the DB.
-        recursive: if true the activity is recursive, and will be reprogrammed after the completion
-        week_days: comma separated list of days
-        preferred_time: preferred time in the day to prompt the activity
-
-    Returns:
-            nothing
-
-    """
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-    entry = UserPreferences(users_nicedayuid=user_id,
-                            intervention_component_id=intervention_component_id,
-                            recursive=recursive,
-                            week_days=week_days,
-                            preferred_time=preferred_time)
-    selected.user_preferences.append(entry)
-    session.commit()  # Update database
-
-
 def store_user_intervention_state(user_id: int, intervention_component: str, phase: str):
     """
     Updater the user_intervention_state table, adding a new row with the intervention_component
@@ -184,7 +155,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         user_id: niceday user id
         intervention_component: the name of the intervention component.
                                 The names are listed in virtual_coach_db.helper.definitions
-                                in the PreparationInterventionComponents class
+                                in the Components class
         phase: the name of the phase. The names are listed in virtual_coach_db.helper.definitions
                Phases class
 

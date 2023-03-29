@@ -3,9 +3,8 @@ from sqlalchemy import update
 from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, 
                                               FirstAidKit,
                                               InterventionActivity)
-from virtual_coach_db.helper import (ExecutionInterventionComponents,
-                                     DialogQuestionsEnum,
-                                     ExecutionInterventionComponentsTriggers)
+from virtual_coach_db.helper import (Components,
+                                     DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
 from .definitions import (COMMITMENT, CONSENSUS, 
@@ -454,7 +453,7 @@ class SetSlotGeneralActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        ExecutionInterventionComponents.GENERAL_ACTIVITY)]
+                        Components.GENERAL_ACTIVITY)]
 
 
 def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):

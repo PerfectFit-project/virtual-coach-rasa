@@ -15,7 +15,7 @@ from .definitions import TIMEZONE
 from .definitions import MORNING, AFTERNOON, EVENING
 from .helper import get_latest_bot_utterance
 
-from virtual_coach_db.helper import ExecutionInterventionComponentsTriggers
+from virtual_coach_db.helper import ComponentsTriggers
 
 from . import validator
 
@@ -30,7 +30,7 @@ class ActionContinueGeneralActivityDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
         celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, ExecutionInterventionComponentsTriggers.CONTINUE_GENERAL_ACTIVITY))
+                         (user_id, ComponentsTriggers.CONTINUE_GENERAL_ACTIVITY))
 
 
 class ActionResetReschedulingNowSlot(Action):

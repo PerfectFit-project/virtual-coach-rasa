@@ -4,6 +4,7 @@ from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
                                               FirstAidKit,
                                               InterventionActivity)
 from virtual_coach_db.helper import (Components,
+                                     ComponentsTriggers,
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
@@ -35,7 +36,7 @@ class ActionStartReschedulingDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
         celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, ExecutionInterventionComponentsTriggers.RESCHEDULE_ACTIVITY))
+                         (user_id, ComponentsTriggers.RESCHEDULE_ACTIVITY))
 
 
 class CheckIfFirstExecutionGA(Action):

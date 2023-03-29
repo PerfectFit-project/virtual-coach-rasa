@@ -38,14 +38,14 @@ responses:
   # We present the user with the options from the central mode
   utter_central_mode_options:
     - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽
-            /n
+            \n
             Typ 'ehbo' als je je EHBO-doos wilt openen om een bewaarde oefening te bekijken of opnieuw te doen. 🧰
             Wil je opnieuw uitleg over hoe de EHBO-doos werkt? Typ dan 'uitleg'. ℹ️
-            /n
+            \n
             Typ 'oefening' als je een oefening wilt doen. 📱
-            /n
+            \n
             Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊
-            /n
+            \n
             Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
             Je kunt ook altijd bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞
             De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."

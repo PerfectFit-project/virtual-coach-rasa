@@ -76,49 +76,38 @@ nlu:
   examples: |
     - EXTERNAL_first_aid_kit_video
 
-- intent: EXTERNAL_trigger_future_self_long
+- intent: EXTERNAL_trigger_future_self_long_video
   examples: |
-    - EXTERNAL_trigger_future_self_long
+    - EXTERNAL_trigger_future_self_long_video
 
-- intent: EXTERNAL_trigger_future_self_short
+- intent: EXTERNAL_trigger_future_self_short_video
   examples: |
-    - EXTERNAL_trigger_future_self_short
+    - EXTERNAL_trigger_future_self_short_video
 
-- intent: EXTERNAL_trigger_execution_introduction
+- intent: EXTERNAL_trigger_execution_introduction_video
   examples: |
-    - EXTERNAL_trigger_execution_introduction
+    - EXTERNAL_trigger_execution_introduction_video
 
-- intent: EXTERNAL_trigger_preparation_introduction
+- intent: EXTERNAL_trigger_preparation_introduction_video
   examples: |
-    - EXTERNAL_trigger_preparation_introduction
+    - EXTERNAL_trigger_preparation_introduction_video
 
-- intent: EXTERNAL_trigger_medication_talk
+- intent: EXTERNAL_trigger_medication_talk_video
   examples: |
-    - "EXTERNAL_trigger_medication_talk"
+    - EXTERNAL_trigger_medication_talk_video
 
-- intent: EXTERNAL_trigger_track_behavior
+- intent: EXTERNAL_trigger_track_behavior_video
   examples: |
-    - "EXTERNAL_trigger_track_behavior"
+    - EXTERNAL_trigger_track_behavior_video
 
 - intent: EXTERNAL_watch_video_dialog
   examples: |
     - EXTERNAL_watch_video_dialog
 ### preparation phase
-- intent: EXTERNAL_trigger_preparation_introduction
-  examples: |
-    - "EXTERNAL_trigger_preparation_introduction"
 
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
     - "EXTERNAL_trigger_profile_creation"
-
-- intent: EXTERNAL_trigger_medication_talk
-  examples: |
-    - "EXTERNAL_trigger_medication_talk"
-
-- intent: EXTERNAL_trigger_track_behavior
-  examples: |
-    - "EXTERNAL_trigger_track_behavior" 
 
 ###
 

@@ -94,7 +94,7 @@ class SetSlotFakVideo(Action):
 
 class SetSlotFSLongVideo(Action):
     def name(self):
-        return "action_set_slot_future_self_long"
+        return "action_set_slot_future_self_long_video"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('current_intervention_component',
@@ -103,7 +103,7 @@ class SetSlotFSLongVideo(Action):
 
 class SetSlotFSShortVideo(Action):
     def name(self):
-        return "action_set_slot_future_self_short"
+        return "action_set_slot_future_self_short_video"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('current_intervention_component',
@@ -112,7 +112,7 @@ class SetSlotFSShortVideo(Action):
 
 class SetSlotExecutionIntroduction(Action):
     def name(self):
-        return "action_set_slot_execution_introduction"
+        return "action_set_slot_execution_introduction_video"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('current_intervention_component',
@@ -121,7 +121,7 @@ class SetSlotExecutionIntroduction(Action):
 
 class SetSlotPreparationIntroduction(Action):
     def name(self):
-        return "action_set_slot_preparation_introduction"
+        return "action_set_slot_preparation_introduction_video"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('current_intervention_component',
@@ -130,7 +130,7 @@ class SetSlotPreparationIntroduction(Action):
 
 class SetSlotMedication(Action):
     def name(self):
-        return "action_set_slot_medication_talk"
+        return "action_set_slot_medication_talk_video"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('current_intervention_component',
@@ -139,7 +139,7 @@ class SetSlotMedication(Action):
 
 class SetSlotTrackBehavior(Action):
     def name(self):
-        return "action_set_slot_track_behavior"
+        return "action_set_slot_track_behavior_video"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('current_intervention_component',

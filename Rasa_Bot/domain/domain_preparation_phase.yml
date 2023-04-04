@@ -61,9 +61,9 @@ slots:
       - type: custom
 
 responses:
-  utter_finished_preparation_phase:
+  utter_next_part_1:
     - text: "Je hebt de vorige keer een onderdeel van de voorbereidingsfase afgerond. Goed gedaan! 👏"
-  utter_next_part:
+  utter_next_part_2:
     - text: "Je kunt nu door naar het volgende onderdeel."
   utter_ask_now_or_later:
     - text: "Wil jij het volgende onderdeel nu doen of later? Typ '1' wanneer je nu tijd hebt om een oefening te doen. Typ '2' wanneer je de oefening liever later doet."

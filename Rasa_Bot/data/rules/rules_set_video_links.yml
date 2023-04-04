@@ -4,28 +4,28 @@ rules:
 
   - rule: Set video preparation introduction
     steps:
-      - intent: EXTERNAL_trigger_preparation_introduction
+      - intent: EXTERNAL_trigger_preparation_introduction_video
       - action: action_set_slot_preparation_introduction_video
       - action: action_set_preparation_introduction_video_link
       - action: action_launch_watch_video_dialog
 
   - rule: Set video medication
     steps:
-      - intent: EXTERNAL_trigger_medication_talk
+      - intent: EXTERNAL_trigger_medication_talk_video
       - action: action_set_slot_medication_talk_video
       - action: action_set_medication_video_link
       - action: action_launch_rescheduling_prep
 
   - rule: Set video tracking behavior
     steps:
-      - intent: EXTERNAL_trigger_track_behavior
+      - intent: EXTERNAL_trigger_track_behavior_video
       - action: action_set_slot_track_behavior_video
       - action: action_set_track_behavior_video_link
       - action: action_launch_rescheduling_prep
 
   - rule: Set video future self long
     steps:
-      - intent: EXTERNAL_trigger_future_self_long
+      - intent: EXTERNAL_trigger_future_self_long_video
       - action: action_set_slot_future_self_long_video
       - action: action_set_future_self_long_video_link
       - action: action_launch_rescheduling_prep
@@ -39,14 +39,14 @@ rules:
 
   - rule: Set video future self short
     steps:
-      - intent: EXTERNAL_trigger_future_self_short
+      - intent: EXTERNAL_trigger_future_self_short_video
       - action: action_set_slot_future_self_short_video
       - action: action_set_future_self_short_video_link
       - action: action_launch_watch_video_dialog
 
   - rule: Set video execution introduction
     steps:
-      - intent: EXTERNAL_trigger_execution_introduction
+      - intent: EXTERNAL_trigger_execution_introduction_video
       - action: action_set_slot_execution_introduction_video
       - action: action_set_execution_introduction_video_link
       - action: action_launch_watch_video_dialog

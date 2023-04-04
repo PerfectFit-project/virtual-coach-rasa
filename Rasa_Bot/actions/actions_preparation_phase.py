@@ -25,10 +25,12 @@ class ExpectedTimeNextPart(Action):
         return "action_expected_time_next_part"
 
     async def run(self, dispatcher, tracker, domain):
-        nextDialog = str(tracker.get_slot('current_intervention_component'))
-        expectedTimeInterval = DialogExpectedDuration[nextDialog].split(" ")
-        message = "Ik verwacht dat het volgende onderdeel " + expectedTimeInterval[0] + " tot " \
-                  + expectedTimeInterval[1] + " minuten zal duren.⏱️"
+        next_dialog = str(tracker.get_slot('current_intervention_component'))
+        min_duration = DialogExpectedDuration[next_dialog][0]
+        max_duration = DialogExpectedDuration[next_dialog][1]
+
+        message = "Ik verwacht dat het volgende onderdeel " + str(min_duration) + " tot " \
+                  + str(max_duration) + " minuten zal duren.⏱️"
         dispatcher.utter_message(text=message)
         return []
 

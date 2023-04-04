@@ -15,29 +15,28 @@ slots:
     mappings:
       - type: from_text
         conditions:
-          - active_loop: profile_creation_day_form
+          - active_loop: profile_creation_day_time_confirm_form
+            requested_slot: profile_creation_day_slot
   profile_creation_time_slot:
     type: float
     influence_conversation: false
     mappings:
       - type: from_text
         conditions:
-          - active_loop: profile_creation_time_form
-  profile_creation_time_daypart_slot:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: custom
+          - active_loop: profile_creation_day_time_confirm_form
+            requested_slot: profile_creation_time_slot
+  # 1 is confirm, 2 is modify
   profile_creation_confirm_preference_slot:
     type: categorical
     values:
       - 1
       - 2
-    influence_conversation: true
+    influence_conversation: false
     mappings:
       - type: from_text
         conditions:
-          - active_loop: profile_creation_confirm_preference_form
+          - active_loop: profile_creation_day_time_confirm_form
+            requested_slot: profile_creation_confirm_preference_slot
     
   # 1 is walk, 2 is run
   profile_creation_run_walk_slot:
@@ -209,14 +208,10 @@ forms:
     required_slots:
       - profile_creation_code_slot
       
-  profile_creation_day_form:
+  profile_creation_day_time_confirm_form:
     required_slots:
       - profile_creation_day_slot
-  profile_creation_time_form:
-    required_slots:
       - profile_creation_time_slot
-  profile_creation_confirm_preference_form:
-    required_slots:
       - profile_creation_confirm_preference_slot
       
   profile_creation_run_walk_form:
@@ -313,8 +308,6 @@ responses:
   - text: "Typ '1' als je in de ochtend (vóór 12 uur) tijd hebt. 🌅\nTyp '2' als je in de middag (tussen 12 en 18 uur) tijd hebt. ☀️\nTyp '3' als je in de avond (na 18 uur) tijd hebt. 🌕"
   utter_profile_creation_time_not_valid:
   - text: "Typ a.u.b. één van de drie cijfers om aan te geven wanneer je meestal tijd hebt voor een gesprek op de gekozen dag."
-  utter_profile_creation_preference_6:
-  - text: 'Staat genoteerd. Wij gaan de komende tijd steeds op {profile_creation_day_slot} {profile_creation_time_daypart_slot} samen in gesprek.'
   utter_ask_profile_creation_confirm_preference_slot:
   - text: "Typ '1' als dit klopt.\nTyp '2' als je je antwoord wilt aanpassen."
   
@@ -490,12 +483,11 @@ responses:
   - text: "Graag tot dan! 👋"
 
 actions:
+  - action_reset_profile_creation_confirm_preference_slot
+
   - validate_profile_creation_code_form
   
-  - validate_profile_creation_day_form
-  - validate_profile_creation_time_form
-  - profile_creation_map_time_to_daypart
-  - validate_profile_creation_confirm_preference_form
+  - validate_profile_creation_day_time_confirm_form
 
   - validate_profile_creation_run_walk_form
   

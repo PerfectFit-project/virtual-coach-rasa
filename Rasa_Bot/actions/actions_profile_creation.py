@@ -14,6 +14,8 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
+
+import logging
     
 
 class ValidateProfileCreationCodeForm(FormValidationAction):
@@ -37,9 +39,10 @@ class ValidateProfileCreationCodeForm(FormValidationAction):
         return {"profile_creation_code_slot": value}
 
 
-class ValidateProfileCreationDayForm(FormValidationAction):
+class ValidateProfileCreationDayTimeConfirmForm(FormValidationAction):
+    
     def name(self) -> Text:
-        return 'validate_profile_creation_day_form'
+        return 'validate_profile_creation_day_time_confirm_form'
 
     def validate_profile_creation_day_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
@@ -56,13 +59,16 @@ class ValidateProfileCreationDayForm(FormValidationAction):
         if not validated:
             dispatcher.utter_message(response="utter_profile_creation_day_not_valid")
             return {"profile_creation_day_slot": None}
+        
+        dispatcher.utter_message(response="utter_profile_creation_preference_4")
+        dispatcher.utter_message(response="utter_profile_creation_preference_5")
+        
+        logging.info("Day:" + str(day_name))
+        
+        tracker.slots["profile_creation_day_slot"] = day_name
 
         return {"profile_creation_day_slot": day_name}
     
-
-class ValidateProfileCreationTimeForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_profile_creation_time_form'
 
     def validate_profile_creation_time_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
@@ -78,29 +84,26 @@ class ValidateProfileCreationTimeForm(FormValidationAction):
                                                            response = value):
             dispatcher.utter_message(response="utter_profile_creation_time_not_valid")
             return {"profile_creation_time_slot": None}
-
-        return {"profile_creation_time_slot": int(value)}
-
-
-class ProfileCreationMapTimeToDaypart(Action):
-    """Map time number to daypart string"""
-
-    def name(self):
-        return "profile_creation_map_time_to_daypart"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        time = tracker.get_slot("profile_creation_time_slot")
+        
+        time = int(value)
+        
+        logging.info("time: " + str(time))
+        
+        day = tracker.get_slot("profile_creation_day_slot")
+        
+        logging.info("day slot: " + str(day))
         
         daypart = DAYPART_NAMES_DUTCH[time - 1]
-            
-        return [SlotSet("profile_creation_time_daypart_slot", daypart)]
+        
+        logging.info("day part:" + daypart)
+        
+        message = "Staat genoteerd. Wij gaan de komende tijd steeds op " + day + " " + daypart + " samen in gesprek."
+        
+        dispatcher.utter_message(text=message)
 
-
-class ValidateProfileCreationConfirmPreferenceForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_profile_creation_confirm_preference_form'
-
+        return {"profile_creation_time_slot": time}
+    
+    
     def validate_profile_creation_confirm_preference_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -108,6 +111,8 @@ class ValidateProfileCreationConfirmPreferenceForm(FormValidationAction):
         """Validate profile_creation_confirm_preference_slot"""
 
         last_utterance = get_latest_bot_utterance(tracker.events)
+        
+        logging.info("last utterance:" + last_utterance)
         if last_utterance != 'utter_ask_profile_creation_confirm_preference_slot':
             return {"profile_creation_confirm_preference_slot": None}
 
@@ -115,8 +120,24 @@ class ValidateProfileCreationConfirmPreferenceForm(FormValidationAction):
                                                            response = value):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"profile_creation_confirm_preference_slot": None}
+        
+        # User wants to modify something about the timing 
+        if value == "2":
+            return {"profile_creation_day_slot": None,
+                    "profile_creation_time_slot": None,
+                    "profile_creation_confirm_preference_slot": None}
 
         return {"profile_creation_confirm_preference_slot": int(value)}
+
+
+class ActionResetProfileCreationConfirmPreferenceSlot(Action):
+    """Reset profile_creation_confirm_preference_slot"""
+
+    def name(self):
+        return "action_reset_profile_creation_confirm_preference_slot"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("profile_creation_confirm_preference_slot", None)]
 
 
 class ValidateProfileCreationRunWalkForm(FormValidationAction):

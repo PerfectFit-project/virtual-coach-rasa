@@ -23,7 +23,7 @@ rules:
   - active_loop: profile_creation_code_form
   wait_for_user_input: false
   
-## 2 + 3: Participant code and preferred day for contact
+## 2 + 3: Participant code and preferred day + time for contact
 - rule: Profile creation participant code
   condition:
     - active_loop: profile_creation_code_form
@@ -34,58 +34,17 @@ rules:
   - action: utter_profile_creation_preference_1
   - action: utter_profile_creation_preference_2
   - action: utter_profile_creation_preference_3
-  - action: profile_creation_day_form
-  - active_loop: profile_creation_day_form
+  - action: profile_creation_day_time_confirm_form
+  - active_loop: profile_creation_day_time_confirm_form
   wait_for_user_input: false
  
-## 3: Preferred day + preferred time 
-- rule: Profile creation preferred time
+## 3: Preferred day + preferred time entered
+- rule: Profile creation preferred day and time entered
   condition:
-    - active_loop: profile_creation_day_form
+    - active_loop: profile_creation_day_time_confirm_form
   steps:
-  - action: profile_creation_day_form
+  - action: profile_creation_day_time_confirm_form
   - active_loop: null
-  - action: utter_profile_creation_preference_4
-  - action: utter_profile_creation_preference_5
-  - action: profile_creation_time_form
-  - active_loop: profile_creation_time_form
-  wait_for_user_input: false
-
-## 3: Preferred time + confirm preferences
-- rule: Profile creation confirm preferences
-  condition:
-    - active_loop: profile_creation_time_form
-  steps:
-  - action: profile_creation_time_form
-  - active_loop: null
-  - action: profile_creation_map_time_to_daypart
-  - action: utter_profile_creation_preference_6
-  - action: profile_creation_confirm_preference_form
-  - active_loop: profile_creation_confirm_preference_form
-  wait_for_user_input: false
-  
-## 3: Modify preferences
-- rule: Profile creation modify preferences
-  condition:
-    - active_loop: profile_creation_confirm_preference_form
-  steps:
-  - action: profile_creation_confirm_preference_form
-  - active_loop: null
-  - slot_was_set:
-    - profile_creation_confirm_preference_slot: 2
-  - action: profile_creation_confirm_preference_form
-  - active_loop: profile_creation_confirm_preference_form
-  wait_for_user_input: false
-  
-## 3 + 4: Confirm preferences and start running walking pref
-- rule: Profile creation confirm preferences
-  condition:
-    - active_loop: profile_creation_confirm_preference_form
-  steps:
-  - action: profile_creation_confirm_preference_form
-  - active_loop: null
-  - slot_was_set:
-    - profile_creation_confirm_preference_slot: 1
   - action: utter_profile_creation_testim_1
   - action: utter_profile_creation_testim_2
   - action: profile_creation_run_walk_form

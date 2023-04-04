@@ -483,8 +483,6 @@ responses:
   - text: "Graag tot dan! 👋"
 
 actions:
-  - action_reset_profile_creation_confirm_preference_slot
-
   - validate_profile_creation_code_form
   
   - validate_profile_creation_day_time_confirm_form

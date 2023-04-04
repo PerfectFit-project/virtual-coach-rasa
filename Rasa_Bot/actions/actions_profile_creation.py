@@ -130,16 +130,6 @@ class ValidateProfileCreationDayTimeConfirmForm(FormValidationAction):
         return {"profile_creation_confirm_preference_slot": int(value)}
 
 
-class ActionResetProfileCreationConfirmPreferenceSlot(Action):
-    """Reset profile_creation_confirm_preference_slot"""
-
-    def name(self):
-        return "action_reset_profile_creation_confirm_preference_slot"
-
-    async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("profile_creation_confirm_preference_slot", None)]
-
-
 class ValidateProfileCreationRunWalkForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_profile_creation_run_walk_form'

@@ -2,8 +2,7 @@
 Contains custom actions related to the relapse dialogs
 """
 from virtual_coach_db.dbschema.models import (Testimonials, Users)
-from virtual_coach_db.helper import (ExecutionInterventionComponents, 
-                                     PreparationInterventionComponents)
+from virtual_coach_db.helper import (Components)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
 from .definitions import DATABASE_URL, TIMEZONE, FILE_PATH_IMAGE_PA
@@ -118,12 +117,12 @@ class ActionGoalSettingContinueAfterPlan(Action):
         # checks in which dialog the user is, and resumes the correct flow accordingly
         current_dialog = tracker.get_slot('current_intervention_component')
 
-        if current_dialog == ExecutionInterventionComponents.RELAPSE_DIALOG:
+        if current_dialog == Components.RELAPSE_DIALOG:
             # resumes the relapse dialog from rule: smoke relapse decide to get medication info
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]
 
-        if current_dialog == PreparationInterventionComponents.GOAL_SETTING:
+        if current_dialog == Components.GOAL_SETTING:
             return [FollowupAction('utter_goal_setting_pa_expl_1')]
 
         return None
@@ -222,7 +221,7 @@ class ActionSetSlotGoalSettingDialog(Action):
     async def run(self, dispatcher, tracker, domain):
 
         return [SlotSet('current_intervention_component',
-                        PreparationInterventionComponents.GOAL_SETTING)]
+                        Components.GOAL_SETTING)]
 
 
 class ValidateWhichSportForm(FormValidationAction):

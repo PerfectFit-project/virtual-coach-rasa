@@ -1,6 +1,6 @@
 ##Domain for preparation phase dialog
 intents:
-  - EXTERNAL_preparation_phase
+  - EXTERNAL_rescheduling_preparation_phase
 
 actions:
   - action_expected_time_next_part
@@ -10,6 +10,7 @@ actions:
   - validate_pick_a_daypart_form
   - action_schedule_next_preparation_phase
   - action_start_next_dialog
+  - action_launch_rescheduling_prep
 
 forms:
   next_part_now_or_later_form:
@@ -60,9 +61,9 @@ slots:
       - type: custom
 
 responses:
-  utter_finished_preparation_phase:
-    - text: "Je hebt zojuist weer een onderdeel van de voorbereidingsfase afgerond. Goed gedaan!👏"
-  utter_next_part:
+  utter_next_part_1:
+    - text: "Je hebt de vorige keer een onderdeel van de voorbereidingsfase afgerond. Goed gedaan! 👏"
+  utter_next_part_2:
     - text: "Je kunt nu door naar het volgende onderdeel."
   utter_ask_now_or_later:
     - text: "Wil jij het volgende onderdeel nu doen of later? Typ '1' wanneer je nu tijd hebt om een oefening te doen. Typ '2' wanneer je de oefening liever later doet."

@@ -1,0 +1,49 @@
+version: "3.1"
+
+rules:
+- rule: start preparation phase
+  steps:
+    - intent: EXTERNAL_rescheduling_preparation_phase
+    - action: utter_next_part_1
+    - action: utter_next_part_2
+    - action: action_expected_time_next_part
+    - action: next_part_now_or_later_form
+    - active_loop: next_part_now_or_later_form
+  wait_for_user_input: false
+
+- rule: User has time now
+
+  condition:
+  - active_loop: next_part_now_or_later_form
+  steps:
+    - action: next_part_now_or_later_form
+    - active_loop: null
+    - slot_was_set:
+        - now_or_later: 1
+    - action: utter_lets_start
+    - action: action_start_next_dialog
+
+- rule: User wants to do it later
+
+  condition:
+    - active_loop: next_part_now_or_later_form
+  steps:
+    - action: next_part_now_or_later_form
+    - active_loop: null
+    - slot_was_set:
+      - now_or_later: 2
+    - action: utter_preparation_delay_warning
+    - action: action_ask_new_time
+    - action: pick_a_daypart_form
+    - active_loop: pick_a_daypart_form
+  wait_for_user_input: false
+
+- rule: reschedule
+  condition:
+  - active_loop: pick_a_daypart_form
+  steps:
+    - action: pick_a_daypart_form
+    - active_loop: null
+    - action: action_schedule_next_preparation_phase
+    - action: utter_see_you
+    - action: action_end_dialog

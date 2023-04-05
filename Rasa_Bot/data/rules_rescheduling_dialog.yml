@@ -6,8 +6,7 @@ rules:
 # Rescheduling query - now
 - rule: rescheduling query dialog now - activity dialog
   steps:
-    - intent: EXTERNAL_trigger_reschedule_activity
-    - action: utter_intro
+    - action: utter_intro_reschedule_ga
     - action: action_expected_time_next_part
     - action: rescheduling_now_or_later_form
     - active_loop: rescheduling_now_or_later_form
@@ -21,8 +20,7 @@ rules:
 # Rescheduling query - later
 - rule: rescheduling query dialog later
   steps:
-    - intent: EXTERNAL_trigger_reschedule_activity
-    - action: utter_intro
+    - action: utter_intro_reschedule_ga
     - action: action_expected_time_next_part
     - action: rescheduling_now_or_later_form
     - active_loop: rescheduling_now_or_later_form
@@ -37,6 +35,4 @@ rules:
     - action: action_reschedule_dialog
     - action: utter_rescheduling_option_chosen
     - action: action_end_dialog
-    # TODO: what are we going to do at the end of the dialog if the user types something again?
-    # Maybe a ConversationPaused() event from custom action?
 

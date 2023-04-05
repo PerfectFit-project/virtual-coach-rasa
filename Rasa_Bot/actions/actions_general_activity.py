@@ -21,7 +21,7 @@ from .helper import (get_latest_bot_utterance,
                      get_user_intervention_activity_inputs,
                      store_dialog_closed_answer_to_db)
 from rasa_sdk import Action, FormValidationAction, Tracker
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from typing import Any, Dict, Text
 
@@ -29,14 +29,62 @@ from celery import Celery
 celery = Celery(broker=REDIS_URL)
 
 
-class ActionStartReschedulingDialog(Action):
-    def name(self) -> Text:
-        return "action_start_rescheduling_query_dialog"
+# Trigger relapse phase through celery
+class TriggerGeneralActivity(Action):
+    def name(self):
+        return "action_trigger_general_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = tracker.current_state()['sender_id']
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, ComponentsTriggers.RESCHEDULE_ACTIVITY))
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        celery.send_task('celery_tasks.user_trigger_dialog',
+                         (user_id, Components.GENERAL_ACTIVITY))
+
+        return []
+
+
+class LaunchGaRescheduling(Action):
+    """Launch the general activity rescheduling dialog"""
+
+    def name(self):
+        return "launch_ga_rescheduling"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('utter_intro_reschedule_ga')]
+
+
+class GoToCheckActivityDone(Action):
+    """Launch the general activity rescheduling dialog"""
+
+    def name(self):
+        return "go_to_check_activity_done"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('check_activity_done')]
+
+
+class GoToChooseActivity(Action):
+    """Launch the general activity rescheduling dialog"""
+
+    def name(self):
+        return "go_to_choose_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('check_who_decides')]
+
+
+class GoToRating(Action):
+    """Launch the general activity rescheduling dialog"""
+
+    def name(self):
+        return "go_to_rating"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('general_activity_check_rating')]
 
 
 class CheckIfFirstExecutionGA(Action):

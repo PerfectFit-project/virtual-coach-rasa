@@ -312,7 +312,7 @@ responses:
     - text: "Hier is je nieuwe oefening:"
     
 actions:
-  - action_start_rescheduling_query_dialog #trigger the rescheduling dialog
+  - action_trigger_general_activity # start the dialog through the scheduler
   - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
   - check_user_input_required   # check if the selected activity requires the input of the user
@@ -325,10 +325,15 @@ actions:
   - validate_general_activity_next_activity_form
   - get_last_performed_activity # get the last performed activity
   - get_activity_coach_choice # the coach chooses the next activity
+  - go_to_check_activity_done # starts the rule checking if the activity has been done already
+  - got_to_check_input_required # starts the rule checking if the user input is required
+  - go_to_choose_activity # starts the rule for choosing an activity
+  - go_to_rating # starts the rule checking the activity rating
   - validate_activity_usefulness_form # validate the slot activity_useful_rating
   - check_who_decides # determines if the user can decide or if the coach decides
   - action_set_slot_general_activity # set the slot to the current running dialog
   - load_activity # load the activity instructions
+  - launch_ga_rescheduling # followup to start the rescheduling dialog
   - validate_persuasion_want_form  # validate value is between 1 and 5
   - validate_persuasion_need_form   # validate value is between 1 and 5
   - validate_persuasion_prompts_form  # validate value is between 1 and 5

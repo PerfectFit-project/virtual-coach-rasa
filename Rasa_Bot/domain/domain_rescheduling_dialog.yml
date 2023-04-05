@@ -56,7 +56,7 @@ slots:
 responses:
 
   ### General rescheduling query dialog
-  utter_intro:
+  utter_intro_reschedule_ga:
      - text: "Je kunt weer een nieuwe oefening doen!"
      - text: "Je kunt een nieuwe oefening beginnen!"
      - text: "Je kunt nu weer een nieuwe oefening doen!"

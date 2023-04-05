@@ -1,0 +1,241 @@
+## Activities dialog stories
+# Purpose: Reflecting previous (=last) activity that the user has done
+# and picking the next activity.
+version: "3.1"
+
+## 1a: Trigger general activity dialog
+
+rules:
+- rule: user start dialog
+  steps:
+  - intent: review_last_activity
+  - action: action_trigger_general_activity # TO DO: implement
+
+- rule: Trigger general activity
+  steps:
+  - intent: EXTERNAL_trigger_general_activity
+  - action: action_set_slot_general_activity
+  - action: utter_greeting #4
+  - action: launch_ga_rescheduling
+
+
+- rule: continue after rescheduling first execution
+  steps:
+  - action: check_if_first_execution_ga
+  - slot_was_set:
+    - general_activity_first_execution: true
+  - action: go_to_choose_activity # choose_activity_checkpoint
+
+
+- rule: continue after rescheduling not first time
+  steps:
+  - action: check_if_first_execution_ga
+  - slot_was_set:
+      - general_activity_first_execution: false
+  - action: get_last_performed_activity
+  - action: persuasion_effort_form
+  - active_loop: persuasion_effort_form
+  - active_loop: null
+  - action: utter_persuasion_effort_thanks
+  - action: activity_usefulness_form
+  - active_loop: activity_usefulness_form
+  - active_loop: null
+  - action: go_to_rating # checkpoint: low_or_high_rating
+
+## 2a: The rating of the activity is in the top 5
+
+- rule: if rating high then check if this activity requires text input
+  steps:
+  - action: general_activity_check_rating # checkpoint: low_or_high_rating
+  - slot_was_set:
+    - general_activity_low_high_rating: high
+  - action: utter_general_activity_thanks_top_5_1
+  - action: got_to_check_input_required # checkpoint: input_required_check
+
+## 3b: The rating of the activity is in the top 5 and input of the user is not required
+
+- rule: if input is not required
+  steps:
+  - action: check_user_input_required #checkpoint: input_required_check
+  - slot_was_set:
+    - is_user_input_required: false
+  - action: utter_general_activity_look_back
+  - action: go_to_choose_activity # choose_activity_checkpoint
+
+## 3c: The input of the user is required and already given
+
+- rule: if input is required and previously given
+  steps:
+  - action: check_user_input_required # checkpoint: input_required_check
+  - slot_was_set:
+    - is_user_input_required: true
+  - activity: go_to_check_activity_done # checkpoint: has_activity_already_done
+
+## 3a: the activity has not been done before
+
+- rule: if input is required and previously given
+  steps:
+  - activity: check_activity_done # checkpoint: has_activity_already_done
+  - slot_was_set:
+    - is_activity_done: false
+  - action: utter_general_activity_edit_2
+  - action: general_activity_description_form
+  - active_loop: general_activity_description_form
+  wait_for_user_input: false # checkpoint: input_activity_description
+
+## 3c: the activity has been already done before
+
+- rule: if input is required and previously given
+  steps:
+  - activity: check_activity_done # checkpoint: has_activity_already_done
+  - slot_was_set:
+    - is_activity_done: true
+  - action: get_activity_user_input
+  - action: utter_general_activity_thanks_top_5_2
+  - action: save_or_edit_form
+  - active_loop: save_or_edit_form
+  wait_for_user_input: false # checkpoint: save_or_edit_checkpoint
+
+## 4b: save option selected
+
+- rule: if the user decides to save the previous content
+  condition: # checkpoint: save_or_edit_checkpoint
+  - active_loop: save_or_edit_form
+  steps:
+  - action: save_or_edit_form
+  - active_loop: null
+  - slot_was_set:
+    - save_or_edit_slot: 1
+  - action: utter_general_activity_save
+  - action: go_to_choose_activity # choose_activity_checkpoint
+
+## 4a: edit option selected
+
+- rule: if the user decides to edit the previous content
+  condition: # checkpoint: save_or_edit_checkpoint
+  - active_loop: save_or_edit_form
+  steps:
+  - action: save_or_edit_form
+  - active_loop: null
+  - slot_was_set:
+    - save_or_edit_slot: 2
+  - action: utter_general_activity_edit_1
+  - action: utter_general_activity_edit_2
+  - action: general_activity_description_form
+  - active_loop: general_activity_description_form
+  wait_for_user_input: false # checkpoint: input_activity_description
+
+## 4a: input the description
+
+- rule: if the user decides to edit the previous content
+  condition: # checkpoint: input_activity_description
+  - active_loop: general_activity_description_form
+  steps:
+  - action: general_activity_description_form
+  - active_loop: null
+  - action: general_activity_description_form
+  - active_loop: general_activity_description_form
+  - active_loop: null
+  - action: save_description_in_db
+  - action: utter_general_activity_edit_3
+  - action: go_to_choose_activity # choose_activity_checkpoint
+
+## 2b: The rating of the activity is not in the top 5
+
+- rule: if rating is low then just thanks
+  steps:
+  - action: general_activity_check_rating  # checkpoint: low_or_high_rating
+  - slot_was_set:
+    - general_activity_low_high_rating: low
+  - action: utter_general_activity_thanks #9
+  - action: go_to_choose_activity # choose_activity_checkpoint
+
+## 6a: the user chooses the activity
+
+- rule: new activities are randomly proposed to the user
+  steps: # choose_activity_checkpoint
+  - action: check_who_decides
+  - slot_was_set:
+    - who_decides_slot: user
+  - action: get_three_random_activities
+  - action: utter_general_activity_choose_next_activity
+  - action: general_activity_next_activity_form
+  - active_loop: general_activity_next_activity_form
+  - active_loop: null
+  - action: utter_general_activity_next_user
+  - action: utter_persuasion_questions_intro
+  - action: utter_persuasion_questions_intro_2
+  - action: utter_ask_persuasion_prompts_slot_intro
+  - action: persuasion_prompts_form
+  - active_loop: persuasion_prompts_form
+  wait_for_user_input: false # checkpoint: persuasion
+
+## 7a: the coach chooses the activity
+
+- rule: new activities are randomly proposed to the user
+  steps: # choose_activity_checkpoint
+  - action: check_who_decides
+  - slot_was_set:
+    - who_decides_slot: coach
+  - action: get_activity_coach_choice
+  - action: utter_general_activity_next_coach
+  - action: utter_persuasion_questions_intro
+  - action: utter_persuasion_questions_intro_2
+  - action: utter_ask_persuasion_prompts_slot_intro
+  - action: persuasion_prompts_form
+  - active_loop: persuasion_prompts_form
+  wait_for_user_input: false # checkpoint: persuasion
+
+
+# Chosen persuasion type is to not persuade -> do not need user input
+- rule: persuasion without input
+  condition: # checkpoint: persuasion
+  - active_loop: persuasion_prompts_form
+  steps:
+  - action: persuasion_prompts_form
+  - active_loop: null
+  - action: utter_ask_persuasion_want_slot_intro
+  - action: persuasion_want_form
+  - active_loop: persuasion_want_form
+  - active_loop: null
+  - action: utter_ask_persuasion_need_slot_intro
+  - action: persuasion_need_form
+  - active_loop: persuasion_need_form
+  - active_loop: null
+  - action: utter_thank_persuasion_state_questions
+  - action: send_persuasive_message_activity
+  - slot_was_set:
+    - persuasion_requires_input: false
+  - action: save_persuasion_to_database
+  - action: utter_intro_activity_text
+  - action: load_activity
+  - action: action_end_dialog
+
+
+# Chosen persuasion type is either commitment or consensus -> need user input
+- rule: persuasion with input
+  condition: # checkpoint: persuasion
+  - active_loop: persuasion_prompts_form
+  steps:
+  - action: persuasion_prompts_form
+  - active_loop: null
+  - action: utter_ask_persuasion_want_slot_intro
+  - action: persuasion_want_form
+  - active_loop: persuasion_want_form
+  - active_loop: null
+  - action: utter_ask_persuasion_need_slot_intro
+  - action: persuasion_need_form
+  - active_loop: persuasion_need_form
+  - active_loop: null
+  - action: utter_thank_persuasion_state_questions
+  - action: send_persuasive_message_activity
+  - slot_was_set:
+    - persuasion_requires_input: true
+  - action: persuasion_reflection_form
+  - active_loop: persuasion_reflection_form
+  - active_loop: null
+  - action: utter_thank_persuasion_reflection
+  - action: save_persuasion_to_database
+  - action: utter_intro_activity_text
+  - action: load_activity
+  - action: action_end_dialog

@@ -6,7 +6,7 @@ import datetime
 from typing import Any, Dict, Text
 
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 
@@ -28,9 +28,8 @@ class ActionContinueGeneralActivityDialog(Action):
         return "action_continue_with_general_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = tracker.current_state()['sender_id']
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, ComponentsTriggers.CONTINUE_GENERAL_ACTIVITY))
+
+        return [FollowupAction('check_if_first_execution_ga')]
 
 
 class ActionResetReschedulingNowSlot(Action):

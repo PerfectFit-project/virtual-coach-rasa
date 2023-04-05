@@ -209,6 +209,7 @@ nlu:
 
 - intent: medicijn_intent
   examples: |
+    - "medicatie"
     - "medicati"
     - "medicijnen"
     - "medicijn"

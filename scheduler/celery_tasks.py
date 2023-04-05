@@ -122,7 +122,7 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
 
     logging.info('Celery received a dialog rescheduling')
     send_fsm_event(user_id=user_id,
-                   event=Event(EventEnum.DIALOG_RESCHEDULED,
+                   event=Event(EventEnum.DIALOG_RESCHEDULED_USER,
                                (intervention_component_name, new_date)))
 
 
@@ -194,7 +194,7 @@ def trigger_scheduled_intervention_component(self,  # pylint: disable=unused-arg
         rescheduled_date = datetime.now() + timedelta(minutes=MAXIMUM_DIALOG_DURATION)
         # send a rescheduling event
         send_fsm_event(user_id,
-                       event=Event(EventEnum.DIALOG_RESCHEDULED, (name, rescheduled_date)))
+                       event=Event(EventEnum.DIALOG_RESCHEDULED_AUTO, (name, rescheduled_date)))
 
 
 @app.task(bind=True)

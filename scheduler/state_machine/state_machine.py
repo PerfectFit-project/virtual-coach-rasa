@@ -60,7 +60,8 @@ class DialogState:
 
 class EventEnum(Enum):
     DIALOG_COMPLETED = 'dialog_completed'
-    DIALOG_RESCHEDULED = 'dialog_rescheduled'
+    DIALOG_RESCHEDULED_AUTO = 'dialog_rescheduled_auto'
+    DIALOG_RESCHEDULED_USER = 'dialog_rescheduled_user'
     DIALOG_STARTED = 'dialog_started'
     NEW_DAY = 'new_day'
     USER_TRIGGER = 'user_trigger'
@@ -90,10 +91,17 @@ class StateMachine:
             self.dialog_state.set_to_idle()
             self.state.on_dialog_completed(event.Descriptor)
 
-        elif event.EventType == EventEnum.DIALOG_RESCHEDULED:
+        elif event.EventType == EventEnum.DIALOG_RESCHEDULED_AUTO:
             logging.info('Dialog resheduled event received %s ', event.Descriptor)
             # in this case the descriptor is a tuple, where 0 is
             # the dialog and 1 the new date
+            self.state.on_dialog_rescheduled(event.Descriptor[0], event.Descriptor[1])
+
+        elif event.EventType == EventEnum.DIALOG_RESCHEDULED_USER:
+            logging.info('Dialog resheduled event received %s ', event.Descriptor)
+            # in this case the descriptor is a tuple, where 0 is
+            # the dialog and 1 the new date
+            self.dialog_state.set_to_idle()
             self.state.on_dialog_rescheduled(event.Descriptor[0], event.Descriptor[1])
 
         elif event.EventType == EventEnum.DIALOG_STARTED:

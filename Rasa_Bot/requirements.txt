@@ -1,6 +1,5 @@
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.3
 protobuf==3.20.1  # temporary fix
-websockets==10.0  # temporary fix
 typeguard==2.13.3
 chardet==3.0.4
 multidict==5.2.0

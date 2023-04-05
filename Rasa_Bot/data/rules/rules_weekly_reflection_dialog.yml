@@ -274,8 +274,6 @@ rules:
   - active_loop: user_ready_1_form
   wait_for_user_input: false
 
-    ## TODO Figure out how to handle splitting into groups, 88 excel file
-
 ## User responded 2, yes to smoking situations form
 - rule: Possible smoking situations
   condition:
@@ -297,7 +295,6 @@ rules:
 ## 6. Reflection on physical activity
 
 ## 6a Overview physical activity group 1
-## TODO depending on steps slight tweaks in dialog
 ## TODO show the overview, excel file 90
 - rule: Step dialog component group 1
   condition:
@@ -307,13 +304,13 @@ rules:
   - active_loop: null
   - action: utter_look_forward_20
   - action: utter_look_forward_21
-  - action: action_select_pa_group
+  - action: action_which_pa_group
   - slot_was_set:
       - pa_group: 1
   - action: utter_overview_group1_1
   - action: utter_overview_group1_2
   - action: utter_overview_group1_3
-  - action: utter_overview_group1_4
+  - action: action_step_goal_utterances
   - action: how_went_pa_form
   - active_loop: how_went_pa_form
   wait_for_user_input: false
@@ -325,19 +322,18 @@ rules:
   - action: user_ready_1_form
   - active_loop: null
   - action: utter_look_forward_13
-  - action: action_select_pa_group
+  - action: action_which_pa_group
   - slot_was_set:
       - pa_group: 1
   - action: utter_overview_group1_1
   - action: utter_overview_group1_2
   - action: utter_overview_group1_3
-  - action: utter_overview_group1_4
+  - action: action_step_goal_utterances
   - action: how_went_pa_form
   - active_loop: how_went_pa_form
   wait_for_user_input: false
 
 ## 6b Overview physical activity group 2
-## TODO depending on steps slight tweaks in dialog
 ## TODO show the overview, excel file 90
 - rule: Step dialog component group 2
   condition:
@@ -347,13 +343,13 @@ rules:
   - active_loop: null
   - action: utter_look_forward_20
   - action: utter_look_forward_21
-  - action: action_select_pa_group
+  - action: action_which_pa_group
   - slot_was_set:
       - pa_group: 2
   - action: utter_overview_group2_1
   - action: utter_overview_group2_2
   - action: utter_overview_group2_3
-  - action: utter_overview_group2_4
+  - action: action_step_goal_utterances
   - action: how_went_pa_form
   - active_loop: how_went_pa_form
   wait_for_user_input: false
@@ -365,13 +361,13 @@ rules:
   - action: user_ready_1_form
   - active_loop: null
   - action: utter_look_forward_13
-  - action: action_select_pa_group
+  - action: action_which_pa_group
   - slot_was_set:
       - pa_group: 2
   - action: utter_overview_group2_1
   - action: utter_overview_group2_2
   - action: utter_overview_group2_3
-  - action: utter_overview_group2_4
+  - action: action_step_goal_utterances
   - action: how_went_pa_form
   - active_loop: how_went_pa_form
   wait_for_user_input: false
@@ -516,6 +512,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - refresh_previous_week: 1
+  - action: action_set_pa_group
   - or:
       - slot_was_set:
         - pa_group: 1
@@ -528,7 +525,6 @@ rules:
 
 ## 7. Look forward to new week
 ## 7a Steps next week, for group 1
-## TODO retrieve long term goal and show graph if possible
 - rule: Show steps next week group1, 1
   condition:
     - active_loop: refresh_previous_week_form
@@ -537,6 +533,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - refresh_previous_week: 2
+  - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 1
   - action: utter_steps_next_week_1
@@ -565,9 +562,11 @@ rules:
   - action: utter_difficult_moments_pa_10
   - action: utter_difficult_moments_pa_11
   - action: utter_difficult_moments_pa_12
+  - action: action_set_pa_group
   - slot_was_set:
     - pa_group: 1
   - action: action_set_slot_smoke_or_pa_2
+  - action: action_reset_slot_crave_lapse_relapse
   - action: pa_type_together_why_fail_form
   - active_loop: pa_type_together_why_fail_form
   wait_for_user_input: false
@@ -582,6 +581,7 @@ rules:
     - difficult_moments: 3
   - action: utter_difficult_moments_pa_2
   - action: utter_difficult_moments_pa_3
+  - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 1
   - action: utter_steps_next_week_1
@@ -607,6 +607,7 @@ rules:
   - slot_was_set:
     - difficult_moments: 1
   - action: utter_difficult_moments_pa_1
+  - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 1
   - action: utter_steps_next_week_1
@@ -633,6 +634,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - refresh_previous_week: 2
+  - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 2
   - action: utter_increase_intensity_1
@@ -645,7 +647,6 @@ rules:
   - active_loop: if_doable_form
   wait_for_user_input: false
 
-##TODO figure out how to leave dialog and come back, excel file 156
 - rule: Show increase intensity dialog group2, 2
   steps:
   - action: met_expectations_form
@@ -656,6 +657,7 @@ rules:
   - action: utter_difficult_moments_pa_10
   - action: utter_difficult_moments_pa_11
   - action: utter_difficult_moments_pa_12
+  - action: action_set_pa_group
   - slot_was_set:
     - pa_group: 2
   - action: utter_increase_intensity_1
@@ -678,6 +680,7 @@ rules:
     - difficult_moments: 3
   - action: utter_difficult_moments_pa_2
   - action: utter_difficult_moments_pa_3
+  - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 2
   - action: utter_increase_intensity_1
@@ -699,6 +702,7 @@ rules:
   - slot_was_set:
     - difficult_moments: 1
   - action: utter_difficult_moments_pa_1
+  - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 2
   - action: utter_increase_intensity_1
@@ -712,7 +716,6 @@ rules:
   wait_for_user_input: false
 
 ## User answered 2, no, so we don't increase intensity
-## TODO show graph
 - rule: No intensity increase
   condition:
     - active_loop: if_doable_form

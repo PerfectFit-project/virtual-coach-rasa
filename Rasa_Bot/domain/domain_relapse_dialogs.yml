@@ -704,6 +704,7 @@ actions:
   - action_set_slot_crave_lapse_relapse_1
   - action_set_slot_crave_lapse_relapse_2
   - action_set_slot_crave_lapse_relapse_3
+  - action_reset_slot_crave_lapse_relapse
   - action_trigger_relapse
   - populate_coping_activities_list
   - populate_coping_activities_list_pa

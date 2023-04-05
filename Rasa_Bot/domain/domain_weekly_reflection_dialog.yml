@@ -235,6 +235,8 @@ responses:
   # 1. Congratulate
   utter_congratulate_1:
     - text: "Hallo, 👋🏼"
+    - text: "Goedendag!"
+    - text: "Hi!"
   utter_congratulate_2:
     - text: "Gefeliciteerd, de {week_number}e week van het Perfect Fit programma zit erop! 🎉🎉"
   utter_congratulate_3:
@@ -913,8 +915,8 @@ responses:
     - text: "Typ 1 of 2 om aan te geven of bewegen nu even wat minder makkelijk ging of dat het vaker niet gaat"
   utter_difficult_moments_pa_7:
     - text: "Hoe vervelend ook, het kan dus gebeuren dat in beweging komen even niet lukt.  "
-    - text: "Soms gaat het even niet zoals je wilt en dat kan gebeuren. /Het kan voorkomen dat het
-             niet altijd is gelukt om in beweging te komen, dat is normaal."
+    - text: "Soms gaat het even niet zoals je wilt en dat kan gebeuren."
+    - text: "Het kan voorkomen dat het niet altijd is gelukt om in beweging te komen, dat is normaal."
     - text: "Soms is het lastig om in beweging te komen, maar dat is geen reden om op te geven."
   utter_difficult_moments_pa_8:
     - text: "Wees dus niet te hard voor jezelf ❤️. Daardoor kun je je rot voelen en dan krijg je minder zin om te gaan."
@@ -956,8 +958,8 @@ responses:
   utter_steps_next_week_2:
     - text: "Ook voor het bewegen is het slim om alvast vooruit te kijken naar komende week ➡️. 
              Op deze manier ben je voorbereid op wat er gaat komen.  "
-    - text: " Op deze manier ben je voorbereid op wat er gaat komen./Het kan ook handig zijn om alvast vooruit te kijken naar de komende week als het gaat om bewegen➡️."
-    - text: "Zo kun je jezelf voorbereiden op wat er komen gaat./ Het is ook verstandig om vooruit te kijken naar de komende week als het gaat om bewegen ➡️. Zo kun je plannen maken en ervoor zorgen dat je voldoende beweging krijgt."
+    - text: "Het kan ook handig zijn om alvast vooruit te kijken naar de komende week als het gaat om bewegen➡️. Zo kun je jezelf voorbereiden op wat er komen gaat."
+    - text: "Het is ook verstandig om vooruit te kijken naar de komende week als het gaat om bewegen ➡️. Zo kun je plannen maken en ervoor zorgen dat je voldoende beweging krijgt."
     - text: "Door ook vooruit te kijken naar het bewegen voor de komende week ➡️, kun je ervoor zorgen dat je op tijd begint met plannen en jezelf voorbereidt op mogelijk moeilijkere momenten."
     - text: "Het is ook een goed idee om vooruit te kijken naar het bewegen voor de komende week ➡️. Op die manier kun je jezelf uitdagen en ervoor zorgen dat je aan je doelen werkt. "
   utter_steps_next_week_3:
@@ -1304,7 +1306,9 @@ responses:
 
 actions:
   - action_trigger_weekly_reflection
-  - action_select_pa_group
+  - action_which_pa_group
+  - action_set_pa_group
+  - action_step_goal_utterances
   - action_get_week_number
   - action_get_long_term_pa_goal
   - action_set_slot_weekly_reflection

@@ -90,18 +90,51 @@ class GetWeekNumber(Action):
         return [SlotSet('week_number', str(exec_week))]
 
 
-class SelectPaGroup(Action):
+class WhichPaGroup(Action):
     def name(self):
-        return "action_select_pa_group"
+        return "action_which_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        ## TODO get steps and use to set the slot
+        ## TODO This method should return the current pa group of the user, by reading from the database
         steps_bool = True
         if steps_bool:
             return [SlotSet('pa_group', 1)]
         return [SlotSet('pa_group', 2)]
+
+class SetPaGroup(Action):
+    def name(self):
+        return "action_set_pa_group"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        ## TODO this method should save in the database the pa group based on steps, then set the slot
+        steps_bool = True
+        if steps_bool:
+            return [SlotSet('pa_group', 1)]
+        return [SlotSet('pa_group', 2)]
+
+class StepGoalUtterances(Action):
+    def name(self):
+        return "action_step_goal_utterances"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
+        ## TODO retrieve amount of days that step goal was met
+        step_goal_days = 7
+        if step_goal_days > 5:
+            dispatcher.utter_message(response="utter_overview_group1_4")
+        elif 3 < step_goal_days < 6:
+            dispatcher.utter_message(response="utter_overview_group1_5")
+            dispatcher.utter_message(response="utter_overview_group1_6")
+        else:
+            dispatcher.utter_message(response="utter_overview_group1_7")
+            dispatcher.utter_message(response="utter_overview_group1_8")
+
+        return []
 
 
 class ValidateHowWentNonSmokeForm(FormValidationAction):

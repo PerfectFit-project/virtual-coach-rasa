@@ -14,8 +14,6 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-
-import logging
     
 
 class ValidateProfileCreationCodeForm(FormValidationAction):
@@ -62,10 +60,6 @@ class ValidateProfileCreationDayTimeConfirmForm(FormValidationAction):
         
         dispatcher.utter_message(response="utter_profile_creation_preference_4")
         dispatcher.utter_message(response="utter_profile_creation_preference_5")
-        
-        logging.info("Day:" + str(day_name))
-        
-        tracker.slots["profile_creation_day_slot"] = day_name
 
         return {"profile_creation_day_slot": day_name}
     
@@ -86,19 +80,10 @@ class ValidateProfileCreationDayTimeConfirmForm(FormValidationAction):
             return {"profile_creation_time_slot": None}
         
         time = int(value)
-        
-        logging.info("time: " + str(time))
-        
+        daypart = DAYPART_NAMES_DUTCH[time - 1]
         day = tracker.get_slot("profile_creation_day_slot")
         
-        logging.info("day slot: " + str(day))
-        
-        daypart = DAYPART_NAMES_DUTCH[time - 1]
-        
-        logging.info("day part:" + daypart)
-        
         message = "Staat genoteerd. Wij gaan de komende tijd steeds op " + day + " " + daypart + " samen in gesprek."
-        
         dispatcher.utter_message(text=message)
 
         return {"profile_creation_time_slot": time}
@@ -111,8 +96,6 @@ class ValidateProfileCreationDayTimeConfirmForm(FormValidationAction):
         """Validate profile_creation_confirm_preference_slot"""
 
         last_utterance = get_latest_bot_utterance(tracker.events)
-        
-        logging.info("last utterance:" + last_utterance)
         if last_utterance != 'utter_ask_profile_creation_confirm_preference_slot':
             return {"profile_creation_confirm_preference_slot": None}
 

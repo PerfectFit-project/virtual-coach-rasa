@@ -30,7 +30,7 @@ class SetSlotProfileCreation(Action):
 
 class SetSlotMedicationTalk(Action):
     def name(self):
-        return "action_set_slot_medication_talk"
+        return "action_set_slot_medication_talk_video"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",

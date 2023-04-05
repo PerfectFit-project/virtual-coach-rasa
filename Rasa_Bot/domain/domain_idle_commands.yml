@@ -1,0 +1,20 @@
+intents:
+  - help_intent
+  - ehbo_intent
+  - uitleg_intent
+  - oefening_intent
+  - medicijn_intent
+
+responses:
+  # Fallback for low NLU confidence and low next action confidence
+  # For low next action confidence, "utter_default" is automatically called.
+  # For low NLU confidence, we have defined a rule.
+  utter_default:
+    - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
+
+actions:
+  - action_trigger_relapse_dialog
+  - action_trigger_first_aid_dialog
+  - action_trigger_explanation_first_aid_video_dialog
+  - action_trigger_general_activity_dialog
+  - action_trigger_video_medicine_dialog

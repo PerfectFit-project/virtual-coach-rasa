@@ -1,7 +1,7 @@
 version: "3.1"
 
 intents:
-- EXTERNAL_trigger_execution_introduction
+- EXTERNAL_trigger_execution_introduction_video
 - EXTERNAL_trigger_general_activity
 - EXTERNAL_weekly_reflection
 - EXTERNAL_daily_reflection

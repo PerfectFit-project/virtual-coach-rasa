@@ -4,6 +4,7 @@ websockets==10.0  # temporary fix
 typeguard==2.13.3
 chardet==3.0.4
 multidict==5.2.0
+websockets==10.2
 rasa==3.2.8 # NB! when updating, make sure to also update:
             # * rasa base image in actions/Dockerfile,
             # * version number in nlu.yml, story files, rules.yml,

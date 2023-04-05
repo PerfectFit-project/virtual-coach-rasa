@@ -2,10 +2,10 @@ version: "3.1"
 
 intents:
 - EXTERNAL_trigger_ask_foreseen_hrs
-- EXTERNAL_trigger_preparation_introduction
+- EXTERNAL_trigger_preparation_introduction_video
 - EXTERNAL_trigger_profile_creation
-- EXTERNAL_trigger_medication_talk
-- EXTERNAL_trigger_track_behavior
+- EXTERNAL_trigger_medication_talk_video
+- EXTERNAL_trigger_track_behavior_video
 - EXTERNAL_trigger_cold_turkey
 - EXTERNAL_trigger_plan_quit_start
 - EXTERNAL_trigger_future_self

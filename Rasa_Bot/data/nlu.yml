@@ -20,7 +20,7 @@ nlu:
     - "Mag ik de planning voor de week?"
     - "Mag ik de agenda?"
     - "Heb je de planning voor mij?"
-    
+
 - intent: confirm
   examples: |
     - Ja graag
@@ -33,7 +33,7 @@ nlu:
     - Ah ja
     - "Graag"
     - Ja, klopt
-    
+
 - intent: deny
   examples: |
     - "Nee, dank je wel."
@@ -50,14 +50,14 @@ nlu:
     - "Start future self dialog."
     - "Ik wil future self dialog."
     - "future self dialog."
-    
+
 - intent: CENTRAL_get_first_aid_kit
   examples: |
     - "Get first aid kit"
     - "Ik wil first aid kit"
     - "First aid kit"
     - "EHBO doos"
-    
+
 - intent: urgent
   examples: |
     - "dood"
@@ -70,25 +70,44 @@ nlu:
   examples: |
     - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"
 
+# set video links
+
+- intent: EXTERNAL_first_aid_kit_video
+  examples: |
+    - EXTERNAL_first_aid_kit_video
+
+- intent: EXTERNAL_trigger_future_self_long_video
+  examples: |
+    - EXTERNAL_trigger_future_self_long_video
+
+- intent: EXTERNAL_trigger_future_self_short_video
+  examples: |
+    - EXTERNAL_trigger_future_self_short_video
+
+- intent: EXTERNAL_trigger_execution_introduction_video
+  examples: |
+    - EXTERNAL_trigger_execution_introduction_video
+
+- intent: EXTERNAL_trigger_preparation_introduction_video
+  examples: |
+    - EXTERNAL_trigger_preparation_introduction_video
+
+- intent: EXTERNAL_trigger_medication_talk_video
+  examples: |
+    - EXTERNAL_trigger_medication_talk_video
+
+- intent: EXTERNAL_trigger_track_behavior_video
+  examples: |
+    - EXTERNAL_trigger_track_behavior_video
+
 - intent: EXTERNAL_watch_video_dialog
   examples: |
     - EXTERNAL_watch_video_dialog
 ### preparation phase
-- intent: EXTERNAL_trigger_preparation_introduction
-  examples: |
-    - "EXTERNAL_trigger_preparation_introduction"
 
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
     - "EXTERNAL_trigger_profile_creation"
-
-- intent: EXTERNAL_trigger_medication_talk
-  examples: |
-    - "EXTERNAL_trigger_medication_talk"
-
-- intent: EXTERNAL_trigger_track_behavior
-  examples: |
-    - "EXTERNAL_trigger_track_behavior" 
 
 ###
 
@@ -128,9 +147,21 @@ nlu:
   examples: |
     - "EXTERNAL_relapse_dialog_pa"
 
-- intent: EXTERNAL_relapse_dialog_pa
+- intent: EXTERNAL_watch_video_dialog
   examples: |
-    - "EXTERNAL_relapse_dialog_pa"
+    - "EXTERNAL_watch_video_dialog"
+
+- intent: EXTERNAL_rescheduling_preparation_phase
+  examples: |
+    - "EXTERNAL_rescheduling_preparation_phase"
+
+- intent: EXTERNAL_watch_video_dialog
+  examples: |
+    - "EXTERNAL_watch_video_dialog"
+
+- intent: EXTERNAL_rescheduling_preparation_phase
+  examples: |
+    - "EXTERNAL_rescheduling_preparation_phase"
 
 
 - intent: relapse_dialog
@@ -164,3 +195,51 @@ nlu:
     - "file"
     - "File"
     - "Start file"
+
+- intent: help_intent
+  examples: |
+    - "help"
+    - "hepl"
+    - "elp"
+    - "ehlp"
+    - "hel"
+
+- intent: ehbo_intent
+  examples: |
+    - "ehbo"
+    - "ebho"
+    - "eobh"
+    - "eehbo"
+    - "ehhbo"
+    - "ehbbo"
+    - "ehboo"
+    - "ik wil ehbo"
+
+- intent: uitleg_intent
+  examples: |
+    - "uilteg"
+    - "uileg"
+    - "uitleg"
+    - "iutleg"
+    - "uitlge"
+    - "ik wil een uitleg"
+
+- intent: oefening_intent
+  examples: |
+    - "oefning"
+    - "oefenin"
+    - "oefening"
+    - "eofening"
+    - "ik wil de oefening doen"
+    - "oefenign"
+
+- intent: medicijn_intent
+  examples: |
+    - "medicatie"
+    - "medicati"
+    - "medicijnen"
+    - "medicijn"
+    - "medicein"
+    - "nedicijn"
+    - "medicjin"
+    - "medijcin"

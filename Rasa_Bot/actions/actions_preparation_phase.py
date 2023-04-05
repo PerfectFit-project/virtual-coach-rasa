@@ -31,6 +31,7 @@ class ExpectedTimeNextPart(Action):
 
         message = "Ik verwacht dat het volgende onderdeel " + str(min_duration) + " tot " \
                   + str(max_duration) + " minuten zal duren.⏱️"
+
         dispatcher.utter_message(text=message)
         return []
 
@@ -97,8 +98,7 @@ class StartNextDialog(Action):
                           ComponentsTriggers.WATCH_VIDEO))
 
 
-
-class Schedule_Next_Prep_Phase(Action):
+class ScheduleNextPrepPhase(Action):
     """ reschedule the dialog for another time """
 
     def name(self) -> Text:

@@ -83,7 +83,8 @@ class ValidateProfileCreationDayTimeConfirmForm(FormValidationAction):
         daypart = DAYPART_NAMES_DUTCH[time - 1]
         day = tracker.get_slot("profile_creation_day_slot")
 
-        message = "Staat genoteerd. Wij gaan de komende tijd steeds op " + day + " " + daypart + " samen in gesprek."
+        message = "Staat genoteerd. Wij gaan de komende tijd steeds op " 
+        message += day + " " + daypart + " samen in gesprek."
         dispatcher.utter_message(text=message)
 
         return {"profile_creation_time_slot": time}

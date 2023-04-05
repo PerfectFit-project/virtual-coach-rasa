@@ -1,0 +1,34 @@
+version: "3.1"
+
+rules:
+- rule: Give user central mode options when they send a message with low NLU confidence
+  steps:
+  - intent: nlu_fallback
+  - action: utter_default
+  - action: utter_central_mode_options
+  - action: action_end_dialog
+
+- rule: help command
+  steps:
+  - intent: help_intent
+  - action: action_trigger_relapse_dialog
+
+- rule: first aid command
+  steps:
+  - intent: ehbo_intent
+  - action: action_trigger_first_aid_dialog
+
+- rule: explanation aid command
+  steps:
+  - intent: uitleg_intent
+  - action: action_trigger_explanation_first_aid_video_dialog
+
+- rule: exercise command
+  steps:
+  - intent: oefening_intent
+  - action: action_trigger_general_activity_dialog
+
+- rule: medicine command
+  steps:
+  - intent: medicijn_intent
+  - action: action_trigger_video_medicine_dialog

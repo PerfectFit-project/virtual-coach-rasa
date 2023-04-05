@@ -5,7 +5,7 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import VideoLinks, Components
+from virtual_coach_db.helper.definitions import VideoLinks, Components, ComponentsTriggers
 from . import validator
 from .definitions import REDIS_URL
 from .helper import get_latest_bot_utterance
@@ -21,7 +21,22 @@ class ActionLaunchWatchVideoDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        new_intent = 'EXTERNAL_watch_video_dialog'
+        new_intent = ComponentsTriggers.WATCH_VIDEO
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, new_intent))
+        return []
+
+
+class ActionLaunchReschedulingPrep(Action):
+    """Trigger the preparation dialogs rescheduling"""
+
+    def name(self):
+        return "action_launch_rescheduling_prep"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
+
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent))
         return []
@@ -36,17 +51,6 @@ class SetMedicationVideoLink(Action):
 
         return [SlotSet("video_link",
                         VideoLinks.MEDICATION_VIDEO)]
-
-
-class SetSlotVideoLink(Action):
-    """ this is an example for setting the slot of the video link"""
-    def name(self):
-        return "action_set_slot_video_link"
-
-    async def run(self, dispatcher, tracker, domain):
-
-        return [SlotSet("video_link",
-                        VideoLinks.TESTVIDEOLINK)]
 
 
 class DisplayVideoLink(Action):
@@ -73,16 +77,6 @@ class DelayedMessage(Action):
         celery.send_task('celery_tasks.trigger_intervention_component',
                          (user_id, new_intent),
                          eta=datetime.datetime.now() + datetime.timedelta(seconds=30))
-        return []
-
-
-class ActionReactToReminder(Action):
-    """Will ask user about the video after watching"""
-    def name(self):
-        return "action_thanks_for_watching"
-
-    async def run(self, dispatcher, tracker, domain):
-        dispatcher.utter_message(response="utter_thanks_for_watching")
         return []
 
 
@@ -120,5 +114,3 @@ class ContinueAfterVideo(Action):
             # resumes the relapse dialog opening the ehbo_me_self_lapse_form.
             # The flow will then depend on the chosen option in the form
             return [FollowupAction('ehbo_me_self_lapse_form')]
-        # TODO: add the other possible cases
-        return [FollowupAction('utter_test_utterance')]

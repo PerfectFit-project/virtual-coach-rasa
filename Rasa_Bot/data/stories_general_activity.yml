@@ -11,12 +11,12 @@ stories:
   - intent: review_last_activity
   - action: action_set_slot_general_activity
   - action: utter_greeting #4
-  - checkpoint: rescheduling_query_dialog
+  - action: action_start_rescheduling_query_dialog
 
 
 - story: continue after rescheduling first execution
   steps:
-  - checkpoint: continue_with_general_activity
+  - intent: EXTERNAL_trigger_continue_general_activity
   - action: check_if_first_execution_ga
   - slot_was_set:
     - general_activity_first_execution: true
@@ -24,7 +24,7 @@ stories:
 
 - story: continue after rescheduling not first time
   steps:
-  - checkpoint: continue_with_general_activity
+  - intent: EXTERNAL_trigger_continue_general_activity
   - action: check_if_first_execution_ga
   - slot_was_set:
       - general_activity_first_execution: false

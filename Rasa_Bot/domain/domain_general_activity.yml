@@ -1,6 +1,6 @@
 intents:
 - review_last_activity
-
+- EXTERNAL_trigger_continue_general_activity
 
 slots:
   # Check if it is the first time the dialog is performed
@@ -312,6 +312,7 @@ responses:
     - text: "Hier is je nieuwe oefening:"
     
 actions:
+  - action_start_rescheduling_query_dialog #trigger the rescheduling dialog
   - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
   - check_user_input_required   # check if the selected activity requires the input of the user

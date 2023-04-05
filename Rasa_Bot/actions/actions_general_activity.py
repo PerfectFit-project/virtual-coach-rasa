@@ -4,6 +4,7 @@ from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
                                               FirstAidKit,
                                               InterventionActivity)
 from virtual_coach_db.helper import (Components,
+                                     ComponentsTriggers,
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
@@ -13,7 +14,8 @@ from .definitions import (COMMITMENT, CONSENSUS,
                           OPT_POLICY, STATE_FEATURE_MEANS, 
                           REFLECTIVE_QUESTION_COMMITMENT,
                           REFLECTIVE_QUESTION_COMMITMENT_IDENTITY,
-                          REFLECTIVE_QUESTION_CONSENSUS)
+                          REFLECTIVE_QUESTION_CONSENSUS,
+                          REDIS_URL)
 from .helper import (get_latest_bot_utterance, 
                      get_random_activities, 
                      get_user_intervention_activity_inputs,
@@ -22,6 +24,19 @@ from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from typing import Any, Dict, Text
+
+from celery import Celery
+celery = Celery(broker=REDIS_URL)
+
+
+class ActionStartReschedulingDialog(Action):
+    def name(self) -> Text:
+        return "action_start_rescheduling_query_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+        celery.send_task('celery_tasks.trigger_intervention_component',
+                         (user_id, ComponentsTriggers.RESCHEDULE_ACTIVITY))
 
 
 class CheckIfFirstExecutionGA(Action):

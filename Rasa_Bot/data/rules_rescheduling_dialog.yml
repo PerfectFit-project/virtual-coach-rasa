@@ -1,0 +1,42 @@
+# Stories for rescheduling dialog
+version: "3.1"
+
+rules:
+
+# Rescheduling query - now
+- rule: rescheduling query dialog now - activity dialog
+  steps:
+    - intent: EXTERNAL_trigger_reschedule_activity
+    - action: utter_intro
+    - action: action_expected_time_next_part
+    - action: rescheduling_now_or_later_form
+    - active_loop: rescheduling_now_or_later_form
+    - slot_was_set:
+      - rescheduling_now: 1
+    - active_loop: null
+    - action: utter_user_chose_now
+    - action: action_set_continuation
+    - action: action_continue_with_general_activity
+
+# Rescheduling query - later
+- rule: rescheduling query dialog later
+  steps:
+    - intent: EXTERNAL_trigger_reschedule_activity
+    - action: utter_intro
+    - action: action_expected_time_next_part
+    - action: rescheduling_now_or_later_form
+    - active_loop: rescheduling_now_or_later_form
+    - slot_was_set:
+      - rescheduling_now: 2
+    - active_loop: null
+    - action: utter_user_chose_later
+    - action: action_ask_new_time
+    - action: pick_a_daypart_form
+    - active_loop: pick_a_daypart_form
+    - active_loop: null
+    - action: action_reschedule_dialog
+    - action: utter_rescheduling_option_chosen
+    - action: action_end_dialog
+    # TODO: what are we going to do at the end of the dialog if the user types something again?
+    # Maybe a ConversationPaused() event from custom action?
+

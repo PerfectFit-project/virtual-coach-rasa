@@ -4,7 +4,6 @@ from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
                                               FirstAidKit,
                                               InterventionActivity)
 from virtual_coach_db.helper import (Components,
-                                     ComponentsTriggers,
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
@@ -55,8 +54,6 @@ class LaunchGaRescheduling(Action):
 
 
 class GoToCheckActivityDone(Action):
-    """Launch the general activity rescheduling dialog"""
-
     def name(self):
         return "go_to_check_activity_done"
 
@@ -65,9 +62,16 @@ class GoToCheckActivityDone(Action):
         return [FollowupAction('check_activity_done')]
 
 
-class GoToChooseActivity(Action):
-    """Launch the general activity rescheduling dialog"""
+class GoToCheckInputRequired(Action):
+    def name(self):
+        return "go_to_check_input_required"
 
+    async def run(self, dispatcher, tracker, domain):
+
+        return [FollowupAction('check_user_input_required')]
+
+
+class GoToChooseActivity(Action):
     def name(self):
         return "go_to_choose_activity"
 
@@ -77,8 +81,6 @@ class GoToChooseActivity(Action):
 
 
 class GoToRating(Action):
-    """Launch the general activity rescheduling dialog"""
-
     def name(self):
         return "go_to_rating"
 

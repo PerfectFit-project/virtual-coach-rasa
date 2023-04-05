@@ -50,7 +50,7 @@ rules:
   - slot_was_set:
     - general_activity_low_high_rating: high
   - action: utter_general_activity_thanks_top_5_1
-  - action: got_to_check_input_required # checkpoint: input_required_check
+  - action: go_to_check_input_required # checkpoint: input_required_check
 
 ## 3b: The rating of the activity is in the top 5 and input of the user is not required
 
@@ -69,13 +69,13 @@ rules:
   - action: check_user_input_required # checkpoint: input_required_check
   - slot_was_set:
     - is_user_input_required: true
-  - activity: go_to_check_activity_done # checkpoint: has_activity_already_done
+  - action: go_to_check_activity_done # checkpoint: has_activity_already_done
 
 ## 3a: the activity has not been done before
 
 - rule: if input is required and previously given
   steps:
-  - activity: check_activity_done # checkpoint: has_activity_already_done
+  - action: check_activity_done # checkpoint: has_activity_already_done
   - slot_was_set:
     - is_activity_done: false
   - action: utter_general_activity_edit_2
@@ -87,7 +87,7 @@ rules:
 
 - rule: if input is required and previously given
   steps:
-  - activity: check_activity_done # checkpoint: has_activity_already_done
+  - action: check_activity_done # checkpoint: has_activity_already_done
   - slot_was_set:
     - is_activity_done: true
   - action: get_activity_user_input

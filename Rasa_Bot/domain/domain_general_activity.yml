@@ -326,7 +326,7 @@ actions:
   - get_last_performed_activity # get the last performed activity
   - get_activity_coach_choice # the coach chooses the next activity
   - go_to_check_activity_done # starts the rule checking if the activity has been done already
-  - got_to_check_input_required # starts the rule checking if the user input is required
+  - go_to_check_input_required # starts the rule checking if the user input is required
   - go_to_choose_activity # starts the rule for choosing an activity
   - go_to_rating # starts the rule checking the activity rating
   - validate_activity_usefulness_form # validate the slot activity_useful_rating

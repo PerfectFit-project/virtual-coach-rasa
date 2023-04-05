@@ -99,7 +99,6 @@ rules:
   - active_loop: profile_creation_sim_1_form
   wait_for_user_input: false
 
-  
 ## 4: Enter sim 1 and start sim 2
 - rule: Profile creation enter sim 1
   condition:
@@ -447,7 +446,6 @@ rules:
   steps:
   - action: profile_creation_conf_10_form
   - active_loop: null
-  - action: utter_profile_creation_conf_2
   - action: utter_profile_creation_closing_1
   - action: utter_profile_creation_closing_2
   - action: utter_profile_creation_closing_3

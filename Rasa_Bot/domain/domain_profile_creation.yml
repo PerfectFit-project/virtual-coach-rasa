@@ -470,8 +470,6 @@ responses:
           name: profile_creation_run_walk_slot
           value: 2
     text: "Hoeveel vertrouwen heb je dat je in totaal 150 minuten (twee en een half uur) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
-  utter_profile_creation_conf_2:
-  - text: "Bedankt voor je antwoorden."  
   
   utter_profile_creation_closing_1:
   - text: "Bedankt voor al je antwoorden."

@@ -28,7 +28,8 @@ EVENING_SEND_TIME  = 20
 DAYPART_NAMES_DUTCH = ["ochtend", "middag", "avond"]
 
 # Confidence slots in profile creation dialog
-PROFILE_CREATION_CONF_SLOTS = ["profile_creation_conf_" + str(i) + "_slot" for i in range(1, 11)]
+# Start with the last one, needed for breaking out of confidence slot asking
+PROFILE_CREATION_CONF_SLOTS = ["profile_creation_conf_" + str(i) + "_slot" for i in range(10, 0, -1)]
     
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5

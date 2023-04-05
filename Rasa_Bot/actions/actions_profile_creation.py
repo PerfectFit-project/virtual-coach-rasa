@@ -14,7 +14,7 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-    
+
 
 class ValidateProfileCreationCodeForm(FormValidationAction):
     def name(self) -> Text:
@@ -78,11 +78,11 @@ class ValidateProfileCreationDayTimeConfirmForm(FormValidationAction):
                                                            response = value):
             dispatcher.utter_message(response="utter_profile_creation_time_not_valid")
             return {"profile_creation_time_slot": None}
-        
+    
         time = int(value)
         daypart = DAYPART_NAMES_DUTCH[time - 1]
         day = tracker.get_slot("profile_creation_day_slot")
-        
+
         message = "Staat genoteerd. Wij gaan de komende tijd steeds op " + day + " " + daypart + " samen in gesprek."
         dispatcher.utter_message(text=message)
 
@@ -516,18 +516,18 @@ class ProfileCreationSetConfLowHighSlot(Action):
         return "profile_creation_set_conf_low_high_slot"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         # Find the conf slot we just set
         conf = -1
         for conf_slot in PROFILE_CREATION_CONF_SLOTS:
             conf = tracker.get_slot(conf_slot)
             if conf > -1:
                 break
-        
+
         low_high = 0
         if conf > 1:
             low_high = 1
-            
+
         return [SlotSet("profile_creation_conf_low_high_slot", low_high)]
 
 
@@ -538,36 +538,36 @@ class ProfileCreationSaveToDB(Action):
         return "profile_creation_save_to_db"
 
     async def run(self, dispatcher, tracker, domain):
-    
+
         user_id = tracker.current_state()['sender_id']
-        
+
         # Compute mean confidence
         conf_avg = compute_mean_confidence(tracker)
-        
+
         # Get the preference for walking or running from slot
         # Deduct 1 since database stores 0 for walking and 1 for running.
         walk_run_pref = tracker.get_slot("profile_creation_run_walk_slot") - 1
-        
+
         # Compute Godin level based on Godin score
         godin_level = compute_godin_level(tracker)
-            
+
         # Compute the perceived similarity for the two clusters of testimonials
         c1_mean, c3_mean = compute_mean_cluster_similarity_ratings(tracker)
-        
+
         # Get preferred day of the week
         day = tracker.get_slot("profile_creation_day_slot")
         day_idx = DAYS_OF_WEEK.index(day) + 1  # Start index at 1 for db
-        
+
         # Get preferred time
         preferred_time = compute_preferred_time(tracker)
-        
+
         # Get participant code
         participant_code = tracker.get_slot("profile_creation_code_slot")
-        
+
         # Store in database
         store_profile_creation_data_to_db(user_id, godin_level, walk_run_pref,
                                           conf_avg, c1_mean, c3_mean, 
                                           participant_code, str(day_idx), 
                                           preferred_time)
-        
+
         return []

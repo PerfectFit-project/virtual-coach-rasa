@@ -17,6 +17,7 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               ClosedAnswers)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import Components
+import pandas as pd
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
@@ -541,4 +542,56 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
         figure_specifics = [legends, i + 1, 1, bool(i == 0)]
         fig = add_subplot(fig, answer_descriptions, data, figure_specifics)
 
+    return fig
+
+def make_step_overview(date_array: List[str], step_array: List[int], step_goal: int) -> Any:
+    """
+       Makes the step overview for the weekly reflection dialog.
+        Args:
+                date_array: the list of dates for the y_axis
+                step_array: the list of steps for the x_axis
+                step_goal: the step goal of the user
+            Returns:
+                    A plot, showing the number of steps the user took each day
+                    for a week, with a line representing the step goal and the
+                    bars being green if they accomplished their goal and red if
+                    not.
+    """
+    data = pd.DataFrame(
+        {'date': date_array,
+         'steps': step_array})
+
+    data['goal_achieved'] = data['steps'] >= step_goal
+
+    fig = go.Figure(go.Bar(x=data['steps'],
+                           y=data['date'],
+                           orientation='h',
+                           marker=dict(color=data['goal_achieved'].map(
+                               {True: 'green', False: 'red'}))))
+
+    fig.add_shape(type='line',
+                  x0=step_goal,
+                  y0=-0.5,
+                  x1=step_goal,
+                  y1=len(data) - 0.5,
+                  line=dict(color='black', width=3, dash='longdash'))
+
+    fig.add_annotation(x=step_goal,
+                       y=-1,
+                       text=f'Step Goal: {step_goal}',
+                       showarrow=False,
+                       font=dict(size=14, color='black'))
+
+    for i, step in enumerate(data['steps']):
+        fig.add_annotation(x=step,
+                           y=i,
+                           text=str(step),
+                           showarrow=False,
+                           font=dict(size=12, color='black'),
+                           xshift=5)
+
+    fig.update_layout(title='Step overview',
+                      height=500,
+                      margin=dict(l=150),
+                      xaxis=dict(tickformat='d'))
     return fig

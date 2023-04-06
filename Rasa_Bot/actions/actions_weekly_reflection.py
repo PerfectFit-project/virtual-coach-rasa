@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from . import validator
 from .definitions import REDIS_URL
 from .helper import (get_latest_bot_utterance, get_user,
-                     get_user_intervention_state_hrs)
+                     get_user_intervention_state_hrs, make_step_overview)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -15,6 +15,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.helper.definitions import Components
+import logging
+
 
 celery = Celery(broker=REDIS_URL)
 
@@ -153,6 +155,29 @@ class SetIntensityMinutesGoal(Action):
         ## TODO This method should get minutes goal and set the slot accordingly, adding 15 minutes
         intensity_minutes = 50 + 15
         return [SlotSet('intensity_minutes', intensity_minutes)]
+
+class ShowPaOverview(Action):
+    def name(self):
+        return "action_show_pa_overview"
+
+    async def run(self, dispatcher, tracker, domain):
+        ## TODO retrieve step goal per day and dates, placeholder for now
+
+        ## TODO replace these stepholders with the database data
+        date_array = ['Mon 16', 'Tue 17', 'Wed 18', 'Thu 19', 'Fri 20', 'Sat 21', 'Sun 22']
+        step_array  = [5000, 6000, 7000, 8000, 9000, 10000, 11000]
+        step_goal = 8000
+
+        fig = make_step_overview(date_array, step_array, step_goal)
+
+        filepath = '/app/pa_overview.PNG'
+
+        try:
+            fig.write_image("pa_overview.PNG")
+        except Exception:
+            logging.info("File upload unsuccessful.")
+
+        return [SlotSet("upload_file_path", filepath)]
 
 
 class ValidateHowWentNonSmokeForm(FormValidationAction):

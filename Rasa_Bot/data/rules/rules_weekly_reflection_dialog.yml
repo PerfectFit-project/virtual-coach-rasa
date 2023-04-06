@@ -295,7 +295,6 @@ rules:
 ## 6. Reflection on physical activity
 
 ## 6a Overview physical activity group 1
-## TODO show the overview, excel file 90
 - rule: Step dialog component group 1
   condition:
   - active_loop: user_ready_2_form
@@ -309,6 +308,10 @@ rules:
       - pa_group: 1
   - action: utter_overview_group1_1
   - action: utter_overview_group1_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: action_set_step_goal_days
   - action: utter_overview_group1_3
   - action: action_step_goal_utterances
@@ -328,6 +331,10 @@ rules:
       - pa_group: 1
   - action: utter_overview_group1_1
   - action: utter_overview_group1_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: action_set_step_goal_days
   - action: utter_overview_group1_3
   - action: action_step_goal_utterances
@@ -336,7 +343,6 @@ rules:
   wait_for_user_input: false
 
 ## 6b Overview physical activity group 2
-## TODO show the overview, excel file 90
 - rule: Step dialog component group 2
   condition:
     - active_loop: user_ready_2_form
@@ -351,6 +357,10 @@ rules:
   - action: action_set_intensity_minutes_goal
   - action: utter_overview_group2_1
   - action: utter_overview_group2_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: action_set_intensity_minutes
   - action: action_set_step_goal_days
   - action: utter_overview_group2_3
@@ -372,6 +382,10 @@ rules:
   - action: action_set_intensity_minutes_goal
   - action: utter_overview_group2_1
   - action: utter_overview_group2_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: action_set_intensity_minutes
   - action: action_set_step_goal_days
   - action: utter_overview_group2_3
@@ -633,7 +647,6 @@ rules:
   wait_for_user_input: false
 
 ## 7b Increase intensity, for group 2
-## TODO retrieve intensity minutes
 - rule: Show increase intensity dialog group2, 1
   condition:
     - active_loop: refresh_previous_week_form

@@ -111,59 +111,6 @@ def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
 
 
 @app.task
-def weekly_reflection_dialog(user_id: int, intervention_component_name: str):
-    phase = utils.get_phase_object(Phases.EXECUTION.value)
-    component = utils.get_intervention_component(intervention_component_name)
-
-    state = UserInterventionState(
-        users_nicedayuid=user_id,
-        intervention_phase_id=phase.phase_id,
-        intervention_component_id=component.intervention_component_id,
-        completed=False,
-        last_time=datetime.now().astimezone(TIMEZONE),
-        last_part=0,
-        next_planned_date=None,
-        task_uuid=None
-    )
-
-    utils.store_intervention_component_to_db(state)
-
-    trigger_intervention_component.apply_async(
-        args=[user_id, 'EXTERNAL_weekly_reflection'])
-
-
-@app.task
-def step_dialog_component(user_id: int, intervention_component_name: str):
-    steps_bool = True
-    ##TODO get total steps for week and steps for each day. Then based on that trigger next component
-
-    ## Group 1 >> users with total weekly steps < 56.000 AND steps are NOT ≥ 8000 on 4/7 previous days
-    ## Group 2 >> users with total weekly steps ≥ 56.000 AND steps ≥ 8000 on 4/7 previous days
-
-    if steps_bool:
-        trigger_intervention_component.apply_async(
-            args=[user_id, 'EXTERNAL_step_dialog_group1'])
-    else:
-        trigger_intervention_component.apply_async(
-            args=[user_id, 'EXTERNAL_step_dialog_group2'])
-
-@app.task
-def step_advice_component(user_id: int, intervention_component_name: str):
-    steps_bool = True
-    ##TODO get total steps for week and steps for each day. Then based on that trigger next component
-
-    ## Group 1 >> users with total weekly steps < 56.000 AND steps are NOT ≥ 8000 on 4/7 previous days
-    ## Group 2 >> users with total weekly steps ≥ 56.000 AND steps ≥ 8000 on 4/7 previous days
-
-    if steps_bool:
-        trigger_intervention_component.apply_async(
-            args=[user_id, 'EXTERNAL_step_advice_group1'])
-    else:
-        trigger_intervention_component.apply_async(
-            args=[user_id, 'EXTERNAL_step_advice_group2'])
-
-
-@app.task
 def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: datetime):
     """
     This task notifies the state machine that a dialog has been rescheduled.

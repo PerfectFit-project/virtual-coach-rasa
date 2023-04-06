@@ -148,26 +148,6 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
     session.commit()  # Update database
 
 
-def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool,
-                                 week_days: str, preferred_time: datetime.datetime):
-    """
-    Updater the user_intervention_state table, adding a new row with the intervention_component
-
-    Args:
-        user_id: niceday user id
-        intervention_component_id: the id of the intervention component as store din the DB.
-        recursive: if true the activity is recursive, and will be reprogrammed after the completion
-        week_days: comma separated list of days
-        preferred_time: preferred time in the day to prompt the activity
-
-    Returns:
-            nothing
-
-    """
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-
 def store_user_intervention_state(user_id: int, intervention_component: str, phase: str):
     """
     Updater the user_intervention_state table, adding a new row with the intervention_component

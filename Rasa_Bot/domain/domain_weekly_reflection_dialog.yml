@@ -12,6 +12,32 @@ slots:
     mappings:
       - type: custom
 
+  step_goal_days:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    mappings:
+      - type: custom
+
+  intensity_minutes:
+    type: float
+    min_value: 0
+    max_value: 150
+    mappings:
+      - type: custom
+
+  intensity_minutes_goal:
+    type: float
+    min_value: 0
+    max_value: 150
+    mappings:
+      - type: custom
 
   week_number:
     type: text
@@ -639,7 +665,7 @@ responses:
     - text: "Dit overzicht toont het aantal stappen dat je hebt gezet en je persoonlijke stappendoel van de afgelopen week: "
     - text: "Bekijk hier je resultaten van afgelopen week: het aantal stappen dat je hebt gezet en je persoonlijke stappendoel: "
   utter_overview_group1_3:
-    - text: "Je hebt op [insert number of days step goal was met] dagen je stappendoel gehaald." ## TODO Insert number of days
+    - text: "Je hebt op {step_goal_days} dagen je stappendoel gehaald."
   utter_overview_group1_4:
     - text: "Fantastisch gedaan! 👏 Actiever worden is niet makkelijk. Knap dat je afgelopen week zo actief bent geweest."
     - text: "Geweldig gedaan! 👏 Het is niet gemakkelijk om actiever te worden, dus het is fantastisch om te zien dat je
@@ -681,11 +707,10 @@ responses:
   # 6b Overview physical activity group 2
   utter_overview_group2_1:
     - text: "Laten wij nu terugkijken op je beweging van afgelopen week. Je stappendoel 🦶🏼 stond elke dag op 8000
-             en daarnaast was het doel om minimaal [insert previous goal intensive minutes + 15 minutes with a maximum
-             of 150 minutes] minuten intensief te bewegen ☀." ## TODO Insert minutes
+             en daarnaast was het doel om minimaal {intensity_minutes_goal} minuten intensief te bewegen ☀."
   utter_overview_group2_2:
     - text: "Dit is het overzicht van jouw gezette stappen, persoonlijk stappendoel en intensieve bewegingsminuten
-             van afgelopen week: " ## TODO Show step overview
+             van afgelopen week: "
     - text: "Hier is een overzicht van de stappen die je hebt gezet, je persoonlijke stappendoel en het aantal
              intensieve bewegingsminuten van de afgelopen week:"
     - text: "Je kunt hier zien hoeveel stappen je hebt gezet, je persoonlijke stappendoel en hoeveel intensieve
@@ -694,8 +719,8 @@ responses:
     - text: "Bekijk hier je stappen, persoonlijk stappendoel en intensieve bewegingsminuten van de afgelopen week:"
     - text: "Een overzicht van je stappen, persoonlijk stappendoel en intensieve bewegingsminuten van afgelopen week vind je hier: "
   utter_overview_group2_3:
-    - text: "Je hebt op [insert number of days step goal was met] dagen je stappendoel gehaald en [insert number of intensive PA minutes]
-             minuten intensief bewogen." ## TODO Insert minutes
+    - text: "Je hebt op {step_goal_days} dagen je stappendoel gehaald en {intensity_minutes}
+             minuten intensief bewogen."
   utter_overview_group2_4:
     - text: "Fantastisch gedaan! 👏 Actiever worden is niet makkelijk. Knap dat je afgelopen week zo actief bent geweest.  "
     - text: "Geweldig gedaan! 👏 Het is niet gemakkelijk om actiever te worden, dus petje af dat je afgelopen week zo actief bent geweest."
@@ -1000,8 +1025,7 @@ responses:
     - text: "Als je te snel en te intensief begint met bewegen, kan dat ook ervoor zorgen dat je na een paar keer geen motivatie meer hebt en helemaal stopt. Dat willen we natuurlijk voorkomen."
     - text: "Het is belangrijk om niet te snel en te intensief te beginnen met bewegen, omdat je anders na een paar keer misschien geen zin meer hebt en helemaal stopt. Dit willen we natuurlijk voorkomen."
   utter_increase_intensity_6:
-    - text: "Ik stel dus voor dat je komende week naast je stappen ook minimaal [insert previous goal intensive minutes
-             + 15 minutes with a maximum of 150 minutes] intensief gaat bewegen.  "
+    - text: "Ik stel dus voor dat je komende week naast je stappen ook minimaal {intensity_minutes_goal} intensief gaat bewegen.  "
   utter_ask_if_doable:
     - text: "Zie jij dit zitten? 
              Typ '1' voor ja. 
@@ -1062,8 +1086,8 @@ responses:
     - text: "Als je hartslag stijgt en je ademhaling sneller wordt, waardoor het moeilijker is om te praten, dan ben je bezig met intensieve beweging."
     - text: "Wanneer je hartslag omhoog gaat en je sneller begint te ademen, wat het moeilijk maakt om te praten, dan ben je intensief aan het bewegen."
   utter_increase_intensity_15:
-    - text: "Laten wij nu een plan maken voor hoe jij komende week naast je dagelijkse stappendoel ook [intensity minutes for this week]
-             minuten intensief gaat bewegen ⏱️." ## TODO get minutes for this week
+    - text: "Laten wij nu een plan maken voor hoe jij komende week naast je dagelijkse stappendoel ook {intensity_minutes}
+             minuten intensief gaat bewegen ⏱️."
   utter_increase_intensity_16:
     - text: "Zoals ik eerder zei is het het belangrijk om langzaam op te bouwen 🐌. Als je een keer meer wilt doen is dat geen probleem.
              Maar let er wel op dat je niet te veel, te snel doet. Het is beter om iedere dag ietsje meer te doen dan in één  keer heel veel."
@@ -1083,9 +1107,9 @@ responses:
     - text: "Noteer je plan! 🖊️ Haal een pen en papier tevoorschijn en schrijf op:
              1. Welke intensieve beweging of sport ga jij komende week doen (bijvoorbeeld hardlopen, voetballen, touwtje springen, wielrennen)?"
   utter_increase_intensity_18:
-    - text: "2. Hoe lang ga je dit doen? Je kan de [insert intensity minutes intensity minutes for this week] minuten bijvoorbeeld
+    - text: "2. Hoe lang ga je dit doen? Je kan de {intensity_minutes} minuten bijvoorbeeld
              opdelen in twee keer of drie keer. Let wel op dat jij elke keer minimaal 10 minuten achter elkaar beweegt.
-             Anders heb je alsnog niet zoveel voordeel van je beweging. " ##TODO get minutes for the week
+             Anders heb je alsnog niet zoveel voordeel van je beweging. "
   utter_increase_intensity_19:
     - text: "3. Wanneer ga je de intensieve beweging of sport doen? "
     - text: "3. Op welk moment van de week ga je de intensieve beweging of sport doen?"
@@ -1121,7 +1145,7 @@ responses:
 
   # 7c Will there be difficult moments this week?
   utter_predict_difficult_moments_1:
-    - text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen." ##TODO show graph
+    - text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen."
     - text: "Zoals eerder gezien, zijn dit de situaties waar jij moeite mee hebt 📍. In deze situaties vond jij het moeilijk om actief te worden"
     - text: "Zoals we eerder hebben besproken, zijn dit jouw uitdagende situaties 📍. Je vond het in deze situaties moeilijk om actief te zijn"
     - text: "We hebben eerder gezien dat dit jouw lastige situaties zijn 📍. In deze situaties was het voor jou moeilijk om in beweging te komen."
@@ -1308,6 +1332,9 @@ actions:
   - action_trigger_weekly_reflection
   - action_which_pa_group
   - action_set_pa_group
+  - action_set_intensity_minutes
+  - action_set_intensity_minutes_goal
+  - action_set_step_goal_days
   - action_step_goal_utterances
   - action_get_week_number
   - action_get_long_term_pa_goal

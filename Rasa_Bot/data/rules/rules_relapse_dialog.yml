@@ -207,7 +207,6 @@ rules:
   - action: action_send_metadata
   - action: action_delete_file
   - action: utter_look_forward_5
-  - action: utter_look_forward_5
   - action: utter_look_forward_6
   - action: possible_smoking_situations_form
   - active_loop: possible_smoking_situations_form
@@ -418,12 +417,12 @@ rules:
   - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
     - crave_lapse_relapse: 2
   - action: store_reflect_barchart
-  - action: utter_smoke_lapse_15
+  - action: utter_smoke_lapse_19
+  - slot_was_set:
+    - weekly_or_relapse: 1
   - action: utter_smoke_lapse_16
   - action: utter_smoke_lapse_17
   - action: utter_smoke_lapse_18
-  - slot_was_set:
-    - weekly_or_relapse: 1
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false
@@ -440,12 +439,19 @@ rules:
   - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
     - crave_lapse_relapse: 2
   - action: store_reflect_barchart
-  - action: utter_smoke_lapse_15
-  - action: utter_smoke_lapse_16
-  - action: utter_smoke_lapse_17
-  - action: utter_smoke_lapse_18
+  - action: utter_smoke_lapse_19
   - slot_was_set:
     - weekly_or_relapse: 2
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
   - action: possible_smoking_situations_form
   - active_loop: possible_smoking_situations_form
   wait_for_user_input: false

@@ -475,6 +475,8 @@ responses:
   utter_smoke_lapse_18:
     - text: "Het kan ook helpen om te praten met bijvoorbeeld een vriend of familielid over hoe het 
              is gegaan en je plan om opnieuw te stoppen."
+  utter_smoke_lapse_19:
+    - text: "Mooi dat dit zo kan benoemen."
 
 
   utter_ask_ehbo_me_self_lapse:

@@ -2,15 +2,11 @@
 Contains custom actions related to the weekly reflection dialogue
 """
 
-import logging
-
 import datetime
 from dateutil.relativedelta import relativedelta
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL
-from .helper import (get_latest_bot_utterance, get_random_activities,
-                     store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state, get_user,
+from .definitions import REDIS_URL
+from .helper import (get_latest_bot_utterance, get_user,
                      get_user_intervention_state_hrs)
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -95,9 +91,7 @@ class WhichPaGroup(Action):
         return "action_which_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        ## TODO This method should return the current pa group of the user, by reading from the database
+        ## TODO This method should return the current pa group of the user from the database
         steps_bool = True
         if steps_bool:
             return [SlotSet('pa_group', 1)]
@@ -108,22 +102,28 @@ class SetPaGroup(Action):
         return "action_set_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        ## TODO this method should save in the database the pa group based on steps, then set the slot
+        ## TODO this method should save in the database the pa group based on steps and set slot
         steps_bool = True
         if steps_bool:
             return [SlotSet('pa_group', 1)]
         return [SlotSet('pa_group', 2)]
+
+
+class SetStepGoalDays(Action):
+    def name(self):
+        return "action_set_step_goal_days"
+
+    async def run(self, dispatcher, tracker, domain):
+        ## TODO This method should get step goal days and set accordingly
+        step_goal_days = 7
+        return [SlotSet('step_goal_days', step_goal_days)]
 
 class StepGoalUtterances(Action):
     def name(self):
         return "action_step_goal_utterances"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        ## TODO retrieve amount of days that step goal was met
+        ## TODO retrieve amount of days that step goal was met, then set the slot
         step_goal_days = 7
         if step_goal_days > 5:
             dispatcher.utter_message(response="utter_overview_group1_4")
@@ -135,6 +135,24 @@ class StepGoalUtterances(Action):
             dispatcher.utter_message(response="utter_overview_group1_8")
 
         return []
+
+class SetIntensityMinutes(Action):
+    def name(self):
+        return "action_set_intensity_minutes"
+
+    async def run(self, dispatcher, tracker, domain):
+        ## TODO This method should get minutes and set the slot accordingly
+        intensity_minutes = 50
+        return [SlotSet('intensity_minutes', intensity_minutes)]
+
+class SetIntensityMinutesGoal(Action):
+    def name(self):
+        return "action_set_intensity_minutes_goal"
+
+    async def run(self, dispatcher, tracker, domain):
+        ## TODO This method should get minutes goal and set the slot accordingly, adding 15 minutes
+        intensity_minutes = 50 + 15
+        return [SlotSet('intensity_minutes', intensity_minutes)]
 
 
 class ValidateHowWentNonSmokeForm(FormValidationAction):

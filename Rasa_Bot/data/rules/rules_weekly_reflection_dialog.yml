@@ -309,6 +309,7 @@ rules:
       - pa_group: 1
   - action: utter_overview_group1_1
   - action: utter_overview_group1_2
+  - action: action_set_step_goal_days
   - action: utter_overview_group1_3
   - action: action_step_goal_utterances
   - action: how_went_pa_form
@@ -327,6 +328,7 @@ rules:
       - pa_group: 1
   - action: utter_overview_group1_1
   - action: utter_overview_group1_2
+  - action: action_set_step_goal_days
   - action: utter_overview_group1_3
   - action: action_step_goal_utterances
   - action: how_went_pa_form
@@ -346,8 +348,11 @@ rules:
   - action: action_which_pa_group
   - slot_was_set:
       - pa_group: 2
+  - action: action_set_intensity_minutes_goal
   - action: utter_overview_group2_1
   - action: utter_overview_group2_2
+  - action: action_set_intensity_minutes
+  - action: action_set_step_goal_days
   - action: utter_overview_group2_3
   - action: action_step_goal_utterances
   - action: how_went_pa_form
@@ -364,8 +369,11 @@ rules:
   - action: action_which_pa_group
   - slot_was_set:
       - pa_group: 2
+  - action: action_set_intensity_minutes_goal
   - action: utter_overview_group2_1
   - action: utter_overview_group2_2
+  - action: action_set_intensity_minutes
+  - action: action_set_step_goal_days
   - action: utter_overview_group2_3
   - action: action_step_goal_utterances
   - action: how_went_pa_form
@@ -642,6 +650,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form
@@ -665,6 +674,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form
@@ -688,6 +698,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form
@@ -710,6 +721,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form
@@ -735,7 +747,6 @@ rules:
   wait_for_user_input: false
 
 ## User answered 1, yes, and so we prompt the next parts
-## TODO retrieve minutes
 - rule: Intensity increase
   condition:
     - active_loop: if_doable_form
@@ -752,6 +763,7 @@ rules:
   - action: utter_increase_intensity_12
   - action: utter_increase_intensity_13
   - action: utter_increase_intensity_14
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_15
   - action: utter_increase_intensity_16
   - action: utter_increase_intensity_17

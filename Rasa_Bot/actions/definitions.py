@@ -63,6 +63,14 @@ REFLECTIVE_QUESTION_COMMITMENT_IDENTITY = "Hoe helpt deze activiteit jou bij \
 REFLECTIVE_QUESTION_CONSENSUS = "Hoe denk je dat deze activiteit iemand zoals \
     jou kan helpen om gezonder te gaan leven?"
 
+
+activities_categories = {1: 'self-related',
+                         2: 'educational',
+                         3: 'practical',
+                         4: 'reinforcement',
+                         5: 'motivational'}
+
+
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
     FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?

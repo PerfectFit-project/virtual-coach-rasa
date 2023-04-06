@@ -7,7 +7,7 @@ from virtual_coach_db.helper import (Components,
                                      DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
-from .definitions import (COMMITMENT, CONSENSUS, 
+from .definitions import (activities_categories, COMMITMENT, CONSENSUS,
                           DATABASE_URL, 
                           NUM_TOP_ACTIVITIES, 
                           OPT_POLICY, STATE_FEATURE_MEANS, 
@@ -195,6 +195,41 @@ class GetActivityUserInput(Action):
         return [SlotSet("activity_user_input", last_input)]
 
 
+class GetGeneralActivitiesOptions(Action):
+    """Get the options for the activities to be presented to the user"""
+
+    def name(self):
+        return "get_general_activities_options"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        user_id = tracker.current_state()['sender_id']
+
+        activity_type_slot = tracker.get_slot('general_activity_activity_type_slot')
+        activity_id = tracker.get_slot('last_activity_id_slot')
+
+        activity_type = activities_categories[int(activity_type_slot)]
+
+        rnd_activities = get_random_activities(activity_id, 8)
+        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
+
+        options = ["Typ " + str(i) + " als je " +
+                   rnd_activities[i].intervention_activity_title +
+                   "wilt doen.\n"
+                   for i in range(len(rnd_activities))]
+
+        sentence = ''
+        for option in options:
+            sentence += option
+
+        sentence += "Typ " + \
+                    str(len(rnd_activities)) + \
+                    " als je toch een andere soort oefening wilt doen."
+
+        return [SlotSet("general_activity_activities_options_slot", sentence),
+                SlotSet("rnd_activities_ids", rnd_activities_ids)]
+
+
 class CheckUserInputRequired(Action):
     """Check if the activity requires the input of the user"""
 
@@ -340,24 +375,6 @@ class SaveDescriptionInDb(Action):
         session.commit()
 
         return []
-
-
-class GetThreeRandomActivities(Action):
-    def name(self) -> Text:
-        return 'get_three_random_activities'
-
-    async def run(self, dispatcher, tracker, domain):
-        """pick three random activities and sets the slots"""
-
-        activity_id = tracker.get_slot('last_activity_id_slot')
-
-        rnd_activities = get_random_activities(activity_id, 3)
-        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
-
-        return [SlotSet("activity1_name", rnd_activities[0].intervention_activity_title),
-                SlotSet("activity2_name", rnd_activities[1].intervention_activity_title),
-                SlotSet("activity3_name", rnd_activities[2].intervention_activity_title),
-                SlotSet("rnd_activities_ids", rnd_activities_ids)]
 
 
 class ValidateGeneralActivityNextActivityForm(FormValidationAction):
@@ -656,6 +673,27 @@ class SendPersuasiveMessageActivity(Action):
                 SlotSet("persuasive_message_index", message_idx),
                 SlotSet("persuasion_requires_input", input_required),
                 SlotSet("persuasion_reflective_question", reflective_question)]
+
+
+class ValidateGeneralActivityActivityTypeForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_general_activity_activity_type_form'
+
+    def validate_general_activity_activity_type_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_effort_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_general_activity_activity_type_slot':
+            return {"general_activity_activity_type_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"general_activity_activity_type_slot": None}
+
+        return {"general_activity_activity_type_slot": float(value)}
     
 
 class ValidatePersuasionWantForm(FormValidationAction):

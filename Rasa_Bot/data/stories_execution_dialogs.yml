@@ -16,16 +16,6 @@ stories:
    - action: mark_dialog_as_completed
    - action: action_end_dialog
 
-## Weekly reflection
-- story: Weekly reflection placeholder
-  steps:
-  - intent: EXTERNAL_weekly_reflection
-  - action: action_set_slot_weekly_reflection
-  - action: utter_weekly_reflection
-  - intent: oke
-  - action: mark_dialog_as_completed
-  - action: action_end_dialog
-
 ## Daily reflection
 - story: Daily reflection placeholder
   steps:

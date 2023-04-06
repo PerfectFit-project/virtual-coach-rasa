@@ -117,4 +117,3 @@ class ContinueAfterVideo(Action):
         if current_dialog == Components.WEEKLY_REFLECTION:
             # resumes weekly reflection from possible_smoking_situations_form.
             return [FollowupAction('possible_smoking_situations_form')]
-

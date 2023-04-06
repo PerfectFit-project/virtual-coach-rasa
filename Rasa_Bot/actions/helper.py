@@ -500,13 +500,13 @@ def get_faik_text(user_id):
     # get the highest scored activities
     top_five_activities = (
         session.query(
-              FirstAidKit
-         ).order_by(FirstAidKit.activity_rating.desc())
-             .filter(
-             FirstAidKit.users_nicedayuid == user_id
-         )
-             .limit(NUM_TOP_ACTIVITIES).all()
-     )
+            FirstAidKit
+        ).order_by(FirstAidKit.activity_rating.desc())
+        .filter(
+            FirstAidKit.users_nicedayuid == user_id
+        )
+        .limit(NUM_TOP_ACTIVITIES).all()
+    )
 
     if top_five_activities is not None:
         for activity_idx, activity in enumerate(top_five_activities):

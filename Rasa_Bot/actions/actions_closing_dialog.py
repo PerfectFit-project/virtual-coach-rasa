@@ -1,18 +1,17 @@
 import datetime
-import logging
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from typing import Text, Dict, Any, List, Union
+from typing import Text, Dict, Any
 from celery import Celery
 from . import validator
-from virtual_coach_db.dbschema.models import Users, FirstAidKit
+from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (ExecutionInterventionComponents,
                                                  ExecutionInterventionComponentsTriggers)
-from .definitions import REDIS_URL, DATABASE_URL, NUM_TOP_ACTIVITIES
+from .definitions import REDIS_URL, DATABASE_URL
 from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
 
 

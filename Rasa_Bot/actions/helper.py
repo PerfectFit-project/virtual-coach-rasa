@@ -14,9 +14,7 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              UserPreferences,
-                                              ClosedAnswers,
-                                              FirstAidKit)
+                                              FirstAidKit,
                                               ClosedAnswers)
 
 from virtual_coach_db.helper.helper_functions import get_db_session
@@ -313,6 +311,7 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
 
     return rnd_activities
 
+
 def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
     """
        Get the closed answer responses associated with the given user and question.
@@ -340,6 +339,7 @@ def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswe
 
     return closed_answers
 
+
 def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
     """
        Get all the possible closed answers associated with a given question id.
@@ -363,6 +363,7 @@ def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
     )
 
     return closed_answers
+
 
 def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     """
@@ -390,6 +391,7 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
 
     return open_answers
 
+
 def count_answers(answers: List[DialogClosedAnswers],
                   closed_answer_options: List[ClosedAnswers]) -> List[int]:
     """
@@ -413,7 +415,6 @@ def count_answers(answers: List[DialogClosedAnswers],
     return result
 
 
-
 def week_day_to_numerical_form(week_day):
     if week_day.lower() == "monday":
         return 1
@@ -430,6 +431,7 @@ def week_day_to_numerical_form(week_day):
     if week_day.lower() == "sunday":
         return 7
     return -1
+
 
 def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     """
@@ -453,6 +455,7 @@ def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     fig.update_yaxes(visible=False, showticklabels=False)
     # Change the bar mode
     return fig
+
 
 def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
     """

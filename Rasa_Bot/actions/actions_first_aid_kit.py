@@ -1,7 +1,7 @@
 import logging
 
 from . import validator
-from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES, REDIS_URL
+from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance,
                      get_user_intervention_activity_inputs,
                      get_faik_text)
@@ -13,10 +13,8 @@ from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from virtual_coach_db.dbschema.models import (FirstAidKit,
-                                              InterventionActivity)
+from virtual_coach_db.dbschema.models import InterventionActivity
 from virtual_coach_db.helper.helper_functions import get_db_session
-
 
 
 celery = Celery(broker=REDIS_URL)

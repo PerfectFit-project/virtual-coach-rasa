@@ -537,11 +537,8 @@ class ClosingState(State):
         logging.info("Running state %s", self.state)
         # plan the execution of the closing dialog
 
-        component = get_intervention_component(Components.CLOSING_DIALOG)
-
         closing_date = get_next_planned_date(
             user_id=self.user_id,
-            intervention_component_id=component.intervention_component_id,
             current_date=datetime.now()
         )
 

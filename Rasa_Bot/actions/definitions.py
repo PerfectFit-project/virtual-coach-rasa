@@ -29,7 +29,8 @@ DAYPART_NAMES_DUTCH = ["ochtend", "middag", "avond"]
 
 # Confidence slots in profile creation dialog
 # Start with the last one, needed for breaking out of confidence slot asking
-PROFILE_CREATION_CONF_SLOTS = ["profile_creation_conf_" + str(i) + "_slot" for i in range(10, 0, -1)]
+PROFILE_CREATION_CONF_SLOTS = ["profile_creation_conf_" + str(i) + "_slot" for i in range(10, 0, 
+                                                                                          -1)]
     
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5

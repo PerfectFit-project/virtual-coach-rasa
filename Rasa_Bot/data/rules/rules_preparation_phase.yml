@@ -3,10 +3,9 @@ version: "3.1"
 rules:
 - rule: start preparation phase
   steps:
-    - intent: EXTERNAL_preparation_phase
-    - action: action_set_slot_previous_dialog
-    - action: utter_finished_preparation_phase
-    - action: utter_next_part
+    - intent: EXTERNAL_rescheduling_preparation_phase
+    - action: utter_next_part_1
+    - action: utter_next_part_2
     - action: action_expected_time_next_part
     - action: next_part_now_or_later_form
     - active_loop: next_part_now_or_later_form

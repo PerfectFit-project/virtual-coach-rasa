@@ -47,6 +47,10 @@ responses:
      - text: "Kun je een geheel getal tussen 1 en 7 opgeven?"
   utter_please_answer_1_to_8:
      - text: "Kun je een geheel getal tussen 1 en 7 opgeven?"
+  utter_please_answer_0_to_10:
+     - text: "Kun je een geheel getal tussen 0 en 10 opgeven?"
+  utter_please_answer_neg_to_pos_3:
+     - text: "Typ een getal tussen -3 en 3."
   utter_please_answer_yes_no:
      - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
   utter_please_answer_now_or_later:

@@ -1,7 +1,10 @@
 ##Domain for watching a video
+
+version: "3.1"
+
 intents:
-  - EXTERNAL_watch_video_dialog
   - EXTERNAL_done_with_video
+  - EXTERNAL_watch_video_dialog
 
 actions:
   - action_continue_after_video

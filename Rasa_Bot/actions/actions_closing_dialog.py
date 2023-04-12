@@ -79,10 +79,13 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
             return {"closing_lapse_info_correct": None}
 
         if value == 2:
-            return {"closing_smoking_status": 2,
+            closing_smoking_status = 2
+            return {"closing_smoking_status": closing_smoking_status,
                     "closing_lapse_info_correct": value}
 
-        return {"closing_lapse_info_correct": value}
+        closing_smoking_status = tracker.get_slot('closing_smoking_status')
+        return {"closing_smoking_status": closing_smoking_status,
+                "closing_lapse_info_correct": value}
 
 
 class ValidateClosingReflectionSmokeDoneForm(FormValidationAction):

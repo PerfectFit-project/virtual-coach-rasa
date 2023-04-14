@@ -485,6 +485,8 @@ responses:
 actions:
   - action_get_first_last_date
   - action_save_goal_setting_dialog_part1
+  - action_save_goal_setting_dialog_part2
+  - action_save_goal_setting_dialog_part3
   - action_set_slot_goal_setting_dialog
   - action_goal_setting_choose_testimonials
   - action_goal_setting_continue_after_plan

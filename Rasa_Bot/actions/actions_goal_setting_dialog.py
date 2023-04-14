@@ -9,6 +9,7 @@ from . import validator
 from .definitions import DATABASE_URL, TIMEZONE, FILE_PATH_IMAGE_PA
 from .helper import (get_intervention_component_id, 
                      get_latest_bot_utterance, 
+                     store_dialog_part_to_db,
                      store_quit_date_to_db, 
                      store_long_term_pa_goal_to_db)
 from datetime import datetime, timedelta
@@ -18,8 +19,6 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 
-import logging
-
 
 class ActionSaveGoalSettingDialogPart1(Action):
     """To save first part of goal-setting dialog"""
@@ -28,49 +27,40 @@ class ActionSaveGoalSettingDialogPart1(Action):
         return "action_save_goal_setting_dialog_part1"
 
     async def run(self, dispatcher, tracker, domain):
-        session = get_db_session(db_url=DATABASE_URL)
-        user_id = tracker.current_state()['sender_id']
-        goal_setting_id = get_intervention_component_id(Components.GOAL_SETTING)
-        part = 1
 
-        selected = (
-            session.query(
-                UserInterventionState
-            )
-            .filter(
-                UserInterventionState.users_nicedayuid == user_id,
-                UserInterventionState.intervention_component_name == goal_setting_id
-            )
-            .first()
-        )
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 1)
 
-        # Current time to be saved in database
-        last_time = datetime.datetime.now().astimezone(TIMEZONE)
+        return []
+    
 
-        # If already an entry for the user for the goal-setting dialog exists
-        # in the intervention state table
-        if selected is not None:
-            # Update time and part of future self dialog
-            selected.last_time = last_time
-            selected.last_part = part
+class ActionSaveGoalSettingDialogPart2(Action):
+    """To save second part of goal-setting dialog"""
 
-        # No entry exists yet for user for the goal-setting dialog in
-        # the intervention state table
-        else:
-            selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
+    def name(self):
+        return "action_save_goal_setting_dialog_part2"
 
-            # User exists in Users table
-            if selected_user is not None:
-                entry = UserInterventionState(intervention_component_id=goal_setting_id,
-                                              last_time=last_time,
-                                              last_part=part)
-                selected_user.user_intervention_state.append(entry)
+    async def run(self, dispatcher, tracker, domain):
 
-            # User does not exist in Users table
-            else:
-                logging.error("Error: User not in Users table")
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 2)
 
-        session.commit()  # Update database
+        return []
+    
+
+class ActionSaveGoalSettingDialogPart3(Action):
+    """To save third part of goal-setting dialog"""
+
+    def name(self):
+        return "action_save_goal_setting_dialog_part3"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 3)
 
         return []
 

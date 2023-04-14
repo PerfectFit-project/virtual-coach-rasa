@@ -1,6 +1,7 @@
 """
 Helper functions for rasa actions.
 """
+import logging
 import numpy as np
 import plotly.graph_objects as go
 import secrets
@@ -91,6 +92,52 @@ def compute_preferred_time(tracker):
     preferred_time = datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
     
     return preferred_time
+
+
+def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
+                            part: int):
+    """Store that part of dialog has been completed in db."""
+    
+    session = get_db_session(db_url=DATABASE_URL)
+
+    selected = (
+        session.query(
+            UserInterventionState
+        )
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_name == intervention_component_id
+        )
+        .first()
+    )
+
+    # Current time to be saved in database
+    last_time = datetime.datetime.now().astimezone(TIMEZONE)
+
+    # If already an entry for the user for the goal-setting dialog exists
+    # in the intervention state table
+    if selected is not None:
+        # Update time and part of future self dialog
+        selected.last_time = last_time
+        selected.last_part = part
+
+    # No entry exists yet for user for the goal-setting dialog in
+    # the intervention state table
+    else:
+        selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
+
+        # User exists in Users table
+        if selected_user is not None:
+            entry = UserInterventionState(intervention_component_id=intervention_component_id,
+                                          last_time=last_time,
+                                          last_part=part)
+            selected_user.user_intervention_state.append(entry)
+
+        # User does not exist in Users table
+        else:
+            logging.error("Error: User not in Users table")
+
+    session.commit()  # Update database
 
 
 def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int, 

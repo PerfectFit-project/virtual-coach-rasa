@@ -4,6 +4,19 @@ intents:
   - EXTERNAL_trigger_goal_setting
 
 slots:
+  # Part of goal-setting dialog the user is currently in
+  # 0 indicates the last part of the dialog, 1 the first part of the dialog
+  goal_setting_dialog_part:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+
   # Branch 1 introduction
   # slot required to ask the user how is he/she doing
   how_doing_slot:
@@ -471,12 +484,14 @@ responses:
 
 actions:
   - action_get_first_last_date
+  - action_save_goal_setting_dialog_part1
   - action_set_slot_goal_setting_dialog
   - action_goal_setting_choose_testimonials
   - action_goal_setting_continue_after_plan
   - action_continue_testimonial_evaluation
   - action_continue_change_pa_goal
   - action_continue_step_goal_pa
+
   - validate_chosen_quit_date_form
   - validate_goal_setting_plan_finished_form
   - validate_how_doing_form

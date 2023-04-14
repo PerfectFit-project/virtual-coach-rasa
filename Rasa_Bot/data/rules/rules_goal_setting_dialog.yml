@@ -78,7 +78,7 @@ rules:
   - action: chosen_quit_date_form
   - active_loop: null
   - action: utter_goal_setting_choose_date_4
-  - action: utter_goal_setting_choose_date_5
+  - action: utter_goal_setting_choose_date_5 # todo: here start part 2
   - action: utter_goal_setting_choose_date_6
   - action: utter_goal_setting_choose_date_7
   - action: utter_goal_setting_choose_date_8
@@ -116,7 +116,7 @@ rules:
   - active_loop: which_sport_form
   - active_loop: null
   - action: utter_goal_setting_pa_set_5
-  - action: utter_goal_setting_pa_set_6
+  - action: utter_goal_setting_pa_set_6 # todo: here starts part 3
   - action: first_pa_goal_form
   - active_loop: first_pa_goal_form
   - active_loop: null
@@ -228,7 +228,7 @@ rules:
 
 - rule: step goal pa  # 3c
   steps:
-  - action: utter_step_goal_pa_1
+  - action: utter_step_goal_pa_1  # todo: part 4 starts here
   - action: utter_step_goal_pa_2
   - action: utter_step_goal_pa_3
   - action: utter_step_goal_pa_4

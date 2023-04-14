@@ -65,7 +65,7 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
 
     def validate_closing_lapse_info_correct(
             self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[str, None]:
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[str, Any]:
         # pylint: disable=unused-argument
         """Validate form whether info on (re)lapse is correct"""
 

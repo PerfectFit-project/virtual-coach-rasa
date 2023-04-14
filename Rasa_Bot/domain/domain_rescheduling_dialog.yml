@@ -1,6 +1,8 @@
-slots:
+### Rescheduling query dialog
 
-  ### Rescheduling query dialog
+version: "3.1"
+
+slots:
   # Whether the user wants to continue the dialog now
   rescheduling_now:
     type: bool
@@ -42,8 +44,8 @@ slots:
     influence_conversation: true
     mappings:
       - type: custom
+      
 responses:
-
   ### General rescheduling query dialog
   utter_ask_rescheduling_now_or_later_form_rescheduling_now:
      - text: "Wil jij deze oefening nu doen of later?"

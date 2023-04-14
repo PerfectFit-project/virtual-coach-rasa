@@ -1,0 +1,513 @@
+version: "3.1"
+      
+slots:
+  profile_creation_code_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_code_form
+
+  profile_creation_day_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_day_time_confirm_form
+            requested_slot: profile_creation_day_slot
+  profile_creation_time_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_day_time_confirm_form
+            requested_slot: profile_creation_time_slot
+  # 1 is confirm, 2 is modify
+  profile_creation_confirm_preference_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_day_time_confirm_form
+            requested_slot: profile_creation_confirm_preference_slot
+    
+  # 1 is walk, 2 is run
+  profile_creation_run_walk_slot:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_run_walk_form
+     
+  
+  profile_creation_godin_light_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_godin_light_form
+  profile_creation_godin_moderate_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_godin_moderate_form
+  profile_creation_godin_intensive_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_godin_intensive_form
+  
+  profile_creation_sim_1_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_sim_1_form
+  profile_creation_sim_2_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_sim_2_form
+  profile_creation_sim_3_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_sim_3_form
+  profile_creation_sim_4_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_sim_4_form
+  
+  # Indicates whether value is 0 or 1 -> 0 vs. > 1 -> 1
+  profile_creation_conf_low_high_slot:
+    type: categorical
+    influence_conversation: true
+    values:
+      - 0
+      - 1
+    mappings:
+      - type: custom
+  profile_creation_conf_1_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_1_form
+  profile_creation_conf_2_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_2_form
+  profile_creation_conf_3_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_3_form
+  profile_creation_conf_4_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_4_form
+  profile_creation_conf_5_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_5_form
+  profile_creation_conf_6_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_6_form
+  profile_creation_conf_7_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_7_form
+  profile_creation_conf_8_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_8_form
+  profile_creation_conf_9_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_9_form
+  profile_creation_conf_10_slot:
+    type: float
+    influence_conversation: false
+    initial_value: -1
+    min_value: -1
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: profile_creation_conf_10_form
+  
+
+forms:
+  profile_creation_code_form:
+    required_slots:
+      - profile_creation_code_slot
+      
+  profile_creation_day_time_confirm_form:
+    required_slots:
+      - profile_creation_day_slot
+      - profile_creation_time_slot
+      - profile_creation_confirm_preference_slot
+      
+  profile_creation_run_walk_form:
+    required_slots:
+      - profile_creation_run_walk_slot
+      
+  profile_creation_godin_light_form:
+    required_slots:
+      - profile_creation_godin_light_slot
+  profile_creation_godin_moderate_form:
+    required_slots:
+      - profile_creation_godin_moderate_slot 
+  profile_creation_godin_intensive_form:
+    required_slots:
+      - profile_creation_godin_intensive_slot  
+      
+  profile_creation_sim_1_form:
+    required_slots:
+      - profile_creation_sim_1_slot  
+  profile_creation_sim_2_form:
+    required_slots:
+      - profile_creation_sim_2_slot  
+  profile_creation_sim_3_form:
+    required_slots:
+      - profile_creation_sim_3_slot  
+  profile_creation_sim_4_form:
+    required_slots:
+      - profile_creation_sim_4_slot  
+      
+  profile_creation_conf_1_form:
+    required_slots:
+      - profile_creation_conf_1_slot  
+  profile_creation_conf_2_form:
+    required_slots:
+      - profile_creation_conf_2_slot  
+  profile_creation_conf_3_form:
+    required_slots:
+      - profile_creation_conf_3_slot  
+  profile_creation_conf_4_form:
+    required_slots:
+      - profile_creation_conf_4_slot  
+  profile_creation_conf_5_form:
+    required_slots:
+      - profile_creation_conf_5_slot  
+  profile_creation_conf_6_form:
+    required_slots:
+      - profile_creation_conf_6_slot  
+  profile_creation_conf_7_form:
+    required_slots:
+      - profile_creation_conf_7_slot  
+  profile_creation_conf_8_form:
+    required_slots:
+      - profile_creation_conf_8_slot  
+  profile_creation_conf_9_form:
+    required_slots:
+      - profile_creation_conf_9_slot  
+  profile_creation_conf_10_form:
+    required_slots:
+      - profile_creation_conf_10_slot  
+    
+responses:
+  utter_profile_creation_start_1:
+  - text: "Hallo 👋🏼"
+  utter_profile_creation_start_2:
+  - text: "Welkom bij het Perfect Fit programma!"
+  utter_profile_creation_start_3:
+  - text: "Voordat je aan de slag moet je een profiel aanmaken. Hiervoor ga ik je een aantal vragen stellen. ❔\n\nMisschien vraag je je af hoe het zit met jouw privacy. 🔒 Je privacy is heel belangrijk. Daarom worden al je gegevens veilig opgeslagen. De app houdt zich natuurlijk aan de wet."
+  utter_profile_creation_code_1:
+  - text: "Bij aanmelding heb je een participant code gekregen van de onderzoekers."
+  utter_profile_creation_code_2:
+  - text: "Deze code is belangrijk want daarmee weet ik dat dit profiel bij jou hoort."
+  utter_ask_profile_creation_code_slot:
+  - text: "Vul nu je code in."
+  utter_profile_creation_code_not_valid:
+  - text: "Deze code lijkt niet helemaal te kloppen. Zou je hem nog een keer willen invullen?"
+  utter_profile_creation_code_3:
+  - text: "Dankjewel."
+  
+  utter_profile_creation_preference_1:
+  - text: "Sommige van de gesprekken die wij gaan hebben komen elke week terug. Het is handig als ik weet welke dag in de week voor jou het beste uitkomt."
+  utter_profile_creation_preference_2:
+  - text: "Kies een dag waarop jij de komende weken het vaakst tijd gaat hebben. 🗓️"
+  utter_profile_creation_preference_3:
+  - text: "Geen zorgen. Als het moment soms niet uitkomt, kun je het gesprek uitstellen."
+  utter_ask_profile_creation_day_slot:
+  - text: "Typ nu de dag van de week waarop jij meestal tijd hebt (bijvoorbeeld maandag)."
+  utter_profile_creation_day_not_valid:
+  - text: "Dat begreep ik niet. Typ de dag van de week waarop jij het vaakst tijd hebt. Bijvoorbeeld: maandag"
+  utter_profile_creation_preference_4:
+  - text: "Helder."
+  utter_profile_creation_preference_5:
+  - text: "Op welk moment van de dag heb jij meestal tijd voor een gesprek?"
+  utter_ask_profile_creation_time_slot:
+  - text: "Typ '1' als je in de ochtend (vóór 12 uur) tijd hebt. 🌅\nTyp '2' als je in de middag (tussen 12 en 18 uur) tijd hebt. ☀️\nTyp '3' als je in de avond (na 18 uur) tijd hebt. 🌕"
+  utter_profile_creation_time_not_valid:
+  - text: "Typ a.u.b. één van de drie cijfers om aan te geven wanneer je meestal tijd hebt voor een gesprek op de gekozen dag."
+  utter_ask_profile_creation_confirm_preference_slot:
+  - text: "Typ '1' als dit klopt.\nTyp '2' als je je antwoord wilt aanpassen."
+  
+  utter_profile_creation_testim_1:
+  - text: "Ik ga je nu een aantal vragen stellen die mij helpen om onze gesprekken persoonlijker te maken."
+  utter_profile_creation_testim_2:
+  - text: "Hou jij meer van wandelen of van hardlopen?"
+  utter_ask_profile_creation_run_walk_slot:
+  - text: "Typ '1' als je meer van wandelen houdt. 🚶🏼\nTyp '2' als je meer van hardlopen houdt. 🏃🏽‍♂️"
+  utter_profile_creation_run_walk_not_valid:
+  - text: "Dat begreep ik niet. Typ 1 of 2 om aan te geven of je meer van wandelen of hardlopen houdt."
+ 
+  utter_profile_creation_godin_1:
+  - text: "Denk aan een gemiddelde week."
+  utter_ask_profile_creation_godin_light_slot:
+  - text: "In je vrije tijd, hoe vaak doe jij aan lichte inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nLichte inspanning is mininale inspanning. Voorbeelden: yoga 🧘, boogschieten 🏹, vissen 🎣, bowlen 🎳, golfen 🏌🏼, rustig wandelen 🚶🏾‍♂️."
+  utter_ask_profile_creation_godin_moderate_slot:
+  - text: "In je vrije tijd, hoe vaak doe jij aan matige inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nMatige inspranning is inspanning waar je niet heel moe van wordt. Voorbeelden: snel wandelen 🚶🏾‍♂️, baseball ⚾, tennis 🎾, rustig fietsen 🚴🏽, volleyball 🏐, badminton 🏸, skiën 🎿, dansen 🕺🏼💃🏻."
+  utter_ask_profile_creation_godin_intensive_slot:
+  - text: "In je vrije tijd, hoe vaak doe jij aan intensieve inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nIntensieve inspanning is wanneer je hart snel gaat kloppen. Voorbeelden: hardlopen 🏃, voetbal ⚽, squash 🎾, basketball 🏀, judo 🥋, roolschaatsen, hard zwemmen 🏊 of fietsen 🚴🏽."
+  utter_profile_creation_godin_2:
+  - text: "Bedankt voor je antwoorden."
+  
+  utter_profile_creation_sim_1:
+  - text: "Je krijgt nu vier korte verhalen te zien. 4️ Lees deze goed door. Daarna ga ik je vragen in hoeverre jij jezelf vindt lijken op deze mensen."
+  utter_profile_creation_sim_2:
+  - text: "Dit is het eerste verhaal: 'Ik ben iemand die graag alleen traint, dus ik train thuis 6 dagen per week en richt me op de delen van mijn lichaam die ik wil verbeteren. Ook probeer ik gezond te eten.'"
+  utter_ask_profile_creation_sim_1_slot:
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  utter_profile_creation_sim_3:
+  - text: "Oké, duidelijk."
+  utter_profile_creation_sim_4:
+  - text: "Dit is het tweede verhaal: 'Hallo, mijn naam is Jennifer, ik ben 57 jaar oud. Ik was bijna volledig arbeidsongeschikt, omdat ik problemen had met mijn knieën en mijn rug. Maar dit afgelopen jaar ben ik gaan zwemmen en ben ik wat gewicht verloren, dus nu kan ik 3 dagen per week lopen.'"
+  utter_ask_profile_creation_sim_2_slot:
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  utter_profile_creation_sim_5:
+  - text: "Helder."
+  utter_profile_creation_sim_6:
+  - text: "Dit is het derde verhaal: 'Hallo, ik ben Daniel. Ik zorgde altijd min of meer voor mijn lichaam, door vrije lichaamstraining en cardio. Vorig jaar liet ik het gaan omdat ik altijd moe thuiskwam van het werk, maar ik heb de gewoonte van joggen en trainen weer opgepakt.'"
+  utter_ask_profile_creation_sim_3_slot:
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  utter_profile_creation_sim_7:
+  - text: "Oké, bedankt."
+  utter_profile_creation_sim_8:
+  - text: "Dit is het vierde en laatste verhaal: 'Ik geniet van wandelen, wat ik tenminste één keer per dag doe, soms zelfs twee keer. Ik vind dit een zachte oefening die me relatief fit houdt. Het hebben van wandelpaden waar ik woon helpt en moedigt me echt aan.'"
+  utter_ask_profile_creation_sim_4_slot:
+  - text: "In hoeverre vind jij jezelf lijken op deze persoon? Geef dit een score tussen -3 en 3 (-3 = ik lijk helemaal niet op deze persoon, 3 = ik lijk heel erg op deze persoon)."
+  utter_profile_creation_sim_9:
+  - text: "Staat genoteerd."
+  
+  utter_profile_creation_conf_1:
+  - text: "We zijn er bijna. Alleen nog wat vragen over je vertrouwen in het doen van lichamelijke beweging.❔"
+  utter_ask_profile_creation_conf_1_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 30 minuten (een half uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 15 minuten (een kwartier) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_2_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 60 minuten (1 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 30 minuten (een half uur) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_3_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 90 minuten (1,5 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 45 minuten (drie kwartier) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_4_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 120 minuten (2 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 60 minuten (één uur) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_5_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 150 minuten (2,5 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 75 minuten (een uur en een kwartier) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_6_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 180 minuten (3 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 90 minuten (anderhalfuur) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_7_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 210 minuten (3,5 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 105 minuten (een uur en drie kwartier) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_8_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 240 minuten (4 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 120 minuten (twee uur) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_9_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 270 minuten (4,5 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 135 minuten (twee en een kwartier) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  utter_ask_profile_creation_conf_10_slot:
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 1
+    text: "Hoeveel vertrouwen heb je dat je in totaal 300 minuten (5 uur) in één week zou kunnen lopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  - condition:
+        - type: slot
+          name: profile_creation_run_walk_slot
+          value: 2
+    text: "Hoeveel vertrouwen heb je dat je in totaal 150 minuten (twee en een half uur) in één week zou kunnen hardlopen? Geef je vertrouwen een cijfer tussen de 0 en 10 (0 = helemaal geen vertrouwen, 10 = alle vertrouwen)."
+  
+  utter_profile_creation_closing_1:
+  - text: "Bedankt voor al je antwoorden."
+  utter_profile_creation_closing_2:
+  - text: "Je profiel is nu aangemaakt. Dat betekent dat je officieel van start kunt met het Perfect Fit programma. 🏁"
+  utter_profile_creation_closing_3:
+  - text: "De volgende keer dat wij elkaar spreken gaan wij het hebben over bepaalde middelen die je kunnen helpen met het stoppen met roken."
+  utter_profile_creation_closing_4:
+  - text: "Graag tot dan! 👋"
+
+actions:
+  - validate_profile_creation_code_form
+  
+  - validate_profile_creation_day_time_confirm_form
+
+  - validate_profile_creation_run_walk_form
+  
+  - validate_profile_creation_godin_light_form
+  - validate_profile_creation_godin_moderate_form
+  - validate_profile_creation_godin_intensive_form
+  
+  - validate_profile_creation_sim_1_form
+  - validate_profile_creation_sim_2_form
+  - validate_profile_creation_sim_3_form
+  - validate_profile_creation_sim_4_form
+
+  - validate_profile_creation_conf_1_form
+  - validate_profile_creation_conf_2_form
+  - validate_profile_creation_conf_3_form
+  - validate_profile_creation_conf_4_form
+  - validate_profile_creation_conf_5_form
+  - validate_profile_creation_conf_6_form
+  - validate_profile_creation_conf_7_form
+  - validate_profile_creation_conf_8_form
+  - validate_profile_creation_conf_9_form
+  - validate_profile_creation_conf_10_form
+  
+  - profile_creation_set_conf_low_high_slot
+  
+  - profile_creation_save_to_db
+  

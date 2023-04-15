@@ -346,16 +346,28 @@ responses:
 # General
   utter_relapse_intro_codeword:
     - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
-  utter_relapse_intro_offer_help:
+  utter_relapse_intro_offer_help_pt1:
     - text: "Goed dat je hulp vraagt. Ik ga je helpen."
+    - text: "Het is goed dat je hulp vraagt!"
+    - text: "Het is prima dat je om hulp vraagt!"
+  utter_relapse_intro_offer_help_pt2:
+    - text: "Ik ga je helpen."
+    - text: "Ik zal je ondersteunen."
+    - text: "Ik ben er om je te helpen."
   utter_relapse_smoke_or_pa:
     - text: "Gaat het om roken of lichamelijke beweging?"
+    - text: "Betreft het roken of fysieke activiteit?"
+    - text: "Gaat het over roken of lichaamsbeweging?"
   utter_ask_smoke_or_pa_form_smoke_or_pa:
-    - text: "Typ '1' als je het gaat om roken. Typ '2' als het gaat om lichamelijke beweging."
+    - text: "Typ '1' als je het gaat om roken. 🚬. Typ '2' als het gaat om lichamelijke beweging. 🚶/"
+    - text: "Als het om roken gaat, typ dan 1. 🚬. Als het over lichaamsbeweging gaat, typ dan 2. 🚶"
+    - text: "Typ '1' als het gaat om roken. 🚬. Typ '2' als het gaat om fysieke activiteit. 🚶"
 
  # Smoke
   utter_specify_smoke:
     - text: "Kun je mij vertellen wat er aan de hand is?"
+    - text: "Zou je me kunnen vertellen wat er aan de hand is?"
+    - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
     - text: "Typ '1' als je zin hebt om te roken. 
              Typ '2' als je vandaag één of meer sigaretten hebt gerookt. 
@@ -363,25 +375,49 @@ responses:
              Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.
              "
   utter_smoke_crave_1:
-    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid"
+    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
+    - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
+    - text: "Goed dat je dit aangeeft! Ik waardeer je eerlijkheid. 🙏"
   utter_smoke_crave_2:
     - text: "Het is vervelend, maar wel heel logisch dat je nog zin hebt om te roken als je net bent gestopt."
+    - text: "Het is begrijpelijk en normaal dat je nog steeds de drang voelt om te roken na het stoppen."
+    - text: "Het is lastig, maar het is niet ongebruikelijk om nog verlangen te hebben naar een sigaret wanneer je net bent gestopt."
   utter_smoke_crave_3:
-    - text: "Heftige trek kan je soms overspoelen en dan weet je even niet hoe je kan omgaan met deze trek."
+    - text: "Heftige trek kan je soms overspoelen 🌊 en dan weet je even niet hoe je kan omgaan met deze trek."
+    - text: "Soms kun je overspoeld 🌊 worden door hevige trek en weet je even niet hoe je hiermee moet omgaan."
+    - text: "Het kan gebeuren dat je overweldigd 🌊 wordt door sterke trek en tijdelijk niet weet hoe je hierop moet reageren."
   utter_smoke_crave_4:
-    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt?"
+    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt?⌛"
+    - text: "Wist je dat hevige trek vaak als een golf komt en meestal slechts 3 minuten aanhoudt? ⌛"
+    - text: "Wist je dat sterke trek vaak in golven komt en meestal maar zo'n 3 minuten duurt? ⌛"
   utter_smoke_crave_5:
     - text: "Eerst is het heel heftig, maar na een paar minuten wordt het vanzelf minder."
+    - text: "In het begin kan de drang heel intens zijn, maar na enkele minuten wordt het vanzelf minder."
+    - text: "Het kan heel intens zijn in het begin, maar na een paar minuten neemt het vanzelf af."
   utter_smoke_crave_6:
     - text: "Je kan erop vertrouwen dat de trek vanzelf weer minder wordt."
+    - text: "Wees dus gerust, de drang om te roken zal vanzelf minder worden."
+    - text: "Je mag erop vertrouwen dat de behoefte om te roken vanzelf minder zal worden."
   utter_smoke_crave_7:
     - text: "Wat helpt is om tijdens deze heftige trek wat te gaan doen."
+    - text: "Een manier om hiermee om te gaan, is om tijdens de intense behoefte iets te gaan doen."
+    - text: "Om de hevige drang te verminderen, kan het helpen om bezig te blijven tijdens deze momenten."
   utter_smoke_crave_8:
-    - text: "Ik kan je daarbij helpen. Wat zullen we doen?"
+    - text: "Ik kan je daarbij helpen."
+    - text: "Ik ben er om je te ondersteunen."
+    - text: "Ik ben er om je te helpen."
+  utter_ask_ehbo_me_self_pt1:
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰"
+    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen? Typ dan '1' 🧰"
+    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰"
+  utter_ask_ehbo_me_self_pt2:
+    - text: "Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀"
+    - text: "Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀"
+    - text: "Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀"
   utter_ask_ehbo_me_self:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ 1 als je een
-             oefening uit je EHBO-doos wilt doen. ,Typ 2 als ik een oefening mag voorstellen. Typ 3
-             als je zelf een activiteit wilt kiezen."
+    - text: "Typ '3' als je zelf een oefening wilt kiezen. 📱"
+    - text: "Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'."
+    - text: "Wil je zelf een oefening uitkiezen? Typ dan '3'."
 
 # smoke lapse
 
@@ -477,10 +513,18 @@ responses:
 
 
 # 4a
+  utter_ask_hrs_new_activity_slot_pt1:
+    - text: "Is de trek weg of wil je nog een oefening doen?"
+    - text: "Heb je de trek onder controle of wil je nog een oefening doen?"
+    - text: "Is de hevige trek verdwenen of wil je nog een andere oefening uitproberen?"
+  utter_ask_hrs_new_activity_slot_pt2:
+    - text: "Typ '1' als de trek weg is."
+    - text: "Als de trek weg is, typ dan '1'."
+    - text: "Voel je de trek niet meer? Typ dan '1'."
   utter_ask_hrs_new_activity_slot:
-    - text: "Is de trek weg of wil je nog een oefening doen? 
-            Typ 1 als de trek weg is. 
-            Typ 2 als de trek nog niet weg is en je nog een oefening wil doen."
+    - text: "Typ '2' als de trek nog niet weg is en je nog een oefening wil doen."
+    - text: "Als de trek nog niet is weggegaan, kun je nog een oefening doen door '2' te typen."
+    - text: "Wil je nog een oefening doen omdat de trek nog niet weg is? Typ dan '2'."
   utter_hrs_reasons_1:
     - text: "Je kan trots zijn op jezelf dat je deze trek hebt weerstaan. Goed bezig!"
   utter_hrs_reasons_2:
@@ -553,6 +597,8 @@ responses:
             Je kunt ook altijd een afspraak maken met je huisarts. Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt."
   utter_hrs_list_activities_intro:
     - text: "De volgende oefeningen kunnen jou op dit moment helpen met de trek."
+    - text: "Deze oefeningen zijn gemaakt om je te helpen bij de trek."
+    - text: "Onderstaande oefeningen kunnen jou helpen bij het verminderen van de heftige trek."
 
   utter_ask_hrs_choose_coping_activity_slot:
     - text: "Welke van deze oefeningen wil je nu doen?

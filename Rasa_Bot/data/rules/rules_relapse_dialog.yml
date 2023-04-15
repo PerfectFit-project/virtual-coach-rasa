@@ -14,7 +14,8 @@ rules:
   steps:
   - intent: EXTERNAL_relapse_dialog
   - action: utter_relapse_intro_codeword
-  - action: utter_relapse_intro_offer_help
+  - action: utter_relapse_intro_offer_help_pt1
+  - action: utter_relapse_intro_offer_help_pt2
   - action: utter_relapse_smoke_or_pa
   - action: smoke_or_pa_form
   - active_loop: smoke_or_pa_form
@@ -54,6 +55,8 @@ rules:
   - action: utter_smoke_crave_6
   - action: utter_smoke_crave_7
   - action: utter_smoke_crave_8
+  - action: utter_ask_ehbo_me_self_pt1
+  - action: utter_ask_ehbo_me_self_pt2
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -73,6 +76,8 @@ rules:
 - rule: smoke hrs after fak from intent  # checkpoint: continue_with_relapse_dialog
   steps:
   - intent: EXTERNAL_relapse_dialog_hrs
+  - action: utter_ask_hrs_new_activity_slot_pt1
+  - action: utter_ask_hrs_new_activity_slot_pt2
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
   wait_for_user_input: false
@@ -87,6 +92,8 @@ rules:
   - slot_was_set:
     - hrs_new_activity_slot: 2
   - active_loop: null
+  - action: utter_ask_ehbo_me_self_pt1
+  - action: utter_ask_ehbo_me_self_pt2
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -228,6 +235,8 @@ rules:
       - crave_lapse_relapse: 1 # hrs
   - slot_was_set:
       - hrs_activity_slot: 1
+  - action: utter_ask_ehbo_me_self_pt1
+  - action: utter_ask_ehbo_me_self_pt2
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -266,6 +275,8 @@ rules:
     - ehbo_me_self: 2
   - active_loop: null
   - action: show_first_coping_activity
+  - action: utter_ask_hrs_new_activity_slot_pt1
+  - action: utter_ask_hrs_new_activity_slot_pt2
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
   wait_for_user_input: false

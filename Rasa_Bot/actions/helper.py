@@ -7,13 +7,12 @@ import secrets
 
 from datetime import datetime
 from typing import List, Optional, Any
-
-
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL, EVENING_SEND_TIME,
                           MORNING_SEND_TIME, 
                           PROFILE_CREATION_CONF_SLOTS,
-                          TIMEZONE)
+                          TIMEZONE, NUM_TOP_ACTIVITIES)
+
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
                                               DialogOpenAnswers, 
                                               InterventionActivity,
@@ -21,7 +20,9 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
+                                              FirstAidKit,
                                               ClosedAnswers)
+
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
@@ -198,6 +199,24 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
                                 datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_closed_answers.append(entry)
     session.commit()  # Update database
+
+
+def store_pf_evaluation_to_db(user_id: int, pf_evaluation_grade: int, pf_evaluation_comment: str):
+    """
+    Stores a performance evaluation grade and comment for a user in the database.
+
+    Args:
+        user_id (int): The ID of the user to store the evaluation for.
+        pf_evaluation_grade (int): The grade of the performance evaluation, from 0 to 10.
+        pf_evaluation_comment (str): The comment accompanying the performance evaluation.
+
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.pf_evaluation_grade = pf_evaluation_grade
+    selected.pf_evaluation_comment = pf_evaluation_comment
+    session.commit()
 
 
 def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
@@ -409,6 +428,7 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
 
     return rnd_activities
 
+
 def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
     """
        Get the closed answer responses associated with the given user and question.
@@ -436,6 +456,7 @@ def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswe
 
     return closed_answers
 
+
 def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
     """
        Get all the possible closed answers associated with a given question id.
@@ -459,6 +480,7 @@ def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
     )
 
     return closed_answers
+
 
 def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     """
@@ -486,6 +508,7 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
 
     return open_answers
 
+
 def count_answers(answers: List[DialogClosedAnswers],
                   closed_answer_options: List[ClosedAnswers]) -> List[int]:
     """
@@ -509,6 +532,23 @@ def count_answers(answers: List[DialogClosedAnswers],
     return result
 
 
+def week_day_to_numerical_form(week_day):
+    if week_day.lower() == "monday":
+        return 1
+    if week_day.lower() == "tuesday":
+        return 2
+    if week_day.lower() == "wednesday":
+        return 3
+    if week_day.lower() == "thursday":
+        return 4
+    if week_day.lower() == "friday":
+        return 5
+    if week_day.lower() == "saturday":
+        return 6
+    if week_day.lower() == "sunday":
+        return 7
+    return -1
+
 def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     """
        Add a barchart subplot to a given figure, with the following data.
@@ -531,6 +571,7 @@ def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     fig.update_yaxes(visible=False, showticklabels=False)
     # Change the bar mode
     return fig
+
 
 def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
     """
@@ -563,3 +604,35 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
         fig = add_subplot(fig, answer_descriptions, data, figure_specifics)
 
     return fig
+
+
+def get_faik_text(user_id):
+    session = get_db_session(db_url=DATABASE_URL)
+    
+    kit_text = ""
+    filled = False  # Whether the first aid kit has content
+    activity_ids_list = []  # List of activity IDs
+
+    # get the highest scored activities
+    top_five_activities = (
+        session.query(
+            FirstAidKit
+        ).order_by(FirstAidKit.activity_rating.desc())
+        .filter(
+            FirstAidKit.users_nicedayuid == user_id
+        )
+        .limit(NUM_TOP_ACTIVITIES).all()
+    )
+
+    if top_five_activities is not None:
+        for activity_idx, activity in enumerate(top_five_activities):
+            kit_text += str(activity_idx + 1) + ") "
+            kit_text += activity.intervention_activity.intervention_activity_title
+            kit_text += ": " + activity.intervention_activity.intervention_activity_description
+            if not activity_idx == len(top_five_activities) - 1:
+                kit_text += "\n"
+
+            activity_ids_list.append(activity.intervention_activity.intervention_activity_id)
+        filled = True
+
+    return kit_text, filled, activity_ids_list

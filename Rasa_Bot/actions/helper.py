@@ -15,7 +15,7 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionPhases,
                                               UserInterventionState,
                                               ClosedAnswers)
-from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
@@ -291,6 +291,62 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
 
     return rnd_activities
 
+
+def get_possible_activities(user_id: int, activity_type: str, avoid_activity_id: int
+                            ) -> List[InterventionActivity]:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                user_id: ID of the user
+                activity_type: category of activity to select from
+                avoid_activity_id: the intervention_activity_id of an activitye that
+                should not be included in the list
+
+            Returns:
+                    The list of InterventionActivities available
+
+    """
+
+    timing = get_timing()
+
+    available = []
+    mandatory = []
+
+    for resource in timing:
+        if resource["always_available"]:
+            available.append(resource["resource_id"])
+        else:
+            phases = resource["phases"]
+            for phase in list(filter(lambda x: x["phase"] == curr_ph, phases)):
+                if phase["always_available"]:
+                    available.append(resource["resource_id"])
+                elif curr_time in phase["available"]:
+                    available.append(resource["resource_id"])
+                if curr_time in phase["mandatory"]:
+                    mandatory.append(resource["resource_id"])
+
+    session = get_db_session(db_url=DATABASE_URL)
+
+    available_activities = (
+        session.query(
+            InterventionActivity
+        )
+        .filter(
+            InterventionActivity.intervention_activity_id != avoid_activity_id
+        )
+        .all()
+    )
+
+    rnd_activities = []
+
+    for _ in range(number_of_activities):
+        random_choice = secrets.choice(available_activities)
+        rnd_activities.append(random_choice)
+        available_activities.remove(random_choice)
+
+    return rnd_activities
+
+
 def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
     """
        Get the closed answer responses associated with the given user and question.
@@ -318,6 +374,7 @@ def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswe
 
     return closed_answers
 
+
 def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
     """
        Get all the possible closed answers associated with a given question id.
@@ -341,6 +398,7 @@ def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
     )
 
     return closed_answers
+
 
 def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     """
@@ -368,6 +426,7 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
 
     return open_answers
 
+
 def count_answers(answers: List[DialogClosedAnswers],
                   closed_answer_options: List[ClosedAnswers]) -> List[int]:
     """
@@ -391,7 +450,6 @@ def count_answers(answers: List[DialogClosedAnswers],
     return result
 
 
-
 def week_day_to_numerical_form(week_day):
     if week_day.lower() == "monday":
         return 1
@@ -408,6 +466,7 @@ def week_day_to_numerical_form(week_day):
     if week_day.lower() == "sunday":
         return 7
     return -1
+
 
 def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     """
@@ -431,6 +490,7 @@ def add_subplot(fig, x_axis: List[str], data, figure_specifics) -> Any:
     fig.update_yaxes(visible=False, showticklabels=False)
     # Change the bar mode
     return fig
+
 
 def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
     """

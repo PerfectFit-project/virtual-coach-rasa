@@ -157,8 +157,12 @@ rules:
   - action: check_who_decides
   - slot_was_set:
     - who_decides_slot: user
-  - action: get_three_random_activities
-  - action: utter_general_activity_choose_next_activity
+  - action: utter_general_activity_choose_next_activity_1
+  - action: general_activity_activity_type_form
+  - active_loop: general_activity_activity_type_form
+  - active_loop: null
+  - action: get_general_activities_options
+  - action: utter_general_activity_choose_next_activity_2
   - action: general_activity_next_activity_form
   - active_loop: general_activity_next_activity_form
   - active_loop: null

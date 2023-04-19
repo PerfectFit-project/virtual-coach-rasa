@@ -8,7 +8,7 @@ version: "3.1"
 stories:
 - story: start dialog
   steps:
-  - intent: review_last_activity
+  - intent: oefening_intent
   - action: action_set_slot_general_activity
   - action: utter_greeting #4
   - checkpoint: rescheduling_query_dialog

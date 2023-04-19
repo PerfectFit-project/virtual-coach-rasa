@@ -23,12 +23,15 @@ rules:
   - intent: uitleg_intent
   - action: action_trigger_explanation_first_aid_video_dialog
 
-- rule: exercise command
-  steps:
-  - intent: oefening_intent
-  - action: action_trigger_general_activity_dialog
+# TODO: uncomment when the general activity dialog rules are ready
+#- rule: exercise command
+#  steps:
+#  - intent: oefening_intent
+#  - action: action_trigger_general_activity_dialog
 
 - rule: medicine command
   steps:
   - intent: medicijn_intent
-  - action: action_trigger_video_medicine_dialog
+  - action: action_set_slot_medication_talk_video
+  - action: action_set_medication_video_link
+  - action: action_launch_watch_video_dialog

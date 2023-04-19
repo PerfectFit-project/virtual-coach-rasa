@@ -6,7 +6,7 @@ from enum import Enum
 
 from dateutil import tz
 
-# load database url and niceday_api_endopint variables
+# load database url and niceday_api_endpoint variables
 DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
@@ -19,6 +19,19 @@ MORNING = (6, 12)
 AFTERNOON = (12, 18)
 EVENING = (18, 24)
 
+# Times to start components during times
+MORNING_SEND_TIME = 7
+AFTERNOON_SEND_TIME = 15
+EVENING_SEND_TIME  = 20
+
+# Daypart names in Dutch
+DAYPART_NAMES_DUTCH = ["ochtend", "middag", "avond"]
+
+# Confidence slots in profile creation dialog
+# Start with the last one, needed for breaking out of confidence slot asking
+PROFILE_CREATION_CONF_SLOTS = ["profile_creation_conf_" + str(i) + "_slot" for i in range(10, 0, 
+                                                                                          -1)]
+    
 # number of activities displayed by the first aid kit
 NUM_TOP_ACTIVITIES = 5
 
@@ -34,34 +47,47 @@ OPT_POLICY = [[[1, 2], [3, 2]],[[1, 1], [3, 1]]]
 # (+1 compared to paper, because here values are from 1-5 (not 0-4))
 STATE_FEATURE_MEANS = [3.96, 3.74, 3.88]
 # Persuasive messages for the persuasion types of commitment and consensus
-COMMITMENT = ["Vergeet niet: Je hebt besloten om gezonder te gaan leven. \
-                  Het zal goed voelen wanneer je je aan deze belofte houdt.",
-              "Vergeet niet: Je hebt besloten om gezonder te gaan leven. \
-                  We willen natuurlijk dat je hier niet te veel over nadenkt, \
-                  maar het zal niet fijn voelen als je je niet aan deze belofte \
-                  houdt.",
-              "Vergeet niet: Je wilt graag gezonder gaan leven. Ik gun je dat \
-                  dit gaat lukken.",
-              "Vergeet niet: Je wilt graag gezonder gaan leven. Ik hoop dat je \
-                  deze belofte niet breekt.",
-              "Vergeet niet: Je hebt beloofd om iemand te worden die gezonder leeft. \
-                  Deze activiteit kan je helpen om deze persoon te worden.",
-              "Vergeet niet: Je hebt beloofd om iemand te worden die gezonder leeft. \
-                  Als je deze activiteit NIET doet, kan het moeilijker zijn om \
-                      deze persoon te worden."]
+COMMITMENT = ["Vergeet niet: Je hebt besloten om gezonder te gaan leven. "\
+                 "Het zal goed voelen wanneer je je aan deze belofte houdt.",
+              "Vergeet niet: Je hebt besloten om gezonder te gaan leven. "\
+                 "We willen natuurlijk dat je hier niet te veel over nadenkt, "\
+                 "maar het zal niet fijn voelen als je je niet aan deze belofte "\
+                 "houdt.",
+              "Vergeet niet: Je wilt graag gezonder gaan leven. Ik gun je dat "\
+                 "dit gaat lukken.",
+              "Vergeet niet: Je wilt graag gezonder gaan leven. Ik hoop dat je "\
+                 "deze belofte niet breekt.",
+              "Vergeet niet: Je hebt beloofd om iemand te worden die gezonder leeft. "\
+                 "Deze activiteit kan je helpen om deze persoon te worden.",
+              "Vergeet niet: Je hebt beloofd om iemand te worden die gezonder leeft. "\
+                 "Als je deze activiteit NIET doet, kan het moeilijker zijn om "\
+                 "deze persoon te worden."]
 CONSENSUS = ["De meeste mensen denken dat deze activiteit zal helpen om",
-             "De meeste mensen denken dat als je deze activiteit NIET doet, \
-                 het moeilijker kan zijn om",
+             "De meeste mensen denken dat als je deze activiteit NIET doet, "\
+                 "het moeilijker kan zijn om",
              "Het grootste deel van de mensen gelooft dat deze activiteit zal helpen om",
-             "Het grootste deel van de mensen gelooft dat als je deze activiteit \
-                 NIET doet, het moeilijker kan zijn om"]
+             "Het grootste deel van de mensen gelooft dat als je deze activiteit "\
+                 "NIET doet, het moeilijker kan zijn om"]
 # Reflective questions for persuasion types of commitment and consensus
-REFLECTIVE_QUESTION_COMMITMENT = "Je hebt het besluit genomen om gezonder te \
-    gaan leven. Hoe helpt deze activiteit jou hierbij?"
-REFLECTIVE_QUESTION_COMMITMENT_IDENTITY = "Hoe helpt deze activiteit jou bij \
-    jouw besluit om iemand te worden die gezonder leeft?"
-REFLECTIVE_QUESTION_CONSENSUS = "Hoe denk je dat deze activiteit iemand zoals \
-    jou kan helpen om gezonder te gaan leven?"
+REFLECTIVE_QUESTION_COMMITMENT = "Je hebt het besluit genomen om gezonder te "\
+   "gaan leven. Hoe helpt deze activiteit jou hierbij?"
+REFLECTIVE_QUESTION_COMMITMENT_IDENTITY = "Hoe helpt deze activiteit jou bij "\
+   "jouw besluit om iemand te worden die gezonder leeft?"
+REFLECTIVE_QUESTION_CONSENSUS = "Hoe denk je dat deze activiteit iemand zoals "\
+   "jou kan helpen om gezonder te gaan leven?"
+    
+# Accepted misspelled words for days of the weeks
+DAYS_OF_WEEK_ACCEPTED = {"maandag": ["maandag", "mandag", "maadag"],
+                         "diensdag": ["dinsdag", "diensdag", "diensdah"],
+                         "woensdag": ["woensdag", "wonsdag", "wensdag"],
+                         "donderdag": ["donderdag", "dondrdag", "dondedag"],
+                         "vrijdag": ["vrijdag", "vridag", "vrida", "vrjdag", 
+                                     "vijdag"],
+                         "zaterdag": ["zaterdag", "zatedag"],
+                         "zondag": ["zondag", "zodag", "sondag"]}
+# List of days of week in Dutch
+DAYS_OF_WEEK = ["maandag", "diensdag", "woensdag", "donderdag", "vrijdag",
+                "zaterdag", "zondag"]
 
 
 activities_categories = {1: 'self-related',

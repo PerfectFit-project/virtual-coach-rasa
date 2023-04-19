@@ -1,3 +1,5 @@
+version: "3.1"
+
 intents:
 - review_last_activity
 - EXTERNAL_trigger_continue_general_activity

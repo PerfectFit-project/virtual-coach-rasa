@@ -1,5 +1,6 @@
 import string
 from datetime import datetime
+from .definitions import (DAYS_OF_WEEK_ACCEPTED)
 
 
 def validate_date_format(response: str) -> bool:
@@ -22,6 +23,13 @@ def validate_date_range(response: str, minimum_date: str, maximum_date: str) -> 
         return True
 
     return False
+
+
+def validate_days_of_week(value: str):
+    for day_name in list(DAYS_OF_WEEK_ACCEPTED.keys()):
+        if value.lower() in DAYS_OF_WEEK_ACCEPTED[day_name]:
+            return True, day_name
+    return False, None
 
 
 def validate_int_type(value: str) -> bool:
@@ -65,6 +73,32 @@ def validate_number_in_range_response(n_min: int, n_max: int, response: str) -> 
     return True
 
 
+def validate_participant_code(code: str) -> bool:
+    
+    # Must have length 5
+    if len(code) != 5:
+        return False
+    # Check if code contains only letters and numbers
+    if not code.isalnum():
+        return False
+    # Second and fourth character must be numbers
+    if not (code[1].isnumeric() and code[3].isnumeric()):
+        return False
+    # First, third and fifth character must be letters
+    if not (code[0].isalpha() and code[2].isalpha() and code[4].isalpha()):
+        return False
+    # Number 0 is not used
+    if "0" in code:
+        return False
+    # Second number must be larger than the first
+    if not code[3] > code[1]:
+        return False
+    # Later letters must come later in the alphabet
+    if not (code[4].lower() > code[2].lower() and code[2].lower() > code[0].lower()):
+        return False
+    return True
+
+
 def validate_yes_no_answer(response: str) -> bool:
     if response.lower() in ['Ja', 'ja', 'ja.', 'Nee', 'nee', "nee."]:
         return True
@@ -73,3 +107,9 @@ def validate_yes_no_answer(response: str) -> bool:
 
 def simple_sanitize_input(value):
     return value.translate({c: "" for c in string.punctuation})
+
+
+def validate_klaar(response: str) -> bool:
+    if response.lower() in ['Klaar', 'klaar']:
+        return True
+    return False

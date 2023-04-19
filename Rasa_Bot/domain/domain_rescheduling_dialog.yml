@@ -1,9 +1,9 @@
+version: "3.1"
+
 intents:
   - EXTERNAL_trigger_reschedule_activity
 
 slots:
-
-  ### Rescheduling query dialog
   # Whether the user wants to continue the dialog now
   rescheduling_now:
     type: categorical
@@ -53,8 +53,8 @@ slots:
     influence_conversation: true
     mappings:
       - type: custom
+      
 responses:
-
   ### General rescheduling query dialog
   utter_intro_reschedule_ga:
      - text: "Je kunt weer een nieuwe oefening doen!"

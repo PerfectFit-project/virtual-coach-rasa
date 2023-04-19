@@ -1,0 +1,455 @@
+# Rules related to the profile creation functionality
+version: "3.1"
+
+rules:
+## Start and start rescheduling dialog
+- rule: Start profile creation dialog and rescheduling
+  steps:
+  - intent: EXTERNAL_trigger_profile_creation
+  - action: action_set_slot_profile_creation
+  - action: action_launch_rescheduling_prep
+  # Since this action above will trigger an intent, we need to wait 
+  # for user input here.
+  
+## 1 + 2: Welcome and begin participant code
+- rule: Profile creation welcome and begin participant code
+  steps:
+  - action: utter_profile_creation_start_1
+  - action: utter_profile_creation_start_2
+  - action: utter_profile_creation_start_3
+  - action: utter_profile_creation_code_1
+  - action: utter_profile_creation_code_2
+  - action: profile_creation_code_form
+  - active_loop: profile_creation_code_form
+  wait_for_user_input: false
+  
+## 2 + 3: Participant code and preferred day + time for contact
+- rule: Profile creation participant code
+  condition:
+    - active_loop: profile_creation_code_form
+  steps:
+  - action: profile_creation_code_form
+  - active_loop: null
+  - action: utter_profile_creation_code_3
+  - action: utter_profile_creation_preference_1
+  - action: utter_profile_creation_preference_2
+  - action: utter_profile_creation_preference_3
+  - action: profile_creation_day_time_confirm_form
+  - active_loop: profile_creation_day_time_confirm_form
+  wait_for_user_input: false
+ 
+## 3: Preferred day + preferred time entered
+- rule: Profile creation preferred day and time entered
+  condition:
+    - active_loop: profile_creation_day_time_confirm_form
+  steps:
+  - action: profile_creation_day_time_confirm_form
+  - active_loop: null
+  - action: utter_profile_creation_testim_1
+  - action: utter_profile_creation_testim_2
+  - action: profile_creation_run_walk_form
+  - active_loop: profile_creation_run_walk_form
+  wait_for_user_input: false
+  
+## 4: Enter running walking pref and start Godin light
+- rule: Profile creation enter running walking pref
+  condition:
+    - active_loop: profile_creation_run_walk_form
+  steps:
+  - action: profile_creation_run_walk_form
+  - active_loop: null
+  - action: utter_profile_creation_godin_1
+  - action: profile_creation_godin_light_form
+  - active_loop: profile_creation_godin_light_form
+  wait_for_user_input: false
+  
+## 4: Enter Godin light and start Godin moderate
+- rule: Profile creation enter Godin light
+  condition:
+    - active_loop: profile_creation_godin_light_form
+  steps:
+  - action: profile_creation_godin_light_form
+  - active_loop: null
+  - action: profile_creation_godin_moderate_form
+  - active_loop: profile_creation_godin_moderate_form
+  wait_for_user_input: false
+  
+## 4: Enter Godin moderate and start Godin intensive
+- rule: Profile creation enter Godin moderate
+  condition:
+    - active_loop: profile_creation_godin_moderate_form
+  steps:
+  - action: profile_creation_godin_moderate_form
+  - active_loop: null
+  - action: profile_creation_godin_intensive_form
+  - active_loop: profile_creation_godin_intensive_form
+  wait_for_user_input: false
+  
+## 4: Enter Godin intensive and start sim 1
+- rule: Profile creation enter Godin intensive
+  condition:
+    - active_loop: profile_creation_godin_intensive_form
+  steps:
+  - action: profile_creation_godin_intensive_form
+  - active_loop: null
+  - action: utter_profile_creation_godin_2
+  - action: utter_profile_creation_sim_1
+  - action: utter_profile_creation_sim_2
+  - action: profile_creation_sim_1_form
+  - active_loop: profile_creation_sim_1_form
+  wait_for_user_input: false
+
+## 4: Enter sim 1 and start sim 2
+- rule: Profile creation enter sim 1
+  condition:
+    - active_loop: profile_creation_sim_1_form
+  steps:
+  - action: profile_creation_sim_1_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_3
+  - action: utter_profile_creation_sim_4
+  - action: profile_creation_sim_2_form
+  - active_loop: profile_creation_sim_2_form
+  wait_for_user_input: false
+  
+## 4: Enter sim 2 and start sim 3
+- rule: Profile creation enter sim 2
+  condition:
+    - active_loop: profile_creation_sim_2_form
+  steps:
+  - action: profile_creation_sim_2_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_5
+  - action: utter_profile_creation_sim_6
+  - action: profile_creation_sim_3_form
+  - active_loop: profile_creation_sim_3_form
+  wait_for_user_input: false
+  
+## 4: Enter sim 3 and start sim 4
+- rule: Profile creation enter sim 3
+  condition:
+    - active_loop: profile_creation_sim_3_form
+  steps:
+  - action: profile_creation_sim_3_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_7
+  - action: utter_profile_creation_sim_8
+  - action: profile_creation_sim_4_form
+  - active_loop: profile_creation_sim_4_form
+  wait_for_user_input: false
+
+## 4: Enter sim 4 and start conf 1
+- rule: Profile creation enter sim 4
+  condition:
+    - active_loop: profile_creation_sim_4_form
+  steps:
+  - action: profile_creation_sim_4_form
+  - active_loop: null
+  - action: utter_profile_creation_sim_9
+  - action: utter_profile_creation_conf_1
+  - action: profile_creation_conf_1_form
+  - active_loop: profile_creation_conf_1_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 1 and end since conf low
+- rule: Profile creation enter conf 1 and end
+  condition:
+    - active_loop: profile_creation_conf_1_form
+  steps:
+  - action: profile_creation_conf_1_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 1 and start conf 2
+- rule: Profile creation enter conf 1
+  condition:
+    - active_loop: profile_creation_conf_1_form
+  steps:
+  - action: profile_creation_conf_1_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_2_form
+  - active_loop: profile_creation_conf_2_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 2 and end since conf low
+- rule: Profile creation enter conf 2 and end
+  condition:
+    - active_loop: profile_creation_conf_2_form
+  steps:
+  - action: profile_creation_conf_2_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 2 and start conf 3
+- rule: Profile creation enter conf 2
+  condition:
+    - active_loop: profile_creation_conf_2_form
+  steps:
+  - action: profile_creation_conf_2_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_3_form
+  - active_loop: profile_creation_conf_3_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 3 and end since conf low
+- rule: Profile creation enter conf 3 and end
+  condition:
+    - active_loop: profile_creation_conf_3_form
+  steps:
+  - action: profile_creation_conf_3_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 3 and start conf 4
+- rule: Profile creation enter conf 3
+  condition:
+    - active_loop: profile_creation_conf_3_form
+  steps:
+  - action: profile_creation_conf_3_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_4_form
+  - active_loop: profile_creation_conf_4_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 4 and end since conf low
+- rule: Profile creation enter conf 4 and end
+  condition:
+    - active_loop: profile_creation_conf_4_form
+  steps:
+  - action: profile_creation_conf_4_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 4 and start conf 5
+- rule: Profile creation enter conf 4
+  condition:
+    - active_loop: profile_creation_conf_4_form
+  steps:
+  - action: profile_creation_conf_4_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_5_form
+  - active_loop: profile_creation_conf_5_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 5 and end since conf low
+- rule: Profile creation enter conf 5 and end
+  condition:
+    - active_loop: profile_creation_conf_5_form
+  steps:
+  - action: profile_creation_conf_5_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 5 and start conf 6
+- rule: Profile creation enter conf 5
+  condition:
+    - active_loop: profile_creation_conf_5_form
+  steps:
+  - action: profile_creation_conf_5_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_6_form
+  - active_loop: profile_creation_conf_6_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 6 and end since conf low
+- rule: Profile creation enter conf 6 and end
+  condition:
+    - active_loop: profile_creation_conf_6_form
+  steps:
+  - action: profile_creation_conf_6_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 6 and start conf 7
+- rule: Profile creation enter conf 6
+  condition:
+    - active_loop: profile_creation_conf_6_form
+  steps:
+  - action: profile_creation_conf_6_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_7_form
+  - active_loop: profile_creation_conf_7_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 7 and end since conf low
+- rule: Profile creation enter conf 7 and end
+  condition:
+    - active_loop: profile_creation_conf_7_form
+  steps:
+  - action: profile_creation_conf_7_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 7 and start conf 8
+- rule: Profile creation enter conf 7
+  condition:
+    - active_loop: profile_creation_conf_7_form
+  steps:
+  - action: profile_creation_conf_7_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_8_form
+  - active_loop: profile_creation_conf_8_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 8 and end since conf low
+- rule: Profile creation enter conf 8 and end
+  condition:
+    - active_loop: profile_creation_conf_8_form
+  steps:
+  - action: profile_creation_conf_8_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+  
+## 4: Enter conf 8 and start conf 9
+- rule: Profile creation enter conf 8
+  condition:
+    - active_loop: profile_creation_conf_8_form
+  steps:
+  - action: profile_creation_conf_8_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_9_form
+  - active_loop: profile_creation_conf_9_form
+  wait_for_user_input: false
+  
+## 4: Enter conf 9 and end since conf low
+- rule: Profile creation enter conf 9 and end
+  condition:
+    - active_loop: profile_creation_conf_9_form
+  steps:
+  - action: profile_creation_conf_9_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 0
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+
+## 4: Enter conf 9 and start conf 10
+- rule: Profile creation enter conf 9
+  condition:
+    - active_loop: profile_creation_conf_9_form
+  steps:
+  - action: profile_creation_conf_9_form
+  - active_loop: null
+  - action: profile_creation_set_conf_low_high_slot
+  - slot_was_set:
+    - profile_creation_conf_low_high_slot: 1
+  - action: profile_creation_conf_10_form
+  - active_loop: profile_creation_conf_10_form
+  wait_for_user_input: false
+  
+## 4 + 5: Enter conf 10 and closing
+- rule: Profile creation enter conf 10
+  condition:
+    - active_loop: profile_creation_conf_10_form
+  steps:
+  - action: profile_creation_conf_10_form
+  - active_loop: null
+  - action: utter_profile_creation_closing_1
+  - action: utter_profile_creation_closing_2
+  - action: utter_profile_creation_closing_3
+  - action: utter_profile_creation_closing_4
+  - action: profile_creation_save_to_db
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog

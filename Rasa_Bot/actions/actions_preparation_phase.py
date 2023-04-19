@@ -1,15 +1,18 @@
+from celery import Celery
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, FollowupAction
-from virtual_coach_db.helper.definitions import (DialogExpectedDuration,
-                                                 ComponentsTriggers, Components)
+from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from celery import Celery
+from virtual_coach_db.helper.definitions import (Components,
+                                                 ComponentsTriggers,
+                                                 DialogExpectedDuration)
+
 from . import validator
-from .definitions import REDIS_URL, MORNING, AFTERNOON, TIMEZONE
+from .definitions import MORNING, AFTERNOON, REDIS_URL, TIMEZONE
 from .helper import get_latest_bot_utterance
 from .actions_rescheduling_dialog import get_reschedule_date
+
 import datetime
 
 celery = Celery(broker=REDIS_URL)
@@ -83,12 +86,11 @@ class StartNextDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        current_dialog = tracker.get_slot('current_intervention_component').upper()
+        current_dialog = tracker.get_slot('current_intervention_component')
 
         # if the dialog is the profile creation, launch that
-        # TODO: substitute with actual first action of the profile creation
         if current_dialog == Components.PROFILE_CREATION:
-            return [FollowupAction('action_end_dialog')]
+            return [FollowupAction('utter_profile_creation_start_1')]
 
         # if the dialog is a video one, launch the watch a video dialog
         celery.send_task('celery_tasks.trigger_intervention_component',

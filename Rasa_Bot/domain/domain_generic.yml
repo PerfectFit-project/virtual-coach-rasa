@@ -29,14 +29,6 @@ slots:
       - type: custom
 
 responses:
-  # Fallback for low NLU confidence and low next action confidence
-  # For low next action confidence, "utter_default" is automatically called.
-  # For low NLU confidence, we have defined a rule.
-  utter_default:
-    - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
-  # We present the user with the options from the central mode
-  utter_central_mode_options:
-    - text: "Je kunt deze woorden gebruiken om met mij te praten: 1) EHBO doos, 2) ..., ... ."
 
   ### Re-prompts in forms
   utter_please_answer_1_2:
@@ -57,6 +49,8 @@ responses:
      - text: "Kun je een geheel getal tussen 1 en 7 opgeven?"
   utter_please_answer_0_to_10:
      - text: "Kun je een geheel getal tussen 0 en 10 opgeven?"
+  utter_please_answer_neg_to_pos_3:
+     - text: "Typ een getal tussen -3 en 3."
   utter_please_answer_yes_no:
      - text: "Geef alsjeblieft antwoord met 'ja' of 'nee'?"
   utter_please_answer_now_or_later:

@@ -6,10 +6,6 @@ version: "3.1"
 ## 1a: Trigger general activity dialog
 
 rules:
-- rule: user start dialog
-  steps:
-  - intent: review_last_activity
-  - action: action_trigger_general_activity # TO DO: implement
 
 - rule: Trigger general activity
   steps:

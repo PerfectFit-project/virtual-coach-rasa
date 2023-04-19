@@ -97,6 +97,17 @@ activities_categories = {1: 'self-related',
                          5: 'motivational'}
 
 
+class FsmStates:
+    ONBOARDING = "Onboarding"
+    TRACKING = "Tracking"
+    GOALS_SETTING = "Goals setting"
+    BUFFER = "Buffer"
+    EXECUTION_RUN = "Execution run"
+    RELAPSE = "Relapse"
+    CLOSING = "Closing"
+    TEST = "Test"
+
+
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
     FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?

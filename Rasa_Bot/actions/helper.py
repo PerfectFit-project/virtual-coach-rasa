@@ -5,13 +5,14 @@ import numpy as np
 import plotly.graph_objects as go
 import secrets
 
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional, Any
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL, EVENING_SEND_TIME,
                           MORNING_SEND_TIME, 
                           PROFILE_CREATION_CONF_SLOTS,
-                          TIMEZONE, NUM_TOP_ACTIVITIES)
+                          TIMEZONE, NUM_TOP_ACTIVITIES,
+                          FsmStates)
 
 from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
                                               DialogOpenAnswers, 
@@ -21,9 +22,9 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionPhases,
                                               UserInterventionState,
                                               FirstAidKit,
-                                              ClosedAnswers)
+                                              ClosedAnswers, UserStateMachine)
 
-from virtual_coach_db.helper.helper_functions import get_db_session
+from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 
 def compute_godin_level(tracker) -> int:
@@ -340,6 +341,92 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
     session.commit()  # Update database
 
 
+def get_current_user_phase(user_id: int) -> str:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                 user_id: niceday user id
+
+            Returns:
+                    The name of the current phase of the user state machine
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    user_fsm = (
+        session.query(
+            UserStateMachine
+        )
+        .filter(
+            UserStateMachine.users_nicedayuid == user_id
+        )
+        .all()
+    )
+
+    return user_fsm[0].state
+
+
+def get_current_phase_time(user_id: int, phase: str) -> int:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                 user_id: niceday user id
+                 phase: current fsm state
+
+            Returns:
+                    The number of days or weeks in the current state
+
+    """
+    if phase not in [FsmStates.TRACKING, FsmStates.GOALS_SETTING, FsmStates.GOALS_SETTING]:
+        time = get_days_from_start(user_id)
+    else:
+        time = get_execution_week(user_id)
+
+    return time
+
+
+def get_days_from_start(user_id: int) -> int:
+    """
+    Retrieve the number of days passed from the first day of intervention
+    Args:
+        user_id: ID of the user
+
+    Returns:  number of days passed from the first day of intervention
+
+    """
+    start_date = get_start_date(user_id)
+
+    current_date = date.today()
+
+    spent_days = (current_date - start_date).days + 1 # if the date is the same, it is day 1
+
+    return spent_days
+
+
+def get_execution_week(user_id: int) -> int:
+    """
+    Retrieve the week number in the execution phase
+    Args:
+        user_id: ID of the user
+
+    Returns:  number of weeks spent in the execution phase
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    user = (
+        session.query(
+            Users
+        )
+        .filter(
+            Users.nicedayuid == user_id
+        )
+        .all()
+    )
+
+    return user[0].execution_week
+
+
 def get_intervention_component_id(intervention_component_name: str) -> int:
     """
        Get the id of an intervention component as stored in the DB
@@ -429,60 +516,62 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
     return rnd_activities
 
 
-# def get_possible_activities(user_id: int, activity_type: str, avoid_activity_id: int
-#                             ) -> List[InterventionActivity]:
-#     """
-#        Get a number of random activities from the resources list.
-#         Args:
-#                 user_id: ID of the user
-#                 activity_type: category of activity to select from
-#                 avoid_activity_id: the intervention_activity_id of an activitye that
-#                 should not be included in the list
-#
-#             Returns:
-#                     The list of InterventionActivities available
-#
-#     """
-#
-#     timing = get_timing()
-#
-#     available = []
-#     mandatory = []
-#
-#     for resource in timing:
-#         if resource["always_available"]:
-#             available.append(resource["resource_id"])
-#         else:
-#             phases = resource["phases"]
-#             for phase in list(filter(lambda x: x["phase"] == curr_ph, phases)):
-#                 if phase["always_available"]:
-#                     available.append(resource["resource_id"])
-#                 elif curr_time in phase["available"]:
-#                     available.append(resource["resource_id"])
-#                 if curr_time in phase["mandatory"]:
-#                     mandatory.append(resource["resource_id"])
-#
-#     session = get_db_session(db_url=DATABASE_URL)
-#
-#     available_activities = (
-#         session.query(
-#             InterventionActivity
-#         )
-#         .filter(
-#             InterventionActivity.intervention_activity_id != avoid_activity_id
-#         )
-#         .all()
-#     )
-#
-#     rnd_activities = []
-#
-#     for _ in range(number_of_activities):
-#         random_choice = secrets.choice(available_activities)
-#         rnd_activities.append(random_choice)
-#         available_activities.remove(random_choice)
-#
-#     return rnd_activities
+def get_possible_activities(user_id: int, activity_type: str, avoid_activity_id: int
+                            ) -> List[InterventionActivity]:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                user_id: ID of the user
+                activity_type: category of activity to select from
+                avoid_activity_id: the intervention_activity_id of an activity that
+                should not be included in the list
 
+            Returns:
+                    The list of InterventionActivities available
+
+    """
+
+    timing = get_timing()
+    curr_ph = get_current_user_phase(user_id)
+    curr_time = get_current_phase_time(user_id, curr_ph)
+
+    available = []
+    mandatory = []
+
+    for resource in timing:
+        if resource["always_available"]:
+            available.append(resource["resource_id"])
+        else:
+            phases = resource["phases"]
+            for phase in list(filter(lambda x: x["phase"] == curr_ph, phases)):
+                if phase["always_available"]:
+                    available.append(resource["resource_id"])
+                elif curr_time in phase["available"]:
+                    available.append(resource["resource_id"])
+                if curr_time in phase["mandatory"]:
+                    mandatory.append(resource["resource_id"])
+
+    return rnd_activities
+
+
+def get_start_date(user_id: int) -> date:
+    """
+    Retrieve teh starting date of the intervention for a user
+    Args:
+        user_id: ID of the user
+
+    Returns: the intervention starting date
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (session.query(Users)
+                .filter(Users.nicedayuid == user_id)
+                .one())
+
+    start_date = selected.start_date
+
+    return start_date
 
 def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
     """

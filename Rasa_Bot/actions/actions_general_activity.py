@@ -395,11 +395,14 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
         if last_utterance != 'utter_ask_general_activity_next_activity_slot':
             return {"general_activity_next_activity_slot": None}
 
-        if not validator.validate_number_in_range_response(1, 4, value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+        opt_number = len(tracker.get_slot('rnd_activities_ids'))
+
+        if not validator.validate_number_in_range_response(1, opt_number, value):
+            dispatcher.utter_message(textt="Kun je een geheel getal tussen 1 en "
+                                           + str(opt_number) + " opgeven? ...")
             return {"general_activity_next_activity_slot": None}
 
-        if value == '4':
+        if value == str(opt_number):
             user_id = tracker.current_state()['sender_id']
 
             activity_type_slot = tracker.get_slot('general_activity_activity_type_slot')
@@ -413,10 +416,17 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
 
             available_activities_ids = [activity.intervention_activity_id for activity in available]
 
+            options = ["Typ " + str(i) + " als je " +
+                       available[i].intervention_activity_title +
+                       "wilt doen.\n"
+                       for i in range(len(available))]
+
+            sentence = ''
+            for option in options:
+                sentence += option
+
             return {"general_activity_next_activity_slot": None,
-                    "activity1_name": available[0].intervention_activity_title,
-                    "activity2_name": available[1].intervention_activity_title,
-                    "activity3_name": available[2].intervention_activity_title,
+                    "general_activity_activities_options_slot": sentence,
                     "rnd_activities_ids": available_activities_ids}
 
         return {"general_activity_next_activity_slot": value}
@@ -460,10 +470,14 @@ class GetActivityCoachChoice(Action):
         return "get_activity_coach_choice"
 
     async def run(self, dispatcher, tracker, domain):
-        # for testing purposes, returns a random title
-        # TODO: implement logic
 
-        return [SlotSet("chosen_activity_slot", "this is the chosen activity")]
+        user_id = tracker.current_state()['sender_id']
+
+        mandatory, _ = get_possible_activities(user_id)
+        activity_title = mandatory[0].intervention_activity_title
+
+        return [SlotSet("chosen_activity_slot", activity_title),
+                SlotSet("general_activity_next_activity_slot", 0)]
 
 
 class CheckWhoDecides(Action):
@@ -473,10 +487,14 @@ class CheckWhoDecides(Action):
         return "check_who_decides"
 
     async def run(self, dispatcher, tracker, domain):
-        # for testing purposes, the user decides
-        # TODO: implement logic
 
-        decider = 'user'
+        user_id = tracker.current_state()['sender_id']
+        mandatory, _ = get_possible_activities(user_id)
+
+        if len(mandatory) > 0:
+            decider = 'coach'
+        else:
+            decider = 'user'
 
         return [SlotSet("who_decides_slot", decider)]
 

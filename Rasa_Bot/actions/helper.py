@@ -541,7 +541,8 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
     return rnd_activities
 
 
-def get_possible_activities(user_id: int, activity_category: str, avoid_activity_id: int
+def get_possible_activities(user_id: int, activity_category: str = None,
+                            avoid_activity_id: int = None
                             ) -> (List[InterventionActivity], List[InterventionActivity]):
     """
        Get a number of random activities from the resources list.
@@ -561,13 +562,16 @@ def get_possible_activities(user_id: int, activity_category: str, avoid_activity
     curr_ph = get_current_user_phase(user_id)
     curr_time = get_current_phase_time(user_id, curr_ph)
 
+    if activity_category is None:
+        activities_list = list(filter(lambda x: x["resource_id"] != avoid_activity_id, timing))
+    else:
+        activities_list = list(filter(
+            lambda x: x["category"] == activity_category and x["resource_id"] != avoid_activity_id,
+            timing)
+        )
+
     available_ids = []
     mandatory = []
-
-    activities_list = list(filter(
-        lambda x: x["category"] == activity_category and x["resource_id"] != avoid_activity_id,
-        timing)
-    )
 
     for resource in activities_list:
         if resource["always_available"]:

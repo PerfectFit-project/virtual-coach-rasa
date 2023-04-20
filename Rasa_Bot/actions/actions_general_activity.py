@@ -16,7 +16,8 @@ from .definitions import (activities_categories, COMMITMENT, CONSENSUS,
                           REFLECTIVE_QUESTION_CONSENSUS,
                           REDIS_URL)
 from .helper import (get_latest_bot_utterance, 
-                     get_random_activities, 
+                     get_random_activities,
+                     get_possible_activities,
                      get_user_intervention_activity_inputs,
                      store_dialog_closed_answer_to_db)
 from rasa_sdk import Action, FormValidationAction, Tracker
@@ -210,24 +211,27 @@ class GetGeneralActivitiesOptions(Action):
 
         activity_type = activities_categories[int(activity_type_slot)]
 
-        rnd_activities = get_random_activities(activity_id, 8)
-        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
+        mandatory, available = get_possible_activities(user_id,
+                                                       activity_type,
+                                                       activity_id)
+
+        available_activities_ids = [activity.intervention_activity_id for activity in available]
 
         options = ["Typ " + str(i) + " als je " +
-                   rnd_activities[i].intervention_activity_title +
+                   available[i].intervention_activity_title +
                    "wilt doen.\n"
-                   for i in range(len(rnd_activities))]
+                   for i in range(len(available))]
 
         sentence = ''
         for option in options:
             sentence += option
 
         sentence += "Typ " + \
-                    str(len(rnd_activities)) + \
+                    str(len(available)) + \
                     " als je toch een andere soort oefening wilt doen."
 
         return [SlotSet("general_activity_activities_options_slot", sentence),
-                SlotSet("rnd_activities_ids", rnd_activities_ids)]
+                SlotSet("rnd_activities_ids", available_activities_ids)]
 
 
 class CheckUserInputRequired(Action):
@@ -396,16 +400,24 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
             return {"general_activity_next_activity_slot": None}
 
         if value == '4':
+            user_id = tracker.current_state()['sender_id']
+
+            activity_type_slot = tracker.get_slot('general_activity_activity_type_slot')
             activity_id = tracker.get_slot('last_activity_id_slot')
 
-            rnd_activities = get_random_activities(activity_id, 3)
-            rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
+            activity_type = activities_categories[int(activity_type_slot)]
+
+            mandatory, available = get_possible_activities(user_id,
+                                                           activity_type,
+                                                           activity_id)
+
+            available_activities_ids = [activity.intervention_activity_id for activity in available]
 
             return {"general_activity_next_activity_slot": None,
-                    "activity1_name": rnd_activities[0].intervention_activity_title,
-                    "activity2_name": rnd_activities[1].intervention_activity_title,
-                    "activity3_name": rnd_activities[2].intervention_activity_title,
-                    "rnd_activities_ids": rnd_activities_ids}
+                    "activity1_name": available[0].intervention_activity_title,
+                    "activity2_name": available[1].intervention_activity_title,
+                    "activity3_name": available[2].intervention_activity_title,
+                    "rnd_activities_ids": available_activities_ids}
 
         return {"general_activity_next_activity_slot": value}
 

@@ -9,13 +9,13 @@ from datetime import datetime, date
 from typing import List, Optional, Any
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL, EVENING_SEND_TIME,
-                          MORNING_SEND_TIME, 
+                          MORNING_SEND_TIME,
                           PROFILE_CREATION_CONF_SLOTS,
                           TIMEZONE, NUM_TOP_ACTIVITIES,
                           FsmStates)
 
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
-                                              DialogOpenAnswers, 
+from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
+                                              DialogOpenAnswers,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
@@ -29,7 +29,7 @@ from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 def compute_godin_level(tracker) -> int:
     "Compute the Godin activity level (0-2)."
-    
+
     godin_light = tracker.get_slot("profile_creation_godin_light_slot")
     godin_mod = tracker.get_slot("profile_creation_godin_moderate_slot")
     godin_inten = tracker.get_slot("profile_creation_godin_intensive_slot")
@@ -37,17 +37,17 @@ def compute_godin_level(tracker) -> int:
     godin_score = 9 * godin_inten + 5 * godin_mod + 3 * godin_light
 
     godin_level = 0  # insufficiently active/sedentary
-    if godin_score >= 24: # 24 units or more is active
+    if godin_score >= 24:  # 24 units or more is active
         godin_level = 2
     elif godin_score >= 14:  # 14-23 is moderately active
         godin_level = 1
- 
+
     return godin_level
 
 
 def compute_mean_cluster_similarity_ratings(tracker):
     "Compute mean similarity ratings for testimonial clusters."
-    
+
     # First for cluster 1
     c1_1 = tracker.get_slot("profile_creation_sim_2_slot")
     c1_2 = tracker.get_slot("profile_creation_sim_4_slot")
@@ -56,30 +56,30 @@ def compute_mean_cluster_similarity_ratings(tracker):
     c3_1 = tracker.get_slot("profile_creation_sim_1_slot")
     c3_2 = tracker.get_slot("profile_creation_sim_3_slot")
     c3_mean = (c3_1 + c3_2) / 2
-    
+
     return c1_mean, c3_mean
 
 
 def compute_mean_confidence(tracker) -> float:
     "Compute mean confidence."
-    
+
     # Get confidence slots from tracker
     conf = [tracker.get_slot(slot_name) for slot_name in PROFILE_CREATION_CONF_SLOTS]
-    
+
     # Replace -1 with 0 (-1 are values people never filled in because
     # the confidence was already low for the previous amount of physical activity)
     conf = [i if not i == -1 else 0 for i in conf]
-    
+
     # Compute average and multiply with 10 (we used a scale from 0 to 10,
     # but the database uses a scale from 0 to 100)
     conf_avg = np.mean(conf) * 10
-    
+
     return conf_avg
 
 
 def compute_preferred_time(tracker):
     "Compute a person's preferred time for intervention components."
-    
+
     # Get preferred time
     time_slot = tracker.get_slot("profile_creation_time_slot")
     time_hour = MORNING_SEND_TIME
@@ -91,17 +91,17 @@ def compute_preferred_time(tracker):
     # year, month, day, hour, minute, second, microsecond
     # We only care about the hours
     preferred_time = datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
-    
+
     return preferred_time
 
 
-def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int, 
-                                      running_walking_pref: int, 
+def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
+                                      running_walking_pref: int,
                                       self_efficacy_pref: float,
                                       sim_cluster_1: float, sim_cluster_3: float,
                                       participant_code: str, week_days: str,
                                       preferred_time):
-    #pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments
     """
     Stores profile creation data for a user in the database.
 
@@ -123,7 +123,7 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
     """
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    
+
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
     selected.testim_godin_activity_level = godin_activity_level
@@ -134,7 +134,7 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
     selected.participant_code = participant_code
     selected.week_days = week_days
     selected.preferred_time = preferred_time
-    
+
     session.commit()
 
 
@@ -341,6 +341,31 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
     session.commit()  # Update database
 
 
+def get_activities_from_id(activity_id: int) -> InterventionActivity:
+    """
+    Get the InterventionActivity of an activity.
+     Args:
+            activity_id: the id of an activity
+
+         Returns:
+                The InterventionActivity correspondent to the activity_id
+
+        """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    activity = (
+        session.query(
+            InterventionActivity
+        )
+        .filter(
+            InterventionActivity.intervention_activity_id == activity_id
+        )
+        .all()
+    )
+
+    return activity[0]
+
+
 def get_current_user_phase(user_id: int) -> str:
     """
        Get a number of random activities from the resources list.
@@ -398,7 +423,7 @@ def get_days_from_start(user_id: int) -> int:
 
     current_date = date.today()
 
-    spent_days = (current_date - start_date).days + 1 # if the date is the same, it is day 1
+    spent_days = (current_date - start_date).days + 1  # if the date is the same, it is day 1
 
     return spent_days
 
@@ -516,18 +541,19 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
     return rnd_activities
 
 
-def get_possible_activities(user_id: int, activity_type: str, avoid_activity_id: int
-                            ) -> List[InterventionActivity]:
+def get_possible_activities(user_id: int, activity_category: str, avoid_activity_id: int
+                            ) -> (List[InterventionActivity], List[InterventionActivity]):
     """
        Get a number of random activities from the resources list.
         Args:
                 user_id: ID of the user
-                activity_type: category of activity to select from
+                activity_category: category of activity to select from
                 avoid_activity_id: the intervention_activity_id of an activity that
                 should not be included in the list
 
             Returns:
-                    The list of InterventionActivities available
+                    A tuple containing a list of the mandatory activities as first element
+                    and a list of the available activities as second element
 
     """
 
@@ -535,23 +561,39 @@ def get_possible_activities(user_id: int, activity_type: str, avoid_activity_id:
     curr_ph = get_current_user_phase(user_id)
     curr_time = get_current_phase_time(user_id, curr_ph)
 
-    available = []
+    available_ids = []
     mandatory = []
 
-    for resource in timing:
+    activities_list = list(filter(
+        lambda x: x["category"] == activity_category and x["resource_id"] != avoid_activity_id,
+        timing)
+    )
+
+    for resource in activities_list:
         if resource["always_available"]:
-            available.append(resource["resource_id"])
+            available_ids.append(resource["resource_id"])
         else:
             phases = resource["phases"]
             for phase in list(filter(lambda x: x["phase"] == curr_ph, phases)):
                 if phase["always_available"]:
-                    available.append(resource["resource_id"])
+                    available_ids.append(resource["resource_id"])
                 elif curr_time in phase["available"]:
-                    available.append(resource["resource_id"])
-                if curr_time in phase["mandatory"]:
+                    available_ids.append(resource["resource_id"])
+                if "mandatory" in phase and curr_time in phase["mandatory"]:
                     mandatory.append(resource["resource_id"])
 
-    return rnd_activities
+    mandatory_ids = []
+    # check if the mandatory activities have been already performed
+    if len(mandatory) > 0:
+        for activity in mandatory:
+            # if the activity has been completed, do not report it as mandatory
+            if is_activity_done(activity):
+                mandatory_ids.append(activity)
+
+    mandatory_list = [get_activities_from_id(mandatory_id) for mandatory_id in mandatory_ids]
+    available_list = [get_activities_from_id(available_id) for available_id in available_ids]
+
+    return mandatory_list, available_list
 
 
 def get_start_date(user_id: int) -> date:
@@ -572,6 +614,7 @@ def get_start_date(user_id: int) -> date:
     start_date = selected.start_date
 
     return start_date
+
 
 def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
     """
@@ -651,6 +694,33 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     )
 
     return open_answers
+
+
+def is_activity_done(activity_id: int) -> bool:
+    """
+    Checks if an activity has been already completed by a user
+    Args:
+        activity_id: id of the activity to be checked
+
+    Returns: True if the activity has been already completed, false otherwise
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    activities = (
+        session.query(
+            InterventionActivitiesPerformed
+        )
+        .filter(
+            InterventionActivitiesPerformed.intervention_activity_id == activity_id
+        )
+        .all()
+    )
+
+    if len(activities) > 0:
+        return True
+
+    return False
 
 
 def count_answers(answers: List[DialogClosedAnswers],
@@ -753,7 +823,7 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
 
 def get_faik_text(user_id):
     session = get_db_session(db_url=DATABASE_URL)
-    
+
     kit_text = ""
     filled = False  # Whether the first aid kit has content
     activity_ids_list = []  # List of activity IDs

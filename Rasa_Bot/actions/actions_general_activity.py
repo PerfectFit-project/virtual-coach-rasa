@@ -217,7 +217,7 @@ class GetGeneralActivitiesOptions(Action):
 
         available_activities_ids = [activity.intervention_activity_id for activity in available]
 
-        options = ["Typ " + str(i) + " als je " +
+        options = ["Typ " + str(i+1) + " als je " +
                    available[i].intervention_activity_title +
                    "wilt doen.\n"
                    for i in range(len(available))]
@@ -395,7 +395,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
         if last_utterance != 'utter_ask_general_activity_next_activity_slot':
             return {"general_activity_next_activity_slot": None}
 
-        opt_number = len(tracker.get_slot('rnd_activities_ids'))
+        opt_number = len(tracker.get_slot('rnd_activities_ids')) + 1
 
         if not validator.validate_number_in_range_response(1, opt_number, value):
             dispatcher.utter_message(textt="Kun je een geheel getal tussen 1 en "
@@ -416,7 +416,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
 
             available_activities_ids = [activity.intervention_activity_id for activity in available]
 
-            options = ["Typ " + str(i) + " als je " +
+            options = ["Typ " + str(i+1) + " als je " +
                        available[i].intervention_activity_title +
                        "wilt doen.\n"
                        for i in range(len(available))]
@@ -511,7 +511,7 @@ class LoadActivity(Action):
         activities_slot = tracker.get_slot('rnd_activities_ids')
         user_id = tracker.current_state()['sender_id']
 
-        activity_id = activities_slot[chosen_option - 1]
+        activity_id = activities_slot[chosen_option]
         session = get_db_session(db_url=DATABASE_URL)
 
         user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
@@ -661,7 +661,7 @@ class SendPersuasiveMessageActivity(Action):
         chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
         activities_slot = tracker.get_slot('rnd_activities_ids')
 
-        activity_id = activities_slot[chosen_option - 1]
+        activity_id = activities_slot[chosen_option]
         session = get_db_session(db_url=DATABASE_URL)
 
         # Get the activity benefit

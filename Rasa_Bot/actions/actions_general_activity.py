@@ -1,6 +1,6 @@
 import random
 from sqlalchemy import update
-from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed, 
+from virtual_coach_db.dbschema.models import (InterventionActivitiesPerformed,
                                               FirstAidKit,
                                               InterventionActivity)
 from virtual_coach_db.helper import (Components,
@@ -8,14 +8,14 @@ from virtual_coach_db.helper import (Components,
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
 from .definitions import (activities_categories, COMMITMENT, CONSENSUS,
-                          DATABASE_URL, 
-                          NUM_TOP_ACTIVITIES, 
-                          OPT_POLICY, STATE_FEATURE_MEANS, 
+                          DATABASE_URL,
+                          NUM_TOP_ACTIVITIES,
+                          OPT_POLICY, STATE_FEATURE_MEANS,
                           REFLECTIVE_QUESTION_COMMITMENT,
                           REFLECTIVE_QUESTION_COMMITMENT_IDENTITY,
                           REFLECTIVE_QUESTION_CONSENSUS,
                           REDIS_URL)
-from .helper import (get_latest_bot_utterance, 
+from .helper import (get_latest_bot_utterance,
                      get_random_activities,
                      get_possible_activities,
                      get_user_intervention_activity_inputs,
@@ -26,6 +26,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from typing import Any, Dict, Text
 
 from celery import Celery
+
 celery = Celery(broker=REDIS_URL)
 
 
@@ -50,7 +51,6 @@ class LaunchGaRescheduling(Action):
         return "launch_ga_rescheduling"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [FollowupAction('utter_intro_reschedule_ga')]
 
 
@@ -59,7 +59,6 @@ class GoToCheckActivityDone(Action):
         return "go_to_check_activity_done"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [FollowupAction('check_activity_done')]
 
 
@@ -68,7 +67,6 @@ class GoToCheckInputRequired(Action):
         return "go_to_check_input_required"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [FollowupAction('check_user_input_required')]
 
 
@@ -77,7 +75,6 @@ class GoToChooseActivity(Action):
         return "go_to_choose_activity"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [FollowupAction('check_who_decides')]
 
 
@@ -86,7 +83,6 @@ class GoToRating(Action):
         return "go_to_rating"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [FollowupAction('general_activity_check_rating')]
 
 
@@ -97,7 +93,6 @@ class CheckIfFirstExecutionGA(Action):
         return "check_if_first_execution_ga"
 
     async def run(self, dispatcher, tracker, domain):
-
         user_id = tracker.current_state()['sender_id']
         session = get_db_session(db_url=DATABASE_URL)
 
@@ -157,7 +152,6 @@ class GeneralActivityCheckRating(Action):
 
         # if the activity is not in the FAK, add it
         if not current_record:
-
             save_activity_to_fak(user_id, activity_id, rating_value)
 
             session.commit()
@@ -186,7 +180,6 @@ class GetActivityUserInput(Action):
         return "get_activity_user_input"
 
     async def run(self, dispatcher, tracker, domain):
-
         activity_id = tracker.get_slot('last_activity_id_slot')
         user_id = tracker.current_state()['sender_id']
 
@@ -203,7 +196,6 @@ class GetGeneralActivitiesOptions(Action):
         return "get_general_activities_options"
 
     async def run(self, dispatcher, tracker, domain):
-
         user_id = tracker.current_state()['sender_id']
 
         activity_type_slot = tracker.get_slot('general_activity_activity_type_slot')
@@ -217,7 +209,7 @@ class GetGeneralActivitiesOptions(Action):
 
         available_activities_ids = [activity.intervention_activity_id for activity in available]
 
-        options = ["Typ " + str(i+1) + " als je " +
+        options = ["Typ " + str(i + 1) + " als je " +
                    available[i].intervention_activity_title +
                    "wilt doen.\n"
                    for i in range(len(available))]
@@ -241,7 +233,6 @@ class CheckUserInputRequired(Action):
         return "check_user_input_required"
 
     async def run(self, dispatcher, tracker, domain):
-
         activity_id = tracker.get_slot('last_activity_id_slot')
         session = get_db_session(db_url=DATABASE_URL)
 
@@ -293,7 +284,7 @@ class ValidateActivityUsefulnessForm(FormValidationAction):
         if last_utterance != 'utter_ask_activity_useful_rating':
             return {"activity_useful_rating": None}
 
-        if not validator.validate_number_in_range_response(n_min=0, n_max=10, 
+        if not validator.validate_number_in_range_response(n_min=0, n_max=10,
                                                            response=value):
             dispatcher.utter_message(response="utter_please_answer_0_to_10")
             return {"activity_useful_rating": None}
@@ -385,6 +376,52 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_general_activity_next_activity_form'
 
+    def validate_general_activity_activity_type_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_effort_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_general_activity_activity_type_slot':
+            return {"general_activity_activity_type_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"general_activity_activity_type_slot": None}
+
+        user_id = tracker.current_state()['sender_id']
+
+        activity_type_slot = int(value)
+        activity_id = tracker.get_slot('last_activity_id_slot')
+
+        activity_type = activities_categories[int(activity_type_slot)]
+
+        mandatory, available = get_possible_activities(user_id,
+                                                       activity_type,
+                                                       activity_id)
+
+        available_activities_ids = [activity.intervention_activity_id for activity in available]
+
+        options = ["Typ " + str(i + 1) + " als je " +
+                   available[i].intervention_activity_title +
+                   "wilt doen.\n"
+                   for i in range(len(available))]
+
+        sentence = ''
+        for option in options:
+            sentence += option
+
+        sentence += "Typ " + \
+                    str(len(available) + 1) + \
+                    " als je toch een andere soort oefening wilt doen."
+
+        dispatcher.utter_message(response="utter_general_activity_choose_next_activity_2")
+
+        return {"general_activity_activity_type_slot": float(value),
+                "general_activity_activities_options_slot": sentence,
+                "rnd_activities_ids": available_activities_ids}
+
     def validate_general_activity_next_activity_slot(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -398,38 +435,18 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
         opt_number = len(tracker.get_slot('rnd_activities_ids')) + 1
 
         if not validator.validate_number_in_range_response(1, opt_number, value):
-            dispatcher.utter_message(textt="Kun je een geheel getal tussen 1 en "
-                                           + str(opt_number) + " opgeven? ...")
+            dispatcher.utter_message(text="Kun je een geheel getal tussen 1 en "
+                                          + str(opt_number) + " opgeven? ...")
             return {"general_activity_next_activity_slot": None}
 
         if value == str(opt_number):
-            user_id = tracker.current_state()['sender_id']
+            return {"general_activity_activity_type_slot": None,
+                    "general_activity_next_activity_slot": None}
 
-            activity_type_slot = tracker.get_slot('general_activity_activity_type_slot')
-            activity_id = tracker.get_slot('last_activity_id_slot')
+        activity_type_slot = tracker.get_slot('general_activity_activity_type_slot')
 
-            activity_type = activities_categories[int(activity_type_slot)]
-
-            mandatory, available = get_possible_activities(user_id,
-                                                           activity_type,
-                                                           activity_id)
-
-            available_activities_ids = [activity.intervention_activity_id for activity in available]
-
-            options = ["Typ " + str(i+1) + " als je " +
-                       available[i].intervention_activity_title +
-                       "wilt doen.\n"
-                       for i in range(len(available))]
-
-            sentence = ''
-            for option in options:
-                sentence += option
-
-            return {"general_activity_next_activity_slot": None,
-                    "general_activity_activities_options_slot": sentence,
-                    "rnd_activities_ids": available_activities_ids}
-
-        return {"general_activity_next_activity_slot": value}
+        return {"general_activity_activity_type_slot": activity_type_slot,
+                "general_activity_next_activity_slot": value}
 
 
 class GetLastPerformedActivity(Action):
@@ -470,7 +487,6 @@ class GetActivityCoachChoice(Action):
         return "get_activity_coach_choice"
 
     async def run(self, dispatcher, tracker, domain):
-
         user_id = tracker.current_state()['sender_id']
 
         mandatory, _ = get_possible_activities(user_id)
@@ -563,8 +579,8 @@ def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
                     activity_rating=rating_value)
     )
     session.commit()
-    
-    
+
+
 class ValidatePersuasionReflectionForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_persuasion_reflection_form'
@@ -584,8 +600,8 @@ class ValidatePersuasionReflectionForm(FormValidationAction):
             return {"persuasion_reflection_slot": None}
 
         return {"persuasion_reflection_slot": value}
-    
-    
+
+
 class SavePersuasionToDatabase(Action):
     """Save persuasion to database"""
 
@@ -593,9 +609,8 @@ class SavePersuasionToDatabase(Action):
         return "save_persuasion_to_database"
 
     async def run(self, dispatcher, tracker, domain):
-    
         user_id = tracker.current_state()['sender_id']
-        
+
         # Get chosen persuasion type
         pers_type = tracker.get_slot('persuasion_type')
         # Get index of chosen persuasive message; -1 if "no persuasion"
@@ -606,47 +621,47 @@ class SavePersuasionToDatabase(Action):
         need = tracker.get_slot('persuasion_need_slot')
         # Get effort score
         effort = tracker.get_slot('persuasion_effort_slot')
-        
+
         # Store state feature values to database
-        store_dialog_closed_answer_to_db(user_id, answer_value = want, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_WANT.value)
-        store_dialog_closed_answer_to_db(user_id, answer_value = need, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_NEED.value)
-        store_dialog_closed_answer_to_db(user_id, answer_value = prompts, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_PROMPTS.value)
+        store_dialog_closed_answer_to_db(user_id, answer_value=want,
+                                         question_id=DialogQuestionsEnum.PERSUASION_WANT.value)
+        store_dialog_closed_answer_to_db(user_id, answer_value=need,
+                                         question_id=DialogQuestionsEnum.PERSUASION_NEED.value)
+        store_dialog_closed_answer_to_db(user_id, answer_value=prompts,
+                                         question_id=DialogQuestionsEnum.PERSUASION_PROMPTS.value)
         # Store used persuasion type (1 = commitment, 2 = consensus, 3 = no persuasion)
-        store_dialog_closed_answer_to_db(user_id, answer_value = pers_type, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_TYPE.value)
+        store_dialog_closed_answer_to_db(user_id, answer_value=pers_type,
+                                         question_id=DialogQuestionsEnum.PERSUASION_TYPE.value)
         # +2 since the lowest value we have is -1 in case of no persuasion, and the 
         # answer values must start at 1 in the database
         question_id = DialogQuestionsEnum.PERSUASION_MESSAGE_INDEX.value
-        store_dialog_closed_answer_to_db(user_id, answer_value = message_idx + 2, 
-                                         question_id = question_id)
+        store_dialog_closed_answer_to_db(user_id, answer_value=message_idx + 2,
+                                         question_id=question_id)
         # +1 since the lowest value is 0
-        store_dialog_closed_answer_to_db(user_id, answer_value = effort + 1, 
-                                         question_id = DialogQuestionsEnum.PERSUASION_EFFORT.value)
+        store_dialog_closed_answer_to_db(user_id, answer_value=effort + 1,
+                                         question_id=DialogQuestionsEnum.PERSUASION_EFFORT.value)
 
         return []
-    
-    
+
+
 def get_opt_persuasion_type(tracker: Tracker):
     """
     Get optimal persuasion type for user state.
     """
-    
+
     # Get answers to state feature questions
     want = tracker.get_slot('persuasion_want_slot')
     prompts = tracker.get_slot('persuasion_prompts_slot')
     need = tracker.get_slot('persuasion_need_slot')
-    
+
     # Make state binary
-    binary_state = [want >= STATE_FEATURE_MEANS[0], 
-                    prompts >= STATE_FEATURE_MEANS[1], 
+    binary_state = [want >= STATE_FEATURE_MEANS[0],
+                    prompts >= STATE_FEATURE_MEANS[1],
                     need >= STATE_FEATURE_MEANS[2]]
-    
+
     # Get optimal persuasion type
     pers_type = OPT_POLICY[binary_state[0]][binary_state[1]][binary_state[2]]
-    
+
     return pers_type
 
 
@@ -657,7 +672,7 @@ class SendPersuasiveMessageActivity(Action):
         return "send_persuasive_message_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        
+
         chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
         activities_slot = tracker.get_slot('rnd_activities_ids')
 
@@ -674,10 +689,10 @@ class SendPersuasiveMessageActivity(Action):
             ).all()
         )
         benefit = activities[0].intervention_activity_benefit
-        
+
         # Get optimal persuasion type for user state
         pers_type = get_opt_persuasion_type(tracker)
-        
+
         reflective_question = ""  # Reflective question to ask users as part of persuasion
         input_required = False  # Whether we will ask a reflective question to users
         message_idx = -1  # Index of persuasive message
@@ -698,33 +713,12 @@ class SendPersuasiveMessageActivity(Action):
             message_idx = random.randrange(len(CONSENSUS))
             dispatcher.utter_message(text=CONSENSUS[message_idx] + " " + benefit)
             reflective_question = REFLECTIVE_QUESTION_CONSENSUS
-        
+
         return [SlotSet("persuasion_type", pers_type),
                 SlotSet("persuasive_message_index", message_idx),
                 SlotSet("persuasion_requires_input", input_required),
                 SlotSet("persuasion_reflective_question", reflective_question)]
 
-
-class ValidateGeneralActivityActivityTypeForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_general_activity_activity_type_form'
-
-    def validate_general_activity_activity_type_slot(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate persuasion_effort_slot input."""
-        last_utterance = get_latest_bot_utterance(tracker.events)
-
-        if last_utterance != 'utter_ask_general_activity_activity_type_slot':
-            return {"general_activity_activity_type_slot": None}
-
-        if not validator.validate_number_in_range_response(1, 5, value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
-            return {"general_activity_activity_type_slot": None}
-
-        return {"general_activity_activity_type_slot": float(value)}
-    
 
 class ValidatePersuasionWantForm(FormValidationAction):
     def name(self) -> Text:
@@ -746,7 +740,7 @@ class ValidatePersuasionWantForm(FormValidationAction):
 
         return {"persuasion_want_slot": float(value)}
 
-    
+
 class ValidatePersuasionNeedForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_persuasion_need_form'
@@ -787,7 +781,7 @@ class ValidatePersuasionPromptsForm(FormValidationAction):
             return {"persuasion_prompts_slot": None}
 
         return {"persuasion_prompts_slot": float(value)}
-    
+
 
 class ValidatePersuasionEffortForm(FormValidationAction):
     def name(self) -> Text:

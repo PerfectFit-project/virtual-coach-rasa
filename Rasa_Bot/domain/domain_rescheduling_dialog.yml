@@ -62,12 +62,24 @@ responses:
      - text: "Je kunt nu weer een nieuwe oefening doen!"
      - text: "Je kunt een nieuwe oefening starten!"
   utter_ask_rescheduling_now_or_later_form_rescheduling_now:
-     - text: "Wil jij deze oefening nu doen of later? Typ '1' wanneer je nu tijd hebt om een oefening te doen. Typ '2' wanneer je de oefening liever later doet."
-     - text: "Wil je deze oefening nu doen of later? Voer '1' in wanneer je nu tijd hebt voor een oefening. Voer '2' in wanneer je de oefening liever later doet."
-     - text: "Wil je deze oefening nu doen of later? Typ '1' als je nu tijd hebt voor een oefening. Typ '2' als je de oefening liever later doet."
-     - text: "Wil je deze oefening nu doen of later? Voer '1' in wanneer je nu tijd hebt voor een oefening. Voer '2' in wanneer je de oefening liever later wilt doen."
-     - text: "Wil je deze oefening nu doen of later? Typ '1' als je nu tijd hebt voor een oefening. Typ '2' als je de oefening liever later wilt doen."
-     - text: "Wil je deze oefening nu doen of liever later? Typ '1' als je nu tijd hebt voor een oefening. Typ '2' als je de oefening later wilt doen."
+     - text: "Wil jij deze oefening nu doen of later?\n
+              Typ '1' wanneer je nu tijd hebt om een oefening te doen.\n
+              Typ '2' wanneer je de oefening liever later doet."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Voer '1' in wanneer je nu tijd hebt voor een oefening.\n
+              Voer '2' in wanneer je de oefening liever later doet."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Typ '1' als je nu tijd hebt voor een oefening.\n
+              Typ '2' als je de oefening liever later doet."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Voer '1' in wanneer je nu tijd hebt voor een oefening.\n
+              Voer '2' in wanneer je de oefening liever later wilt doen."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Typ '1' als je nu tijd hebt voor een oefening.\n
+              Typ '2' als je de oefening liever later wilt doen."
+     - text: "Wil je deze oefening nu doen of liever later?\n
+              Typ '1' als je nu tijd hebt voor een oefening.\n
+              Typ '2' als je de oefening later wilt doen."
   utter_user_chose_later:
      - text: "Prima, ik raad je wel aan om deze oefening snel te doen. Dit gaat je namelijk helpen je doelen te behalen!"
      - text: "Goed, het is verstandig om deze oefening zo snel mogelijk te doen. Dit helpt je bij het bereiken van je doelen!"

@@ -122,7 +122,8 @@ slots:
     mappings:
       - type: from_text
         conditions:
-          - active_loop: general_activity_activity_type_form
+          - active_loop: general_activity_next_activity_form
+            requested_slot: general_activity_activity_type_slot
 
   # alternatives to display for the activity choice
   general_activity_activities_options_slot:
@@ -139,6 +140,7 @@ slots:
       - type: from_text
         conditions:
           - active_loop: general_activity_next_activity_form
+            requested_slot: general_activity_next_activity_slot
 
   who_decides_slot:
     type: categorical
@@ -236,13 +238,11 @@ forms:
   general_activity_description_form:
     required_slots:
       - general_activity_description_slot
+  # ask the user the type of and which activity to be performed
   general_activity_next_activity_form:
     required_slots:
-      - general_activity_next_activity_slot
-  # ask the user the type of activity to be performed
-  general_activity_activity_type_form:
-    required_slots:
       - general_activity_activity_type_slot
+      - general_activity_next_activity_slot
   # ask user if they have sth that prompts/reminds them to do the activity
   persuasion_prompts_form:
     required_slots:
@@ -282,7 +282,9 @@ responses:
   utter_general_activity_thanks_top_5_2:
     - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
   utter_ask_save_or_edit_slot:
-    - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor 'Bewaren', Typ 2 voor 'Aanpassen'. "
+    - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen?\n
+            Typ 1 voor 'Bewaren'\n
+            Typ 2 voor 'Aanpassen'. "
   utter_general_activity_save:
     - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
   utter_general_activity_edit_1:
@@ -324,15 +326,30 @@ responses:
   utter_ask_persuasion_prompts_slot_intro:
     - text: "1) Ik heb dingen die mij eraan herinneren om de activiteit te doen."
   utter_ask_persuasion_prompts_slot:
-    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+    - text: "1. Helemaal mee oneens\n 
+            2. Mee oneens\n
+            3. Niet mee eens, niet mee oneens\n
+            4. Mee eens\n
+            5. Helemaal mee eens.\n
+            Typ '1', '2', '3', '4', of '5'."
   utter_ask_persuasion_want_slot_intro:
     - text: "2) Ik heb het gevoel dat ik de activiteit wil gaan doen."
   utter_ask_persuasion_want_slot:
-    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+    - text: "1. Helemaal mee oneens\n
+             2. Mee oneens\n
+             3. Niet mee eens, niet mee oneens\n
+             4. Mee eens\n
+             5. Helemaal mee eens.\n 
+             Typ '1', '2', '3', '4', of '5'."
   utter_ask_persuasion_need_slot_intro:
     - text: "3) Ik heb het gevoel dat ik de activiteit moet doen."
   utter_ask_persuasion_need_slot:
-    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+    - text: "1. Helemaal mee oneens\n
+             2. Mee oneens\n
+             3. Niet mee eens, niet mee oneens\n
+             4. Mee eens\n
+             5. Helemaal mee eens.\n
+             Typ '1', '2', '3', '4', of '5'."
   utter_thank_persuasion_reflection:
     - text: "Oké, bedankt voor het delen!"  
     - text: "Super dat je jouw gedachten met mij wilde delen!"

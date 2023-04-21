@@ -59,6 +59,7 @@ class ValidateReschedulingNowOrLaterForm(FormValidationAction):
         now_or_later = validator.validate_number_in_range_response(1, 2, value)
         if not now_or_later:
             dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"rescheduling_now": None}
 
         return {"rescheduling_now": value}
 

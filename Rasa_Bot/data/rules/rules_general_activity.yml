@@ -129,9 +129,6 @@ rules:
   steps:
   - action: general_activity_description_form
   - active_loop: null
-  - action: general_activity_description_form
-  - active_loop: general_activity_description_form
-  - active_loop: null
   - action: save_description_in_db
   - action: utter_general_activity_edit_3
   - action: go_to_choose_activity # choose_activity_checkpoint

@@ -676,7 +676,7 @@ class SendPersuasiveMessageActivity(Action):
         chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
         activities_slot = tracker.get_slot('rnd_activities_ids')
 
-        activity_id = activities_slot[chosen_option]
+        activity_id = activities_slot[chosen_option - 1]
         session = get_db_session(db_url=DATABASE_URL)
 
         # Get the activity benefit

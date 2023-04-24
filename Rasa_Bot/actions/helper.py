@@ -583,8 +583,13 @@ def get_possible_activities(user_id: int, activity_category: str = None,
                     available_ids.append(resource["resource_id"])
                 elif curr_time in phase["available"]:
                     available_ids.append(resource["resource_id"])
-                if "mandatory" in phase and curr_time in phase["mandatory"]:
-                    mandatory.append(resource["resource_id"])
+                # check if the current time is equal or higher than the mandatory. The user could
+                # have rescheduled the dialog, so we need to take that into account. In case
+                # the activity has been already performed, it is removed form the mandatory list
+                if "mandatory" in phase:
+                    for mandatory_time in phase["mandatory"]:
+                        if curr_time >= mandatory_time:
+                            mandatory.append(resource["resource_id"])
 
     mandatory_ids = []
     # check if the mandatory activities have been already performed

@@ -14,9 +14,6 @@ from .definitions import REDIS_URL
 from .definitions import TIMEZONE
 from .definitions import MORNING, AFTERNOON, EVENING
 from .helper import get_latest_bot_utterance
-
-from virtual_coach_db.helper import ComponentsTriggers
-
 from . import validator
 
 

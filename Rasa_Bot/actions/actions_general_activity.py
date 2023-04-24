@@ -16,7 +16,6 @@ from .definitions import (activities_categories, COMMITMENT, CONSENSUS,
                           REFLECTIVE_QUESTION_CONSENSUS,
                           REDIS_URL)
 from .helper import (get_latest_bot_utterance,
-                     get_random_activities,
                      get_possible_activities,
                      get_user_intervention_activity_inputs,
                      store_dialog_closed_answer_to_db)
@@ -203,7 +202,7 @@ class GetGeneralActivitiesOptions(Action):
 
         activity_type = activities_categories[int(activity_type_slot)]
 
-        mandatory, available = get_possible_activities(user_id,
+        _, available = get_possible_activities(user_id,
                                                        activity_type,
                                                        activity_id)
 
@@ -214,9 +213,7 @@ class GetGeneralActivitiesOptions(Action):
                    "wilt doen.\n"
                    for i in range(len(available))]
 
-        sentence = ''
-        for option in options:
-            sentence += option
+        sentence = ''.join(options)
 
         sentence += "Typ " + \
                     str(len(available)) + \
@@ -397,7 +394,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
 
         activity_type = activities_categories[int(activity_type_slot)]
 
-        mandatory, available = get_possible_activities(user_id,
+        _, available = get_possible_activities(user_id,
                                                        activity_type,
                                                        activity_id)
 
@@ -408,9 +405,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
                    "wilt doen.\n"
                    for i in range(len(available))]
 
-        sentence = ''
-        for option in options:
-            sentence += option
+        sentence = ''.join(options)
 
         sentence += "Typ " + \
                     str(len(available) + 1) + \

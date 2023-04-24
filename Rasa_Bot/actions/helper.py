@@ -578,18 +578,18 @@ def get_possible_activities(user_id: int, activity_category: str = None,
             available_ids.append(resource["resource_id"])
         else:
             phases = resource["phases"]
-            for phase in list(filter(lambda x: x["phase"] == curr_ph, phases)):
-                if phase["always_available"]:
-                    available_ids.append(resource["resource_id"])
-                elif curr_time in phase["available"]:
-                    available_ids.append(resource["resource_id"])
-                # check if the current time is equal or higher than the mandatory. The user could
-                # have rescheduled the dialog, so we need to take that into account. In case
-                # the activity has been already performed, it is removed form the mandatory list
-                if "mandatory" in phase:
-                    for mandatory_time in phase["mandatory"]:
-                        if curr_time >= mandatory_time:
-                            mandatory.append(resource["resource_id"])
+            phase = list(filter(lambda x: x["phase"] == curr_ph, phases))[0]
+            if phase["always_available"]:
+                available_ids.append(resource["resource_id"])
+            elif curr_time in phase["available"]:
+                available_ids.append(resource["resource_id"])
+            # check if the current time is equal or higher than the mandatory. The user could
+            # have rescheduled the dialog, so we need to take that into account. In case
+            # the activity has been already performed, it is removed form the mandatory list
+            if "mandatory" in phase:
+                for mandatory_time in phase["mandatory"]:
+                    if curr_time >= mandatory_time:
+                        mandatory.append(resource["resource_id"])
 
     mandatory_ids = []
     # check if the mandatory activities have been already performed
@@ -599,10 +599,10 @@ def get_possible_activities(user_id: int, activity_category: str = None,
             if is_activity_done(activity):
                 mandatory_ids.append(activity)
 
-    mandatory_list = [get_activities_from_id(mandatory_id) for mandatory_id in mandatory_ids]
-    available_list = [get_activities_from_id(available_id) for available_id in available_ids]
+    mandatory_ids = [get_activities_from_id(mandatory_id) for mandatory_id in mandatory_ids]
+    available_ids = [get_activities_from_id(available_id) for available_id in available_ids]
 
-    return mandatory_list, available_list
+    return mandatory_ids, available_ids
 
 
 def get_start_date(user_id: int) -> date:

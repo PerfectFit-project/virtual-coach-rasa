@@ -541,8 +541,8 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
     return rnd_activities
 
 
-def get_possible_activities(user_id: int, activity_category: str = None,
-                            avoid_activity_id: int = None
+def get_possible_activities(user_id: int, activity_category: Optional[str] = None,
+                            avoid_activity_id: Optional[int] = None
                             ) -> Tuple[List[InterventionActivity], List[InterventionActivity]]:
     """
        Get a number of random activities from the resources list.

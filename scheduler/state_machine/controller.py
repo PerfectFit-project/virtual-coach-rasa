@@ -149,6 +149,14 @@ class TrackingState(State):
 
     def on_new_day(self, current_date: date):
         logging.info('current date: %s', current_date)
+        # at day 7 activity C2.9 has to be proposed
+
+        start_date = get_start_date(self.user_id)
+
+        if(current_date - start_date).days >= 7:
+            plan_and_store(user_id=self.user_id,
+                           dialog=Components.GENERAL_ACTIVITY,
+                           phase_id=1)
 
         # if it's time and the self dialog has been completed,
         # move to new state

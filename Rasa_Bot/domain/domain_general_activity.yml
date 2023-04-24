@@ -274,27 +274,60 @@ responses:
     - text: "En hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
+    - text: "Dank je wel voor je feedback"
+    - text: "Bedankt voor je reactie"
   utter_general_activity_look_back:
     - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Op moeilijke momenten kun je hier naar terugkijken."
+    - text: "Wanneer je het moeilijk hebt kun je hier naar terugkijken."
+    - text: "Hier kun je naar terugkijken op moeilijke momenten."
   utter_general_activity_thanks_top_5_1:
     - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+    - text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
 #  utter_what_you_learned_from_activity:
   utter_general_activity_thanks_top_5_2:
     - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
+    - text: "Je hebt deze oefening eerder al nuttig gevonden. Toen liet je weten dat je dit geleerd hebt van de oefening: {activity_user_input}"
+    - text: "Je hebt deze oefening al eerder als zinvol beoordeeld. Je hebt mij toen laten weten dat je het volgende had geleerd van de oefening: {activity_user_input}"
   utter_ask_save_or_edit_slot:
     - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen?\n
             Typ 1 voor 'Bewaren'\n
             Typ 2 voor 'Aanpassen'. "
+    - text: "Wil je deze tekst nog steeds bewaren in je EHBO-doos of wil je de tekst aanpassen?\n
+            Typ 1 voor 'Bewaren'\n
+            Typ 2 voor 'Aanpassen'. "
+    - text: "Zou je deze tekst willen houden in je EHBO-doos of wil je de tekst graag veranderen?\n
+            Typ 1 voor 'Bewaren'\n
+            Typ 2 voor 'Aanpassen'. "
   utter_general_activity_save:
     - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Top! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Wanneer je het moeilijk hebt, kun je hier naar terugkijken."
+    - text: "Super! Dezelfde tekst wordt bewaard in de EHBO-doos. Hier kun je naar terugkijken als je het moeilijk hebt."
   utter_general_activity_edit_1:
     - text: "Prima! "
+    - text: "Dat is goed! "
   utter_general_activity_edit_2:
-    - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. "
+    - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen."
+    - text: "/Wat heb je geleerd van deze oefening? Kun je in een paar zinnen vertellen wat je graag wilt onthouden? Deze zinnen zullen uiteindelijk in je EHBO-doos bewaard worden."
+    - text: "Kun je in een paar zinnen beschrijven wat je van deze oefening hebt geleerd? Dus wat wil je meenemen van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos komen."
+    - text: "Kun je in een paar zinnen uitleggen wat je geleerd hebt van deze oefening? Wat is het belangrijkste wat je wilt onthouden van deze oefening? Deze zinnen zullen later worden opgeslagen in je EHBO-doos."
+    - text: "Kun je in een paar zinnen beschrijven wat je geleerd hebt van deze oefening? Wat is het belangrijkste wat je wilt onthouden van deze oefening? Deze zinnen zullen later toegevoegd worden aan je EHBO-doos."
+    - text: "Kun je in een paar zinnen zeggen wat je geleerd hebt van deze oefening? Wat wil je onthouden van deze oefening? Deze zinnen zullen later in je EHBO-doos terechtkomen."
   utter_general_activity_edit_3:
     - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
+    - text: "Dank je wel! Je antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Bedankt! Je antwoord is nu opgeslagen en toegevoegd aan de EHBO-doos. Op momenten dat je het moeilijk hebt kun je hier naar terugkijken."
+    - text: "Bedankt voor je antwoord! Het wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Dank je wel voor je antwoord! Het wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Dank je wel! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken op moeilijke momenten."
+    - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken op moeilijke momenten."
+    - text: "Bedankt voor je antwoord! Het wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Op moelijke momenten kun je hier naar terugkijken."
   utter_ask_general_activity_description_slot:
-    - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos. "
+    - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos."
+    - text: "Typ nu een paar zinnen over wat je geleerd hebt. Dan kan ik dit kan toevoegen aan je EHBO-doos."
+    - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan bewaren in je EHBO-doos."
+    - text: "Typ nu in een paar zinnen wat je geleerd hebt. Dan kan ik dit bewaren in je EHBO-doos."
   utter_general_activity_choose_next_activity_1:
     - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit verschillende oefeningen. Welke soort oefening wil je doen?"
     - text: "Het is nu tijd voor een nieuwe oefening. Je kunt kiezen uit meerdere oefeningen. Wat voor oefening wil je doen?"
@@ -315,8 +348,14 @@ responses:
 
   utter_general_activity_next_user:
     - text: "Oké, goede keuze!"
+    - text: "Oké, slimme keuze!"
+    - text: "Oké, goede beslissing!"
   utter_general_activity_next_coach:
-    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen."
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen."
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Ik wens je veel succes!"
+    - text: "Dan is het nu tijd om een nieuwe oefening te starten. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Veel succes!"
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Veel succes!"
+    - text: "Dan is het nu tijd om aan een nieuwe oefening te beginnen. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Ik wens je veel succes!"
   utter_persuasion_questions_intro:
     - text: "Ik wil je nu graag een paar vragen stellen over de activiteit die je gaat doen."
     - text: "Dan zou ik je nu graag wat vragen stellen over de activiteit die je gaat doen."

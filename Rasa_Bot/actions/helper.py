@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import secrets
 
 from datetime import datetime, date
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL, EVENING_SEND_TIME,
                           MORNING_SEND_TIME,
@@ -543,7 +543,7 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
 
 def get_possible_activities(user_id: int, activity_category: str = None,
                             avoid_activity_id: int = None
-                            ) -> (List[InterventionActivity], List[InterventionActivity]):
+                            ) -> Tuple[List[InterventionActivity], List[InterventionActivity]]:
     """
        Get a number of random activities from the resources list.
         Args:

@@ -202,6 +202,7 @@ rules:
   - action: save_persuasion_to_database
   - action: utter_intro_activity_text
   - action: load_activity
+  - action: mark_dialog_as_completed
   - action: action_end_dialog
 
 
@@ -231,4 +232,5 @@ rules:
   - action: save_persuasion_to_database
   - action: utter_intro_activity_text
   - action: load_activity
+  - action: mark_dialog_as_completed
   - action: action_end_dialog

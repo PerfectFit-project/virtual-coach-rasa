@@ -55,8 +55,6 @@ rules:
   - action: utter_smoke_crave_6
   - action: utter_smoke_crave_7
   - action: utter_smoke_crave_8
-  - action: utter_ask_ehbo_me_self_pt1
-  - action: utter_ask_ehbo_me_self_pt2
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -92,8 +90,6 @@ rules:
   - slot_was_set:
     - hrs_new_activity_slot: 2
   - active_loop: null
-  - action: utter_ask_ehbo_me_self_pt1
-  - action: utter_ask_ehbo_me_self_pt2
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -235,8 +231,6 @@ rules:
       - crave_lapse_relapse: 1 # hrs
   - slot_was_set:
       - hrs_activity_slot: 1
-  - action: utter_ask_ehbo_me_self_pt1
-  - action: utter_ask_ehbo_me_self_pt2
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false

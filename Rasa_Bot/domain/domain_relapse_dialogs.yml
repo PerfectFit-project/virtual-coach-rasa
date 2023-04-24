@@ -406,18 +406,10 @@ responses:
     - text: "Ik kan je daarbij helpen."
     - text: "Ik ben er om je te ondersteunen."
     - text: "Ik ben er om je te helpen."
-  utter_ask_ehbo_me_self_pt1:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰"
-    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen? Typ dan '1' 🧰"
-    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰"
-  utter_ask_ehbo_me_self_pt2:
-    - text: "Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀"
-    - text: "Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀"
-    - text: "Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀"
   utter_ask_ehbo_me_self:
-    - text: "Typ '3' als je zelf een oefening wilt kiezen. 📱"
-    - text: "Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'."
-    - text: "Wil je zelf een oefening uitkiezen? Typ dan '3'."
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰 Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀 Typ '3' als je zelf een oefening wilt kiezen. 📱"
+    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen? Typ dan '1' 🧰 Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'."
+    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰 Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 Wil je zelf een oefening uitkiezen? Typ dan '3'."
 
 # smoke lapse
 
@@ -507,7 +499,7 @@ responses:
   utter_ask_ehbo_me_self_lapse:
     - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten.
             Typ 1 als je een oefening uit je EHBO-doos wilt doen. 
-            Typ 2 als ik een oefening mag voorstellen. 
+            Typ 2 als ik een oefening mag voorstellen.
             Typ 3 als je zelf een activiteit wilt kiezen.
             Typ 4 als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt afsluiten."
 
@@ -526,46 +518,55 @@ responses:
     - text: "Als de trek nog niet is weggegaan, kun je nog een oefening doen door '2' te typen."
     - text: "Wil je nog een oefening doen omdat de trek nog niet weg is? Typ dan '2'."
   utter_hrs_reasons_1:
-    - text: "Je kan trots zijn op jezelf dat je deze trek hebt weerstaan. Goed bezig!"
+    - text: "Je kan trots zijn op jezelf dat je deze trek hebt weerstaan. Goed bezig!💪"
+    - text: "Het is fantastisch dat je deze trek hebt overwonnen. Je doet het geweldig! 💪"
+    - text: "Geweldig gedaan, je hebt jezelf bewezen dat je deze trek aankon en je bent een stap dichter bij je doel! 💪"
   utter_hrs_reasons_2:
-    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je zin kreeg om te roken. "
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je zin kreeg om te roken."
+    - text: "Het kan nuttig zijn om te begrijpen waarom je zin kreeg om te roken, zodat je in de toekomst makkelijker kunt omgaan dit soort situaties."
+    - text: "Het is goed om je trek te begrijpen, zodat je in de toekomst beter voorbereid bent als het weer gebeurt."
   utter_hrs_reasons_3:
     - text: "Daarom wil ik je wat vragen stellen over de situatie waarin je was toen je zin kreeg om te roken."
+    - text: "Om je te helpen begrijpen waarom je zin kreeg om te roken, wil ik je graag wat vragen stellen over de situatie."
+    - text: "Door jou een paar vragen te stellen over de situatie kan ik je helpen begrijpen waarom je zin kreeg om te roken."
   utter_hrs_reasons_4:
     - text: "Wat was je aan het doen toen je zin kreeg?"
   utter_ask_hrs_situation_slot:
-    - text: "Je mag meerdere antwoorden geven.
-            Typ 1 als je aan het werk was. 
-            Typ 2 als je thuis bezig was met klusjes of huishouden. 
-            Typ 3 als je iets voor jezelf deed (hobby, met iemand afspreken). 
-            Typ 4 als je aan het eten of drinken was. 
-            Typ 5 als je net alcohol of koffie hebt gedronken. 
-            Typ 6 als je net wakker bent. 
-            Type 7 als je iets deed wat niet in het lijstje staat."
+    - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer.\n
+            Typ '1' als je aan het werk was. 💼 \n
+            Typ '2' als je thuis bezig was met klusjes of huishouden. 🧹🛠️ \n
+            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken).☀ \n 
+            Typ '4' als je aan het eten of drinken was. 🍽️ \n
+            Typ '5' als je net alcohol of koffie hebt gedronken. 🍷🍺☕ \n
+            Typ '6' als je net wakker was. ⏰ \n
+            Typ '7' als je iets deed wat niet in het lijstje staat."
   utter_hrs_how_did_you_feel_1:
     - text: "Kun je mij vertellen hoe je je voelde toen je zin kreeg om te roken?"
   utter_ask_hrs_feeling_slot:
     - text: "Je mag meerdere antwoorden geven. 
-            Typ 1 als je stress had. 
-            Typ 2 als je verdrietig was. 
-            Typ 3 als je boos was. 
-            Typ 4 als je verveeld was. 
-            Typ 5 als je honger had. 
-            Typ 6 als je bang of angstig was. 
-            Typ 7 als je blij was. 
-            Typ 8 als je je anders voelde. "
+            Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
+            Typ '1' als je stress had. 🥴  \n
+            Typ '2' als je moe was. 😴  \n  
+            Typ '3' als je verdrietig was. 😭     \n
+            Typ '4' als je boos was. 😠 \n
+            Typ '5' als je verveeld was. 🥱 \n
+            Typ '6' als je honger had. 🤤 \n
+            Typ '7' als je bang of angstig was. 😧 \n
+            Typ '8' als je blij was. 😊 \n
+            Typ '9' als je je anders voelde."
   utter_hrs_how_did_you_feel_2:
-    - text: "Goed dat je je gevoelens kan benoemen. "
+    - text: "Goed dat je je gevoelens kan benoemen.👍 "
+    - text: "Het is niet altijd makkelijk om aan te geven hoe je je voelt, dus knap gedaan.👍"
   utter_hrs_who_you_with:
     - text: "Met wie was je toen je zin kreeg?"
   utter_ask_hrs_who_with_slot:
-    - text: "Je mag meerdere antwoorden geven. 
-            Typ 1 als je met je partner was. 
-            Typ 2 als je alleen was. 
-            Typ 3 als je met vrienden en/of familie was. 
-            Typ 4 als was je met kennissen was. 
-            Typ 5 als je met collega's was. 
-            Typ 6 als je met andere rokers was."
+    - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
+            Typ '1' als je met je partner was. \n
+            Typ '2' als je alleen was. \n
+            Typ '3' als je met vrienden en/of familie was. \n
+            Typ '4' als je met kennissen was. \n
+            Typ '5' als je met collega's was. \n
+            Typ '6' als je met andere rokers was. "
   utter_ask_hrs_what_happened_slot:
     - text: "Gebeurde er iets bijzonders?"
   utter_hrs_look_back_1:

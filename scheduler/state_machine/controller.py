@@ -8,8 +8,9 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                reschedule_dialog, retrieve_intervention_day,
                                                revoke_execution, schedule_next_execution,
                                                store_completed_dialog, update_execution_week)
-from state_machine.const import (FUTURE_SELF_INTRO, GOAL_SETTING, TRACKING_DURATION, TIMEZONE,
-                                 PREPARATION_GA, MAX_PREPARATION_DURATION, EXECUTION_DURATION)
+from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER ,FUTURE_SELF_INTRO, GOAL_SETTING,
+                                 TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
+                                 MAX_PREPARATION_DURATION, EXECUTION_DURATION)
 from state_machine.state import State
 from virtual_coach_db.helper.definitions import (Components, Notifications)
 
@@ -153,7 +154,7 @@ class TrackingState(State):
 
         start_date = get_start_date(self.user_id)
 
-        if(current_date - start_date).days >= 7:
+        if(current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER:
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)

@@ -153,7 +153,6 @@ rules:
   - action: utter_general_activity_choose_next_activity_1
   - action: general_activity_next_activity_form
   - active_loop: general_activity_next_activity_form
-
   - active_loop: null
   - action: utter_general_activity_next_user
   - action: utter_persuasion_questions_intro

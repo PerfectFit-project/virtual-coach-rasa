@@ -105,7 +105,6 @@ class FsmStates:
     EXECUTION_RUN = "Execution run"
     RELAPSE = "Relapse"
     CLOSING = "Closing"
-    TEST = "Test"
 
 
 class DialogQuestions(Enum):

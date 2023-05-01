@@ -310,7 +310,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         .filter(
             InterventionPhases.phase_name == phase
         )
-        .all()
+        .first()
     )
 
     components = (
@@ -320,7 +320,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         .filter(
             InterventionComponents.intervention_component_name == intervention_component
         )
-        .all()
+        .first()
     )
 
     # if the list of phases of components is empty, it is not in the DB
@@ -329,8 +329,8 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
 
     session.add(UserInterventionState(
         users_nicedayuid=user_id,
-        intervention_phase_id=phases[0].phase_id,
-        intervention_component_id=components[0].intervention_component_id,
+        intervention_phase_id=phases.phase_id,
+        intervention_component_id=components.intervention_component_id,
         completed=False,
         last_time=datetime.now().astimezone(TIMEZONE),
         last_part=0,
@@ -360,10 +360,10 @@ def get_activities_from_id(activity_id: int) -> InterventionActivity:
         .filter(
             InterventionActivity.intervention_activity_id == activity_id
         )
-        .all()
+        .first()
     )
 
-    return activity[0]
+    return activity
 
 
 def get_current_user_phase(user_id: int) -> str:
@@ -385,10 +385,10 @@ def get_current_user_phase(user_id: int) -> str:
         .filter(
             UserStateMachine.users_nicedayuid == user_id
         )
-        .all()
+        .first()
     )
 
-    return user_fsm[0].state
+    return user_fsm.state
 
 
 def get_current_phase_time(user_id: int, phase: str) -> int:
@@ -446,10 +446,10 @@ def get_execution_week(user_id: int) -> int:
         .filter(
             Users.nicedayuid == user_id
         )
-        .all()
+        .first()
     )
 
-    return user[0].execution_week
+    return user.execution_week
 
 
 def get_intervention_component_id(intervention_component_name: str) -> int:
@@ -472,10 +472,10 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
         .filter(
             InterventionComponents.intervention_component_name == intervention_component_name
         )
-        .all()
+        .first()
     )
 
-    intervention_component_id = selected[0].intervention_component_id
+    intervention_component_id = selected.intervention_component_id
     return intervention_component_id
 
 
@@ -577,27 +577,25 @@ def get_possible_activities(user_id: int, activity_category: Optional[str] = Non
         if resource["always_available"]:
             available_ids.append(resource["resource_id"])
         else:
-            phases = resource["phases"]
-            phase = list(filter(lambda x: x["phase"] == curr_ph, phases))[0]
-            if phase["always_available"]:
+            phase = list(filter(lambda x: x["phase"] == curr_ph, resource["phases"]))
+            if len(phase) > 0 and phase[0]["always_available"]:
                 available_ids.append(resource["resource_id"])
-            elif curr_time in phase["available"]:
+            elif len(phase) > 0 and curr_time in phase[0]["available"]:
                 available_ids.append(resource["resource_id"])
             # check if the current time is equal or higher than the mandatory. The user could
             # have rescheduled the dialog, so we need to take that into account. In case
             # the activity has been already performed, it is removed form the mandatory list
-            if "mandatory" in phase:
-                for mandatory_time in phase["mandatory"]:
+            if len(phase) > 0 and "mandatory" in phase[0]:
+                for mandatory_time in phase[0]["mandatory"]:
                     if curr_time >= mandatory_time:
                         mandatory.append(resource["resource_id"])
 
     mandatory_ids = []
     # check if the mandatory activities have been already performed
-    if len(mandatory) > 0:
-        for activity in mandatory:
-            # if the activity has been completed, do not report it as mandatory
-            if is_activity_done(activity):
-                mandatory_ids.append(activity)
+    for activity in mandatory:
+        # if the activity has been completed, do not report it as mandatory
+        if is_activity_done(activity):
+            mandatory_ids.append(activity)
 
     mandatory_ids = [get_activities_from_id(mandatory_id) for mandatory_id in mandatory_ids]
     available_ids = [get_activities_from_id(available_id) for available_id in available_ids]

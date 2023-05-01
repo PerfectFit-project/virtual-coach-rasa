@@ -65,7 +65,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             
             # the dialog is idle now
             fsm.dialog_state.set_to_idle()
-            save_state_machine_to_db(fsm.machine_id)
+            save_state_machine_to_db(fsm)
 
             next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)
 

@@ -94,6 +94,30 @@ def compute_preferred_time(tracker):
     return preferred_time
 
 
+def get_last_completed_dialog_part_from_db(user_id: int,
+                                           intervention_component_id: int):
+    """Get last completed dialog part from db."""
+    
+    session = get_db_session(db_url=DATABASE_URL)
+
+    selected = (
+        session.query(
+            UserInterventionState
+        ).order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_id == intervention_component_id
+        )
+        .first()
+    )
+    
+    if selected is not None:
+        return selected.last_part
+    
+    # No dialog part previously completed
+    return -1
+
+
 def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
                             part: int):
     """Store that part of dialog has been completed in db."""
@@ -103,16 +127,16 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
     selected = (
         session.query(
             UserInterventionState
-        )
+        ).order_by(UserInterventionState.last_time.desc())
         .filter(
             UserInterventionState.users_nicedayuid == user_id,
-            UserInterventionState.intervention_component_name == intervention_component_id
+            UserInterventionState.intervention_component_id == intervention_component_id
         )
         .first()
     )
 
     # Current time to be saved in database
-    last_time = datetime.datetime.now().astimezone(TIMEZONE)
+    last_time = datetime.now().astimezone(TIMEZONE)
 
     # If already an entry for the user for the goal-setting dialog exists
     # in the intervention state table
@@ -514,8 +538,8 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
                 user_id: the user_id of the user to retrieve the answers for
                 question_id: the question_id for which the answers should be retrieved
 
-            Returns:
-                    The open answers that the user has given for the question
+        Returns:
+                The open answers that the user has given for the question.
 
     """
     session = get_db_session(db_url=DATABASE_URL)
@@ -532,6 +556,33 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     )
 
     return open_answers
+
+def get_most_recent_open_answer(user_id: int, question_id: int):
+    """
+       Get the most recent open answer response associated with the given user and question.
+        Args:
+                user_id: the user_id of the user to retrieve the answers for
+                question_id: the question_id for which the answers should be retrieved
+
+        Returns:
+                The open answer that the user has given for the question most recently.
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    open_answers = (
+        session.query(
+            DialogOpenAnswers
+        ).order_by(DialogOpenAnswers.datetime.desc())
+        .filter(
+            DialogOpenAnswers.users_nicedayuid == user_id,
+            DialogOpenAnswers.question_id == question_id
+        )
+        .first()
+    )
+
+    return open_answers
+
 
 def count_answers(answers: List[DialogClosedAnswers],
                   closed_answer_options: List[ClosedAnswers]) -> List[int]:

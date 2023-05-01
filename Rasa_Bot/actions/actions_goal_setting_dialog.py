@@ -12,6 +12,7 @@ from .helper import (get_intervention_component_id,
                      get_last_completed_dialog_part_from_db,
                      get_latest_bot_utterance, 
                      get_most_recent_open_answer,
+                     store_dialog_open_answer_to_db,
                      store_dialog_part_to_db,
                      store_quit_date_to_db, 
                      store_long_term_pa_goal_to_db)
@@ -45,10 +46,17 @@ class ActionSaveGoalSettingDialogPart2(Action):
         return "action_save_goal_setting_dialog_part2"
 
     async def run(self, dispatcher, tracker, domain):
+        
+        user_id = tracker.current_state()['sender_id']
 
-        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+        store_dialog_part_to_db(user_id, 
                                 get_intervention_component_id(Components.GOAL_SETTING), 
                                 part = 2)
+        
+        # Also need to store the "which_sport"-slot to the database
+        store_dialog_open_answer_to_db(user_id, 
+                                       question_id = DialogQuestionsEnum.GOAL_SETTING_CHOSEN_SPORT,
+                                       answer_value = tracker.get_slot('which_sport'))
 
         return []
     

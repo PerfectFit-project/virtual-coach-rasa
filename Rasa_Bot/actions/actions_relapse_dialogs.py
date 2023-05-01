@@ -706,25 +706,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
 
         return {"type_smoke": value}
 
-    def validate_type_smoke_confirm(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate type of smoke input confirmation"""
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_type_smoke_confirm':
-            return {"type_smoke_confirm": None}
-
-        if not validator.validate_yes_no_answer(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_yes_no")
-            return {"type_smoke_confirm": None}
-
-        if value.lower() in ['Nee', 'nee', "nee."]:
-            return {"type_smoke": None, "type_smoke_confirm": None}
-        return {"type_smoke_confirm": value}
-
     def validate_number_smoke(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -741,26 +722,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             return {"number_smoke": None}
 
         return {"number_smoke": value}
-
-    def validate_number_smoke_confirm(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate number of smoke input confirmation"""
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_number_smoke_confirm':
-            return {"number_smoke_confirm": None}
-
-        if not validator.validate_yes_no_answer(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_yes_no")
-            return {"number_smoke_confirm": None}
-
-        if value.lower() in ['Nee', 'nee', "nee."]:
-            return {"number_smoke": None, "number_smoke_confirm": None}
-        return {"number_smoke_confirm": value}
-
 
 class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
     def name(self) -> Text:

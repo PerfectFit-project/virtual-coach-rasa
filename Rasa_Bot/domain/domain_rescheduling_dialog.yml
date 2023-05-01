@@ -1,32 +1,41 @@
-### Rescheduling query dialog
-
 version: "3.1"
+
+intents:
+  - EXTERNAL_trigger_reschedule_activity
 
 slots:
   # Whether the user wants to continue the dialog now
   rescheduling_now:
-    type: bool
+    type: categorical
+    values:
+      - 1
+      - 2
     influence_conversation: true
     mappings:
     - type: from_text
       conditions:
       - active_loop: rescheduling_now_or_later_form
   # String with rescheduling options for uttering the options
-  rescheduling_options_string:
+  daypart_options_string:
     type: text
     influence_conversation: false
     mappings:
-    - type: custom
+      - type: custom
   # Chosen rescheduling option in case user does not want to continue dialog now
-  rescheduling_option:
-    type: float
-    influence_conversation: false
+  chosen_daypart:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: true
     mappings:
-    - type: from_text
-      conditions:
-      - active_loop: rescheduling_options_form
+      - type: from_text
+        conditions:
+          - active_loop: pick_a_daypart_form
   # Chosen rescheduling option, stored as datetime
-  rescheduling_options_timestamp:
+  daypart_options_timestamp:
     type: any
     influence_conversation: false
     mappings:
@@ -47,35 +56,58 @@ slots:
       
 responses:
   ### General rescheduling query dialog
+  utter_intro_reschedule_ga:
+     - text: "Je kunt weer een nieuwe oefening doen!"
+     - text: "Je kunt een nieuwe oefening beginnen!"
+     - text: "Je kunt nu weer een nieuwe oefening doen!"
+     - text: "Je kunt een nieuwe oefening starten!"
   utter_ask_rescheduling_now_or_later_form_rescheduling_now:
-     - text: "Wil jij deze oefening nu doen of later?"
+     - text: "Wil jij deze oefening nu doen of later?\n
+              Typ '1' wanneer je nu tijd hebt om een oefening te doen.\n
+              Typ '2' wanneer je de oefening liever later doet."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Voer '1' in wanneer je nu tijd hebt voor een oefening.\n
+              Voer '2' in wanneer je de oefening liever later doet."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Typ '1' als je nu tijd hebt voor een oefening.\n
+              Typ '2' als je de oefening liever later doet."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Voer '1' in wanneer je nu tijd hebt voor een oefening.\n
+              Voer '2' in wanneer je de oefening liever later wilt doen."
+     - text: "Wil je deze oefening nu doen of later?\n
+              Typ '1' als je nu tijd hebt voor een oefening.\n
+              Typ '2' als je de oefening liever later wilt doen."
+     - text: "Wil je deze oefening nu doen of liever later?\n
+              Typ '1' als je nu tijd hebt voor een oefening.\n
+              Typ '2' als je de oefening later wilt doen."
   utter_user_chose_later:
-     - text: "OK, het is wel goed als je deze oefening snel doet. Dit gaat je helpen je doelen te behalen. ..."
-     - text: "Prima, dit is wel een belangrijke oefening die je snel moet doen. ..."
-     - text: "Goed, laten we deze oefening later doen. ..."
-  utter_ask_rescheduling_options_form_rescheduling_option:
-     - text: "Wanneer komt het beter uit? {rescheduling_options_string} Geef antwoord met 1, 2, 3, of 4."
+     - text: "Prima, ik raad je wel aan om deze oefening snel te doen. Dit gaat je namelijk helpen je doelen te behalen!"
+     - text: "Goed, het is verstandig om deze oefening zo snel mogelijk te doen. Dit helpt je bij het bereiken van je doelen!"
+     - text: "Prima, ik stel voor om deze oefening snel te doen. Dit ondersteunt je bij het behalen van je doelen!"
+     - text: "Prima, ik raad je aan om deze oefening zo snel mogelijk te doen. Dit helpt je bij het bereiken van je doelen!"
+     - text: "Prima, ik stel voor om deze oefening zo snel mogelijk te doen. Dit ondersteunt je bij het behalen van je doelen!"
   utter_rescheduling_option_chosen:
-     - text: "Prima, ik kom dan bij je terug."
+     - text: "Oké, ik spreek je dan weer! 🙋"
+     - text: "Goed, tot later! 🙋"
   utter_user_chose_now:
-     - text: "Super dat je er gelijk mee aan de slag gaat! ..."
-     - text: "Leuk, laten we beginnen. ..."
-     - text: "Mooi, we gaan aan de slag! ..."
-     - text: "Goed bezig, deze activiteit gaat je helpen met je doelen. ..."
+     - text: "Mooi, we gaan aan de slag! 😊"
+  utter_ask_chosen_daypart:
+    - text: "{daypart_options_string}"
 
 actions:
+  - action_expected_time_next_part
   - validate_rescheduling_now_or_later_form
-  - action_reset_rescheduling_now_slot
-  - action_get_rescheduling_options_list
-  - validate_rescheduling_options_form
-  - action_reset_rescheduling_option_slot
   - action_reschedule_dialog
   - action_set_continuation
+  - action_continue_with_general_activity
+  - action_continue_with_future_self_dialog_after_rescheduling_query
+  - action_ask_new_time
+  - validate_pick_a_daypart_form
 
 forms:
   rescheduling_now_or_later_form:
     required_slots:
       - rescheduling_now
-  rescheduling_options_form:
+  pick_a_daypart_form:
     required_slots:
-      - rescheduling_option
+      - chosen_daypart

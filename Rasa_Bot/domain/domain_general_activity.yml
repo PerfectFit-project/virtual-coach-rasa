@@ -3,7 +3,6 @@ version: "3.1"
 intents:
 - oefening_intent
 
-
 slots:
   # Check if it is the first time the dialog is performed
   general_activity_first_execution:
@@ -116,6 +115,23 @@ slots:
     mappings:
       - type: custom
 
+  # activity category
+  general_activity_activity_type_slot:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: general_activity_next_activity_form
+            requested_slot: general_activity_activity_type_slot
+
+  # alternatives to display for the activity choice
+  general_activity_activities_options_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
  # options for choosing the next activity
   general_activity_next_activity_slot:
     type: text
@@ -124,6 +140,7 @@ slots:
       - type: from_text
         conditions:
           - active_loop: general_activity_next_activity_form
+            requested_slot: general_activity_next_activity_slot
 
   who_decides_slot:
     type: categorical
@@ -221,8 +238,10 @@ forms:
   general_activity_description_form:
     required_slots:
       - general_activity_description_slot
+  # ask the user the type of and which activity to be performed
   general_activity_next_activity_form:
     required_slots:
+      - general_activity_activity_type_slot
       - general_activity_next_activity_slot
   # ask user if they have sth that prompts/reminds them to do the activity
   persuasion_prompts_form:
@@ -255,33 +274,88 @@ responses:
     - text: "En hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
+    - text: "Dank je wel voor je feedback"
+    - text: "Bedankt voor je reactie"
   utter_general_activity_look_back:
     - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Op moeilijke momenten kun je hier naar terugkijken."
+    - text: "Wanneer je het moeilijk hebt kun je hier naar terugkijken."
+    - text: "Hier kun je naar terugkijken op moeilijke momenten."
   utter_general_activity_thanks_top_5_1:
     - text: "Bedankt voor je feedback. Je vindt deze activiteit nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+    - text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
 #  utter_what_you_learned_from_activity:
   utter_general_activity_thanks_top_5_2:
     - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
+    - text: "Je hebt deze oefening eerder al nuttig gevonden. Toen liet je weten dat je dit geleerd hebt van de oefening: {activity_user_input}"
+    - text: "Je hebt deze oefening al eerder als zinvol beoordeeld. Je hebt mij toen laten weten dat je het volgende had geleerd van de oefening: {activity_user_input}"
   utter_ask_save_or_edit_slot:
-    - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen? Typ 1 voor 'Bewaren', Typ 2 voor 'Aanpassen'. "
+    - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen?\n
+            Typ 1 voor 'Bewaren'\n
+            Typ 2 voor 'Aanpassen'. "
+    - text: "Wil je deze tekst nog steeds bewaren in je EHBO-doos of wil je de tekst aanpassen?\n
+            Typ 1 voor 'Bewaren'\n
+            Typ 2 voor 'Aanpassen'. "
+    - text: "Zou je deze tekst willen houden in je EHBO-doos of wil je de tekst graag veranderen?\n
+            Typ 1 voor 'Bewaren'\n
+            Typ 2 voor 'Aanpassen'. "
   utter_general_activity_save:
     - text: "Super! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Top! Dezelfde tekst wordt nu opgeslagen in de EHBO-doos. Wanneer je het moeilijk hebt, kun je hier naar terugkijken."
+    - text: "Super! Dezelfde tekst wordt bewaard in de EHBO-doos. Hier kun je naar terugkijken als je het moeilijk hebt."
   utter_general_activity_edit_1:
     - text: "Prima! "
+    - text: "Dat is goed! "
   utter_general_activity_edit_2:
-    - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen. "
+    - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen."
+    - text: "/Wat heb je geleerd van deze oefening? Kun je in een paar zinnen vertellen wat je graag wilt onthouden? Deze zinnen zullen uiteindelijk in je EHBO-doos bewaard worden."
+    - text: "Kun je in een paar zinnen beschrijven wat je van deze oefening hebt geleerd? Dus wat wil je meenemen van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos komen."
+    - text: "Kun je in een paar zinnen uitleggen wat je geleerd hebt van deze oefening? Wat is het belangrijkste wat je wilt onthouden van deze oefening? Deze zinnen zullen later worden opgeslagen in je EHBO-doos."
+    - text: "Kun je in een paar zinnen beschrijven wat je geleerd hebt van deze oefening? Wat is het belangrijkste wat je wilt onthouden van deze oefening? Deze zinnen zullen later toegevoegd worden aan je EHBO-doos."
+    - text: "Kun je in een paar zinnen zeggen wat je geleerd hebt van deze oefening? Wat wil je onthouden van deze oefening? Deze zinnen zullen later in je EHBO-doos terechtkomen."
   utter_general_activity_edit_3:
     - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt. "
+    - text: "Dank je wel! Je antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Bedankt! Je antwoord is nu opgeslagen en toegevoegd aan de EHBO-doos. Op momenten dat je het moeilijk hebt kun je hier naar terugkijken."
+    - text: "Bedankt voor je antwoord! Het wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Dank je wel voor je antwoord! Het wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken wanneer je het moeilijk hebt."
+    - text: "Dank je wel! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken op moeilijke momenten."
+    - text: "Bedankt! Jouw antwoord wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Hier kun je naar terugkijken op moeilijke momenten."
+    - text: "Bedankt voor je antwoord! Het wordt nu opgeslagen en toegevoegd aan de EHBO-doos. Op moelijke momenten kun je hier naar terugkijken."
   utter_ask_general_activity_description_slot:
-    - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos. "
-  utter_general_activity_choose_next_activity:
-    - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit drie oefeningen."
+    - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan toevoegen aan je EHBO-doos."
+    - text: "Typ nu een paar zinnen over wat je geleerd hebt. Dan kan ik dit kan toevoegen aan je EHBO-doos."
+    - text: "Typ nu een paar zinnen over wat je geleerd hebt, zodat ik dit kan bewaren in je EHBO-doos."
+    - text: "Typ nu in een paar zinnen wat je geleerd hebt. Dan kan ik dit bewaren in je EHBO-doos."
+  utter_general_activity_choose_next_activity_1:
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Je kunt kiezen uit verschillende oefeningen. Welke soort oefening wil je doen?"
+    - text: "Het is nu tijd voor een nieuwe oefening. Je kunt kiezen uit meerdere oefeningen. Wat voor oefening wil je doen?"
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Er zijn meerdere oefeningen om uit te kiezen. Welke soort oefening wil je doen?"
+  utter_ask_general_activity_activity_type_slot:
+    - text: "Typ '1' om een oefening over jezelf te doen.\n 
+             Typ '2' als je weetjes wilt.\n
+             Typ '3' voor oefeningen met handige tips.\n
+             Typ '4' om jezelf te belonen.\n
+             Typ '5' voor meer zelfvertrouwen en motivatie."
+  utter_general_activity_choose_next_activity_2:
+    - text: "Super! Dan kun je kiezen uit de volgende oefeningen:"
+    - text: "Oké, je kunt dan één van de volgende oefeningen kiezen:"
+    - text: "Goed! Kies nu welke oefening je wilt doen:"
   utter_ask_general_activity_next_activity_slot:
-    - text: "Welke oefening wil je doen? Typ 1 als je '{activity1_name}' wilt doen. Typ 2 als je '{activity2_name}' wilt doen. Typ 3 als je '{activity3_name}' wilt doen. Typ 4 als je wilt kiezen uit drie andere oefeningen."
+    - text: "'{general_activity_activities_options_slot}'"
+
+
   utter_general_activity_next_user:
     - text: "Oké, goede keuze!"
+    - text: "Oké, slimme keuze!"
+    - text: "Oké, goede beslissing!"
   utter_general_activity_next_coach:
-    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening {chosen_activity_slot} te doen."
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen."
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Ik wens je veel succes!"
+    - text: "Dan is het nu tijd om een nieuwe oefening te starten. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Veel succes!"
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Veel succes!"
+    - text: "Dan is het nu tijd om aan een nieuwe oefening te beginnen. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Ik wens je veel succes!"
   utter_persuasion_questions_intro:
     - text: "Ik wil je nu graag een paar vragen stellen over de activiteit die je gaat doen."
     - text: "Dan zou ik je nu graag wat vragen stellen over de activiteit die je gaat doen."
@@ -291,15 +365,30 @@ responses:
   utter_ask_persuasion_prompts_slot_intro:
     - text: "1) Ik heb dingen die mij eraan herinneren om de activiteit te doen."
   utter_ask_persuasion_prompts_slot:
-    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+    - text: "1. Helemaal mee oneens\n 
+            2. Mee oneens\n
+            3. Niet mee eens, niet mee oneens\n
+            4. Mee eens\n
+            5. Helemaal mee eens.\n
+            Typ '1', '2', '3', '4', of '5'."
   utter_ask_persuasion_want_slot_intro:
     - text: "2) Ik heb het gevoel dat ik de activiteit wil gaan doen."
   utter_ask_persuasion_want_slot:
-    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+    - text: "1. Helemaal mee oneens\n
+             2. Mee oneens\n
+             3. Niet mee eens, niet mee oneens\n
+             4. Mee eens\n
+             5. Helemaal mee eens.\n 
+             Typ '1', '2', '3', '4', of '5'."
   utter_ask_persuasion_need_slot_intro:
     - text: "3) Ik heb het gevoel dat ik de activiteit moet doen."
   utter_ask_persuasion_need_slot:
-    - text: "1. Helemaal mee oneens - 2. Mee oneens - 3. Niet mee eens, niet mee oneens - 4. Mee eens - 5. Helemaal mee eens. Typ '1', '2', '3', '4', of '5'."
+    - text: "1. Helemaal mee oneens\n
+             2. Mee oneens\n
+             3. Niet mee eens, niet mee oneens\n
+             4. Mee eens\n
+             5. Helemaal mee eens.\n
+             Typ '1', '2', '3', '4', of '5'."
   utter_thank_persuasion_reflection:
     - text: "Oké, bedankt voor het delen!"  
     - text: "Super dat je jouw gedachten met mij wilde delen!"
@@ -314,27 +403,34 @@ responses:
     - text: "Hier is je nieuwe oefening:"
     
 actions:
+  - action_trigger_general_activity # start the dialog through the scheduler
   - check_if_first_execution_ga   # Check if it is the first time the dialog is performed
   - general_activity_check_rating # sets general_activity_low_high_rating to high or low
   - check_user_input_required   # check if the selected activity requires the input of the user
   - check_activity_done # check if the activity selected has been already done
-  - get_activity_user_input # write to the activity_user_input slot the iput for the chosen activity
+  - get_activity_user_input # write to the activity_user_input slot the input for the chosen activity
+  - get_general_activities_options # get the alternatives for the activities the user has to chose from
   - validate_save_or_edit_form # validate the slot save_or_edit_slot
   - validate_general_activity_description_form # check if the description has at least 50 characters
   - save_description_in_db # saves the provided activity description in DB
-  - get_three_random_activities # get three random activities from the resources sets activity1_name -  activity3_name
-  - validate_general_activity_next_activity_form
   - get_last_performed_activity # get the last performed activity
   - get_activity_coach_choice # the coach chooses the next activity
+  - go_to_check_activity_done # starts the rule checking if the activity has been done already
+  - go_to_check_input_required # starts the rule checking if the user input is required
+  - go_to_choose_activity # starts the rule for choosing an activity
+  - go_to_rating # starts the rule checking the activity rating
   - validate_activity_usefulness_form # validate the slot activity_useful_rating
   - check_who_decides # determines if the user can decide or if the coach decides
   - action_set_slot_general_activity # set the slot to the current running dialog
   - load_activity # load the activity instructions
+  - launch_ga_rescheduling # followup to start the rescheduling dialog
   - validate_persuasion_want_form  # validate value is between 1 and 5
   - validate_persuasion_need_form   # validate value is between 1 and 5
   - validate_persuasion_prompts_form  # validate value is between 1 and 5
   - send_persuasive_message_activity  # choose and send persuasive message to persuade user to do activity
   - validate_persuasion_reflection_form
   - save_persuasion_to_database  # Save state features and persuasion type to database
+  - validate_general_activity_activity_type_form # Validate activity type
+  - validate_general_activity_next_activity_form
   - validate_persuasion_effort_form    # Validate effort score
   

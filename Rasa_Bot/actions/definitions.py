@@ -89,6 +89,24 @@ DAYS_OF_WEEK_ACCEPTED = {"maandag": ["maandag", "mandag", "maadag"],
 DAYS_OF_WEEK = ["maandag", "diensdag", "woensdag", "donderdag", "vrijdag",
                 "zaterdag", "zondag"]
 
+
+activities_categories = {1: 'self-related',
+                         2: 'educational',
+                         3: 'practical',
+                         4: 'reinforcement',
+                         5: 'motivational'}
+
+
+class FsmStates:
+    ONBOARDING = "Onboarding"
+    TRACKING = "Tracking"
+    GOALS_SETTING = "Goals setting"
+    BUFFER = "Buffer"
+    EXECUTION_RUN = "Execution run"
+    RELAPSE = "Relapse"
+    CLOSING = "Closing"
+
+
 class DialogQuestions(Enum):
     FUTURE_SELF_SMOKER_WORDS = 1  # Which three words suits you as smoker?
     FUTURE_SELF_SMOKER_WHY = 2  # Why did you pick these words for smoking?

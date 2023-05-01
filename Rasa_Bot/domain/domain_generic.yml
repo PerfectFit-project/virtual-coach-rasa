@@ -65,5 +65,10 @@ responses:
      - text: "Hmm ik heb dat niet begrepen."
   utter_greeting:
      - text: "Hoi!"
+     - text: "Hallo!"
+     - text: "Goededag!"
   utter_give_more_details:
     - text: "Kun je dat wat uitgebreider uitleggen?"
+    - text: "Kun je dat nog iets duidelijker maken?"
+    - text: "Kun je dat iets meer uitleggen?"
+    - text: "Kun je dat nog wat duidelijker uitleggen?"

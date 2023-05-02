@@ -245,7 +245,7 @@ class ValidateGoalSettingPlanFinishedForm(FormValidationAction):
         if last_utterance != 'utter_ask_goal_setting_plan_finished_slot':
             return {"goal_setting_plan_finished_slot": None}
 
-        if value not in ['Klaar', 'klaar']:
+        if not validator.validate_klaar(value):
             return {"goal_setting_plan_finished_slot": None}
 
         return {"goal_setting_plan_finished_slot": value}
@@ -381,7 +381,7 @@ class ValidateTestimonialOneReadForm(FormValidationAction):
         if last_utterance != 'utter_ask_testimonial_one_read':
             return {"testimonial_one_read": None}
 
-        if value not in ['Klaar', 'klaar']:
+        if not validator.validate_klaar(value):
             return {"testimonial_one_read": None}
 
         return {"testimonial_one_read": value}
@@ -401,7 +401,7 @@ class ValidateTestimonialTwoReadForm(FormValidationAction):
         if last_utterance != 'utter_ask_testimonial_two_read':
             return {"testimonial_two_read": None}
 
-        if value not in ['Klaar', 'klaar']:
+        if not validator.validate_klaar(value):
             return {"testimonial_two_read": None}
 
         return {"testimonial_two_read": value}
@@ -597,7 +597,7 @@ class ValidateFinishedWritingPaForm(FormValidationAction):
         if last_utterance != 'utter_ask_finished_writing_pa':
             return {"finished_writing_pa": None}
 
-        if value not in ['Klaar', 'klaar']:
+        if not validator.validate_klaar(value):
             return {"finished_writing_pa": None}
 
         return {"finished_writing_pa": value}

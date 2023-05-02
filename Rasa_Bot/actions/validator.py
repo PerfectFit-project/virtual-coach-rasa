@@ -107,3 +107,9 @@ def validate_yes_no_answer(response: str) -> bool:
 
 def simple_sanitize_input(value):
     return value.translate({c: "" for c in string.punctuation})
+
+
+def validate_klaar(response: str) -> bool:
+    if response.lower() in ['Klaar', 'klaar']:
+        return True
+    return False

@@ -1,0 +1,362 @@
+version: "3.1"
+
+intents:
+  - EXTERNAL_delayed_message_smoke_lapse
+  - EXTERNAL_delayed_message_smoke
+  - EXTERNAL_closing_dialog
+
+
+slots:
+  closing_pa_evaluation:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_pa_evaluation_form
+
+  closing_smoking_status:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+  closing_lapse_info_correct:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_lapse_info_correct_form
+
+  closing_reflection_smoke_done:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_reflection_smoke_done_form
+
+  closing_relapse_prevention_plan_one_done:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_relapse_prevention_plan_one_done_form
+
+  closing_relapse_prevention_plan_two_done:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_relapse_prevention_plan_two_done_form
+
+  closing_pf_grade:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_evaluate_pf_form
+            requested_slot: closing_pf_grade
+
+  closing_pf_evaluate:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: closing_evaluate_pf_form
+            requested_slot: closing_pf_evaluate
+
+  closing_pa_goal:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  closing_total_steps_number:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+responses:
+# 1 Congratulating
+  utter_closing_congratualate_1:
+    - text: "Gefeliciteerd, je hebt het hele Perfect Fit programma gedaan!🥳"
+  utter_closing_congratualate_2:
+    - text: "Heel goed dat je het hebt volgehouden tot het einde."
+  utter_closing_congratualate_3:
+    - text: "Misschien heb je aan het begin wel een beloning voor jezelf bedacht, voor als je klaar bent met Perfect
+             Fit. Dat is nu!"
+  utter_closing_congratualate_4:
+    - text: "Tijd dus om jezelf te belonen. Je hebt het verdiend.🏆"
+  utter_closing_congratualate_5:
+    - text: "Heb je niks bedacht, of weet je het niet meer? Je mag natuurlijk ook nu iets bedenken.💭"
+  utter_closing_congratualate_6:
+    - text: "Ik wil graag met jou bekijken hoe het is gegaan met meer bewegen en stoppen met roken! En wat je hebt bereikt."
+
+# 2 PA
+  utter_closing_pa_1:
+    - text: "Laten we eerst kijken naar bewegen.🚶🏃"
+  utter_closing_pa_2:
+    - text: "Je hebt steeds je stappen bijgehouden. In totaal heb je {closing_total_steps_number} stappen gezet tijdens Perfect Fit!🚶"
+
+  utter_closing_pa_3:
+    - text: "Misschien zijn het er zelfs nog wel meer, als je de tracker niet altijd om had."
+  utter_closing_pa_4:
+    - text: "Toen je begon met Perfect Fit heb je ook een beweegdoel bedacht, voor aan het eind van het programma."
+  utter_closing_pa_5:
+    - text: "Dit was jouw doel: {closing_pa_goal}"
+  utter_ask_closing_pa_evaluation:
+    - text: "Hoe is het gegaan met dit doel?\n 
+             Typ '1' als je het doel hebt bereikt.\n 
+             Typ '2' als je het doel bijna hebt bereikt.\n 
+             Typ '3' als je het doel niet hebt bereikt."
+
+  utter_closing_pa_6:
+    - text: "Geweldig! Heel knap dat je je doel hebt bereikt en dat het is gelukt om meer te gaan bewegen.👏 "
+  utter_closing_pa_7:
+    - text: "Je hebt vast gemerkt dat het bewegen makkelijker gaat. Misschien is het zelfs al een nieuwe gewoonte aan
+             het worden."
+  utter_closing_pa_8:
+    - text: "Ik hoop dat je blij bent met wat je hebt bereikt! We gaan straks kijken hoe je het bewegen kunt
+             volhouden.💪"
+  utter_closing_pa_9:
+    - text: "Wat goed dat je meer bent gaan bewegen! Dat gaat echt de goede kant op."
+  utter_closing_pa_10:
+    - text: "Het is belangrijk om te letten op wat er al goed gaat."
+  utter_closing_pa_11:
+    - text: "We gaan straks kijken hoe je kunt blijven bewegen en je doel kunt halen.🚶"
+  utter_closing_pa_12:
+    - text: "Goed dat je het aangeeft. Het is niet altijd fijn om hier zo bij stil te staan."
+  utter_closing_pa_13:
+    - text: "Maar denk ook aan wat er wel gelukt is.✅"
+  utter_closing_pa_14:
+    - text: "Je bent iets nieuws aan het doen. Dan is het veel belangrijker wat er al lukt, dan wat er nog niet lukt."
+  utter_closing_pa_15:
+    - text: "We gaan straks kijken hoe je verder kunt gaan met bewegen.🚶"
+
+# 3 Smoke
+  utter_closing_smoke_1:
+    - text: "Maar eerst wil ik met je kijken naar stoppen-met-roken."
+  utter_ask_closing_lapse_info_correct:
+    - text: "Als ik het goed zie, heb jij in de laatste 4 weken niet gerookt. Klopt dat?\n
+             Typ '1' voor JA, DAT KLOPT. 👍\n
+             Typ '2' voor NEE, DAT KLOPT NIET. 👎"
+
+  utter_closing_smoke_succes_1:
+    - text: "Het is je gelukt om te stoppen met roken!👏 Voortaan ben jij dus een niet-roker. Ontzettend knap gedaan."
+  utter_closing_smoke_succes_2:
+    - text: "Een tijdje geleden hebben we samen nagedacht over wie je wilde zijn, als je zou stoppen met roken en meer
+             zou bewegen."
+  utter_closing_smoke_succes_3:
+    - text: "Weet je nog hoe dat er uit zag? Probeer dat weer voor je te zien.💭"
+  utter_closing_smoke_succes_4:
+    - text: "Misschien is dit nu al wel zo. Of misschien nog niet helemaal, maar dan ben je goed op weg."
+  utter_closing_smoke_succes_5:
+    - text: "Sta eens stil bij wat je hebt bereikt. Je mag echt trots zijn op jezelf💪, want stoppen met roken is niet
+             makkelijk. En meer bewegen ook niet."
+  utter_closing_smoke_succes_6:
+    - text: "Jij hebt doorgezet, omdat je weet waarom je dit wilt."
+  utter_closing_smoke_succes_7:
+    - text: "Bedenk eens wat het allemaal oplevert, dat je niet meer rookt en meer beweegt. Voor jezelf en de mensen
+             die belangrijk voor jou zijn.💭"
+  utter_closing_smoke_succes_8:
+    - text: "Je kunt dit ook opschrijven, als je wilt.✍️"
+
+  utter_closing_smoke_lapse_1:
+    - text: "Je hebt in de afgelopen tijd hard gewerkt en geoefend om niet te roken."
+  utter_closing_smoke_lapse_2:
+    - text: "Door te oefenen ben je weer dichterbij een rookvrij leven. Ook als je nog wel eens gerookt hebt."
+  utter_closing_smoke_lapse_3:
+    - text: "Oefenen is belangrijk. Bijna niemand stopt in 1 keer met roken."
+  utter_closing_smoke_lapse_4:
+    - text: "Roken is heel verslavend. Maar jij hebt de moed om dit te veranderen!💪"
+  utter_closing_smoke_lapse_5:
+    - text: "Een tijdje geleden hebben we samen nagedacht over wie je wilde zijn, als je zou stoppen met roken en meer
+             zou bewegen."
+  utter_closing_smoke_lapse_6:
+    - text: "Weet je nog hoe dat er uit zag? Probeer dat weer voor je te zien.💭"
+  utter_closing_smoke_lapse_7:
+    - text: "Houd dat doel voor ogen!"
+  utter_closing_smoke_lapse_8:
+    - text: "Bedenk eens wat het allemaal oplevert, als je niet meer rookt en meer beweegt. Voor jezelf en de mensen
+             die belangrijk voor jou zijn.💭"
+  utter_closing_smoke_lapse_9:
+    - text: "Je kunt dit ook opschrijven, als je wilt.✍️"
+
+
+# 4 Relapse prevention plan
+  utter_closing_prevention_plan_1:
+    - text: "Laten we nu samen een plan maken om verder te gaan met wat jij hebt bereikt. En om het vol te houden!💪"
+  utter_closing_prevention_plan_2:
+    - text: "Je hebt veel geleerd over situaties die lastig voor je waren. Misschien is het al makkelijker dan het
+             eerst was. Maar het is goed om op te blijven letten."
+  utter_closing_prevention_plan_3:
+    - text: "Ik wil graag, voor de laatste keer, met je kijken naar lastige situaties. En naar wat je kunt doen in deze
+             situaties."
+  utter_closing_prevention_plan_4:
+    - text: "Het is handig om je plan straks op te schrijven.✍️ Neem daarom even de tijd om een pen en papier te
+             pakken, of je telefoon, of typ het op een computer of tablet. Net wat jij handig vindt."
+  utter_closing_prevention_plan_5:
+    - text: "Hier zie je de situaties die het moeilijker voor jou kunnen maken om niet te roken:"
+  utter_closing_prevention_plan_6:
+    - text: "Het komt je vast bekend voor."
+  utter_closing_prevention_plan_7:
+    - text: "Hier zijn jouw lastige situaties voor bewegen🚶:"
+  utter_closing_prevention_plan_8a:
+    - text: "Als je wilt kun je deze plaatjes opslaan in de foto's op je telefoon. Klik dan op het plaatje, zodat je
+            het kunt opslaan."
+  utter_closing_prevention_plan_8b:
+    - text: "Gelukkig kun je veel doen als het even moeilijk is!"
+  utter_closing_prevention_plan_9a:
+    - text: "Hier zie je de oefeningen die jou het meest hebben geholpen. Die kun je natuurlijk blijven doen."
+  utter_closing_prevention_plan_9b:
+    - text: "{first_aid_kit_text}"
+  utter_closing_prevention_plan_10:
+    - text: "Je kunt de uitleg van de oefeningen altijd terugvinden op de website van Perfect Fit:
+            https://perfectfit-onderzoek.nl/"
+  utter_closing_prevention_plan_11:
+    - text: "Het is handig om even op te schrijven wat de beste oefeningen zijn voor jou. Je kunt er ook een
+             schermafbeelding (screenshot) van maken."
+  utter_closing_prevention_plan_12:
+    - text: "Er zijn vast nog andere dingen die jou hebben geholpen om niet te roken en meer te bewegen."
+  utter_closing_prevention_plan_13:
+    - text: "Neem even de tijd om dit te bedenken en op te schrijven.💭✍️"
+  utter_closing_prevention_plan_14:
+    - text: "Dat kost nu wat moeite, maar het zal je later helpen!"
+  utter_closing_prevention_plan_15:
+    - text: "Stel dat je het over een paar maanden moeilijk hebt, dan is het heel handig om dit te hebben. Je hoeft dan
+             niet meer te bedenken wat je kunt doen."
+  utter_closing_prevention_plan_16:
+    - text: "Goed gedaan!👍 Een goed plan is het halve werk."
+
+
+# 4 Relapse prevention plan - successful quitters
+  utter_closing_prevention_success_1:
+    - text: "Dan nog een hele belangrijke tip om niet weer te gaan roken: rook helemaal niks!"
+  utter_closing_prevention_success_2:
+    - text: "Zelfs niet 1 sigaret, en zelfs niet 1 trekje van een sigaret."
+  utter_closing_prevention_success_3:
+    - text: "Dat klinkt als een open deur, hè?🚪 Maar je kunt zomaar in de verleiding komen."
+  utter_closing_prevention_success_4:
+    - text: "Als je toch rookt ben je jezelf alleen maar aan het klieren. Het is echt zonde van wat je allemaal gedaan
+            hebt."
+  utter_closing_prevention_success_5:
+    - text: "Je hebt nu iets fantastisch bereikt, en dat wil je natuurlijk zo houden!"
+  utter_closing_prevention_success_6:
+    - text: "Ik heb er vertrouwen in dat jij dit kunt.💪"
+
+# 4 Relapse prevention plan - less successful quitters
+  utter_closing_prevention_lapse_1:
+    - text: "Maar zoals ik al zei: roken is heel verslavend."
+  utter_closing_prevention_lapse_2:
+    - text: "Soms is het makkelijker om helemaal te stoppen met roken, als je daar wat meer hulp bij hebt."
+  utter_closing_prevention_lapse_3:
+    - text: "De meeste mensen moeten heel vaak proberen om te stoppen met roken, voordat het echt lukt."
+  utter_closing_prevention_lapse_4:
+    - text: "Dat ligt niet aan die mensen, maar aan de sigaret."
+  utter_closing_prevention_lapse_5:
+    - text: "Misschien heb je behoefte om iemand te spreken? Je kunt bellen met de gratis Stoplijn (0800-1995).📞 De
+            Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Zij kunnen met jou bespreken wat bij jou
+            past, en hoe jij het beste kunt stoppen met roken."
+  utter_closing_prevention_lapse_6:
+    - text: "Je kunt ook altijd een afspraak maken met je huisarts. Die is vaak goed op de hoogte van wat er mogelijk
+             is in jouw buurt. Je huisarts kan je ook helpen om te stoppen met roken."
+  utter_closing_prevention_lapse_7:
+    - text: "En vergeet niet: door alles wat je hebt gedaan en geoefend ben je weer een stuk dichterbij een rookvrij
+             leven!"
+  utter_closing_prevention_lapse_8:
+    - text: "Dat heb je knap gedaan. Als je blijft volhouden, dan word je op een dag een niet-roker.💪 Geloof mij maar!"
+
+# 5 Closing
+  utter_closing_closing_1:
+    - text: "Dan was dit ons laatste gesprek. Je hebt hard gewerkt, en ik hoop dat Perfect Fit je heeft geholpen om
+             dichter bij jouw doelen te komen."
+  utter_closing_closing_2:
+    - text: "Dankjewel voor jouw inzet!🙏"
+  utter_closing_closing_3:
+    - text: "Je hebt net een plan gemaakt voor hoe je verder kunt gaan. Bewaar dat op een plek waar je het makkelijk
+            kunt vinden!"
+  utter_closing_closing_4:
+    - text: "Dan nog heel wat anders. Perfect Fit wordt steeds verbeterd. Het is heel waardevol om te weten hoe je het
+             vond."
+  utter_closing_closing_5:
+    - text: "Zou je een cijfer van 1 tot 10 wilen geven aan Perfect Fit? Een 10 is uitstekend, een 1 is waardeloos."
+  utter_closing_closing_6:
+    - text: "Dankjewel.🙏"
+  utter_closing_closing_7:
+    - text: "Ik vond het leuk om samen met jou het Perfect Fit programma te doen.🤝 Ik hoop dat jij er ook veel aan hebt
+             gehad."
+  utter_closing_closing_8:
+    - text: "Dan wens ik je nu alle goeds!😊"
+
+  utter_ask_closing_reflection_smoke_done:
+    - text: "Typ 'klaar' als je klaar bent om verder te gaan."
+  utter_ask_closing_relapse_prevention_plan_one_done:
+    - text: "Typ 'klaar' als je klaar bent om verder te gaan."
+  utter_ask_closing_relapse_prevention_plan_two_done:
+    - text: "Typ 'klaar' als je klaar bent om verder te gaan."
+  utter_ask_closing_pf_grade:
+    - text: "Typ 1, 2, 3, 4, 5, 6, 7, 8, 9 of 10"
+  utter_ask_closing_pf_evaluate:
+    - text: "Heb je nog tips om Perfect Fit beter te maken?"
+  utter_please_answer_pf_eval:
+    - text: "Typ een getal tussen '1' en '10', om aan te geven wat je van Perfect Fit vindt."
+actions:
+  - validate_closing_pa_evaluation_form
+  - action_closing_get_smoking_status
+  - closing_continue_after_pa
+  - closing_continue_after_lapse_info_incorrect
+  - closing_continue_after_smoke
+  - validate_closing_lapse_info_correct_form
+  - validate_closing_reflection_smoke_done_form
+  - validate_closing_relapse_prevention_plan_one_done_form
+  - validate_closing_relapse_prevention_plan_two_done_form
+  - validate_closing_evaluate_pf_form
+  - action_get_pa_goal_from_db
+  - action_closing_delayed_message_after_smoke_lapse
+  - action_closing_delayed_message_after_smoke
+  - action_get_first_aid_kit_activities
+  - action_closing_get_total_number_steps
+  - action_set_slot_closing_dialog
+
+forms:
+  closing_pa_evaluation_form:
+    required_slots:
+      - closing_pa_evaluation
+
+  closing_lapse_info_correct_form:
+    required_slots:
+      - closing_lapse_info_correct
+
+  closing_reflection_smoke_done_form:
+    required_slots:
+      - closing_reflection_smoke_done
+
+  closing_relapse_prevention_plan_one_done_form:
+    required_slots:
+      - closing_relapse_prevention_plan_one_done
+
+  closing_relapse_prevention_plan_two_done_form:
+    required_slots:
+      - closing_relapse_prevention_plan_two_done
+
+  closing_evaluate_pf_form:
+    required_slots:
+      - closing_pf_grade
+      - closing_pf_evaluate

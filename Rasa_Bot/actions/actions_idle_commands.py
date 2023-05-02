@@ -75,10 +75,13 @@ class ActionTriggerUncompletedDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         
+        user_id = tracker.current_state()['sender_id']
+        
         # TODO: let state machine figure out whether there is a
         # valid uncompleted dialog to run and start it if there is one.
         # If there is no uncompleted dialog, the external trigger
         # EXTERNAL_no_valid_uncompleted_dialog should be triggered
         # by the state machine
-        
-        return []
+
+        celery.send_task('celery_tasks.user_trigger_dialog', 
+                         (user_id, Components.CONTINUE_UNCOMPLETED_DIALOG))

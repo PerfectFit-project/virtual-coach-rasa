@@ -32,3 +32,8 @@ rules:
   steps:
   - intent: medicijn_intent
   - action: action_trigger_video_medicine_dialog
+
+- rule: continue dialog
+  steps:
+  - intent: continue_dialog_intent
+  - action: action_trigger_uncompleted_dialog

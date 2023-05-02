@@ -8,11 +8,11 @@ from virtual_coach_db.helper.definitions import (Components,
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
 from .definitions import DATABASE_URL, TIMEZONE, FILE_PATH_IMAGE_PA
-from .helper import (get_intervention_component_id, 
+from .helper import (get_goal_setting_chosen_sport_from_db,
+                     get_intervention_component_id, 
                      get_last_completed_dialog_part_from_db,
                      get_latest_bot_utterance, 
-                     get_most_recent_open_answer,
-                     store_dialog_open_answer_to_db,
+                     store_goal_setting_chosen_sport_to_db,
                      store_dialog_part_to_db,
                      store_quit_date_to_db, 
                      store_long_term_pa_goal_to_db)
@@ -54,9 +54,8 @@ class ActionSaveGoalSettingDialogPart2(Action):
                                 part = 2)
         
         # Also need to store the "which_sport"-slot to the database
-        store_dialog_open_answer_to_db(user_id, 
-                                       question_id = DialogQuestionsEnum.GOAL_SETTING_CHOSEN_SPORT,
-                                       answer_value = tracker.get_slot('which_sport'))
+        store_goal_setting_chosen_sport_to_db(user_id, 
+                                              tracker.get_slot('which_sport'))
 
         return []
     
@@ -291,22 +290,21 @@ class ActionGetLastCompletedGoalSettingPart(Action):
 
     async def run(self, dispatcher, tracker, domain):
         
-        
         user_id = tracker.current_state()['sender_id']
         comp_id = get_intervention_component_id(Components.GOAL_SETTING)
 
         last_part = get_last_completed_dialog_part_from_db(user_id, 
                                                            comp_id)
-        
+
         # Need to set which_sport slot in case last completed part was 2 or 3
-        # TODO
+        # This is because {which_sport} is included in utterances.
         if last_part == 2 or last_part == 3:
-            which_sport = get_most_recent_open_answer(user_id, 
-                                                      question_id = DialogQuestionsEnum.GOAL_SETTING_CHOSEN_SPORT)
+            which_sport = get_goal_setting_chosen_sport_from_db(user_id)
+            
             return [SlotSet('last_completed_goal_setting_dialog_part',
                     last_part),
-                    SlotSet('which_sport'), which_sport]
-            
+                    SlotSet('which_sport_continue_dialog', which_sport)]
+
         else:
             return [SlotSet('last_completed_goal_setting_dialog_part',
                     last_part)]

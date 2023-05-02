@@ -79,6 +79,14 @@ slots:
       - type: from_text
         conditions:
           - active_loop: which_sport_form
+  
+  # In case we need to load this slot from the database when we continue
+  # the goal-setting dialog at a later point in time.
+  which_sport_continue_dialog:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
 
   first_pa_goal:
     type: text
@@ -343,8 +351,30 @@ responses:
   utter_goal_setting_pa_set_6:
     - text: "Je weet nu welke sport je wilt doen. Laten we je beweegdoel nog wat verder uitbreiden."
   utter_ask_first_pa_goal:
-    - text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport},
-            voor hoe lang, waar, en wil je het samen met iemand doen of alleen?"
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: 0
+    text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport},
+          voor hoe lang, waar, en wil je het samen met iemand doen of alleen?"
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: -1
+    text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport},
+          voor hoe lang, waar, en wil je het samen met iemand doen of alleen?" 
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: 1
+    text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport},
+          voor hoe lang, waar, en wil je het samen met iemand doen of alleen?"  
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: 2
+    text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport_continue_dialog},
+          voor hoe lang, waar, en wil je het samen met iemand doen of alleen?" 
   utter_goal_setting_pa_set_7:
     - text: "Oké! Goed dat je nagedacht hebt over je lange-termijn beweegdoel. Dit hoeft nog niet je definitieve doel te
             zijn. We gaan eerst naar een voorbeeld kijken van iemand anders. Daarna kun je je doel nog aanpassen als je
@@ -455,9 +485,41 @@ responses:
   utter_step_goal_pa_6:
     - text: "Hoe kun jij jezelf helpen om je stappendoelen te halen en actiever te worden?"
   utter_step_goal_pa_7:
-    - text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport}. Maar je kunt
-            natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
-            huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: 0
+    text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport}. Maar je kunt
+           natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
+           huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: -1
+    text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport}. Maar je kunt
+           natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
+           huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."  
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: 1
+    text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport}. Maar je kunt
+           natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
+           huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: 2
+    text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport_continue_dialog}. Maar je kunt
+           natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
+           huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."
+  - condition:
+        - type: slot
+          name: last_completed_goal_setting_dialog_part
+          value: 3
+    text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport_continue_dialog}. Maar je kunt
+           natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
+           huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."
   utter_step_goal_pa_8:
     - text: "Om jezelf te helpen kun je bijvoorbeeld de avond voordat je gaat hardlopen je sportschoenen klaarzetten,
             een 'sportmaatje' zoeken, je auto verder weg parkeren of een herinnering in je telefoon zetten om tijdens je

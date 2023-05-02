@@ -118,6 +118,27 @@ def get_last_completed_dialog_part_from_db(user_id: int,
     return -1
 
 
+def get_goal_setting_chosen_sport_from_db(user_id: int):
+    """Get chosen sport from db for user."""
+    
+    session = get_db_session(db_url=DATABASE_URL)
+
+    selected = (
+        session.query(
+            Users
+        )
+        .filter(
+            Users.nicedayuid == user_id
+        )
+        .first()
+    )
+    
+    if selected is not None:
+        return selected.goal_setting_chosen_sport
+    
+    return None
+
+
 def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
                             part: int):
     """Store that part of dialog has been completed in db."""
@@ -240,6 +261,24 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.quit_date = datetime.strptime(quit_date, '%d-%m-%Y')
+    session.commit()
+    
+    
+def store_goal_setting_chosen_sport_to_db(user_id: int, chosen_sport: str):
+    """
+    Store the chosen sport for a user in the database.
+
+    Args:
+        user_id (int): The id of the user.
+        chosen_sport (str): The chosen sport.
+
+    Returns:
+        Nothing
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.goal_setting_chosen_sport = chosen_sport
     session.commit()
 
 
@@ -531,6 +570,7 @@ def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
 
     return closed_answers
 
+
 def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     """
        Get the open answer responses associated with the given user and question.
@@ -553,32 +593,6 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
             DialogOpenAnswers.question_id == question_id
         )
         .all()
-    )
-
-    return open_answers
-
-def get_most_recent_open_answer(user_id: int, question_id: int):
-    """
-       Get the most recent open answer response associated with the given user and question.
-        Args:
-                user_id: the user_id of the user to retrieve the answers for
-                question_id: the question_id for which the answers should be retrieved
-
-        Returns:
-                The open answer that the user has given for the question most recently.
-
-    """
-    session = get_db_session(db_url=DATABASE_URL)
-
-    open_answers = (
-        session.query(
-            DialogOpenAnswers
-        ).order_by(DialogOpenAnswers.datetime.desc())
-        .filter(
-            DialogOpenAnswers.users_nicedayuid == user_id,
-            DialogOpenAnswers.question_id == question_id
-        )
-        .first()
     )
 
     return open_answers

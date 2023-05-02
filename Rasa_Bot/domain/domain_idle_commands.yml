@@ -4,6 +4,7 @@ intents:
   - uitleg_intent
   - oefening_intent
   - medicijn_intent
+  - continue_dialog_intent
 
 responses:
   # Fallback for low NLU confidence and low next action confidence
@@ -18,3 +19,4 @@ actions:
   - action_trigger_explanation_first_aid_video_dialog
   - action_trigger_general_activity_dialog
   - action_trigger_video_medicine_dialog
+  - action_trigger_uncompleted_dialog

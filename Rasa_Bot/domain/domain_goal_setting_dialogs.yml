@@ -7,6 +7,8 @@ slots:
   # Previously completed dialog part (goal-setting dialog has 4 parts)
   # -1 means not previously done, 0 means completed entire dialog.
   # 1 is first part of dialog, 2 second part, 3 third part.
+  # 0 means a completed entire dialog, because this is what the function
+  # store_completed_dialog does for all dialogs (i.e., sets last_part=0)
   last_completed_goal_setting_dialog_part:
     type: categorical
     values:

@@ -298,6 +298,9 @@ class ActionGetLastCompletedGoalSettingPart(Action):
 
         # Need to set which_sport slot in case last completed part was 2 or 3
         # This is because {which_sport} is included in utterances.
+        # Since the which_sport-slot is set as part of a form, we created
+        # an alternative slot, which_sport_continue_dialog, that is used in
+        # the utterances where needed using conditional response variations
         if last_part == 2 or last_part == 3:
             which_sport = get_goal_setting_chosen_sport_from_db(user_id)
             

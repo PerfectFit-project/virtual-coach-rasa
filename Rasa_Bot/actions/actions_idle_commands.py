@@ -65,3 +65,20 @@ class ActionTriggerMedicineVideoDialog(Action):
         user_id = tracker.current_state()['sender_id']
 
         celery.send_task('celery_tasks.user_trigger_dialog', (user_id, Components.MEDICATION_TALK))
+
+
+class ActionTriggerUncompletedDialog(Action):
+    """Trigger uncompleted dialog if there is one"""
+
+    def name(self):
+        return "action_trigger_uncompleted_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        # TODO: let state machine figure out whether there is a
+        # valid uncompleted dialog to run and start it if there is one.
+        # If there is no uncompleted dialog, the external trigger
+        # EXTERNAL_no_valid_uncompleted_dialog should be triggered
+        # by the state machine
+        
+        return []

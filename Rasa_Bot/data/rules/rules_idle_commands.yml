@@ -36,4 +36,11 @@ rules:
 - rule: continue dialog
   steps:
   - intent: continue_dialog_intent
-  - action: action_trigger_uncompleted_dialog
+  - action: action_trigger_uncompleted_dialog  # TODO
+  
+- rule: no valid uncompleted dialog
+  steps:
+  - intent: EXTERNAL_no_valid_uncompleted_dialog
+  - action: utter_no_valid_uncompleted_dialog
+  - action: utter_central_mode_options_without_verder
+  - action: action_end_dialog

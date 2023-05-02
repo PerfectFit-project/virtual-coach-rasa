@@ -5,6 +5,7 @@ intents:
   - oefening_intent
   - medicijn_intent
   - continue_dialog_intent
+  - EXTERNAL_no_valid_uncompleted_dialog
 
 responses:
   # Fallback for low NLU confidence and low next action confidence
@@ -12,6 +13,12 @@ responses:
   # For low NLU confidence, we have defined a rule.
   utter_default:
     - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
+
+  # There is no valid uncompleted dialog
+  utter_no_valid_uncompleted_dialog:
+    - text: "Sorry, er is geen onvoltooide dialoog om af te maken."
+    - text: "Excuses, er is geen onvolledige conversatie om af te ronden."
+    - text: "Het spijt me, er is geen onafgemaakte dialoog om te voltooien."
 
 actions:
   - action_trigger_relapse_dialog

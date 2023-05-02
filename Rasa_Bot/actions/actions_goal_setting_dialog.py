@@ -73,6 +73,22 @@ class ActionSaveGoalSettingDialogPart3(Action):
                                 part = 3)
 
         return []
+    
+
+class ActionSaveGoalSettingDialogPart4(Action):
+    """To save 4th part of goal-setting dialog"""
+
+    def name(self):
+        return "action_save_goal_setting_dialog_part4"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        # 0 means that the entire dialog is completed
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 0)
+
+        return []
 
 
 class ActionGetFirstLastDate(Action):

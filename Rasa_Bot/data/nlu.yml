@@ -245,10 +245,14 @@ nlu:
     - "medijcin"
 
 - intent: continue_dialog_intent
-  examples:
+  examples: |
     - "verder"
     - "verderr"
     - "veder"
     - "vedder"
     - "verder gaan"
     - "ik wil verder gaan"
+    
+- intent: EXTERNAL_no_valid_uncompleted_dialog
+  examples: |
+    - "EXTERNAL_no_valid_uncompleted_dialog"

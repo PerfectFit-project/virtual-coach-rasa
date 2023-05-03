@@ -3,19 +3,18 @@ Contains custom actions related to the relapse dialogs
 """
 from virtual_coach_db.dbschema.models import (Testimonials, 
                                               Users)
-from virtual_coach_db.helper.definitions import (Components, 
-                                                 DialogQuestionsEnum)
+from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
-from .definitions import DATABASE_URL, TIMEZONE, FILE_PATH_IMAGE_PA
+from .definitions import DATABASE_URL, FILE_PATH_IMAGE_PA, TIMEZONE
 from .helper import (get_goal_setting_chosen_sport_from_db,
                      get_intervention_component_id, 
                      get_last_completed_dialog_part_from_db,
                      get_latest_bot_utterance, 
-                     store_goal_setting_chosen_sport_to_db,
                      store_dialog_part_to_db,
-                     store_quit_date_to_db, 
-                     store_long_term_pa_goal_to_db)
+                     store_goal_setting_chosen_sport_to_db,
+                     store_long_term_pa_goal_to_db,
+                     store_quit_date_to_db)
 from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import FollowupAction, SlotSet

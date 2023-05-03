@@ -1,29 +1,32 @@
 """
 Helper functions for rasa actions.
 """
-import logging
 import numpy as np
 import plotly.graph_objects as go
 import secrets
 
 from datetime import datetime, date
-from typing import List, Optional, Any, Tuple
+from typing import Any, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
-                          DATABASE_URL, EVENING_SEND_TIME,
+                          DATABASE_URL, 
+                          EVENING_SEND_TIME,
                           MORNING_SEND_TIME,
+                          NUM_TOP_ACTIVITIES,
                           PROFILE_CREATION_CONF_SLOTS,
-                          TIMEZONE, NUM_TOP_ACTIVITIES,
+                          TIMEZONE,
                           FsmStates)
 
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
+from virtual_coach_db.dbschema.models import (ClosedAnswers,
+                                              DialogClosedAnswers,
                                               DialogOpenAnswers,
+                                              FirstAidKit,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              FirstAidKit,
-                                              ClosedAnswers, UserStateMachine)
+                                              UserStateMachine,
+                                              Users)
 
 from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
@@ -161,14 +164,14 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
     # Current time to be saved in database
     last_time = datetime.now().astimezone(TIMEZONE)
 
-    # If already an entry for the user for the goal-setting dialog exists
+    # If already an entry for the user for the component exists
     # in the intervention state table
     if selected is not None:
-        # Update time and part of future self dialog
+        # Update time and part of component
         selected.last_time = last_time
         selected.last_part = part
 
-    # No entry exists yet for user for the goal-setting dialog in
+    # No entry exists yet for user for the component in
     # the intervention state table
     else:
         selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()

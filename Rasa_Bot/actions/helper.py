@@ -1,6 +1,7 @@
 """
 Helper functions for rasa actions.
 """
+import logging
 import numpy as np
 import plotly.graph_objects as go
 import secrets
@@ -170,6 +171,8 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
         # Update time and part of component
         selected.last_time = last_time
         selected.last_part = part
+        # Set component to not completed
+        selected.completed = False
 
     # No entry exists yet for user for the component in
     # the intervention state table
@@ -180,7 +183,8 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
         if selected_user is not None:
             entry = UserInterventionState(intervention_component_id=intervention_component_id,
                                           last_time=last_time,
-                                          last_part=part)
+                                          last_part=part,
+                                          completed=False)
             selected_user.user_intervention_state.append(entry)
 
         # User does not exist in Users table

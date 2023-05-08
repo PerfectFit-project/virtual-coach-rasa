@@ -310,12 +310,13 @@ responses:
   # 4. Reflection on Non-Smoking
   # 4a How did the non-smoking go?
   utter_ask_how_went_non_smoke:
-    - text: "Laten wij nu terugkijken hoe het niet-roken deze week ging. 
-             Typ '1' als het heel goed ging 😄. 
-             Typ '2' als het goed ging 🙂. 
-             Typ '3' als het oké ging 😐. 
-             Typ '4' als het niet zo goed ging 🙁. 
+    - text: "Laten wij nu terugkijken hoe het niet-roken deze week ging. \n
+             Typ '1' als het heel goed ging 😄. \n
+             Typ '2' als het goed ging 🙂. \n
+             Typ '3' als het oké ging 😐. \n
+             Typ '4' als het niet zo goed ging 🙁. \n
              Typ '5' als het slecht ging 😞. "
+
   utter_reflect_non_smoke_1:
     - text: "Geweldig! 😊 Stoppen met roken is niet makkelijk. Knap dat het afgelopen week zo goed ging."
   utter_ask_free_reflect_1:
@@ -344,22 +345,23 @@ responses:
 
   # 4b Were there difficult moments?
   utter_ask_specific_moments:
-    - text: "Waren er afgelopen week specifieke momenten waarop het moeilijk was om niet te roken? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Waren er afgelopen week specifieke momenten waarop het moeilijk was om niet te roken? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Heb je de afgelopen week momenten gehad waarop je de drang om te roken moeilijk kon weerstaan? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Heb je de afgelopen week momenten gehad waarop je de drang om te roken moeilijk kon weerstaan? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Was het afgelopen week moeilijk om niet te roken op sommige momenten? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Was het afgelopen week moeilijk om niet te roken op sommige momenten? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Ben je afgelopen week op bepaalde momenten in de verleiding gekomen om te roken? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Ben je afgelopen week op bepaalde momenten in de verleiding gekomen om te roken? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
+
   utter_difficult_moments_1:
     - text: "Dat is mooi! 👍🏼"
     - text: "Dat klinkt goed! 👍🏼"
@@ -390,10 +392,11 @@ responses:
     - text: "Het is begrijpelijk dat er soms moeilijke momenten zijn geweest ❤️‍🩹. Het is niet altijd eenvoudig om niet te roken."
 
   utter_ask_smoked_previous_week:
-    - text: "Heb je afgelopen week gerookt? 
-             Typ '1' als je wel zin had om te roken maar niet hebt gerook1️⃣. 
-             Typ '2' als je op één dag hebt gerookt 2️⃣. 
+    - text: "Heb je afgelopen week gerookt?\n
+             Typ '1' als je wel zin had om te roken maar niet hebt gerook1️⃣.\n
+             Typ '2' als je op één dag hebt gerookt 2️⃣.\n
              Typ '3' als je op meerdere dagen hebt gerookt 3️⃣."
+
   utter_difficult_moments_5:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid."
     - text: "Fijn dat je dit met me deelt! Bedankt dat je eerlijk bent."
@@ -509,18 +512,19 @@ responses:
     - text: "Kijk eens naar wat je volgende week van plan bent en bedenk of er momenten zijn waarop je het in het verleden lastig had om niet te roken."
   utter_ask_possible_smoking_situations:
     - text: "Als je dit zo vergelijkt, denk je dat er komende week moeilijke momenten gaan komen 🛑? Momenten waarop jij
-             trek gaat krijgen in roken? 
-             Typ '1' voor nee. 
+             trek gaat krijgen in roken?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Als je deze vergelijking maakt, verwacht je dan dat er momenten zullen zijn waarop je graag wilt roken? 🛑 
-             Typ '1' voor nee. 
+    - text: "Als je deze vergelijking maakt, verwacht je dan dat er momenten zullen zijn waarop je graag wilt roken? 🛑\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Als je deze vergelijking maakt, verwacht je dan dat er komende week uitdagingen zullen zijn waarop je behoefte hebt aan een sigaret? 🛑
-             Typ '1' voor nee. 
+    - text: "Als je deze vergelijking maakt, verwacht je dan dat er komende week uitdagingen zullen zijn waarop je behoefte hebt aan een sigaret? 🛑\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Als je dit zo bekijkt, denk je dan dat er momenten zullen zijn waarop  je behoefte hebt aan een sigaret? 🛑
-             Typ '1' voor nee. 
+    - text: "Als je dit zo bekijkt, denk je dan dat er momenten zullen zijn waarop  je behoefte hebt aan een sigaret? 🛑\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
+
   utter_look_forward_7:
     - text: "Geweldig! 😊"
   utter_look_forward_8:
@@ -762,48 +766,49 @@ responses:
   #6c How did you think it went?
   utter_ask_how_went_pa:
     - text: "Hoe vind jij dat het afgelopen week is gegaan met je lichamelijke beweging? Dat kan van alles zijn.
-             Dus niet alleen wandelen en hardlopen, maar ook sporten, huishouden doen, enzovoort. 
-             Typ '1' als het heel goed ging 😄. 
-             Typ '2' als het goed ging 🙂. 
-             Typ '3' als het oké ging 😐. 
-             Typ '4' als het niet zo goed ging 🙁. 
+             Dus niet alleen wandelen en hardlopen, maar ook sporten, huishouden doen, enzovoort.\n
+             Typ '1' als het heel goed ging 😄.\n
+             Typ '2' als het goed ging 🙂.\n
+             Typ '3' als het oké ging 😐.\n
+             Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞. "
     - text: "Wat vond je van je lichamelijke beweging van afgelopen week? Denk hierbij niet alleen aan wandelen of hardlopen,
-             maar ook aan andere activiteiten zoals huishoudelijke klusjes en sporten. 
-             Typ '1' als het heel goed ging 😄. 
-             Typ '2' als het goed ging 🙂. 
-             Typ '3' als het oké ging 😐. 
-             Typ '4' als het niet zo goed ging 🙁. 
+             maar ook aan andere activiteiten zoals huishoudelijke klusjes en sporten.\n
+             Typ '1' als het heel goed ging 😄.\n
+             Typ '2' als het goed ging 🙂.\n
+             Typ '3' als het oké ging 😐.\n
+             Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞. "
     - text: "Laten we eens kijken naar je lichamelijke beweging van afgelopen week. Hoe ging het?
-             Denk hierbij aan alles wat je hebt gedaan, van sporten tot huishoudelijke taken. 
-             Typ '1' als het heel goed ging 😄. 
-             Typ '2' als het goed ging 🙂. 
-             Typ '3' als het oké ging 😐. 
-             Typ '4' als het niet zo goed ging 🙁. 
+             Denk hierbij aan alles wat je hebt gedaan, van sporten tot huishoudelijke taken.\n
+             Typ '1' als het heel goed ging 😄.\n
+             Typ '2' als het goed ging 🙂.\n
+             Typ '3' als het oké ging 😐.\n
+             Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞. "
     - text: "Hoeveel beweging heb je afgelopen week gehad? Denk hierbij niet alleen aan wandelen of hardlopen,
-             maar ook aan andere activiteiten zoals sporten of het doen van klusjes in huis.
-             Typ '1' als het heel goed ging 😄. 
-             Typ '2' als het goed ging 🙂. 
-             Typ '3' als het oké ging 😐. 
-             Typ '4' als het niet zo goed ging 🙁. 
+             maar ook aan andere activiteiten zoals sporten of het doen van klusjes in huis.\n
+             Typ '1' als het heel goed ging 😄.\n
+             Typ '2' als het goed ging 🙂.\n
+             Typ '3' als het oké ging 😐.\n
+             Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞. "
     - text: "Wat voor soort lichamelijke beweging heb je afgelopen week gedaan? Denk hierbij aan sporten, wandelen,
-             huishoudelijke taken en alles wat daartussenin zit.
-             Typ '1' als het heel goed ging 😄. 
-             Typ '2' als het goed ging 🙂. 
-             Typ '3' als het oké ging 😐. 
-             Typ '4' als het niet zo goed ging 🙁. 
+             huishoudelijke taken en alles wat daartussenin zit.\n
+             Typ '1' als het heel goed ging 😄.\n
+             Typ '2' als het goed ging 🙂.\n
+             Typ '3' als het oké ging 😐.\n
+             Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞. "
     - text: "Hoe was jouw lichamelijke beweging van afgelopen week?
              Bedenk hierbij dat beweging niet alleen gaat om wandelen of hardlopen,
-             maar ook om andere activiteiten zoals sporten en klusjes in huis.
-             Typ '1' als het heel goed ging 😄. 
-             Typ '2' als het goed ging 🙂. 
-             Typ '3' als het oké ging 😐. 
-             Typ '4' als het niet zo goed ging 🙁. 
+             maar ook om andere activiteiten zoals sporten en klusjes in huis.\n
+             Typ '1' als het heel goed ging 😄.\n
+             Typ '2' als het goed ging 🙂.\n
+             Typ '3' als het oké ging 😐.\n
+             Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞."
+
   utter_ask_free_reflect_3:
     - text: "Mooi! 😊 Wat maakt dat het zo goed ging met bewegen?"
     - text: "Goed gedaan! 😊 Wat denk jij dat heeft geholpen bij het actief zijn afgelopen week?"
@@ -842,30 +847,31 @@ responses:
 
   #6d Were there difficult moments?
   utter_ask_difficult_moments:
-    - text: "Waren er afgelopen week momenten waarop het moeilijk was om in beweging te komen? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Waren er afgelopen week momenten waarop het moeilijk was om in beweging te komen? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Heb je afgelopen week momenten gehad waarop het lastig was om te bewegen? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Heb je afgelopen week momenten gehad waarop het lastig was om te bewegen? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Was het afgelopen week soms moeilijk om actief te zijn? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Was het afgelopen week soms moeilijk om actief te zijn? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte omin beweging te komen? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte omin beweging te komen? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Heb je momenten gehad waarop je afgelopen week het lastig vond om te gaan bewegen? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Heb je momenten gehad waarop je afgelopen week het lastig vond om te gaan bewegen? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Waren er momenten afgelopen week waarop het niet zo makkelijk was om in beweging te komen? 🛑
-             Typ '1' voor nee. 
-             Typ '2' voor ja. 
+    - text: "Waren er momenten afgelopen week waarop het niet zo makkelijk was om in beweging te komen? 🛑\n
+             Typ '1' voor nee.\n
+             Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
+
   utter_difficult_moments_pa_1:
     - text: "Dat is mooi! 👍🏼"
     - text: "Geweldig! 👍🏼"
@@ -927,15 +933,16 @@ responses:
     - text: "Heb je de behoefte om nog eens terug te kijken naar je moeilijke situaties van afgelopen week? Typ '1'. Zo niet, dan kun je '2' typen."
     - text: "Laten we de keuze aan jou overlaten. Typ '1' als je terug wilt kijken op je moeilijke situaties van afgelopen week. Typ anders '2' om verder te gaan"
   utter_ask_met_expectations:
-    - text: "Was het specifiek deze week moeilijk in om beweging te komen of gaat bewegen in het algemeen minder goed dan je zou willen? 
-             Typ '1' als het vooral afgelopen week moeilijk ging. 
+    - text: "Was het specifiek deze week moeilijk in om beweging te komen of gaat bewegen in het algemeen minder goed dan je zou willen?\n
+             Typ '1' als het vooral afgelopen week moeilijk ging.\n
              Typ '2' als bewegen over het algemeen minder goed gaat dan je zou willen.   "
-    - text: "Heeft afgelopen week meer moeite gekost dan normaal om in beweging te komen? 
-             Typ '1' als het vooral afgelopen week moeilijk ging. 
+    - text: "Heeft afgelopen week meer moeite gekost dan normaal om in beweging te komen?\n
+             Typ '1' als het vooral afgelopen week moeilijk ging.\n
              Typ '2' als bewegen over het algemeen minder goed gaat dan je zou willen.   "
-    - text: "Is bewegen in het algemeen een uitdaging voor jou of was het vooral afgelopen week lastig?
-             Typ '1' als het vooral afgelopen week moeilijk ging. 
+    - text: "Is bewegen in het algemeen een uitdaging voor jou of was het vooral afgelopen week lastig?\n
+             Typ '1' als het vooral afgelopen week moeilijk ging.\n
              Typ '2' als bewegen over het algemeen minder goed gaat dan je zou willen.   "
+
   utter_type_1_or_2_difficult_moments:
     - text: "Typ 1 of 2 om aan te geven of bewegen nu even wat minder makkelijk ging of dat het vaker niet gaat"
   utter_difficult_moments_pa_7:
@@ -1027,15 +1034,16 @@ responses:
   utter_increase_intensity_6:
     - text: "Ik stel dus voor dat je komende week naast je stappen ook minimaal {intensity_minutes_goal} intensief gaat bewegen.  "
   utter_ask_if_doable:
-    - text: "Zie jij dit zitten? 
-             Typ '1' voor ja. 
+    - text: "Zie jij dit zitten?\n
+             Typ '1' voor ja.\n
              Typ '2' voor nee. "
-    - text: "Lijkt dit iets voor jou?
-             Typ '1' voor ja. 
+    - text: "Lijkt dit iets voor jou?\n
+             Typ '1' voor ja.\n
              Typ '2' voor nee. "
-    - text: "Zou je dit willen proberen?
-             Typ '1' voor ja. 
+    - text: "Zou je dit willen proberen?\n
+             Typ '1' voor ja.\n
              Typ '2' voor nee. "
+
   utter_increase_intensity_7:
     - text: "Helemaal goed 👍🏼."
     - text: "Helemaal prima 👍🏼."
@@ -1170,27 +1178,28 @@ responses:
     - text: "Bekijk je planning voor komende week en kijk of er situaties zijn waarin je het lastig denkt te krijgen om in beweging te komen, zoals je eerder hebt ervaren."
   utter_ask_difficult_moments_next_week:
     - text: "Als je dit zo vergelijkt, denk je dat er komende week moeilijke momenten gaan komen 🛑?
-             Momenten waarop jij het lastig gaat vinden om in beweging te komen? 
-             Typ '1' voor nee. 
+             Momenten waarop jij het lastig gaat vinden om in beweging te komen?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Na het vergelijken van je activiteiten en eerdere moeilijke situaties, denk je dat er momenten kunnen zijn waarop het lastig gaat zijn om in beweging te komen?
-             Typ '1' voor nee. 
+    - text: "Na het vergelijken van je activiteiten en eerdere moeilijke situaties, denk je dat er momenten kunnen zijn waarop het lastig gaat zijn om in beweging te komen?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Nu je je activiteiten voor komende week hebt vergeleken met eerdere moeilijke situaties, verwacht je dat er momenten zullen zijn waarop je het lastig vindt om in beweging te komen?
-             Typ '1' voor nee. 
+    - text: "Nu je je activiteiten voor komende week hebt vergeleken met eerdere moeilijke situaties, verwacht je dat er momenten zullen zijn waarop je het lastig vindt om in beweging te komen?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Op basis van je vergelijking, denk je dat er momenten zullen zijn komende week waarop je het moeilijk zult hebben om in beweging te komen?
-             Typ '1' voor nee. 
+    - text: "Op basis van je vergelijking, denk je dat er momenten zullen zijn komende week waarop je het moeilijk zult hebben om in beweging te komen?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Heb je na het vergelijken van je activiteiten voor komende week met eerdere moeilijke situaties, momenten gevonden waarop je het misschien lastig gaat vinden om in beweging te komen?
-             Typ '1' voor nee. 
+    - text: "Heb je na het vergelijken van je activiteiten voor komende week met eerdere moeilijke situaties, momenten gevonden waarop je het misschien lastig gaat vinden om in beweging te komen?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Kijkend naar de vergelijking van je activiteiten voor komende week met eerdere moeilijke situaties, denk je dat er momenten zullen zijn waarop het moeilijk zal zijn om in beweging te komen?
-             Typ '1' voor nee. 
+    - text: "Kijkend naar de vergelijking van je activiteiten voor komende week met eerdere moeilijke situaties, denk je dat er momenten zullen zijn waarop het moeilijk zal zijn om in beweging te komen?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
-    - text: "Nu je je activiteiten voor komende week hebt vergeleken met eerdere moeilijke situaties, zie je dan  momenten waarop je het lastig gaat hebben om in beweging te komen?
-             Typ '1' voor nee. 
+    - text: "Nu je je activiteiten voor komende week hebt vergeleken met eerdere moeilijke situaties, zie je dan  momenten waarop je het lastig gaat hebben om in beweging te komen?\n
+             Typ '1' voor nee.\n
              Typ '2' voor ja. "
+
   utter_predict_difficult_moments_4:
     - text: "Geweldig! 😊"
     - text: "Fantastisch! 😃"

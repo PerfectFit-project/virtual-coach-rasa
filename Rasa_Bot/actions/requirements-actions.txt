@@ -1,6 +1,8 @@
 celery
+cryptography
 pandas
 plotly
+PyJWT
 kaleido
 python-dateutil==2.8.1
 python-dotenv

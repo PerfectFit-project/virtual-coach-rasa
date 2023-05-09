@@ -1,9 +1,10 @@
 import logging
 
 from . import validator
-from .definitions import DATABASE_URL, NUM_TOP_ACTIVITIES, REDIS_URL
+from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance,
-                     get_user_intervention_activity_inputs,)
+                     get_user_intervention_activity_inputs,
+                     get_faik_text)
 
 from celery import Celery
 from datetime import datetime, timedelta
@@ -12,10 +13,8 @@ from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from virtual_coach_db.dbschema.models import (FirstAidKit,
-                                              InterventionActivity)
+from virtual_coach_db.dbschema.models import InterventionActivity
 from virtual_coach_db.helper.helper_functions import get_db_session
-
 
 
 celery = Celery(broker=REDIS_URL)
@@ -68,43 +67,8 @@ class ActionGetFirstAidKit(Action):
         return "action_get_first_aid_kit"
 
     async def run(self, dispatcher, tracker, domain):
-
-        session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
-
-        selected = (
-            session.query(
-                FirstAidKit
-            )
-            .filter(
-                FirstAidKit.users_nicedayuid == user_id
-            )
-            .all()
-        )
-
-        kit_text = ""
-        filled = False  # Whether the first aid kit has content
-        activity_ids_list = []  # List of activity IDs
-
-        # the kit exists
-        if selected is not None:
-
-            # get the highest rated activities
-            sorted_activities = sorted(
-                selected,
-                key=lambda x: x.activity_rating
-                )[:NUM_TOP_ACTIVITIES]
-
-            for activity_idx, activity in enumerate(sorted_activities):
-                kit_text += str(activity_idx + 1) + ") "
-                kit_text += activity.intervention_activity.intervention_activity_title
-                kit_text += ": " + activity.intervention_activity.intervention_activity_description
-                if not activity_idx == len(sorted_activities) - 1:
-                    kit_text += "\n"
-                
-                activity_ids_list.append(activity.intervention_activity.intervention_activity_id)
-            
-            filled = True
+        kit_text, filled, activity_ids_list = get_faik_text(user_id)
 
         return [SlotSet('first_aid_kit_text', kit_text),
                 SlotSet('first_aid_kit_filled', filled),

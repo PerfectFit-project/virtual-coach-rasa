@@ -1,5 +1,9 @@
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.3
-protobuf==3.20.1  # temporary fix
+protobuf==3.19.4
+typeguard==2.13.3
+chardet==3.0.4
+multidict==5.2.0
+websockets==10.2
 rasa==3.2.8 # NB! when updating, make sure to also update:
             # * rasa base image in actions/Dockerfile,
             # * version number in nlu.yml, story files, rules.yml,

@@ -1,3 +1,5 @@
+version: "3.1"
+
 intents:
 - user_shares_image
 

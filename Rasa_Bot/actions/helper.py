@@ -1,22 +1,141 @@
 """
-Helper functions for rasa actions
+Helper functions for rasa actions.
 """
-import datetime
-import secrets
-from typing import List, Optional, Any
+import numpy as np
 import plotly.graph_objects as go
+import secrets
 
-from .definitions import DATABASE_URL, TIMEZONE
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers, 
-                                              DialogOpenAnswers, 
+from datetime import datetime, date
+from typing import List, Optional, Any, Tuple
+from .definitions import (AFTERNOON_SEND_TIME,
+                          DATABASE_URL, EVENING_SEND_TIME,
+                          MORNING_SEND_TIME,
+                          PROFILE_CREATION_CONF_SLOTS,
+                          TIMEZONE, NUM_TOP_ACTIVITIES,
+                          FsmStates)
+
+from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
+                                              DialogOpenAnswers,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
                                               InterventionPhases,
                                               UserInterventionState,
-                                              UserPreferences,
-                                              ClosedAnswers)
-from virtual_coach_db.helper.helper_functions import get_db_session
+                                              FirstAidKit,
+                                              ClosedAnswers, UserStateMachine)
+
+from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
+
+
+def compute_godin_level(tracker) -> int:
+    "Compute the Godin activity level (0-2)."
+
+    godin_light = tracker.get_slot("profile_creation_godin_light_slot")
+    godin_mod = tracker.get_slot("profile_creation_godin_moderate_slot")
+    godin_inten = tracker.get_slot("profile_creation_godin_intensive_slot")
+
+    godin_score = 9 * godin_inten + 5 * godin_mod + 3 * godin_light
+
+    godin_level = 0  # insufficiently active/sedentary
+    if godin_score >= 24:  # 24 units or more is active
+        godin_level = 2
+    elif godin_score >= 14:  # 14-23 is moderately active
+        godin_level = 1
+
+    return godin_level
+
+
+def compute_mean_cluster_similarity_ratings(tracker):
+    "Compute mean similarity ratings for testimonial clusters."
+
+    # First for cluster 1
+    c1_1 = tracker.get_slot("profile_creation_sim_2_slot")
+    c1_2 = tracker.get_slot("profile_creation_sim_4_slot")
+    c1_mean = (c1_1 + c1_2) / 2
+    # Next for cluster 3
+    c3_1 = tracker.get_slot("profile_creation_sim_1_slot")
+    c3_2 = tracker.get_slot("profile_creation_sim_3_slot")
+    c3_mean = (c3_1 + c3_2) / 2
+
+    return c1_mean, c3_mean
+
+
+def compute_mean_confidence(tracker) -> float:
+    "Compute mean confidence."
+
+    # Get confidence slots from tracker
+    conf = [tracker.get_slot(slot_name) for slot_name in PROFILE_CREATION_CONF_SLOTS]
+
+    # Replace -1 with 0 (-1 are values people never filled in because
+    # the confidence was already low for the previous amount of physical activity)
+    conf = [i if not i == -1 else 0 for i in conf]
+
+    # Compute average and multiply with 10 (we used a scale from 0 to 10,
+    # but the database uses a scale from 0 to 100)
+    conf_avg = np.mean(conf) * 10
+
+    return conf_avg
+
+
+def compute_preferred_time(tracker):
+    "Compute a person's preferred time for intervention components."
+
+    # Get preferred time
+    time_slot = tracker.get_slot("profile_creation_time_slot")
+    time_hour = MORNING_SEND_TIME
+    if time_slot == 2:
+        time_hour = AFTERNOON_SEND_TIME
+    elif time_slot == 3:
+        time_hour = EVENING_SEND_TIME
+
+    # year, month, day, hour, minute, second, microsecond
+    # We only care about the hours
+    preferred_time = datetime(2023, 1, 1, time_hour).astimezone(TIMEZONE)
+
+    return preferred_time
+
+
+def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
+                                      running_walking_pref: int,
+                                      self_efficacy_pref: float,
+                                      sim_cluster_1: float, sim_cluster_3: float,
+                                      participant_code: str, week_days: str,
+                                      preferred_time):
+    # pylint: disable=too-many-arguments
+    """
+    Stores profile creation data for a user in the database.
+
+    Args:
+        user_id (int): The ID of the user to store the evaluation for.
+        godin_activity_level (int): Godin activity level (0,1, or 2).
+        runnin_walking_pref (int): Preference for walking (0) or running (1).
+        self_efficacy_pref (float): Self-efficacy for preference of walking or running
+                                    (between 0 and 100).
+        sim_cluster_1 (float): Mean similarity for cluster 1 (between -3 and 3).
+        sim_cluster_2 (float): Mean similarity for cluster 3 (between -3 and 3).
+        participant_code (str): Participant 5-character code.
+        week_days (str): String with numbers of preferred days for intervention
+                         (e.g., '1' for monday).
+        preferred_time: Preferred time of day for intervention.
+    
+    Returns:
+        Nothing.
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+
+    selected.testim_godin_activity_level = godin_activity_level
+    selected.testim_running_walking_pref = running_walking_pref
+    selected.testim_self_efficacy_pref = self_efficacy_pref
+    selected.testim_sim_cluster_1 = sim_cluster_1
+    selected.testim_sim_cluster_3 = sim_cluster_3
+    selected.participant_code = participant_code
+    selected.week_days = week_days
+    selected.preferred_time = preferred_time
+
+    session.commit()
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
@@ -51,7 +170,7 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
 
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    selected.quit_date = quit_date
+    selected.quit_date = datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
 
 
@@ -78,9 +197,27 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
     answer_id = answer_value + question_id * 100
 
     entry = DialogClosedAnswers(closed_answers_id=answer_id,
-                                datetime=datetime.datetime.now().astimezone(TIMEZONE))
+                                datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_closed_answers.append(entry)
     session.commit()  # Update database
+
+
+def store_pf_evaluation_to_db(user_id: int, pf_evaluation_grade: int, pf_evaluation_comment: str):
+    """
+    Stores a performance evaluation grade and comment for a user in the database.
+
+    Args:
+        user_id (int): The ID of the user to store the evaluation for.
+        pf_evaluation_grade (int): The grade of the performance evaluation, from 0 to 10.
+        pf_evaluation_comment (str): The comment accompanying the performance evaluation.
+
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.pf_evaluation_grade = pf_evaluation_grade
+    selected.pf_evaluation_comment = pf_evaluation_comment
+    session.commit()
 
 
 def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
@@ -143,36 +280,8 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
 
     entry = DialogOpenAnswers(question_id=question_id,
                               answer_value=answer_value,
-                              datetime=datetime.datetime.now().astimezone(TIMEZONE))
+                              datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_open_answers.append(entry)
-    session.commit()  # Update database
-
-
-def store_user_preferences_to_db(user_id: int, intervention_component_id: int, recursive: bool,
-                                 week_days: str, preferred_time: datetime.datetime):
-    """
-    Updater the user_intervention_state table, adding a new row with the intervention_component
-
-    Args:
-        user_id: niceday user id
-        intervention_component_id: the id of the intervention component as store din the DB.
-        recursive: if true the activity is recursive, and will be reprogrammed after the completion
-        week_days: comma separated list of days
-        preferred_time: preferred time in the day to prompt the activity
-
-    Returns:
-            nothing
-
-    """
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-
-    entry = UserPreferences(users_nicedayuid=user_id,
-                            intervention_component_id=intervention_component_id,
-                            recursive=recursive,
-                            week_days=week_days,
-                            preferred_time=preferred_time)
-    selected.user_preferences.append(entry)
     session.commit()  # Update database
 
 
@@ -184,7 +293,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         user_id: niceday user id
         intervention_component: the name of the intervention component.
                                 The names are listed in virtual_coach_db.helper.definitions
-                                in the PreparationInterventionComponents class
+                                in the Components class
         phase: the name of the phase. The names are listed in virtual_coach_db.helper.definitions
                Phases class
 
@@ -201,7 +310,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         .filter(
             InterventionPhases.phase_name == phase
         )
-        .all()
+        .first()
     )
 
     components = (
@@ -211,7 +320,7 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
         .filter(
             InterventionComponents.intervention_component_name == intervention_component
         )
-        .all()
+        .first()
     )
 
     # if the list of phases of components is empty, it is not in the DB
@@ -220,16 +329,127 @@ def store_user_intervention_state(user_id: int, intervention_component: str, pha
 
     session.add(UserInterventionState(
         users_nicedayuid=user_id,
-        intervention_phase_id=phases[0].phase_id,
-        intervention_component_id=components[0].intervention_component_id,
+        intervention_phase_id=phases.phase_id,
+        intervention_component_id=components.intervention_component_id,
         completed=False,
-        last_time=datetime.datetime.now().astimezone(TIMEZONE),
+        last_time=datetime.now().astimezone(TIMEZONE),
         last_part=0,
         next_planned_date=None,
         task_uuid=None
     )
     )
     session.commit()  # Update database
+
+
+def get_activities_from_id(activity_id: int) -> InterventionActivity:
+    """
+    Get the InterventionActivity of an activity.
+     Args:
+            activity_id: the id of an activity
+
+         Returns:
+                The InterventionActivity correspondent to the activity_id
+
+        """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    activity = (
+        session.query(
+            InterventionActivity
+        )
+        .filter(
+            InterventionActivity.intervention_activity_id == activity_id
+        )
+        .first()
+    )
+
+    return activity
+
+
+def get_current_user_phase(user_id: int) -> str:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                 user_id: niceday user id
+
+            Returns:
+                    The name of the current phase of the user state machine
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    user_fsm = (
+        session.query(
+            UserStateMachine
+        )
+        .filter(
+            UserStateMachine.users_nicedayuid == user_id
+        )
+        .first()
+    )
+
+    return user_fsm.state
+
+
+def get_current_phase_time(user_id: int, phase: str) -> int:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                 user_id: niceday user id
+                 phase: current fsm state
+
+            Returns:
+                    The number of days or weeks in the current state
+
+    """
+    if phase not in [FsmStates.TRACKING, FsmStates.GOALS_SETTING, FsmStates.GOALS_SETTING]:
+        time = get_days_from_start(user_id)
+    else:
+        time = get_execution_week(user_id)
+
+    return time
+
+
+def get_days_from_start(user_id: int) -> int:
+    """
+    Retrieve the number of days passed from the first day of intervention
+    Args:
+        user_id: ID of the user
+
+    Returns:  number of days passed from the first day of intervention
+
+    """
+    start_date = get_start_date(user_id)
+
+    current_date = date.today()
+
+    spent_days = (current_date - start_date).days + 1  # if the date is the same, it is day 1
+
+    return spent_days
+
+
+def get_execution_week(user_id: int) -> int:
+    """
+    Retrieve the week number in the execution phase
+    Args:
+        user_id: ID of the user
+
+    Returns:  number of weeks spent in the execution phase
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    user = (
+        session.query(
+            Users
+        )
+        .filter(
+            Users.nicedayuid == user_id
+        )
+        .first()
+    )
+
+    return user.execution_week
 
 
 def get_intervention_component_id(intervention_component_name: str) -> int:
@@ -252,10 +472,10 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
         .filter(
             InterventionComponents.intervention_component_name == intervention_component_name
         )
-        .all()
+        .first()
     )
 
-    intervention_component_id = selected[0].intervention_component_id
+    intervention_component_id = selected.intervention_component_id
     return intervention_component_id
 
 
@@ -319,6 +539,88 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
         available_activities.remove(random_choice)
 
     return rnd_activities
+
+
+def get_possible_activities(user_id: int, activity_category: Optional[str] = None,
+                            avoid_activity_id: Optional[int] = None
+                            ) -> Tuple[List[InterventionActivity], List[InterventionActivity]]:
+    """
+       Get a number of random activities from the resources list.
+        Args:
+                user_id: ID of the user
+                activity_category: category of activity to select from
+                avoid_activity_id: the intervention_activity_id of an activity that
+                should not be included in the list
+
+            Returns:
+                    A tuple containing a list of the mandatory activities as first element
+                    and a list of the available activities as second element
+
+    """
+
+    timing = get_timing()
+    curr_ph = get_current_user_phase(user_id)
+    curr_time = get_current_phase_time(user_id, curr_ph)
+
+    if activity_category is None:
+        activities_list = list(filter(lambda x: x["resource_id"] != avoid_activity_id, timing))
+    else:
+        activities_list = list(filter(
+            lambda x: x["category"] == activity_category and x["resource_id"] != avoid_activity_id,
+            timing)
+        )
+
+    available_ids = []
+    mandatory = []
+
+    for resource in activities_list:
+        if resource["always_available"]:
+            available_ids.append(resource["resource_id"])
+        else:
+            phase = list(filter(lambda x: x["phase"] == curr_ph, resource["phases"]))
+            if len(phase) > 0 and phase[0]["always_available"]:
+                available_ids.append(resource["resource_id"])
+            elif len(phase) > 0 and curr_time in phase[0]["available"]:
+                available_ids.append(resource["resource_id"])
+            # check if the current time is equal or higher than the mandatory. The user could
+            # have rescheduled the dialog, so we need to take that into account. In case
+            # the activity has been already performed, it is removed form the mandatory list
+            if len(phase) > 0 and "mandatory" in phase[0]:
+                for mandatory_time in phase[0]["mandatory"]:
+                    if curr_time >= mandatory_time:
+                        mandatory.append(resource["resource_id"])
+
+    mandatory_ids = []
+    # check if the mandatory activities have been already performed
+    for activity in mandatory:
+        # if the activity has been completed, do not report it as mandatory
+        if is_activity_done(activity):
+            mandatory_ids.append(activity)
+
+    mandatory_ids = [get_activities_from_id(mandatory_id) for mandatory_id in mandatory_ids]
+    available_ids = [get_activities_from_id(available_id) for available_id in available_ids]
+
+    return mandatory_ids, available_ids
+
+
+def get_start_date(user_id: int) -> date:
+    """
+    Retrieve teh starting date of the intervention for a user
+    Args:
+        user_id: ID of the user
+
+    Returns: the intervention starting date
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (session.query(Users)
+                .filter(Users.nicedayuid == user_id)
+                .one())
+
+    start_date = selected.start_date
+
+    return start_date
 
 
 def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswers]:
@@ -399,6 +701,33 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
     )
 
     return open_answers
+
+
+def is_activity_done(activity_id: int) -> bool:
+    """
+    Checks if an activity has been already completed by a user
+    Args:
+        activity_id: id of the activity to be checked
+
+    Returns: True if the activity has been already completed, false otherwise
+
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    activities = (
+        session.query(
+            InterventionActivitiesPerformed
+        )
+        .filter(
+            InterventionActivitiesPerformed.intervention_activity_id == activity_id
+        )
+        .all()
+    )
+
+    if len(activities) > 0:
+        return True
+
+    return False
 
 
 def count_answers(answers: List[DialogClosedAnswers],
@@ -499,41 +828,33 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
     return fig
 
 
-def get_daily_step_goal_from_db(user_id: int) -> int:
-    """
-    Get daily step goal for a given user from the database.
-
-    Args:
-    user_id (int): The user ID for whom the daily step goal is to be retrieved from the database.
-
-    Returns:
-    int: The daily step goal for the given user, retrieved from the database.
-    """
-
-    # Creat session object to connect db
+def get_faik_text(user_id):
     session = get_db_session(db_url=DATABASE_URL)
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    pa_goal = selected.pa_steps_daily_goal
-    session.close()
 
-    return pa_goal
+    kit_text = ""
+    filled = False  # Whether the first aid kit has content
+    activity_ids_list = []  # List of activity IDs
 
+    # get the highest scored activities
+    top_five_activities = (
+        session.query(
+            FirstAidKit
+        ).order_by(FirstAidKit.activity_rating.desc())
+        .filter(
+            FirstAidKit.users_nicedayuid == user_id
+        )
+        .limit(NUM_TOP_ACTIVITIES).all()
+    )
 
-def get_weekly_intensity_minutes_goal_from_db(user_id: int) -> int:
-    """
-    Get intensity minutes goal for a given user from the database.
+    if top_five_activities is not None:
+        for activity_idx, activity in enumerate(top_five_activities):
+            kit_text += str(activity_idx + 1) + ") "
+            kit_text += activity.intervention_activity.intervention_activity_title
+            kit_text += ": " + activity.intervention_activity.intervention_activity_description
+            if not activity_idx == len(top_five_activities) - 1:
+                kit_text += "\n"
 
-    Args:
-    user_id (int): The user ID for whom the daily step goal is to be retrieved from the database.
+            activity_ids_list.append(activity.intervention_activity.intervention_activity_id)
+        filled = True
 
-    Returns:
-    int: The weekly intensity minutes for the given user, retrieved from the database.
-    """
-
-    # Creat session object to connect db
-    session = get_db_session(db_url=DATABASE_URL)
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    pa_goal = selected.pa_intensity_minutes_weekly_goal
-    session.close()
-
-    return pa_goal
+    return kit_text, filled, activity_ids_list

@@ -1,86 +1,55 @@
 version: "3.1"
 
 nlu:
-- intent: review_last_activity
-  examples: |
-    - "Mijn activiteit"
-    - "activiteit?"
-    - "Activiteit"
-    - "Laaste activiteit"
 
-- intent: request_plan_week
-  examples: |
-    - "Kan ik de agenda voor de week krijgen?"
-    - "Kun je de agenda voor de week opsturen?"
-    - "Wat is de agenda voor de komende week?"
-    - "Wat is er gepland voor de komende week?"
-    - "Kun je me de agenda voor de komende week vertellen?"
-    - "Hey, kun je me de agenda voor de week vertellen?"
-    - "Mag ik de planning?"
-    - "Mag ik de planning voor de week?"
-    - "Mag ik de agenda?"
-    - "Heb je de planning voor mij?"
-    
-- intent: confirm
-  examples: |
-    - Ja graag
-    - Zeker
-    - Natuurlijk
-    - Ja doe dat alsjeblieft
-    - Ja
-    - Dat zou fijn zijn
-    - Fijn
-    - Ah ja
-    - "Graag"
-    - Ja, klopt
-    
-- intent: deny
-  examples: |
-    - "Nee, dank je wel."
-    - "Nee, dank u wel."
-    - "Bedankt, maar dat hoeft niet."
-    - "Deze keer niet, dank je."
-    - "Dat hoeft niet."
-    - "Nee, bedankt."
-    - "Nee"
-    - Nee, klopt niet
-
-- intent: request_future_self_dialog
-  examples: |
-    - "Start future self dialog."
-    - "Ik wil future self dialog."
-    - "future self dialog."
-    
 - intent: CENTRAL_get_first_aid_kit
   examples: |
-    - "Get first aid kit"
-    - "Ik wil first aid kit"
-    - "First aid kit"
-    - "EHBO doos"
-    
+    - CENTRAL_get_first_aid_kit
+
 - intent: urgent
   examples: |
     - "dood"
     - "Ik ben depressief"
-- intent: request_tracked_cigarettes
-  examples: |
-    - "Hoeveel sigaretten heb ik vandaag gerookt?"
+# set video links
 
-- intent: request_tracker_reminder
+- intent: EXTERNAL_first_aid_kit_video
   examples: |
-    - "Kun je een herinnering instellen om de gerookte sigaretten te tracken?"
+    - EXTERNAL_first_aid_kit_video
+
+- intent: EXTERNAL_trigger_future_self_long_video
+  examples: |
+    - EXTERNAL_trigger_future_self_long_video
+
+- intent: EXTERNAL_trigger_future_self_short_video
+  examples: |
+    - EXTERNAL_trigger_future_self_short_video
+
+- intent: EXTERNAL_trigger_execution_introduction_video
+  examples: |
+    - EXTERNAL_trigger_execution_introduction_video
+
+- intent: EXTERNAL_trigger_preparation_introduction_video
+  examples: |
+    - EXTERNAL_trigger_preparation_introduction_video
+
+- intent: EXTERNAL_trigger_medication_talk_video
+  examples: |
+    - EXTERNAL_trigger_medication_talk_video
+
+- intent: EXTERNAL_trigger_track_behavior_video
+  examples: |
+    - EXTERNAL_trigger_track_behavior_video
 
 - intent: EXTERNAL_watch_video_dialog
   examples: |
     - EXTERNAL_watch_video_dialog
+### preparation phase
 
 - intent: EXTERNAL_trigger_profile_creation
   examples: |
     - "EXTERNAL_trigger_profile_creation"
 
-- intent: EXTERNAL_trigger_medication_talk
-  examples: |
-    - "EXTERNAL_trigger_medication_talk"
+###
 
 - intent: EXTERNAL_trigger_cold_turkey
   examples: |
@@ -90,9 +59,9 @@ nlu:
   examples: |
     - "EXTERNAL_trigger_plan_quit_start"
 
-- intent: EXTERNAL_trigger_mental_contrasting
+- intent: EXTERNAL_trigger_future_self
   examples: |
-    - "EXTERNAL_trigger_mental_contrasting"
+    - "EXTERNAL_trigger_future_self"
 
 - intent: EXTERNAL_trigger_goal_setting
   examples: |
@@ -118,66 +87,74 @@ nlu:
   examples: |
     - "EXTERNAL_relapse_dialog_pa"
 
-- intent: EXTERNAL_trigger_track_notification
+- intent: EXTERNAL_closing_dialog
   examples: |
-    - "EXTERNAL_trigger_track_notification"
+    - "EXTERNAL_closing_dialog"
 
-- intent: EXTERNAL_pa_step_goal_notification
+- intent: EXTERNAL_watch_video_dialog
   examples: |
-    - "EXTERNAL_pa_step_goal_notification"
+    - "EXTERNAL_watch_video_dialog"
 
-- intent: EXTERNAL_finish_dialog_notification
+- intent: EXTERNAL_rescheduling_preparation_phase
   examples: |
-    - "EXTERNAL_finish_dialog_notification"
+    - "EXTERNAL_rescheduling_preparation_phase"
 
-- intent: EXTERNAL_inactive_user_notification
+- intent: EXTERNAL_watch_video_dialog
   examples: |
-    - "EXTERNAL_inactive_user_notification"
+    - "EXTERNAL_watch_video_dialog"
 
-- intent: EXTERNAL_before_quit_notification
+- intent: EXTERNAL_rescheduling_preparation_phase
   examples: |
-    - "EXTERNAL_before_quit_notification"
-
-- intent: EXTERNAL_pa_intensity_notification
-  examples: |
-    - "EXTERNAL_pa_intensity_notification"
-
-- intent: EXTERNAL_quit_date_notification
-  examples: |
-    - "EXTERNAL_quit_date_notification"
-
-
-- intent: relapse_dialog
-  examples: |
-    - "relapse"
-    - "Relapse"
-    - "Having a relapse"
-    - "Ik heb een relapse"
-    - "Start relapse"
+    - "EXTERNAL_rescheduling_preparation_phase"
 
 - intent: EXTERNAL_done_with_video
   examples: |
     - "EXTERNAL_done_with_video"
 
-- intent: submit_user_preferences
+- intent: help_intent
   examples: |
-    - "I would like to submit my user preferences"
-    - "User preferences"
+    - "help"
+    - "hepl"
+    - "elp"
+    - "ehlp"
+    - "hel"
 
-- intent: oke
+- intent: ehbo_intent
   examples: |
-    - "Oke"
-    - "Ok"
+    - "ehbo"
+    - "ebho"
+    - "eobh"
+    - "eehbo"
+    - "ehhbo"
+    - "ehbbo"
+    - "ehboo"
+    - "ik wil ehbo"
 
-- intent: request_metadata
+- intent: uitleg_intent
   examples: |
-    - "Metadata"
-    - "Ik wil metadata"
-    - "metadata"
-    - "Dit is metadata"
+    - "uilteg"
+    - "uileg"
+    - "uitleg"
+    - "iutleg"
+    - "uitlge"
+    - "ik wil een uitleg"
 
-- intent: user_shares_image
+- intent: oefening_intent
   examples: |
-    - "file"
-    - "File"
-    - "Start file"
+    - "oefning"
+    - "oefenin"
+    - "oefening"
+    - "eofening"
+    - "ik wil de oefening doen"
+    - "oefenign"
+
+- intent: medicijn_intent
+  examples: |
+    - "medicatie"
+    - "medicati"
+    - "medicijnen"
+    - "medicijn"
+    - "medicein"
+    - "nedicijn"
+    - "medicjin"
+    - "medijcin"

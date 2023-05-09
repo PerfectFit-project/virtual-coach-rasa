@@ -1,13 +1,6 @@
 version: "3.1"
 
 rules:
-- rule: Give user central mode options when they send a message with low NLU confidence
-  steps:
-  - intent: nlu_fallback
-  - action: utter_default
-  - action: utter_central_mode_options
-  - action: action_end_dialog
-
 # Only applies at start of conversation
 - rule: Process when people talk about urgent things that we cannot handle
   conversation_start: true
@@ -35,24 +28,6 @@ rules:
   - action: action_set_cigarettes_tracker_reminder
   - action: utter_reminder_is_set
   - action: action_end_dialog
-
-- rule: Activate user preferences form
-  steps:
-  - intent: submit_user_preferences
-  - action: user_preferences_form
-  - active_loop: user_preferences_form
-
-- rule: Submit user preferences form
-  condition:
-  - active_loop: user_preferences_form
-  steps:
-  - action: user_preferences_form
-  - active_loop: null
-  - slot_was_set:
-    - requested_slot: null
-  - action: utter_confirm
-  - action: action_store_user_preferences_to_db
-  - action: utter_user_preferences
 
 - rule:  Test metadata
   steps:

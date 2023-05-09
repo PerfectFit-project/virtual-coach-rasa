@@ -13,7 +13,6 @@ rules:
 - rule: after watching video unclear confirmation
   steps:
     - intent: EXTERNAL_done_with_video
-    - action: action_thanks_for_watching
     - action: utter_thanks_for_watching
     - action: video_clear_form
     - active_loop: video_clear_form
@@ -44,3 +43,5 @@ rules:
   - action: utter_clear_confirmation
   - action: utter_finish_video_dialog
   - action: action_continue_after_video
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog

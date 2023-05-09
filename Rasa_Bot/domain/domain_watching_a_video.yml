@@ -1,7 +1,10 @@
 ##Domain for watching a video
+
+version: "3.1"
+
 intents:
-  - EXTERNAL_watch_video_dialog
   - EXTERNAL_done_with_video
+  - EXTERNAL_watch_video_dialog
 
 actions:
   - action_continue_after_video
@@ -9,8 +12,6 @@ actions:
   - action_display_video_link
   - action_launch_watch_video_dialog
   - action_set_medication_video_link
-  - action_set_slot_video_link
-  - action_thanks_for_watching
   - validate_video_clear_form
 
 forms:

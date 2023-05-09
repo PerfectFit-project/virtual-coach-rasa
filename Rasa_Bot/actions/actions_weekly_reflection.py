@@ -80,7 +80,6 @@ class GetWeekNumber(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
         user_info = get_user(user_id)
         exec_week = user_info.execution_week
         if exec_week > 11:
@@ -194,8 +193,7 @@ class ValidateHowWentNonSmokeForm(FormValidationAction):
             return {"how_went_non_smoke": None}
 
         if not validator.validate_number_in_range_response(1, 5, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            dispatcher.utter_message(response="utter_answer_1_5_weekly_reflection")
             return {"how_went_non_smoke": None}
 
         return {"how_went_non_smoke": value}
@@ -215,8 +213,7 @@ class ValidateSpecificMomentsForm(FormValidationAction):
             return {"specific_moments": None}
 
         if not validator.validate_number_in_range_response(1, 3, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_answer_1_3_weekly_reflection")
             return {"specific_moments": None}
 
         return {"specific_moments": value}
@@ -235,9 +232,8 @@ class ValidateSmokedPreviousWeekForm(FormValidationAction):
         if last_utterance != 'utter_ask_smoked_previous_week':
             return {"smoked_previous_week": None}
 
-        if not validator.validate_number_in_range_response(1, 5, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+        if not validator.validate_number_in_range_response(1, 3, value):
+            dispatcher.utter_message(response="utter_answer_1_3_smoked_prev_week")
             return {"smoked_previous_week": None}
 
         return {"smoked_previous_week": value}
@@ -257,8 +253,7 @@ class ValidatePossibleSmokingSituationsForm(FormValidationAction):
             return {"possible_smoking_situations": None}
 
         if not validator.validate_number_in_range_response(1, 2, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2")
+            dispatcher.utter_message(response="utter_answer_1_2_weekly_reflection")
             return {"possible_smoking_situations": None}
 
         return {"possible_smoking_situations": value}
@@ -278,8 +273,7 @@ class ValidateHowWentPaForm(FormValidationAction):
             return {"how_went_pa": None}
 
         if not validator.validate_number_in_range_response(1, 5, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            dispatcher.utter_message(response="utter_answer_1_5_weekly_reflection_pa")
             return {"how_went_pa": None}
 
         return {"how_went_pa": value}
@@ -299,8 +293,7 @@ class ValidateDifficultMomentsForm(FormValidationAction):
             return {"difficult_moments": None}
 
         if not validator.validate_number_in_range_response(1, 3, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
+            dispatcher.utter_message(response="utter_answer_1_3_weekly_reflection")
             return {"difficult_moments": None}
 
         return {"difficult_moments": value}
@@ -341,8 +334,7 @@ class ValidateMetExpectationsForm(FormValidationAction):
             return {"met_expectations": None}
 
         if not validator.validate_number_in_range_response(1, 2, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2")
+            dispatcher.utter_message(response="utter_type_1_or_2_difficult_moments")
             return {"met_expectations": None}
 
         return {"met_expectations": value}
@@ -405,7 +397,7 @@ class ValidateFreeReflect1Form(FormValidationAction):
 
         long_enough_response = validator.validate_long_enough_response_words(value, 5)
         if not long_enough_response:
-            dispatcher.utter_message(response="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_answer_more_characters_weekly_reflection")
             return {"free_reflect_1": None}
 
         return {"free_reflect_1": value}
@@ -426,7 +418,7 @@ class ValidateFreeReflect2Form(FormValidationAction):
 
         long_enough_response = validator.validate_long_enough_response_words(value, 5)
         if not long_enough_response:
-            dispatcher.utter_message(response="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_answer_more_characters_weekly_reflection")
             return {"free_reflect_2": None}
 
         return {"free_reflect_2": value}
@@ -466,9 +458,9 @@ class ValidateFreeReflect4Form(FormValidationAction):
         if last_utterance != 'utter_ask_free_reflect_4':
             return {"free_reflect_4": None}
 
-        long_enough_response = validator.validate_long_enough_response_words(value, 5)
+        long_enough_response = validator.validate_long_enough_response_chars(value, 15)
         if not long_enough_response:
-            dispatcher.utter_message(response="utter_please_answer_more_words")
+            dispatcher.utter_message(response="utter_answer_more_characters_weekly_reflection")
             return {"free_reflect_4": None}
 
         return {"free_reflect_4": value}

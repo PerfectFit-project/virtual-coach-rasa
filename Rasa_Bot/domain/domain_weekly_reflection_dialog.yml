@@ -316,11 +316,14 @@ responses:
              Typ '3' als het oké ging 😐. \n
              Typ '4' als het niet zo goed ging 🙁. \n
              Typ '5' als het slecht ging 😞. "
-
+  utter_answer_1_5_weekly_reflection_smoking:
+    - text: "Typ 1,2,3,4 of 5 afhankelijk van hoe het niet roken afgelopen week is gegaan"
   utter_reflect_non_smoke_1:
     - text: "Geweldig! 😊 Stoppen met roken is niet makkelijk. Knap dat het afgelopen week zo goed ging."
   utter_ask_free_reflect_1:
     - text: "Wat maakt dat niet-roken goed ging?"
+  utter_answer_more_characters_weekly_reflection:
+    - text: "Kun je mij iets meer vertellen?"
   utter_reflect_non_smoke_2:
     - text: "Dankjewel voor het delen. Mooi dat je dit weet te herkennen."
   utter_reflect_non_smoke_3:
@@ -361,7 +364,8 @@ responses:
              Typ '1' voor nee.\n
              Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-
+  utter_answer_1_3_weekly_reflection:
+    - text: "Typ 1, 2 of 3 om aan te geven of je afgelopen week moeilijke momenten hebt gehad"
   utter_difficult_moments_1:
     - text: "Dat is mooi! 👍🏼"
     - text: "Dat klinkt goed! 👍🏼"
@@ -396,6 +400,9 @@ responses:
              Typ '1' als je wel zin had om te roken maar niet hebt gerook1️⃣.\n
              Typ '2' als je op één dag hebt gerookt 2️⃣.\n
              Typ '3' als je op meerdere dagen hebt gerookt 3️⃣."
+
+  utter_answer_1_3_smoked_prev_week:
+    - text: "Typ 1, 2 of 3 om aan te geven of je afgelopen week hebt gerookt"
 
   utter_difficult_moments_5:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid."
@@ -524,7 +531,8 @@ responses:
     - text: "Als je dit zo bekijkt, denk je dan dat er momenten zullen zijn waarop  je behoefte hebt aan een sigaret? 🛑\n
              Typ '1' voor nee.\n
              Typ '2' voor ja. "
-
+  utter_answer_1_2_weekly_reflection:
+    - text: "Typ 1 of 2 om aan te geven of je denkt dat er komende week moeilijke momenten gaan komen"
   utter_look_forward_7:
     - text: "Geweldig! 😊"
   utter_look_forward_8:
@@ -808,6 +816,8 @@ responses:
              Typ '3' als het oké ging 😐.\n
              Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞."
+  utter_answer_1_5_weekly_reflection_pa:
+    - text: "Typ 1,2,3,4 of 5 afhakelijk van hoe het afgelopen week is gegaan met je stappen"
 
   utter_ask_free_reflect_3:
     - text: "Mooi! 😊 Wat maakt dat het zo goed ging met bewegen?"
@@ -820,7 +830,7 @@ responses:
     - text: "Begrijpelijk 😐. Wat denk je dat ervoor heeft gezorgd dat het 'oké' ging met bewegen deze week?"
     - text: "Oké😐. Kun je bedenken waarom het oké ging met jouw beweging deze week?"
     - text: "Oké 😐. Kun je bedenken waarom het niet zo actief was als je had gewild?"
-    - text: "Geen probleem 😐. Wat denk je dat jou heeft belemmerd om meer te bewegen afgelopen week"
+    - text: "Geen probleem 😐. Wat denk je dat jou heeft belemmerd om meer te bewegen afgelopen week?"
     - text: "Dat is begrijpelijk 😐. Wat denk je dat de reden was dat je niet zo actief bent geweest als je had gewild?"
   utter_how_went_1:
     - text: "Dankjewel voor het delen. Mooi dat je dit weet te vertellen."
@@ -1299,7 +1309,7 @@ responses:
     - text: "Door dit plan te maken, vergroot je de kans om je beweegdoelen te behalen komende week. "
 
   # 8. Closing
-  utter_closing_1:
+  utter_closing_weekly_reflection_1:
     - text: "⬅️ Wij hebben net teruggekeken op afgelopen week en besproken hoe het is gegaan met niet-roken en bewegen."
     - text: "We hebben zojuist de afgelopen week geëvalueerd en gekeken hoe het ging met niet-roken en bewegen."
     - text: "Terugblikkend op afgelopen week hebben we besproken hoe het ging met niet-roken en bewegen."
@@ -1307,28 +1317,28 @@ responses:
     - text: "Zojuist hebben we de afgelopen week geanalyseerd en bekeken hoe het ging met niet-roken en bewegen."
     - text: "We hebben het net gehad over afgelopen week en besproken hoe het ging met niet-roken en bewegen."
     - text: "Net hebben we teruggekeken op afgelopen week en de voortgang besproken op het gebied van niet-roken en bewegen."
-  utter_closing_2:
+  utter_closing_weekly_reflection_2:
     - text: "Wij hebben ook alvast vooruit gekeken naar komende week en een plan gemaakt die je gaat helpen niet te roken en in beweging te komen ➡️."
     - text: "Samen hebben we een plan opgesteld om ervoor te zorgen dat je de komende week actief blijft en niet rookt ➡️."
     - text: "We hebben ook een plan gemaakt om je te helpen de komende week actief te blijven en niet te roken ➡️."
     - text: "En we hebben een plan opgesteld om je te helpen de komende week actief te blijven en niet te roken ➡️."
-  utter_closing_3:
+  utter_closing_weekly_reflection_3:
     - text: "Dit zijn goede en belangrijke stappen gezet om te zorgen dat jij kunt blijven volhouden en je doelen kunt halen. Goed gedaan! 👏"
     - text: "Super gedaan! Met deze stappen maak je het mogelijk om door te gaan en je doelen te behalen."
     - text: "Top gedaan! Het is geweldig om te zien dat je blijft werken aan je doelen en zo je doelen kunt halen."
     - text: "Goed gedaan! Je zet hele goede stappen om door te gaan en je doelen te bereiken."
     - text: "Geweldig werk! Door deze stappen te zetten, help je jezelf om door te blijven gaan en je doelen te bereiken."
-  utter_closing_4:
+  utter_closing_weekly_reflection_4:
     - text: "Wij spreken elkaar binnenkort weer."
     - text: "We praten snel weer bij."
-  utter_closing_5:
+  utter_closing_weekly_reflection_5:
     - text: "Weet dat ik er altijd voor je ben als je tussendoor een oefening wilt doen of hulp nodig hebt."
     - text: "Je kunt op mij rekenen als je tussendoor hulp nodig hebt bij het bereiken van je doelen."
     - text: "Aarzel niet om mij te benaderen als je extra ondersteuning nodig hebt bij het uitvoeren van je plan."
     - text: "Ik sta altijd klaar om je te helpen bij het behalen van je doelen, dus aarzel niet om mij te benaderen."
     - text: "Weet dat ik er voor je ben als je extra motivatie nodig hebt om je plan uit te voeren."
     - text: "Voel je vrij om contact op te nemen als je extra oefeningen wilt doen of vragen hebt."
-  utter_closing_6:
+  utter_closing_weekly_reflection_6:
     - text: "Ik geloof in jou. Zet hem op komende week! 💪🏼"
     - text: "Ik weet zeker dat je het kunt. Veel succes volgende week! 💪🏼"
     - text: "Ik heb er alle vertrouwen in dat je het gaat halen. Go for it! 💪🏼"

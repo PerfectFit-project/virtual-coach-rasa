@@ -155,7 +155,6 @@ rules:
   - action: action_send_metadata
   - action: action_delete_file
   - action: utter_look_forward_5
-  - action: utter_look_forward_5
   - action: utter_look_forward_6
   - action: possible_smoking_situations_form
   - active_loop: possible_smoking_situations_form
@@ -850,12 +849,12 @@ rules:
   - action: user_ready_3_form
   - active_loop: null
   - action: utter_predict_difficult_moments_10
-  - action: utter_closing_1
-  - action: utter_closing_2
-  - action: utter_closing_3
-  - action: utter_closing_4
-  - action: utter_closing_5
-  - action: utter_closing_6
+  - action: utter_closing_weekly_reflection_1
+  - action: utter_closing_weekly_reflection_2
+  - action: utter_closing_weekly_reflection_3
+  - action: utter_closing_weekly_reflection_4
+  - action: utter_closing_weekly_reflection_5
+  - action: utter_closing_weekly_reflection_6
 
 - rule: Closing from difficult moments
   condition:
@@ -865,12 +864,12 @@ rules:
   - active_loop: null
   - action: utter_predict_difficult_moments_16
   - action: utter_predict_difficult_moments_17
-  - action: utter_closing_1
-  - action: utter_closing_2
-  - action: utter_closing_3
-  - action: utter_closing_4
-  - action: utter_closing_5
-  - action: utter_closing_6
+  - action: utter_closing_weekly_reflection_1
+  - action: utter_closing_weekly_reflection_2
+  - action: utter_closing_weekly_reflection_3
+  - action: utter_closing_weekly_reflection_4
+  - action: utter_closing_weekly_reflection_5
+  - action: utter_closing_weekly_reflection_6
 
 
 

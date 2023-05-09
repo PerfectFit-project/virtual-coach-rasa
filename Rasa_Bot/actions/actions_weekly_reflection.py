@@ -6,7 +6,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from . import validator
 from .definitions import REDIS_URL
-from .helper import (get_latest_bot_utterance, get_user, get_pa_group,
+from .helper import (get_latest_bot_utterance, get_user, get_pa_group, set_pa_group,
                      get_user_intervention_state_hrs, make_step_overview)
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -93,11 +93,13 @@ class SetPaGroup(Action):
         return "action_set_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])
         ## TODO this method should save in the database the pa group based on steps and set slot
-        steps_bool = True
-        if steps_bool:
-            return [SlotSet('pa_group', 1)]
-        return [SlotSet('pa_group', 2)]
+        pa_group = 2
+
+        set_pa_group(user_id, pa_group)
+
+        return [SlotSet('pa_group', pa_group)]
 
 
 class SetStepGoalDays(Action):
@@ -143,7 +145,7 @@ class SetIntensityMinutesGoal(Action):
     async def run(self, dispatcher, tracker, domain):
         ## TODO This method should get minutes goal and set the slot accordingly, adding 15 minutes
         intensity_minutes = 50 + 15
-        return [SlotSet('intensity_minutes', intensity_minutes)]
+        return [SlotSet('intensity_minutes_goal', intensity_minutes)]
 
 class ShowPaOverview(Action):
     def name(self):

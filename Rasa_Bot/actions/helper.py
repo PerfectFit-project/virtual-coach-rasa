@@ -615,17 +615,27 @@ def get_pa_group(user_id: int) -> int:
     """
     session = get_db_session(DATABASE_URL)
 
-    user_info = (
-        session.query(
-            Users
-        )
-        .filter(
-            Users.nicedayuid == user_id
-        )
-        .one()
-    )
+    user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
     return user_info.pa_group
+
+
+def set_pa_group(user_id: int, pa_group: int):
+    """
+    Retrieve the physical activity group of a user
+    Args:
+        user_id: ID of the user
+        pa_group: physical activity group value to be saved
+
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
+
+    user_info.pa_group = pa_group
+
+    session.commit()
 
 
 def get_start_date(user_id: int) -> date:

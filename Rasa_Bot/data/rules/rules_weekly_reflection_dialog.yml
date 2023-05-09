@@ -653,6 +653,7 @@ rules:
   - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 2
+  - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
   - action: utter_increase_intensity_2
   - action: utter_increase_intensity_3
@@ -677,6 +678,7 @@ rules:
   - action: action_set_pa_group
   - slot_was_set:
     - pa_group: 2
+  - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
   - action: utter_increase_intensity_2
   - action: utter_increase_intensity_3
@@ -701,6 +703,7 @@ rules:
   - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 2
+  - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
   - action: utter_increase_intensity_2
   - action: utter_increase_intensity_3
@@ -724,6 +727,7 @@ rules:
   - action: action_set_pa_group
   - slot_was_set:
       - pa_group: 2
+  - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
   - action: utter_increase_intensity_2
   - action: utter_increase_intensity_3

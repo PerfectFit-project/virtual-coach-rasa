@@ -21,20 +21,6 @@ import logging
 celery = Celery(broker=REDIS_URL)
 
 
-# Trigger weekly reflection through celery
-class TriggerWeeklyReflectionDialog(Action):
-    def name(self):
-        return "action_trigger_weekly_reflection"
-
-    async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        celery.send_task('celery_tasks.user_trigger_dialog',
-                         (user_id, Components.WEEKLY_REFLECTION))
-
-        return []
-
-
 class SetSlotWeeklyReflection(Action):
     def name(self):
         return "action_set_slot_weekly_reflection"

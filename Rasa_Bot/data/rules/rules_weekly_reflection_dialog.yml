@@ -4,10 +4,6 @@ rules:
 
 ## Rules for the weekly reflection dialog
 ## 1. Congratulate & 2. Explanation Reflection
-- rule: Activate weekly reflection
-  steps:
-  - intent: weekly_reflection
-  - action: action_trigger_weekly_reflection
 
 - rule: Trigger weekly reflection dialog
   steps:

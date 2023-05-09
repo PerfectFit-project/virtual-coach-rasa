@@ -1,7 +1,7 @@
 version: "3.1"
 
 intents:
-  - weekly_reflection
+  - EXTERNAL_weekly_reflection
 
 slots:
   completed_hrs:
@@ -1348,7 +1348,6 @@ responses:
     - text: "Laat je niet ontmoedigen, blijf ervoor gaan. Ik steun je 100%. 💪🏼"
 
 actions:
-  - action_trigger_weekly_reflection
   - action_which_pa_group
   - action_set_pa_group
   - action_set_intensity_minutes

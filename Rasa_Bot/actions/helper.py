@@ -20,10 +20,8 @@ from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
                                               InterventionPhases,
-                                              UserInterventionState,
-                                              ClosedAnswers, FirstAidKit,
+                                              UserInterventionState, FirstAidKit,
                                               ClosedAnswers, UserStateMachine)
-from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import Components
 import pandas as pd
 

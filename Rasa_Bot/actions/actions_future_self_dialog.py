@@ -12,10 +12,11 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from sqlalchemy import func
 from virtual_coach_db.helper.helper_functions import get_db_session
-from virtual_coach_db.helper.definitions import DialogQuestionsEnum
+from virtual_coach_db.helper.definitions import (Components,
+                                                 DialogQuestionsEnum)
 from virtual_coach_db.dbschema.models import (Users, DialogOpenAnswers, 
-                                              UserInterventionState,
-                                              InterventionComponents)
+                                              InterventionComponents,
+                                              UserInterventionState)
 
 from .definitions import DialogQuestions, TIMEZONE, DATABASE_URL
 from .helper import (store_dialog_open_answer_to_db,
@@ -28,7 +29,7 @@ class SetSlotFutureSelfDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
-                        InterventionComponents.FUTURE_SELF)]
+                        Components.FUTURE_SELF)]
 
 
 class ActionStoreSmokerWords(Action):
@@ -428,7 +429,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
     async def run(self, dispatcher, tracker, domain):
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
-        future_self_value = InterventionComponents.FUTURE_SELF.value
+        future_self_value = Components.FUTURE_SELF.value
 
         selected = (
             session.query(
@@ -479,7 +480,7 @@ class ActionStoreFutureSelfDialogState(Action):
         step = tracker.get_slot("future_self_dialog_state")
         session = get_db_session(db_url=DATABASE_URL)
         user_id = tracker.current_state()['sender_id']
-        future_self_value = InterventionComponents.FUTURE_SELF.value
+        future_self_value = Components.FUTURE_SELF.value
 
         selected = (
             session.query(
@@ -507,7 +508,7 @@ class ActionStoreFutureSelfDialogState(Action):
         # the intervention state table
         else:
             intervention_component_id = \
-                get_intervention_component_id(InterventionComponents.FUTURE_SELF)
+                get_intervention_component_id(Components.FUTURE_SELF)
             selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
 
             # User exists in Users table

@@ -4,11 +4,6 @@ rules:
 
 ## Rules for the relapse dialog
 ## 1a: Trigger relapse dialog
-- rule: Activate relapse
-  steps:
-  - intent: relapse_dialog
-  - action: action_trigger_relapse
-
 
 - rule: Trigger relapse dialog
   steps:

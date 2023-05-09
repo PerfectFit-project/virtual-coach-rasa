@@ -5,6 +5,7 @@ from dateutil import tz
 MAXIMUM_DIALOG_DURATION = 90*60
 
 # intervention times (days)
+ACTIVITY_C2_9_DAY_TRIGGER = 7
 FUTURE_SELF_INTRO = 8
 GOAL_SETTING = 9
 TRACKING_DURATION = 10

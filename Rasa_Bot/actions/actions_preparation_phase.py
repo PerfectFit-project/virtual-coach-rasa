@@ -1,15 +1,18 @@
+from celery import Celery
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, FollowupAction
-from virtual_coach_db.helper.definitions import (DialogExpectedDuration,
-                                                 ComponentsTriggers, Components)
+from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from celery import Celery
+from virtual_coach_db.helper.definitions import (Components,
+                                                 ComponentsTriggers,
+                                                 DialogExpectedDuration)
+
 from . import validator
-from .definitions import REDIS_URL, MORNING, AFTERNOON, TIMEZONE
+from .definitions import MORNING, AFTERNOON, REDIS_URL, TIMEZONE
 from .helper import get_latest_bot_utterance
 from .actions_rescheduling_dialog import get_reschedule_date
+
 import datetime
 
 celery = Celery(broker=REDIS_URL)
@@ -50,6 +53,7 @@ class ValidateNowOrLaterForm(FormValidationAction):
         now_or_later = validator.validate_number_in_range_response(1, 2, value)
         if not now_or_later:
             dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"now_or_later": None}
 
         return {"now_or_later": value}
 
@@ -71,6 +75,7 @@ class ValidatePickADaypartForm(FormValidationAction):
         correct_format = validator.validate_number_in_range_response(1, 4, value)
         if not correct_format:
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"chosen_daypart": None}
 
         return {"chosen_daypart": value}
 
@@ -83,12 +88,11 @@ class StartNextDialog(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        current_dialog = tracker.get_slot('current_intervention_component').upper()
+        current_dialog = tracker.get_slot('current_intervention_component')
 
         # if the dialog is the profile creation, launch that
-        # TODO: substitute with actual first action of the profile creation
         if current_dialog == Components.PROFILE_CREATION:
-            return [FollowupAction('action_end_dialog')]
+            return [FollowupAction('utter_profile_creation_start_1')]
 
         # if the dialog is a video one, launch the watch a video dialog
         celery.send_task('celery_tasks.trigger_intervention_component',
@@ -145,9 +149,9 @@ class AskNewTime(Action):
     async def run(self, dispatcher, tracker, domain):
         options = get_daypart_options_str()
 
-        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende" \
-                 "onderdeel over 1 uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3'" \
-                 " als je het {1} wilt doen. En typ '4' als " \
+        prompt = "Wanneer zou je het volgende onderdeel willen doen?\nTyp '1' als je het volgende"\
+                 "onderdeel over 1 uur wilt doen.\nTyp '2' als je het {0} wilt doen.\nTyp '3'" \
+                 " als je het {1} wilt doen.\nEn typ '4' als " \
                  "je het {2} wilt doen. "
         utterance = prompt.format(*options)
 

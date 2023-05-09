@@ -1,4 +1,7 @@
 ##Domain for preparation phase dialog
+
+version: "3.1"
+
 intents:
   - EXTERNAL_rescheduling_preparation_phase
 
@@ -66,7 +69,9 @@ responses:
   utter_next_part_2:
     - text: "Je kunt nu door naar het volgende onderdeel."
   utter_ask_now_or_later:
-    - text: "Wil jij het volgende onderdeel nu doen of later? Typ '1' wanneer je nu tijd hebt om een oefening te doen. Typ '2' wanneer je de oefening liever later doet."
+    - text: "Wil jij het volgende onderdeel nu doen of later?\n
+             Typ '1' wanneer je nu tijd hebt om een oefening te doen.\n
+             Typ '2' wanneer je de oefening liever later doet."
   utter_lets_start:
     - text: "Super, dan gaan we beginnen! 😊"
   utter_preparation_delay_warning:

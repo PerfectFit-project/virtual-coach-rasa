@@ -1104,7 +1104,7 @@ responses:
     - text: "Als je hartslag stijgt en je ademhaling sneller wordt, waardoor het moeilijker is om te praten, dan ben je bezig met intensieve beweging."
     - text: "Wanneer je hartslag omhoog gaat en je sneller begint te ademen, wat het moeilijk maakt om te praten, dan ben je intensief aan het bewegen."
   utter_increase_intensity_15:
-    - text: "Laten wij nu een plan maken voor hoe jij komende week naast je dagelijkse stappendoel ook {intensity_minutes}
+    - text: "Laten wij nu een plan maken voor hoe jij komende week naast je dagelijkse stappendoel ook {intensity_minutes_goal}
              minuten intensief gaat bewegen ⏱️."
   utter_increase_intensity_16:
     - text: "Zoals ik eerder zei is het het belangrijk om langzaam op te bouwen 🐌. Als je een keer meer wilt doen is dat geen probleem.
@@ -1125,7 +1125,7 @@ responses:
     - text: "Noteer je plan! 🖊️ Haal een pen en papier tevoorschijn en schrijf op:
              1. Welke intensieve beweging of sport ga jij komende week doen (bijvoorbeeld hardlopen, voetballen, touwtje springen, wielrennen)?"
   utter_increase_intensity_18:
-    - text: "2. Hoe lang ga je dit doen? Je kan de {intensity_minutes} minuten bijvoorbeeld
+    - text: "2. Hoe lang ga je dit doen? Je kan de {intensity_minutes_goal} minuten bijvoorbeeld
              opdelen in twee keer of drie keer. Let wel op dat jij elke keer minimaal 10 minuten achter elkaar beweegt.
              Anders heb je alsnog niet zoveel voordeel van je beweging. "
   utter_increase_intensity_19:

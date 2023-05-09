@@ -6,7 +6,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from . import validator
 from .definitions import REDIS_URL
-from .helper import (get_latest_bot_utterance, get_user,
+from .helper import (get_latest_bot_utterance, get_user, get_pa_group,
                      get_user_intervention_state_hrs, make_step_overview)
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -78,11 +78,15 @@ class WhichPaGroup(Action):
         return "action_which_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO This method should return the current pa group of the user from the database
-        steps_bool = True
-        if steps_bool:
-            return [SlotSet('pa_group', 1)]
-        return [SlotSet('pa_group', 2)]
+        user_id = int(tracker.current_state()['sender_id'])
+
+        pa_group = get_pa_group(user_id)
+
+        if pa_group is None:
+            pa_group = 2
+
+        return [SlotSet('pa_group', pa_group)]
+
 
 class SetPaGroup(Action):
     def name(self):

@@ -604,6 +604,30 @@ def get_possible_activities(user_id: int, activity_category: Optional[str] = Non
     return mandatory_ids, available_ids
 
 
+def get_pa_group(user_id: int) -> int:
+    """
+    Retrieve the physical activity group of a user
+    Args:
+        user_id: ID of the user
+
+    Returns: the pa group of the user
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    user_info = (
+        session.query(
+            Users
+        )
+        .filter(
+            Users.nicedayuid == user_id
+        )
+        .one()
+    )
+
+    return user_info.pa_group
+
+
 def get_start_date(user_id: int) -> date:
     """
     Retrieve teh starting date of the intervention for a user
@@ -957,6 +981,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                       margin=dict(l=150),
                       xaxis=dict(tickformat='d'))
     return fig
+
 
 def get_faik_text(user_id):
     session = get_db_session(db_url=DATABASE_URL)

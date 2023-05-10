@@ -7,7 +7,8 @@ from dateutil.relativedelta import relativedelta
 from . import validator
 from .definitions import REDIS_URL
 from .helper import (get_latest_bot_utterance, get_user, get_pa_group, set_pa_group,
-                     get_user_intervention_state_hrs, make_step_overview)
+                     get_user_intervention_state_hrs, make_step_overview,
+                     get_intensity_minutes_goal, set_intensity_minutes_goal)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -94,7 +95,7 @@ class SetPaGroup(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])
-        ## TODO this method should save in the database the pa group based on steps and set slot
+        ## TODO retrieve the steps number to decide which is the group
         pa_group = 2
 
         set_pa_group(user_id, pa_group)
@@ -143,8 +144,22 @@ class SetIntensityMinutesGoal(Action):
         return "action_set_intensity_minutes_goal"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO This method should get minutes goal and set the slot accordingly, adding 15 minutes
-        intensity_minutes = 50 + 15
+
+        user_id = int(tracker.current_state()['sender_id'])
+
+        # get the intensive minutes goal for the previous week
+        previous_goal = get_intensity_minutes_goal(user_id)
+
+        # the first time, it's set to 15 minutes
+        if previous_goal is None:
+            previous_goal = 15
+
+        # the new goal is the previous one, plus 15 minutes
+        intensity_minutes = previous_goal + 15
+
+        # save the new goal to the DB
+        set_intensity_minutes_goal(user_id, intensity_minutes)
+
         return [SlotSet('intensity_minutes_goal', intensity_minutes)]
 
 class ShowPaOverview(Action):

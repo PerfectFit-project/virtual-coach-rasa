@@ -305,7 +305,7 @@ responses:
   utter_how_are_you_1:
     - text: "Bedankt voor het delen."
     - text: "Dank je voor het vertellen."
-    - text: "Bedankt voor het laten"
+    - text: "Bedankt voor het laten weten"
 
   # 4. Reflection on Non-Smoking
   # 4a How did the non-smoking go?

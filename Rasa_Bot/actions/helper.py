@@ -604,6 +604,39 @@ def get_possible_activities(user_id: int, activity_category: Optional[str] = Non
     return mandatory_ids, available_ids
 
 
+def get_intensity_minutes_goal(user_id: int) -> int:
+    """
+    Retrieve the current intensity minutes weekly goal of a user
+    Args:
+        user_id: ID of the user
+
+    Returns: the current intensity minutes weekly goal
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
+    return user_info.pa_intensity_minutes_goal
+
+
+def set_intensity_minutes_goal(user_id: int, goal: int):
+    """
+    Set the new intensity minutes weekly goal of a user
+    Args:
+        user_id: ID of the user
+        goal: the new amount of intensity minutes set as a goal
+
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
+
+    user_info.pa_intensity_minutes_goal = goal
+
+    session.commit()
+
+
 def get_pa_group(user_id: int) -> int:
     """
     Retrieve the physical activity group of a user
@@ -622,7 +655,7 @@ def get_pa_group(user_id: int) -> int:
 
 def set_pa_group(user_id: int, pa_group: int):
     """
-    Retrieve the physical activity group of a user
+    Set the physical activity group of a user
     Args:
         user_id: ID of the user
         pa_group: physical activity group value to be saved

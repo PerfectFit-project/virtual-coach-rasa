@@ -29,6 +29,8 @@ rules:
   steps:
   - intent: EXTERNAL_inactive_user_notification  # TODO: set trigger if user inactive for 10 days
   - action: utter_notifications_user_inactive_1  # TODO: go to utter_central_mode_options
+  - action: utter_central_mode_options
+  - action: action_end_dialog
 
 ## New quit date tomorrow notification
 - rule: new quit date tomorrow notification  # TODO: trigger if user set new quit date, day before date

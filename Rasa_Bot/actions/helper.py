@@ -616,7 +616,7 @@ def get_intensity_minutes_goal(user_id: int) -> int:
     session = get_db_session(DATABASE_URL)
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
-    return user_info.pa_intensity_minutes_goal
+    return user_info.pa_intensity_minutes_weekly_goal
 
 
 def set_intensity_minutes_goal(user_id: int, goal: int):
@@ -632,7 +632,7 @@ def set_intensity_minutes_goal(user_id: int, goal: int):
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
-    user_info.pa_intensity_minutes_goal = goal
+    user_info.pa_intensity_minutes_weekly_goal = goal
 
     session.commit()
 
@@ -650,7 +650,7 @@ def get_pa_group(user_id: int) -> int:
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
-    return user_info.pa_group
+    return user_info.pa_intervention_group
 
 
 def set_pa_group(user_id: int, pa_group: int):
@@ -666,7 +666,7 @@ def set_pa_group(user_id: int, pa_group: int):
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
-    user_info.pa_group = pa_group
+    user_info.pa_intervention_group = pa_group
 
     session.commit()
 

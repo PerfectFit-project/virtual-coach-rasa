@@ -173,7 +173,7 @@ class ShowPaOverview(Action):
         ## TODO replace these stepholders with the database data
         date_array = ['Mon 16', 'Tue 17', 'Wed 18', 'Thu 19', 'Fri 20', 'Sat 21', 'Sun 22']
         step_array = [5000, 6000, 7000, 8000, 9000, 10000, 11000]
-        step_goal = 8000
+        step_goal = [4000, 7000, 6000, 9000, 8000, 11000, 10000]
 
         fig = make_step_overview(date_array, step_array, step_goal)
 

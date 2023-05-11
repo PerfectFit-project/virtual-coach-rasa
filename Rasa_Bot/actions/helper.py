@@ -973,48 +973,52 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
     return fig
 
 
-def make_step_overview(date_array: List[str], step_array: List[int], step_goal: int) -> Any:
+def make_step_overview(date_array: List[str], step_array: List[int], step_goal: List[int]) -> Any:
     """
        Makes the step overview for the weekly reflection dialog.
         Args:
                 date_array: the list of dates for the y_axis
                 step_array: the list of steps for the x_axis
-                step_goal: the step goal of the user
+                step_goal: the list of daily steps goals
             Returns:
                     A plot, showing the number of steps the user took each day
-                    for a week, with a line representing the step goal and the
-                    bars being green if they accomplished their goal and red if
-                    not.
+                    for a week, with the bars being green if they accomplished
+                    their goal and red if not.
     """
     data = pd.DataFrame(
         {'date': date_array,
-         'steps': step_array})
+         'steps': step_array,
+         'goals': step_goal})
 
-    data['goal_achieved'] = data['steps'] >= step_goal
+    data['goal_achieved'] = data['steps'] >= data['goals']
 
-    fig = go.Figure(go.Bar(x=data['steps'],
-                           y=data['date'],
-                           orientation='h',
-                           marker=dict(color=data['goal_achieved'].map(
-                               {True: 'green', False: 'red'}))))
+    fig = go.Figure([go.Bar(x=data['steps'],
+                            y=data['date'],
+                            orientation='h',
+                            marker=dict(color=data['goal_achieved'].map(
+                                {True: 'green', False: 'red'})),
+                            showlegend=False
+                            ),
+                     go.Bar(x=data['goals'],
+                            y=data['date'],
+                            orientation='h',
+                            opacity=0.1,
+                            showlegend=False)
+                     ],
+                    layout=go.Layout(barmode='overlay'))
 
-    fig.add_shape(type='line',
-                  x0=step_goal,
-                  y0=-0.5,
-                  x1=step_goal,
-                  y1=len(data) - 0.5,
-                  line=dict(color='black', width=3, dash='longdash'))
-
-    fig.add_annotation(x=step_goal,
-                       y=-1,
-                       text=f'Step Goal: {step_goal}',
-                       showarrow=False,
-                       font=dict(size=14, color='black'))
+    for i, goal in enumerate(data['goals']):
+        fig.add_annotation(x=goal,
+                           y=i,
+                           text=f'Goal: {goal}',
+                           showarrow=False,
+                           font=dict(size=12, color='black'),
+                           xshift=5)
 
     for i, step in enumerate(data['steps']):
-        fig.add_annotation(x=step,
+        fig.add_annotation(x=step/2,
                            y=i,
-                           text=str(step),
+                           text=f'Steps: {step}',
                            showarrow=False,
                            font=dict(size=12, color='black'),
                            xshift=5)
@@ -1023,6 +1027,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                       height=500,
                       margin=dict(l=150),
                       xaxis=dict(tickformat='d'))
+
     return fig
 
 

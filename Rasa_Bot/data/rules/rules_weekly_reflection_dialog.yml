@@ -1,0 +1,876 @@
+version: "3.1"
+
+rules:
+
+## Rules for the weekly reflection dialog
+## 1. Congratulate & 2. Explanation Reflection
+
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
+  - action: utter_congratulate_1
+  - action: utter_congratulate_2
+  - action: utter_congratulate_3
+  - action: utter_explain_reflection_1
+  - action: utter_explain_reflection_2
+  - action: utter_explain_reflection_3
+  - action: how_are_you_form
+  - active_loop: how_are_you_form
+
+## 3. How are you?
+- rule: How are you
+  condition:
+  - active_loop: how_are_you_form
+  steps:
+  - action: how_are_you_form
+  - active_loop: null
+  - action: utter_how_are_you_1
+  - action: how_went_non_smoke_form
+  - active_loop: how_went_non_smoke_form
+  wait_for_user_input: false
+
+## 4. Reflection on Non-Smoking
+## 4a How did the non-smoking go?
+
+## Non-Smoking form user answered great
+- rule: Reflection on non-smoking going great
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 1
+  - action: utter_reflect_non_smoke_1
+  - action: free_reflect_1_form
+  - active_loop: free_reflect_1_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered good
+- rule: Reflection on non-smoking going well
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 2
+  - action: utter_reflect_non_smoke_1
+  - action: free_reflect_1_form
+  - active_loop: free_reflect_1_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered okay
+- rule: Reflection on non-smoking going okay
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 3
+  - action: utter_reflect_non_smoke_3
+  - action: free_reflect_2_form
+  - active_loop: free_reflect_2_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered not great
+- rule: Reflection on non-smoking going okay
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 4
+  - action: utter_reflect_non_smoke_5
+  - action: utter_reflect_non_smoke_6
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## Non-Smoking form user answered bad
+- rule: Reflection on non-smoking going bad
+  condition:
+    - active_loop: how_went_non_smoke_form
+  steps:
+  - action: how_went_non_smoke_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_non_smoke: 5
+  - action: utter_reflect_non_smoke_5
+  - action: utter_reflect_non_smoke_6
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## Additional rule to bring us back to main path
+- rule: Setup for difficult moments 1
+  condition:
+    - active_loop: free_reflect_1_form
+  steps:
+  - action: free_reflect_1_form
+  - active_loop: null
+  - action: utter_reflect_non_smoke_2
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## Additional rule to bring us back to main path
+- rule: Setup for difficult moments 2
+  condition:
+    - active_loop: free_reflect_2_form
+  steps:
+  - action: free_reflect_2_form
+  - active_loop: null
+  - action: utter_reflect_non_smoke_4
+  - action: specific_moments_form
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+
+## 4b Were there difficult moments?
+
+## User answered 1
+- rule: No difficult moments
+  condition:
+    - active_loop: specific_moments_form
+  steps:
+  - action: specific_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - specific_moments: 1
+  - action: utter_difficult_moments_1
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
+
+## User answered 3
+- rule: Not sure if difficult moments
+  condition:
+    - active_loop: specific_moments_form
+  steps:
+  - action: specific_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - specific_moments: 3
+  - action: utter_difficult_moments_2
+  - action: utter_difficult_moments_3
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
+
+## User answered 2
+- rule: There were difficult moments
+  condition:
+    - active_loop: specific_moments_form
+  steps:
+  - action: specific_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - specific_moments: 2
+  - action: utter_difficult_moments_4
+  - action: smoked_previous_week_form
+  - active_loop: smoked_previous_week_form
+  wait_for_user_input: false
+
+## User answered 2 then 1
+- rule: Difficult moments but did not smoke
+  condition:
+    - active_loop: smoked_previous_week_form
+  steps:
+  - action: smoked_previous_week_form
+  - active_loop: null
+  - slot_was_set:
+    - smoked_previous_week: 1
+  - action: utter_difficult_moments_5
+  - action: utter_difficult_moments_6
+  - action: utter_difficult_moments_7
+  - action: utter_difficult_moments_8
+  - action: utter_difficult_moments_9
+  - action: utter_difficult_moments_10
+  - action: utter_difficult_moments_11
+  - action: utter_difficult_moments_12
+  - action: utter_difficult_moments_13
+  - action: utter_hrs_reasons_4
+  - action: hrs_situation_form
+  - active_loop: hrs_situation_form
+  wait_for_user_input: false
+
+## User answered 2 then 2
+- rule: Difficult moments but did not smoke
+  condition:
+    - active_loop: smoked_previous_week_form
+  steps:
+  - action: smoked_previous_week_form
+  - active_loop: null
+  - slot_was_set:
+    - smoked_previous_week: 2
+  - action: utter_smoke_lapse_1
+  - action: action_set_slot_crave_lapse_relapse_2
+  - action: type_and_number_smoke_form
+  - active_loop: type_and_number_smoke_form
+  wait_for_user_input: false
+
+## User answered 2 then 3
+- rule: Difficult moments but did not smoke
+  condition:
+    - active_loop: smoked_previous_week_form
+  steps:
+  - action: smoked_previous_week_form
+  - active_loop: null
+  - slot_was_set:
+    - smoked_previous_week: 3
+  - action: utter_smoke_lapse_1
+  - action: action_set_slot_crave_lapse_relapse_3
+  - action: type_and_number_smoke_form
+  - active_loop: type_and_number_smoke_form
+  wait_for_user_input: false
+
+## 5. Look forward to new week
+
+## User responded 1, no to smoking situations form
+- rule: No possible smoking situations
+  condition:
+    - active_loop: possible_smoking_situations_form
+  steps:
+  - action: possible_smoking_situations_form
+  - active_loop: null
+  - slot_was_set:
+    - possible_smoking_situations: 1
+  - action: utter_look_forward_7
+  - action: utter_look_forward_8
+  - action: utter_look_forward_9
+  - action: utter_look_forward_10
+  - action: utter_look_forward_11
+  - action: utter_look_forward_12
+  - action: user_ready_1_form
+  - active_loop: user_ready_1_form
+  wait_for_user_input: false
+
+## User responded 2, yes to smoking situations form
+- rule: Possible smoking situations
+  condition:
+    - active_loop: possible_smoking_situations_form
+  steps:
+  - action: possible_smoking_situations_form
+  - active_loop: null
+  - slot_was_set:
+    - possible_smoking_situations: 2
+  - action: utter_look_forward_14
+  - action: utter_look_forward_15
+  - action: utter_look_forward_16
+  - action: utter_look_forward_17
+  - action: utter_look_forward_18
+  - action: user_ready_2_form
+  - active_loop: user_ready_2_form
+  wait_for_user_input: false
+
+## 6. Reflection on physical activity
+
+## 6a Overview physical activity group 1
+- rule: Step dialog component group 1
+  condition:
+  - active_loop: user_ready_2_form
+  steps:
+  - action: user_ready_2_form
+  - active_loop: null
+  - action: utter_look_forward_20
+  - action: utter_look_forward_21
+  - action: action_which_pa_group
+  - slot_was_set:
+      - pa_group: 1
+  - action: utter_overview_group1_1
+  - action: utter_overview_group1_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: action_set_step_goal_days
+  - action: utter_overview_group1_3
+  - action: action_step_goal_utterances
+  - action: how_went_pa_form
+  - active_loop: how_went_pa_form
+  wait_for_user_input: false
+
+- rule: Step dialog component group 1 other path
+  condition:
+  - active_loop: user_ready_1_form
+  steps:
+  - action: user_ready_1_form
+  - active_loop: null
+  - action: utter_look_forward_13
+  - action: action_which_pa_group
+  - slot_was_set:
+      - pa_group: 1
+  - action: utter_overview_group1_1
+  - action: utter_overview_group1_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: action_set_step_goal_days
+  - action: utter_overview_group1_3
+  - action: action_step_goal_utterances
+  - action: how_went_pa_form
+  - active_loop: how_went_pa_form
+  wait_for_user_input: false
+
+## 6b Overview physical activity group 2
+- rule: Step dialog component group 2
+  condition:
+    - active_loop: user_ready_2_form
+  steps:
+  - action: user_ready_2_form
+  - active_loop: null
+  - action: utter_look_forward_20
+  - action: utter_look_forward_21
+  - action: action_which_pa_group
+  - slot_was_set:
+      - pa_group: 2
+  - action: action_set_intensity_minutes_goal
+  - action: utter_overview_group2_1
+  - action: utter_overview_group2_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: action_set_intensity_minutes
+  - action: action_set_step_goal_days
+  - action: utter_overview_group2_3
+  - action: action_step_goal_utterances
+  - action: how_went_pa_form
+  - active_loop: how_went_pa_form
+  wait_for_user_input: false
+
+- rule: Step dialog component group 2 other path
+  condition:
+  - active_loop: user_ready_1_form
+  steps:
+  - action: user_ready_1_form
+  - active_loop: null
+  - action: utter_look_forward_13
+  - action: action_which_pa_group
+  - slot_was_set:
+      - pa_group: 2
+  - action: action_set_intensity_minutes_goal
+  - action: utter_overview_group2_1
+  - action: utter_overview_group2_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: action_set_intensity_minutes
+  - action: action_set_step_goal_days
+  - action: utter_overview_group2_3
+  - action: action_step_goal_utterances
+  - action: how_went_pa_form
+  - active_loop: how_went_pa_form
+  wait_for_user_input: false
+
+## 6c How did you think it went?
+## User answered 1, really well
+- rule: How did PA go, really well
+  condition:
+    - active_loop: how_went_pa_form
+  steps:
+  - action: how_went_pa_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_pa: 1
+  - action: free_reflect_3_form
+  - active_loop: free_reflect_3_form
+  wait_for_user_input: false
+
+## User answered 2, well
+- rule: How did PA go, well
+  condition:
+    - active_loop: how_went_pa_form
+  steps:
+  - action: how_went_pa_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_pa: 2
+  - action: free_reflect_3_form
+  - active_loop: free_reflect_3_form
+  wait_for_user_input: false
+
+## User answered 3, okay
+- rule: How did PA go, okay
+  condition:
+    - active_loop: how_went_pa_form
+  steps:
+  - action: how_went_pa_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_pa: 3
+  - action: free_reflect_4_form
+  - active_loop: free_reflect_4_form
+  wait_for_user_input: false
+
+## User answered 4, bad
+- rule: How did PA go, bad
+  condition:
+    - active_loop: how_went_pa_form
+  steps:
+  - action: how_went_pa_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_pa: 4
+  - action: utter_how_went_2
+  - action: utter_how_went_3
+  - action: action_user_completed_hrs
+  - action: difficult_moments_form
+  - active_loop: difficult_moments_form
+  wait_for_user_input: false
+
+## User answered 5, terrible
+- rule: How did PA go, terribly
+  condition:
+    - active_loop: how_went_pa_form
+  steps:
+  - action: how_went_pa_form
+  - active_loop: null
+  - slot_was_set:
+    - how_went_pa: 5
+  - action: utter_how_went_2
+  - action: utter_how_went_3
+  - action: action_user_completed_hrs
+  - action: difficult_moments_form
+  - active_loop: difficult_moments_form
+  wait_for_user_input: false
+
+## Additional rule to get us back to main path
+- rule: Setup for difficult moments pa 1
+  condition:
+    - active_loop: free_reflect_3_form
+  steps:
+  - action: free_reflect_3_form
+  - active_loop: null
+  - action: utter_how_went_1
+  - action: action_user_completed_hrs
+  - action: difficult_moments_form
+  - active_loop: difficult_moments_form
+  wait_for_user_input: false
+
+## Additional rule to get us back to main path
+- rule: Setup for difficult moments pa 2
+  condition:
+    - active_loop: free_reflect_4_form
+  steps:
+  - action: free_reflect_4_form
+  - active_loop: null
+  - action: utter_how_went_1
+  - action: action_user_completed_hrs
+  - action: difficult_moments_form
+  - active_loop: difficult_moments_form
+  wait_for_user_input: false
+
+## 6d Were there difficult moments?
+## User answered 2, yes
+- rule: Difficult moments, user has completed hrs
+  condition:
+    - active_loop: difficult_moments_form
+  steps:
+  - action: difficult_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments: 2
+  - action: utter_difficult_moments_pa_4
+  - slot_was_set:
+    - completed_hrs: 1
+  - action: utter_difficult_moments_pa_5
+  - action: utter_difficult_moments_pa_6
+  - action: refresh_previous_week_form
+  - active_loop: refresh_previous_week_form
+  wait_for_user_input: false
+
+- rule: Difficult moments, user has not completed hrs
+  condition:
+    - active_loop: difficult_moments_form
+  steps:
+  - action: difficult_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments: 2
+  - action: utter_difficult_moments_pa_4
+  - slot_was_set:
+    - completed_hrs: 2
+  - action: met_expectations_form
+  - active_loop: met_expectations_form
+  wait_for_user_input: false
+
+- rule: Refresh previous week
+  condition:
+    - active_loop: refresh_previous_week_form
+  steps:
+  - action: refresh_previous_week
+  - active_loop: null
+  - slot_was_set:
+    - refresh_previous_week: 1
+  - action: action_set_pa_group
+  - or:
+      - slot_was_set:
+        - pa_group: 1
+      - slot_was_set:
+        - pa_group: 2
+  - action: met_expectations_form
+  - active_loop: met_expectations_form
+  wait_for_user_input: false
+
+
+## 7. Look forward to new week
+## 7a Steps next week, for group 1
+- rule: Show steps next week group1, 1
+  condition:
+    - active_loop: refresh_previous_week_form
+  steps:
+  - action: refresh_previous_week
+  - active_loop: null
+  - slot_was_set:
+    - refresh_previous_week: 2
+  - action: action_set_pa_group
+  - slot_was_set:
+      - pa_group: 1
+  - action: utter_steps_next_week_1
+  - action: utter_steps_next_week_2
+  - action: utter_steps_next_week_3
+  - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_predict_difficult_moments_2
+  - action: utter_predict_difficult_moments_3
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
+  wait_for_user_input: false
+
+- rule: Show steps next week group1, 2
+  condition:
+    - active_loop: met_expectations_form
+  steps:
+  - action: met_expectations_form
+  - active_loop: null
+  - action: utter_difficult_moments_pa_7
+  - action: utter_difficult_moments_pa_8
+  - action: utter_difficult_moments_pa_9
+  - action: utter_difficult_moments_pa_10
+  - action: utter_difficult_moments_pa_11
+  - action: utter_difficult_moments_pa_12
+  - action: action_set_pa_group
+  - slot_was_set:
+    - pa_group: 1
+  - action: action_set_slot_smoke_or_pa_2
+  - action: action_reset_slot_crave_lapse_relapse
+  - action: pa_type_together_why_fail_form
+  - active_loop: pa_type_together_why_fail_form
+  wait_for_user_input: false
+
+- rule: Show steps next week group1, 3
+  condition:
+    - active_loop: difficult_moments_form
+  steps:
+  - action: difficult_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments: 3
+  - action: utter_difficult_moments_pa_2
+  - action: utter_difficult_moments_pa_3
+  - action: action_set_pa_group
+  - slot_was_set:
+      - pa_group: 1
+  - action: utter_steps_next_week_1
+  - action: utter_steps_next_week_2
+  - action: utter_steps_next_week_3
+  - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_predict_difficult_moments_2
+  - action: utter_predict_difficult_moments_3
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
+  wait_for_user_input: false
+
+- rule: Show steps next week group1, 4
+  condition:
+    - active_loop: difficult_moments_form
+  steps:
+  - action: difficult_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments: 1
+  - action: utter_difficult_moments_pa_1
+  - action: action_set_pa_group
+  - slot_was_set:
+      - pa_group: 1
+  - action: utter_steps_next_week_1
+  - action: utter_steps_next_week_2
+  - action: utter_steps_next_week_3
+  - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_predict_difficult_moments_2
+  - action: utter_predict_difficult_moments_3
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
+  wait_for_user_input: false
+
+## 7b Increase intensity, for group 2
+- rule: Show increase intensity dialog group2, 1
+  condition:
+    - active_loop: refresh_previous_week_form
+  steps:
+  - action: refresh_previous_week
+  - active_loop: null
+  - slot_was_set:
+    - refresh_previous_week: 2
+  - action: action_set_pa_group
+  - slot_was_set:
+      - pa_group: 2
+  - action: action_get_long_term_pa_goal
+  - action: utter_increase_intensity_1
+  - action: utter_increase_intensity_2
+  - action: utter_increase_intensity_3
+  - action: utter_increase_intensity_4
+  - action: utter_increase_intensity_5
+  #- action: action_set_intensity_minutes_goal
+  - action: utter_increase_intensity_6
+  - action: if_doable_form
+  - active_loop: if_doable_form
+  wait_for_user_input: false
+
+- rule: Show increase intensity dialog group2, 2
+  steps:
+  - action: met_expectations_form
+  - active_loop: null
+  - action: utter_difficult_moments_pa_7
+  - action: utter_difficult_moments_pa_8
+  - action: utter_difficult_moments_pa_9
+  - action: utter_difficult_moments_pa_10
+  - action: utter_difficult_moments_pa_11
+  - action: utter_difficult_moments_pa_12
+  - action: action_set_pa_group
+  - slot_was_set:
+    - pa_group: 2
+  - action: action_get_long_term_pa_goal
+  - action: utter_increase_intensity_1
+  - action: utter_increase_intensity_2
+  - action: utter_increase_intensity_3
+  - action: utter_increase_intensity_4
+  - action: utter_increase_intensity_5
+ # - action: action_set_intensity_minutes_goal
+  - action: utter_increase_intensity_6
+  - action: if_doable_form
+  - active_loop: if_doable_form
+  wait_for_user_input: false
+
+- rule: Show increase intensity dialog group2, 3
+  condition:
+    - active_loop: difficult_moments_form
+  steps:
+  - action: difficult_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments: 3
+  - action: utter_difficult_moments_pa_2
+  - action: utter_difficult_moments_pa_3
+  - action: action_set_pa_group
+  - slot_was_set:
+      - pa_group: 2
+  - action: action_get_long_term_pa_goal
+  - action: utter_increase_intensity_1
+  - action: utter_increase_intensity_2
+  - action: utter_increase_intensity_3
+  - action: utter_increase_intensity_4
+  - action: utter_increase_intensity_5
+ # - action: action_set_intensity_minutes_goal
+  - action: utter_increase_intensity_6
+  - action: if_doable_form
+  - active_loop: if_doable_form
+  wait_for_user_input: false
+
+- rule: Show increase intensity dialog group2, 4
+  condition:
+    - active_loop: difficult_moments_form
+  steps:
+  - action: difficult_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments: 1
+  - action: utter_difficult_moments_pa_1
+  - action: action_set_pa_group
+  - slot_was_set:
+      - pa_group: 2
+  - action: action_get_long_term_pa_goal
+  - action: utter_increase_intensity_1
+  - action: utter_increase_intensity_2
+  - action: utter_increase_intensity_3
+  - action: utter_increase_intensity_4
+  - action: utter_increase_intensity_5
+#  - action: action_set_intensity_minutes_goal
+  - action: utter_increase_intensity_6
+  - action: if_doable_form
+  - active_loop: if_doable_form
+  wait_for_user_input: false
+
+## User answered 2, no, so we don't increase intensity
+- rule: No intensity increase
+  condition:
+    - active_loop: if_doable_form
+  steps:
+  - action: if_doable_form
+  - active_loop: null
+  - slot_was_set:
+    - if_doable: 2
+  - action: utter_increase_intensity_7
+  - action: utter_increase_intensity_8
+  - action: utter_increase_intensity_9
+  - action: utter_predict_difficult_moments_1
+  - action: utter_predict_difficult_moments_2
+  - action: utter_predict_difficult_moments_3
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
+  wait_for_user_input: false
+
+## User answered 1, yes, and so we prompt the next parts
+- rule: Intensity increase
+  condition:
+    - active_loop: if_doable_form
+  steps:
+  - action: if_doable_form
+  - active_loop: null
+  - slot_was_set:
+    - if_doable: 1
+  - action: utter_increase_intensity_10
+  - action: utter_increase_intensity_11
+  - action: action_set_file_path_pa_image
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: utter_increase_intensity_12
+  - action: utter_increase_intensity_13
+  - action: utter_increase_intensity_14
+#  - action: action_set_intensity_minutes_goal
+  - action: utter_increase_intensity_15
+  - action: utter_increase_intensity_16
+  - action: utter_increase_intensity_17
+  - action: utter_increase_intensity_18
+  - action: utter_increase_intensity_19
+  - action: utter_increase_intensity_20
+  - action: utter_increase_intensity_21
+  - action: have_equipment_form
+  - active_loop: have_equipment_form
+  wait_for_user_input: false
+
+## Linear continuation on rule above
+- rule: Intensity increase to difficult moments
+  condition:
+    - active_loop: have_equipment_form
+  steps:
+  - action: have_equipment_form
+  - active_loop: null
+  - action: utter_increase_intensity_22
+  - action: utter_increase_intensity_23
+  - action: utter_predict_difficult_moments_1
+  - action: utter_predict_difficult_moments_2
+  - action: utter_predict_difficult_moments_3
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
+  wait_for_user_input: false
+
+## 7c Will there be difficult moments this week?
+## User answers 1, no
+- rule: Predicts no difficult moments this week
+  condition:
+    - active_loop: difficult_moments_next_week_form
+  steps:
+  - action: difficult_moments_next_week_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments_next_week: 1
+  - action: utter_predict_difficult_moments_4
+  - action: utter_predict_difficult_moments_5
+  - action: utter_predict_difficult_moments_6
+  - action: utter_predict_difficult_moments_7
+  - action: utter_predict_difficult_moments_8
+  - action: utter_predict_difficult_moments_9
+  - action: user_ready_3_form
+  - active_loop: user_ready_3_form
+  wait_for_user_input: false
+
+## User answers 2, yes
+- rule: Predicts no difficult moments this week
+  condition:
+    - active_loop: difficult_moments_next_week_form
+  steps:
+  - action: difficult_moments_next_week_form
+  - active_loop: null
+  - slot_was_set:
+    - difficult_moments_next_week: 2
+  - action: utter_predict_difficult_moments_11
+  - action: utter_predict_difficult_moments_12
+  - action: utter_predict_difficult_moments_13
+  - action: utter_predict_difficult_moments_14
+  - action: utter_predict_difficult_moments_15
+  - action: user_ready_4_form
+  - active_loop: user_ready_4_form
+  wait_for_user_input: false
+
+## 8. Closing
+- rule: Closing from no difficult moments
+  condition:
+    - active_loop: user_ready_3_form
+  steps:
+  - action: user_ready_3_form
+  - active_loop: null
+  - action: utter_predict_difficult_moments_10
+  - action: utter_closing_weekly_reflection_1
+  - action: utter_closing_weekly_reflection_2
+  - action: utter_closing_weekly_reflection_3
+  - action: utter_closing_weekly_reflection_4
+  - action: utter_closing_weekly_reflection_5
+  - action: utter_closing_weekly_reflection_6
+
+- rule: Closing from difficult moments
+  condition:
+    - active_loop: user_ready_4_form
+  steps:
+  - action: user_ready_4_form
+  - active_loop: null
+  - action: utter_predict_difficult_moments_16
+  - action: utter_predict_difficult_moments_17
+  - action: utter_closing_weekly_reflection_1
+  - action: utter_closing_weekly_reflection_2
+  - action: utter_closing_weekly_reflection_3
+  - action: utter_closing_weekly_reflection_4
+  - action: utter_closing_weekly_reflection_5
+  - action: utter_closing_weekly_reflection_6
+
+
+
+

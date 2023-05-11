@@ -64,6 +64,62 @@ class ActionResetOneOrTwoSlot(Action):
         return [SlotSet('one_or_two_slot', None)]
 
 
+class ActionSetSlotSmokeOrPa1(Action):
+    def name(self):
+        return "action_set_slot_smoke_or_pa_1"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('smoke_or_pa', 1)]
+
+class ActionSetSlotSmokeOrPa2(Action):
+    def name(self):
+        return "action_set_slot_smoke_or_pa_2"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('smoke_or_pa', 2)]
+
+class ActionSetSlotsCraveLapseRelapse1(Action):
+    def name(self):
+        return "action_set_slot_crave_lapse_relapse_1"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('crave_lapse_relapse', 1)]
+
+
+class ActionSetSlotCraveLapseRelapse2(Action):
+    def name(self):
+        return "action_set_slot_crave_lapse_relapse_2"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('crave_lapse_relapse', 2)]
+
+class ActionSetSlotCraveLapseRelapse3(Action):
+    def name(self):
+        return "action_set_slot_crave_lapse_relapse_3"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet('crave_lapse_relapse', 3)]
+
+class ActionResetSlotCraveLapseRelapse(Action):
+    def name(self):
+        return "action_reset_slot_crave_lapse_relapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        return {"crave_lapse_relapse": None}
+
+
+class ActionSetSlotWeeklyOrRelapse(Action):
+    def name(self):
+        return "action_set_slot_weekly_or_relapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        intervention_component = tracker.get_slot('current_intervention_component')
+
+        if intervention_component == Components.WEEKLY_REFLECTION:
+            return [SlotSet('weekly_or_relapse', 2)]
+
+        return [SlotSet('weekly_or_relapse', 1)]
+
 class ActionSetSlotRelapseDialog(Action):
     def name(self):
         return "action_set_slot_relapse_dialog_hrs"

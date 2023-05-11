@@ -26,7 +26,8 @@ def at_start(sender, **k):  # pylint: disable=unused-argument
     and for the dialogs status check are started
     """
     notify_new_day.apply_async(args=[datetime.today()])
-    check_dialogs_status.apply_async()
+    ## TODO: uncomment and solve issue
+    # check_dialogs_status.apply_async()
 
 
 @app.task

@@ -341,6 +341,15 @@ slots:
     mappings:
       - type: custom
 
+  weekly_or_relapse:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: custom
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -465,6 +474,8 @@ responses:
   utter_smoke_lapse_18:
     - text: "Het kan ook helpen om te praten met bijvoorbeeld een vriend of familielid over hoe het 
              is gegaan en je plan om opnieuw te stoppen."
+  utter_smoke_lapse_19:
+    - text: "Mooi dat dit zo kan benoemen."
 
 
   utter_ask_ehbo_me_self_lapse:
@@ -688,6 +699,13 @@ actions:
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa
   - action_set_slot_relapse_dialog_relapse
+  - action_set_slot_weekly_or_relapse
+  - action_set_slot_smoke_or_pa_1
+  - action_set_slot_smoke_or_pa_2
+  - action_set_slot_crave_lapse_relapse_1
+  - action_set_slot_crave_lapse_relapse_2
+  - action_set_slot_crave_lapse_relapse_3
+  - action_reset_slot_crave_lapse_relapse
   - action_trigger_relapse
   - populate_coping_activities_list
   - populate_coping_activities_list_pa

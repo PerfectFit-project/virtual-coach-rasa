@@ -114,3 +114,6 @@ class ContinueAfterVideo(Action):
             # resumes the relapse dialog opening the ehbo_me_self_lapse_form.
             # The flow will then depend on the chosen option in the form
             return [FollowupAction('ehbo_me_self_lapse_form')]
+        if current_dialog == Components.WEEKLY_REFLECTION:
+            # resumes weekly reflection from possible_smoking_situations_form.
+            return [FollowupAction('possible_smoking_situations_form')]

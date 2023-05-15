@@ -8,7 +8,7 @@ from . import validator
 from .definitions import REDIS_URL
 from .helper import (get_latest_bot_utterance, get_user, get_pa_group, set_pa_group,
                      get_user_intervention_state_hrs, make_step_overview,
-                     get_intensity_minutes_goal, set_intensity_minutes_goal)
+                     get_intensity_minutes_goal)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction

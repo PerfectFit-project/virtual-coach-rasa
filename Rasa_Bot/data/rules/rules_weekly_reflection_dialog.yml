@@ -659,7 +659,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
-  #- action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form
@@ -684,7 +684,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
- # - action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form
@@ -709,7 +709,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
- # - action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form
@@ -733,7 +733,7 @@ rules:
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
-#  - action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_6
   - action: if_doable_form
   - active_loop: if_doable_form

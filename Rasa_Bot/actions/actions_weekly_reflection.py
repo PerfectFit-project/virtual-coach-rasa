@@ -112,6 +112,7 @@ class SetStepGoalDays(Action):
         step_goal_days = 7
         return [SlotSet('step_goal_days', step_goal_days)]
 
+
 class StepGoalUtterances(Action):
     def name(self):
         return "action_step_goal_utterances"
@@ -130,6 +131,7 @@ class StepGoalUtterances(Action):
 
         return []
 
+
 class SetIntensityMinutes(Action):
     def name(self):
         return "action_set_intensity_minutes"
@@ -138,6 +140,7 @@ class SetIntensityMinutes(Action):
         ## TODO This method should get minutes and set the slot accordingly
         intensity_minutes = 50
         return [SlotSet('intensity_minutes', intensity_minutes)]
+
 
 class SetIntensityMinutesGoal(Action):
     def name(self):
@@ -158,9 +161,12 @@ class SetIntensityMinutesGoal(Action):
         intensity_minutes = previous_goal + 15
 
         # save the new goal to the DB
-        set_intensity_minutes_goal(user_id, intensity_minutes)
+
+        #TODO: save to db new value
+        # set_intensity_minutes_goal(user_id, intensity_minutes)
 
         return [SlotSet('intensity_minutes_goal', intensity_minutes)]
+
 
 class ShowPaOverview(Action):
     def name(self):
@@ -556,6 +562,25 @@ class ValidateUserReady4Form(FormValidationAction):
             return {"user_ready_4": None}
 
         return {"user_ready_4": value}
+
+
+class ValidateHaveEquipment(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_have_equipment_form'
+
+    def validate_have_equipment(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_have_equipment':
+            return {"have_equipment": None}
+
+        if not validator.validate_klaar(value):
+            return {"have_equipment": None}
+
+        return {"have_equipment": value}
 
 
 class ValidateHowAreYou(FormValidationAction):

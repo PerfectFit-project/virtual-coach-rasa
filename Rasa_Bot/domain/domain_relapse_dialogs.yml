@@ -377,10 +377,10 @@ responses:
     - text: "Zou je me kunnen vertellen wat er aan de hand is?"
     - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken. 
-             Typ '2' als je vandaag één of meer sigaretten hebt gerookt. 
-             Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.
-             Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
+    - text: "Typ '1' als je zin hebt om te roken.1️ \n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.2️ \n
+             Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.3️ \n
+             Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
@@ -768,94 +768,159 @@ responses:
     - text: "Hoe wil je doorgaan? Wil je onmiddellijk stoppen (typ '1') of ben je van plan een nieuwe datum te kiezen 
             (typ '2') om te stoppen?"
   utter_smoke_relapse_6:
-    - text: "Wat goed dat je ervoor kiest om meteen weer te stoppen met roken! 
-            Dit maakt het makkelijker om het ook echt te doen."
+    - text: "Wat goed dat je ervoor kiest om meteen weer te stoppen met roken! Dit maakt het makkelijker om het ook echt te doen."
+    - text: "Het is geweldig om te horen dat je meteen weer wilt stoppen met roken! Dit is een grote stap in de goede richting."
+    - text: "Het is fantastisch dat je besloten hebt om te stoppen met roken, dit is een belangrijke stap om je doel te halen."
   utter_smoke_relapse_7:
-    - text: "Heb je nog sigaretten, e-sigaret navullingen, tabek, etc. ? 
-            Wat helpt is om deze meteen weg te gooien. "
+    - text: "Heb je nog sigaretten, e-sigaret navullingen, tabak, etc. ? Wat helpt is om deze meteen weg te gooien.🗑️"
+    - text: "Als je nog sigaretten, e-sigaret navullingen, tabak, etc. hebt, is het goed om deze weg te gooien. Dit gaat het stoppen makkelijker maken.🗑️"
+    - text: "Het kan helpen om eventuele sigaretten, e-sigaret navullingen, tabak, etc. die je nog hebt meteen weg te gooien. Zo voorkom je de verleiding om weer te gaan roken.🗑️"
   utter_smoke_relapse_8:
     - text: "Wat ook helpt is om te kijken of je genoeg hulp hebt om te stoppen en gestopt te blijven."
+    - text: "Het is ook nuttig om te kijken of je de juiste hulp hebt om te stoppen en vol te houden."
   utter_ask_medication_info_slot:
-    - text: "Met hulpmiddelen of medicatie vergroot je de kans om gestopt te blijven. 
-            Wil je hier meer informatie over? 
-            Typ 1 voor ja, typ 2 voor nee."
+    - text: "Met hulpmiddelen of medicatie vergroot je de kans om gestopt te blijven. Wil je hier meer informatie over? \n 
+            Typ '1' voor ja, typ '2' voor nee."
+    - text: "Als je geïnteresseerd bent in hulpmiddelen of medicatie om je te helpen gestopt te blijven, kan ik je hier meer informatie over geven. Typ '1' als je dat wilt, typ '2' als je geen interesse hebt"
+
 # PA
   utter_pa_define_1:
     - text: "Kun je mij vertellen wat er aan de hand is?"
+    - text: "Zou je willen delen wat er op dit moment speelt?"
+    - text: "Wat is er gaande?"
   utter_ask_pa_specify_pa_slot:
-    - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt. Typ '2' als je merkt
-             dat het bewegen over het algemeen niet zo goed gaat als je zou willen.
-             "
+    - text: "Typ '1' als je gepland had om te bewegen, maar dit nu niet lukt. Typ '2' als je merkt dat het bewegen over het algemeen niet zo goed gaat als je zou willen."
+    - text: "Typ '1' als het nu niet lukt om te bewegen hoewel je het had gepland. Typ '2' als het bewegen over het algemeen niet gaat zoals gehoopt of gepland."
+    - text: "Typ '1' als je merkt je dat het nu niet lukt om te bewegen, hoewel je het had gepland. typ '2' als je merkt dat het bewegen over het algemeen niet zo soepel gaat als je zou willen."
   utter_pa_lapse_1:
-    - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan
-             lastig zijn. Hoe vervelend ook, het kan dus gebeuren dat het even niet lukt. Wees dus
-             niet te hard voor jezelf. Daardoor kun je je rot voelen en dan krijg je minder zin om
-             te gaan. 
-             "
+    - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan lastig zijn. 
+            Hoe vervelend ook, het kan dus gebeuren dat het even niet lukt. Wees dus niet te hard voor jezelf. Daardoor 
+            kun je je rot voelen en dan krijg je minder zin om te gaan."
+    - text: "Het is begrijpelijk dat het niet altijd makkelijk is te bewegen. Het vergt tijd en inspanning. Het is 
+            begrijpelijk dat het niet altijd lukt om te bewegen. Het is belangrijk om niet te streng voor jezelf te 
+            zijn als het even niet lukt. Als je heel kritisch bent naar jezelf kun je juist minder zin hebben om te gaan."
+    - text: "Het kan inderdaad een uitdaging zijn om meer te bewegen, maar het is belangrijk om stap voor stap 
+            vooruitgang te boeken. Het is begrijpelijk dat het niet altijd lukt om te bewegen. Het is belangrijk om 
+            niet te streng voor jezelf te zijn als het even niet lukt. Als je heel kritisch bent naar jezelf kun je 
+            juist minder zin hebben om te gaan."
   utter_pa_lapse_2:
-    - text: "En je kunt het ook positief bekijken: er zijn momenten geweest dat je wel in beweging
-             kwam. Dat is heel goed!"
+    - text: "En je kunt het ook positief bekijken: er zijn momenten geweest dat je wel in beweging kwam. Dat is heel goed!💪"
+    - text: "Je kunt ook kijken naar de momenten waarop het wel lukte om in beweging te komen. Dat laat zien dat je het kunt!💪"
   utter_pa_lapse_3:
-    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen
-             zin hebt om in beweging te komen. Daarom wil ik je wat vragen stellen over de situatie
-             waarin je zit. "
+    - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen zin hebt om in 
+            beweging te komen. Daarom wil ik je wat vragen stellen over de situatie waarin je zit."
+    - text: "Het kan nuttig zijn om te kijken naar de situaties waarin je zit op het moment dat het wat minder goed 
+            lukt, zodat je hier in de toekomst op voorbereid bent. Ik wil je hier dus een paar vragen stellen over de 
+            situatie waarin je zit."
   utter_ask_pa_type:
-    - text: "Kun je mij vertellen wat voor lichamelijke activiteit je had gepland om te doen?"
+    - text: "Kun je mij vertellen wat voor lichamelijke activiteit je had gepland om te doen?🚶🏊🎾"
+    - text: "Kun je mij vertellen welke lichamelijke activiteit je van plan was te doen? 🚶🏊🎾"
   utter_ask_pa_together:
-    - text: "Zou je dit met iemand samen doen? Typ 1 voor ja, typ 2 voor nee."
+    - text: "Zou je dit met iemand samen doen? Typ '1' voor ja, typ '2' voor nee."
   utter_ask_pa_why_fail:
     - text: "Kun je aangeven wat de reden is dat dat je nu niet lukt? Je mag meerdere
              antwoorden geven. Typ 1 als je geen zin hebt. Typ 2 als je moe bent en geen energie
              hebt. Typ 3 als je geen tijd hebt. Typ 4 als er iets tussen is gekomen. Typ 5 als het
              ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
   utter_ask_pa_doing_today_slot:
-    - text: "Je mag meerdere antwoorden geven. 
-            Typ 1 als je aan het werk was. 
-            Typ 2 als je thuis bezig was met klusjes of huishouden. 
-            Typ 3 als je iets voor jezelf deed (hobby, met iemand afspreken). 
-            Typ 4 als je al lichamelijk actief bent geweest. 
-            Typ 5 als je iets deed wat niet in het lijstje staat. "
+    - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. 
+            Typ '1' als je aan het werk was. 💼 \n
+            Typ '2' als je thuis bezig was met klusjes of huishouden. 🧹🛠️ \n
+            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken).☀️ \n
+            Typ '4' als je aan het eten of drinken was. 🍽️ \n
+            Typ '5' als je net alcohol of koffie hebt gedronken. 🍷🍺☕ \n
+            Typ '6' als je net wakker was. ⏰  \n
+            Typ '7' als je iets deed wat niet in het lijstje staat. "
   utter_ask_pa_happened_special_slot:
-    - text: "Gebeurde er iets bijzonders?"
+    - text: "Is er iets bijzonder gebeurd?"
+    - text: "Is er iets speciaals gebeurd?"
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_pa_lapse_5:
     - text: "Wat heb je vandaag verder gedaan?"
   utter_pa_lapse_6:
-    - text: "Door vaker te kijken naar situaties waarin je geen zin hebt om in beweging te komen, kun je leren patronen te herkennen. 
-            Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
+    - text: "Door vaker te kijken naar situaties waarin je geen zin hebt om in beweging te komen, kun je leren patronen 
+            herkennen.💡 Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
+    - text: "Als je vaker stilstaat bij momenten waarop je niet in beweging komt, kun je patronen leren herkennen en 
+            jezelf beter voorbereiden op momenten dat her weer gebeurt.💡"
   utter_pa_lapse_7:
-    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je vond het in de volgende situaties lastig om in beweging te komen:"
+    - text: "Laten we daarom samen kijken naar wat je hebt ingevuld. Je vond het in de volgende situaties lastig om in 
+            beweging te komen:"
+    - text: "Laten we daarom samen eens kijken naar wat je hebt ingevuld en de situaties bespreken waarin het lastig 
+            voor je was om in beweging te komen:"
+    - text: "Om deze reden stel ik voor dat we samen gaan bekijken wat je hebt ingevuld en de situaties bespreken 
+            waarin je moeite had om in beweging te komen:"
   utter_pa_lapse_8:
     - text: "Op dit moment heb je de keuze om door te zetten en alsnog in beweging te komen."
+    - text: "Je hebt op dit moment de mogelijkheid om door te zetten en toch in actie te komen."
+    - text: "Op dit moment ligt de keuze bij jou om door te gaan en alsnog in beweging te komen."
   utter_pa_lapse_9:
-    - text: "Als je dat gedaan hebt, ben je een stapje dichterbij het halen van je beweegdoel. En waarschijnlijk ben je blij met jezelf. "
+    - text: "Als je dat gedaan hebt, ben je een stapje dichterbij het halen van je beweegdoel. En waarschijnlijk ben je 
+            blij met jezelf.😄"
+    - text: "Door dat te doen, kom je weer een stap dichter bij het behalen van je beweegdoel. En waarschijnlijk zul je 
+            trots zijn op jezelf. 😄"
+    - text: "Hierdoor zul je weer een stap dichter bij het behalen van je beweegdoel komen, en waarschijnlijk zul je 
+            een gevoel van voldoening ervaren. 😄"
   utter_pa_lapse_10:
-    - text: "Het kan als een hobbel voelen, maar soms is het beste om gewoon te gaan of gewoon door te zetten. 
-            Omkleden of spullen pakken en gaan. Eenmaal bezig gaat het vaak makkelijker."
+    - text: "Het kan als een hobbel voelen, maar soms is het beste om gewoon te gaan of gewoon door te zetten. Omkleden 
+            of spullen pakken en gaan.🚶‍♀️🏃 Eenmaal bezig gaat het vaak makkelijker."
+    - text: "Hoewel het misschien lastig lijkt, kan het soms het beste zijn om gewoon te beginnen of door te zetten. 
+            Kleed je om, pak je spullen en ga ervoor! 🚶‍♀️🏃 Vaak gaat het gemakkelijker zodra je bezig bent."
+    - text: "Het kan als een drempel voelen, maar soms is het gewoon nodig om de eerste stap te zetten of door te 
+            zetten. Kleed je om, pak je spullen en ga! 🚶‍♀️🏃 Wanneer je eenmaal begint, zul je merken dat het vaak makkelijker gaat."
   utter_pa_lapse_11:
-    - text: "Soms past een andere manier van bewegen beter en lukt het je wel om dat te doen. 
-            Je kunt bijvoorbeeld een stuk gaan wandelen, gaan tuinieren, iets doen aan het huishouden of thuis sporten. 
-            Neem nu even de tijd om na te denken hoe je op een andere manier kunt bewegen."
+    - text: "Soms past een andere manier van bewegen beter en lukt het je wel om dat te doen. Je kunt bijvoorbeeld een 
+            stuk gaan wandelen, gaan tuinieren🌻, iets doen aan het huishouden of thuis sporten. Neem nu even de tijd 
+            om na te denken hoe je op een andere manier kunt bewegen.💭"
+    - text: "Soms werkt een andere manier van bewegen beter om alsnog actief te zijn. Bijvoorbeeld een wandeling te 
+            maken, tuinieren🌻, huishoudelijke taken uitvoeren of thuis sporten. Neem nu even de tijd om na te denken 
+            over welke alternatieve beweegactiviteit bij jou past. 💭"
+    - text: "Het kan helpen om op een andere manier te bewegen, en soms is dat het zetje dat je nodig hebt om actief te 
+            worden. Denk er eens over na welke activiteiten voor jou haalbaar zijn, zoals wandelen, tuinieren🌻, 
+            huishoudelijke taken of thuis sporten. Neem even de tijd om hierover na te denken. 💭"
   utter_pa_lapse_12:
-    - text: "Wat ook kan helpen is om met iemand in beweging te komen. Zo maak je het meteen ook gezellig. 
-            Bel dus gerust iemand uit je omgeving om te vragen of zij mee willen doen. "
+    - text: "Wat ook kan helpen is om met iemand in beweging te komen. Zo maak je het meteen ook gezellig. Bel dus 
+            gerust iemand uit je omgeving om te vragen of zij mee willen doen.📞"
+    - text: "Een andere manier om in beweging te komen is om dit samen met iemand anders te doen. Op deze manier heb je
+            niet alleen gezelschap, maar ook motivatie. Voel je vrij om iemand uit je omgeving te bellen en te vragen 
+            of zij mee willen doen. 📞"
+    - text: "Naast het feit dat het gezelliger is, kan het ook motiverend zijn om samen te bewegen. Bel dus gerust 
+            iemand uit je omgeving en vraag ze om samen te gaan sporten. 📞"
   utter_pa_lapse_13:
-    - text: "Je kunt ook plannen wanneer je alsnog gaat. 
-            Door het in je agenda te zetten spreek je met jezelf af dat je op een later moment in beweging komt."
+    - text: "Je kunt ook plannen wanneer je alsnog gaat. Door het in je agenda te zetten spreek je met jezelf af dat je
+            op een later moment in beweging komt."
+    - text: "Een andere optie is om een specifiek tijdstip te plannen waarop je alsnog in beweging komt. Door het in je
+            agenda te zetten, maak je een duidelijke afspraak met jezelf."
+    - text: "Je kunt er ook voor kiezen om een specifiek moment te plannen waarop je alsnog gaat. Door het in je agenda 
+            te noteren, verplicht je jezelf om op dat moment in beweging te komen."
   utter_ask_pa_enough_motivation_slot:
-    - text: "Heb je weer voldoende motivatie om in beweging te komen of wil je nog een oefening doen?
-            Typ 1 als het je nu lukt om in beweging te komen. 
-            Typ 2 om te kijken wat de opties zijn om verder te gaan."
+    - text: "Heb je weer voldoende motivatie om in beweging te komen of wil je nog een oefening doen? Typ '1' als het 
+            je nu lukt om in beweging te komen Typ '2' om te kijken wat de opties zijn om verder te gaan."
+    - text: "Voel je je nu genoeg motivatie om in actie te komen of wil je nog een oefening doen? Typ '1' als het je nu
+            lukt om in beweging te komen  Typ '2' als je wilt kijken wat de mogelijke volgende stappen zijn om verder 
+            te gaan."
+    - text: "Ben je nu klaar om in beweging te komen of wil je nog een oefening proberen om jezelf verder te motiveren? 
+            Typ '1' als het gaat lukken om in beweging te komen. Typ '2' als je wilt kijken wat de mogelijke volgende
+             stappen zijn om verder te gaan."
   utter_pa_list_activities_intro:
     - text: "De volgende oefeningen kunnen jou op dit moment helpen om je te motiveren."
   utter_good_to_hear_pa_1:
-    - text: "Wat goed dat je weer gemotiveerd bent om het bewegen op te pakken!."
+    - text: "Wat goed dat je weer gemotiveerd bent om het bewegen op te pakken!"
+    - text: "Geweldig om te horen dat je weer gemotiveerd bent om te bewegen!"
+    - text: "Fantastisch dat je weer de motivatie hebt gevonden om te bewegen!"
   utter_pa_call_help_1:
-    - text: "Heb je behoefte om iemand te spreken? Je kunt misschien praten met een vriend of familielid."
+    - text: "Heb je behoefte om iemand te spreken?💬 Je kunt misschien praten met een vriend of familielid."
+    - text: "Als je behoefte hebt om met iemand te praten, is het wellicht een goed idee om contact op te nemen met een vriend of familielid."
+    - text: "Wil je graag met iemand praten? Het kan helpen om een vriend of familielid te spreken."
   utter_pa_call_help_2:
-    - text: "Wil je wat meer steun om in beweging te komen? Je kunt een afspraak maken met je huisarts. 
-            Die is vaak goed op de hoogte van wat er mogelijk is in jouw buurt. "
+    - text: "Wil je wat meer steun om in beweging te komen? Je kunt een afspraak maken met je huisarts. Die is vaak 
+            goed op de hoogte van wat er mogelijk is in jouw buurt. Dit was het voor nu. Tot de volgende keer!"
+    - text: "Als je wat extra steun nodig hebt om in beweging te komen, kun je een afspraak maken met je huisarts. Hij
+            of zij is vaak goed op de hoogte van de mogelijkheden in jouw omgeving. Dat was alles voor nu. We spreken 
+            elkaar weer de volgende keer!"
+    - text: "Als je behoefte hebt aan meer hulp om in beweging te komen, overweeg dan een afspraak te maken met je
+            huisarts. Hij of zij kan je informeren over de opties die beschikbaar zijn in jouw buurt.  Dit was alles 
+            voor vandaag. Tot de volgende keer!"
   utter_pa_sick:
     - text: "Wat vervelend voor je, ik hoop dat je je snel weer beter voelt. 
             Typ '...' [command] in de chat wanneer je weer beter bent en klaar om weer in beweging te komen" # TODO: add command

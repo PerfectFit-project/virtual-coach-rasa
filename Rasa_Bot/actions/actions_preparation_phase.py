@@ -53,6 +53,7 @@ class ValidateNowOrLaterForm(FormValidationAction):
         now_or_later = validator.validate_number_in_range_response(1, 2, value)
         if not now_or_later:
             dispatcher.utter_message(response="utter_please_answer_1_2")
+            return {"now_or_later": None}
 
         return {"now_or_later": value}
 
@@ -74,6 +75,7 @@ class ValidatePickADaypartForm(FormValidationAction):
         correct_format = validator.validate_number_in_range_response(1, 4, value)
         if not correct_format:
             dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"chosen_daypart": None}
 
         return {"chosen_daypart": value}
 
@@ -147,9 +149,9 @@ class AskNewTime(Action):
     async def run(self, dispatcher, tracker, domain):
         options = get_daypart_options_str()
 
-        prompt = "Wanneer zou je het volgende onderdeel willen doen? Typ '1' als je het volgende" \
-                 "onderdeel over 1 uur wilt doen. Typ '2' als je het {0} wilt doen. Typ '3'" \
-                 " als je het {1} wilt doen. En typ '4' als " \
+        prompt = "Wanneer zou je het volgende onderdeel willen doen?\nTyp '1' als je het volgende"\
+                 "onderdeel over 1 uur wilt doen.\nTyp '2' als je het {0} wilt doen.\nTyp '3'" \
+                 " als je het {1} wilt doen.\nEn typ '4' als " \
                  "je het {2} wilt doen. "
         utterance = prompt.format(*options)
 

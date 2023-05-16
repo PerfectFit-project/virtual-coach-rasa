@@ -1,7 +1,6 @@
 version: "3.1"
 
 intents:
-  - relapse_dialog
   - EXTERNAL_relapse_dialog
   - EXTERNAL_relapse_dialog_hrs
   - EXTERNAL_relapse_dialog_relapse
@@ -342,6 +341,15 @@ slots:
     mappings:
       - type: custom
 
+  weekly_or_relapse:
+    type: categorical
+    values:
+      - 1
+      - 2
+    influence_conversation: true
+    mappings:
+      - type: custom
+
 responses:
 # General
   utter_relapse_intro_codeword:
@@ -547,6 +555,8 @@ responses:
             om opnieuw te stoppen."
     - text: "Een gesprek voeren met een vriend of familielid over je plan om te stoppen kan je helpen om gemotiveerd 
             te blijven en je doelen te bereiken. "
+  utter_smoke_lapse_19:
+    - text: "Mooi dat dit zo kan benoemen."
 
 
   utter_ask_ehbo_me_self_lapse:
@@ -861,6 +871,13 @@ actions:
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa
   - action_set_slot_relapse_dialog_relapse
+  - action_set_slot_weekly_or_relapse
+  - action_set_slot_smoke_or_pa_1
+  - action_set_slot_smoke_or_pa_2
+  - action_set_slot_crave_lapse_relapse_1
+  - action_set_slot_crave_lapse_relapse_2
+  - action_set_slot_crave_lapse_relapse_3
+  - action_reset_slot_crave_lapse_relapse
   - action_trigger_relapse
   - populate_coping_activities_list
   - populate_coping_activities_list_pa

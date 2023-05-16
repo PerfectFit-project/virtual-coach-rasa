@@ -26,7 +26,8 @@ def at_start(sender, **k):  # pylint: disable=unused-argument
     and for the dialogs status check are started
     """
     notify_new_day.apply_async(args=[datetime.today()])
-    check_dialogs_status.apply_async()
+    ## TODO: uncomment and solve issue
+    # check_dialogs_status.apply_async()
 
 
 @app.task
@@ -65,7 +66,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             
             # the dialog is idle now
             fsm.dialog_state.set_to_idle()
-            save_state_machine_to_db(fsm.machine_id)
+            save_state_machine_to_db(fsm)
 
             next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)
 
@@ -191,7 +192,7 @@ def trigger_scheduled_intervention_component(self,  # pylint: disable=unused-arg
 
     else:
         # if a dialog is running, reschedule the trigger
-        rescheduled_date = datetime.now() + timedelta(minutes=MAXIMUM_DIALOG_DURATION)
+        rescheduled_date = datetime.now() + timedelta(seconds=MAXIMUM_DIALOG_DURATION)
         # send a rescheduling event
         send_fsm_event(user_id,
                        event=Event(EventEnum.DIALOG_RESCHEDULED_AUTO, (name, rescheduled_date)))

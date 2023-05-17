@@ -199,6 +199,7 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
         .filter(
             UserInterventionState.users_nicedayuid == user_id,
             UserInterventionState.intervention_component_id == intervention_component_id
+            UserInterventionState.completed.is_(False)
         )
         .first()
     )

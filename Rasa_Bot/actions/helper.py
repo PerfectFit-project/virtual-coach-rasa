@@ -147,13 +147,15 @@ def get_last_completed_dialog_part_from_db(user_id: int,
     
     session = get_db_session(db_url=DATABASE_URL)
 
+    # Get most recent uncompleted entry for component from db
     selected = (
         session.query(
             UserInterventionState
         ).order_by(UserInterventionState.last_time.desc())
         .filter(
             UserInterventionState.users_nicedayuid == user_id,
-            UserInterventionState.intervention_component_id == intervention_component_id
+            UserInterventionState.intervention_component_id == intervention_component_id,
+            UserInterventionState.completed.is_(False)
         )
         .first()
     )
@@ -198,7 +200,7 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
         ).order_by(UserInterventionState.last_time.desc())
         .filter(
             UserInterventionState.users_nicedayuid == user_id,
-            UserInterventionState.intervention_component_id == intervention_component_id
+            UserInterventionState.intervention_component_id == intervention_component_id,
             UserInterventionState.completed.is_(False)
         )
         .first()
@@ -213,8 +215,6 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
         # Update time and part of component
         selected.last_time = last_time
         selected.last_part = part
-        # Set component to not completed
-        selected.completed = False
 
     # No entry exists yet for user for the component in
     # the intervention state table

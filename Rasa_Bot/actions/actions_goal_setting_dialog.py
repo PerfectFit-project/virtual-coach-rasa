@@ -308,14 +308,16 @@ class ActionGetLastCompletedGoalSettingPart(Action):
         user_id = tracker.current_state()['sender_id']
         comp_id = get_intervention_component_id(Components.GOAL_SETTING)
 
+        # Return value can be -1, 1, 2, or 3.
         last_part = get_last_completed_dialog_part_from_db(user_id, 
                                                            comp_id)
 
-        # Need to set which_sport slot in case last completed part was 2 or 3
+        # Need to set which_sport_continue_dialog slot in case last completed 
+        # part was 2 or 3.
         # This is because {which_sport} is included in utterances.
         # Since the which_sport-slot is set as part of a form, we created
         # an alternative slot, which_sport_continue_dialog, that is used in
-        # the utterances where needed using conditional response variations
+        # the utterances where needed using conditional response variations.
         if last_part in {2, 3}:
             which_sport = get_goal_setting_chosen_sport_from_db(user_id)
             

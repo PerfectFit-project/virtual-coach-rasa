@@ -5,10 +5,8 @@ intents:
 
 slots:
   # Previously completed dialog part (goal-setting dialog has 4 parts)
-  # -1 means not previously done, 0 means completed entire dialog.
+  # -1 means no uncompleted goal-setting dialog,
   # 1 is first part of dialog, 2 second part, 3 third part.
-  # 0 means a completed entire dialog, because this is what the function
-  # store_completed_dialog does for all dialogs (i.e., sets last_part=0)
   last_completed_goal_setting_dialog_part:
     type: categorical
     values:
@@ -16,7 +14,6 @@ slots:
       - 1
       - 2
       - 3
-      - 0
     influence_conversation: true
     mappings:
       - type: custom
@@ -356,12 +353,6 @@ responses:
   - condition:
         - type: slot
           name: last_completed_goal_setting_dialog_part
-          value: 0
-    text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport},
-          voor hoe lang, waar, en wil je het samen met iemand doen of alleen?"
-  - condition:
-        - type: slot
-          name: last_completed_goal_setting_dialog_part
           value: -1
     text: "Typ nu jouw beweegdoel. Waar zou je over 3 maanden willen zijn? Bijvoorbeeld wanneer ga je {which_sport},
           voor hoe lang, waar, en wil je het samen met iemand doen of alleen?" 
@@ -487,13 +478,6 @@ responses:
   utter_step_goal_pa_6:
     - text: "Hoe kun jij jezelf helpen om je stappendoelen te halen en actiever te worden?"
   utter_step_goal_pa_7:
-  - condition:
-        - type: slot
-          name: last_completed_goal_setting_dialog_part
-          value: 0
-    text: "Om je stappendoel te halen kun je wandelen of hardlopen of bijvoorbeeld {which_sport}. Maar je kunt
-           natuurlijk ook meer bewegen door vaker de trap te nemen, lopend naar de supermarkt gaan, te tuinieren of
-           huishoudelijke klussen te doen 🏡. Dit zorgt er allemaal voor dat je meer stappen per dag zet."
   - condition:
         - type: slot
           name: last_completed_goal_setting_dialog_part

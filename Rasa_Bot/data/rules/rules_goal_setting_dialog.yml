@@ -10,11 +10,8 @@ rules:
   - intent: EXTERNAL_trigger_goal_setting
   - action: action_set_slot_goal_setting_dialog
   - action: action_get_last_completed_goal_setting_part
-  - or:
-    - slot_was_set:
-      - last_completed_goal_setting_dialog_part: -1
-    - slot_was_set:
-      - last_completed_goal_setting_dialog_part: 0
+  - slot_was_set:
+    - last_completed_goal_setting_dialog_part: -1
   - action: utter_goal_setting_greeting
   - action: how_doing_form
   - active_loop: how_doing_form

@@ -5,11 +5,11 @@ Contains custom actions related to the relapse dialogs
 import logging
 
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL
+from .definitions import DATABASE_URL, REDIS_URL, activities_categories
 from .helper import (get_latest_bot_utterance, get_random_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
                      store_dialog_closed_answer_list_to_db, store_user_intervention_state,
-                     populate_fig)
+                     populate_fig, get_possible_activities)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -232,31 +232,80 @@ class TriggerRelapseDialog(Action):
         return []
 
 
-class ShowChosenCopingActivity(Action):
-    def name(self):
-        return "show_chosen_coping_activity"
 
-    async def run(self, dispatcher, tracker, domain):
-        chosen_option = int(tracker.get_slot('hrs_choose_coping_activity_slot'))
-        activities_slot = tracker.get_slot('coping_activities_ids')
+class ValidateHrsChooseCopingActivityForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_choose_coping_activity_form'
 
-        activity_id = activities_slot[chosen_option - 1]
+    def validate_hrs_choose_coping_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_effort_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
 
-        session = get_db_session(db_url=DATABASE_URL)
+        if last_utterance != 'utter_ask_hrs_choose_coping_activity_slot':
+            return {"hrs_choose_coping_activity_slot": None}
 
-        instructions = (
-            session.query(
-                InterventionActivity
-            )
-            .filter(
-                InterventionActivity.intervention_activity_id == activity_id
-            ).all()
-        )
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"hrs_choose_coping_activity_slot": None}
 
-        # prompt the message
-        dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
+        user_id = tracker.current_state()['sender_id']
 
-        return []
+        activity_type_slot = int(value)
+        activity_id = tracker.get_slot('last_activity_id_slot')
+
+        activity_type = activities_categories[int(activity_type_slot)]
+
+        _, available = get_possible_activities(user_id,
+                                                       activity_type,
+                                                       activity_id)
+
+        available_activities_ids = [activity.intervention_activity_id for activity in available]
+
+        options = ["Typ " + str(i + 1) + " als je " +
+                   available[i].intervention_activity_title +
+                   "wilt doen.\n"
+                   for i in range(len(available))]
+
+        sentence = ''.join(options)
+
+        sentence += "Typ " + \
+                    str(len(available) + 1) + \
+                    " als je toch een andere soort oefening wilt doen."
+
+        dispatcher.utter_message(response="utter_ask_hrs_choose_coping_activity2")
+
+        return {"hrs_choose_coping_activity_slot": float(value),
+                "hrs_coping_activity_activities_options_slot": sentence,
+                "rnd_activities_ids": available_activities_ids}
+
+    def validate_coping_activity_next_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate coping_activity_next_activity_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_coping_activity_next_activity_slot':
+            return {"coping_activity_next_activity_slot": None}
+
+        opt_number = len(tracker.get_slot('rnd_activities_ids')) + 1
+
+        if not validator.validate_number_in_range_response(1, opt_number, value):
+            dispatcher.utter_message(text="Kun je een geheel getal tussen 1 en "
+                                          + str(opt_number) + " opgeven? ...")
+            return {"coping_activity_next_activity_slot": None}
+
+        if value == str(opt_number):
+            return {"hrs_choose_coping_activity_slot": None,
+                    "coping_activity_next_activity_slot": None}
+
+        activity_type_slot = tracker.get_slot('hrs_choose_coping_activity_slot')
+
+        return {"hrs_choose_coping_activity_slot": activity_type_slot,
+                "coping_activity_next_activity_slot": value}
 
 
 class ShowBarchartDifficultSituations(Action):
@@ -1094,19 +1143,9 @@ class ValidateHrsChooseCopingActivityForm(FormValidationAction):
         if last_utterance != 'utter_ask_hrs_choose_coping_activity_slot':
             return {"hrs_choose_coping_activity_slot": None}
 
-        if not validator.validate_number_in_range_response(1, 4, value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
             return {"hrs_choose_coping_activity_slot": None}
-
-        if value == '4':
-            rnd_activities = get_random_activities(-1, 3)
-            rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
-
-            return {"hrs_choose_coping_activity_slot": None,
-                    "coping_activities_ids": rnd_activities_ids,
-                    "coping_activity1_name": rnd_activities[0].intervention_activity_title,
-                    "coping_activity2_name": rnd_activities[1].intervention_activity_title,
-                    "coping_activity3_name": rnd_activities[2].intervention_activity_title}
 
         return {"hrs_choose_coping_activity_slot": value}
 

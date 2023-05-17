@@ -329,7 +329,6 @@ rules:
     - smoke_or_pa: 1 # smoke branch
   - slot_was_set:
     - crave_lapse_relapse: 1 # hrs
-  - action: show_chosen_coping_activity
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
   wait_for_user_input: false

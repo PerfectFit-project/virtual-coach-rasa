@@ -1,18 +1,93 @@
 """
 Contains custom actions related to the relapse dialogs
 """
-from virtual_coach_db.dbschema.models import (Testimonials, Users)
-from virtual_coach_db.helper import (Components)
+from virtual_coach_db.dbschema.models import (Testimonials, 
+                                              Users)
+from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
-from .definitions import DATABASE_URL, TIMEZONE, FILE_PATH_IMAGE_PA
-from .helper import (get_latest_bot_utterance, store_quit_date_to_db, store_long_term_pa_goal_to_db)
+from .definitions import DATABASE_URL, FILE_PATH_IMAGE_PA, TIMEZONE
+from .helper import (get_goal_setting_chosen_sport_from_db,
+                     get_intervention_component_id, 
+                     get_last_completed_dialog_part_from_db,
+                     get_latest_bot_utterance, 
+                     store_dialog_part_to_db,
+                     store_goal_setting_chosen_sport_to_db,
+                     store_long_term_pa_goal_to_db,
+                     store_quit_date_to_db)
 from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
+
+
+class ActionSaveGoalSettingDialogPart1(Action):
+    """To save first part of goal-setting dialog"""
+
+    def name(self):
+        return "action_save_goal_setting_dialog_part1"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 1)
+
+        return []
+    
+
+class ActionSaveGoalSettingDialogPart2(Action):
+    """To save second part of goal-setting dialog"""
+
+    def name(self):
+        return "action_save_goal_setting_dialog_part2"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        user_id = tracker.current_state()['sender_id']
+
+        store_dialog_part_to_db(user_id, 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 2)
+        
+        # Also need to store the "which_sport"-slot to the database
+        store_goal_setting_chosen_sport_to_db(user_id, 
+                                              tracker.get_slot('which_sport'))
+
+        return []
+    
+
+class ActionSaveGoalSettingDialogPart3(Action):
+    """To save third part of goal-setting dialog"""
+
+    def name(self):
+        return "action_save_goal_setting_dialog_part3"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 3)
+
+        return []
+    
+
+class ActionSaveGoalSettingDialogPart4(Action):
+    """To save 4th part of goal-setting dialog"""
+
+    def name(self):
+        return "action_save_goal_setting_dialog_part4"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        # 0 means that the entire dialog is completed
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.GOAL_SETTING), 
+                                part = 0)
+
+        return []
 
 
 class ActionGetFirstLastDate(Action):
@@ -222,6 +297,36 @@ class ActionSetSlotGoalSettingDialog(Action):
 
         return [SlotSet('current_intervention_component',
                         Components.GOAL_SETTING)]
+    
+
+class ActionGetLastCompletedGoalSettingPart(Action):
+    def name(self):
+        return "action_get_last_completed_goal_setting_part"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        user_id = tracker.current_state()['sender_id']
+        comp_id = get_intervention_component_id(Components.GOAL_SETTING)
+
+        # Return value can be -1, 1, 2, or 3.
+        last_part = get_last_completed_dialog_part_from_db(user_id, 
+                                                           comp_id)
+
+        # Need to set which_sport_continue_dialog slot in case last completed 
+        # part was 2 or 3.
+        # This is because {which_sport} is included in utterances.
+        # Since the which_sport-slot is set as part of a form, we created
+        # an alternative slot, which_sport_continue_dialog, that is used in
+        # the utterances where needed using conditional response variations.
+        if last_part in {2, 3}:
+            which_sport = get_goal_setting_chosen_sport_from_db(user_id)
+            
+            return [SlotSet('last_completed_goal_setting_dialog_part',
+                    last_part),
+                    SlotSet('which_sport_continue_dialog', which_sport)]
+
+        return [SlotSet('last_completed_goal_setting_dialog_part',
+                last_part)]
 
 
 class ValidateWhichSportForm(FormValidationAction):
@@ -475,7 +580,7 @@ class ActionContinueStepGoalPa(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        return [FollowupAction('utter_step_goal_pa_1')]
+        return [FollowupAction('action_save_goal_setting_dialog_part3')]
 
 
 class ValidateFinishedWritingPaForm(FormValidationAction):

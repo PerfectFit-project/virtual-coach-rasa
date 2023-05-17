@@ -5,7 +5,7 @@ rules:
   steps:
   - intent: nlu_fallback
   - action: utter_default
-  - action: utter_central_mode_options
+  - action: action_select_menu
   - action: action_end_dialog
 
 - rule: help command
@@ -34,3 +34,15 @@ rules:
   - action: action_set_slot_medication_talk_video
   - action: action_set_medication_video_link
   - action: action_launch_watch_video_dialog
+
+- rule: continue dialog
+  steps:
+  - intent: continue_dialog_intent
+  - action: action_trigger_uncompleted_dialog
+  
+- rule: no valid uncompleted dialog
+  steps:
+  - intent: EXTERNAL_no_valid_uncompleted_dialog
+  - action: utter_no_valid_uncompleted_dialog
+  - action: utter_central_mode_options_without_verder
+  - action: action_end_dialog

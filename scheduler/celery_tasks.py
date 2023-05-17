@@ -227,7 +227,7 @@ def trigger_menu(self,  # pylint: disable=unused-argument
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
-    response = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
     # the state machine status as to be marked as not running
     # to allow new dialogs to be administered

@@ -100,4 +100,3 @@ class ActionTriggerUncompletedDialog(Action):
         else:
             dispatcher.utter_message(response="utter_no_valid_uncompleted_dialog")
             dispatcher.utter_message(response="utter_central_mode_options_without_verder")
-

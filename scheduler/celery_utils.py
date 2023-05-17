@@ -293,3 +293,23 @@ def send_fsm_event(user_id: int, event: Event):
     user_fsm.on_event(event)
 
     save_state_machine_to_db(user_fsm)
+
+
+def set_dialog_running_status(user_id: int, state: bool):
+    """
+    Set the dialog_running status to True or False
+    Args:
+        user_id: ID of the user
+        state: the status to be set
+
+    """
+
+    user_fsm = get_user_fsm(user_id)
+
+    if state:
+        current_dialog = user_fsm.dialog_state.get_current_dialog()
+        user_fsm.dialog_state.set_to_running(current_dialog)
+    else:
+        user_fsm.dialog_state.set_to_idle()
+
+    save_state_machine_to_db(user_fsm)

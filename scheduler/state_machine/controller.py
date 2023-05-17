@@ -6,7 +6,8 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_last_scheduled_occurrence, get_quit_date,
                                                get_start_date, is_new_week, plan_and_store,
                                                reschedule_dialog, retrieve_intervention_day,
-                                               revoke_execution, schedule_next_execution,
+                                               revoke_execution, run_option_menu,
+                                               run_uncompleted_dialog, schedule_next_execution,
                                                store_completed_dialog, update_execution_week)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER ,FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
@@ -70,9 +71,13 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        plan_and_store(user_id=self.user_id,
-                       dialog=dialog,
-                       phase_id=1)
+        # in this phase no dialog can be resumed
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_option_menu(self.user_id)
+        else:
+            plan_and_store(user_id=self.user_id,
+                           dialog=dialog,
+                           phase_id=1)
 
     def run(self):
         logging.info('Onboarding State running')
@@ -138,9 +143,13 @@ class TrackingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        plan_and_store(user_id=self.user_id,
-                       dialog=dialog,
-                       phase_id=1)
+        # in this phase no dialog can be resumed
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_option_menu(self.user_id)
+        else:
+            plan_and_store(user_id=self.user_id,
+                           dialog=dialog,
+                           phase_id=1)
 
     def run(self):
         logging.info('Starting Tracking state')
@@ -212,9 +221,13 @@ class GoalsSettingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        plan_and_store(user_id=self.user_id,
-                       dialog=dialog,
-                       phase_id=1)
+        # in this phase a dialog can be continued
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_uncompleted_dialog(self.user_id)
+        else:
+            plan_and_store(user_id=self.user_id,
+                           dialog=dialog,
+                           phase_id=1)
 
     def plan_buffer_phase_dialogs(self):
         quit_date = get_quit_date(self.user_id)
@@ -304,10 +317,13 @@ class BufferState(State):
         self.check_if_end_date(current_date)
 
     def on_user_trigger(self, dialog: str):
-        # record that the dialog has been administered
-        plan_and_store(user_id=self.user_id,
-                       dialog=dialog,
-                       phase_id=1)
+        # in this phase no dialog can be resumed
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_option_menu(self.user_id)
+        else:
+            plan_and_store(user_id=self.user_id,
+                           dialog=dialog,
+                           phase_id=1)
 
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
@@ -391,10 +407,13 @@ class ExecutionRunState(State):
                           phase=2)
 
     def on_user_trigger(self, dialog: str):
-
-        plan_and_store(user_id=self.user_id,
-                       dialog=dialog,
-                       phase_id=2)
+        # in this phase a dialog can be continued
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_uncompleted_dialog(self.user_id)
+        else:
+            plan_and_store(user_id=self.user_id,
+                           dialog=dialog,
+                           phase_id=2)
 
         if dialog == Components.RELAPSE_DIALOG:
             self.set_new_state(RelapseState(self.user_id))
@@ -471,9 +490,13 @@ class RelapseState(State):
                 self.set_new_state(ExecutionRunState(self.user_id))
 
     def on_user_trigger(self, dialog: str):
-        plan_and_store(user_id=self.user_id,
-                       dialog=dialog,
-                       phase_id=3)
+        # in this phase no dialog can be resumed
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_option_menu(self.user_id)
+        else:
+            plan_and_store(user_id=self.user_id,
+                           dialog=dialog,
+                           phase_id=3)
 
     def plan_new_date_notifications(self, quit_date: date):
         # plan the notification for the day before the quit date
@@ -559,9 +582,13 @@ class ClosingState(State):
                        phase_id=2)
 
     def on_user_trigger(self, dialog):
-        plan_and_store(user_id=self.user_id,
-                       dialog=dialog,
-                       phase_id=2)
+        # in this phase no dialog can be resumed
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_option_menu(self.user_id)
+        else:
+            plan_and_store(user_id=self.user_id,
+                           dialog=dialog,
+                           phase_id=2)
 
     def on_dialog_completed(self, dialog):
         logging.info('A dialog has been completed  %s ', dialog)

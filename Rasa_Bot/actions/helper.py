@@ -102,6 +102,45 @@ def compute_preferred_time(tracker):
     return preferred_time
 
 
+def dialog_to_be_completed(user_id: int) -> bool:
+    """
+    Checks if a dialog has to be completed.
+
+    Args:
+        user_id: ID of the user
+    Returns:
+        True if a dialog has to be completed, false otherwise
+
+    """
+    # only the goal setting and the weekly reflection dialogs can be resumed, so we search
+    # only for the goal setting and the weekly reflection
+
+    session = get_db_session(db_url=DATABASE_URL)
+
+    uncompleted = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(False))
+        .filter(
+            (InterventionComponents
+             .intervention_component_name == Components.GOAL_SETTING)
+            | (InterventionComponents
+               .intervention_component_name == Components.WEEKLY_REFLECTION)
+        )
+        .first()
+    )
+
+    if uncompleted is None:
+        return False
+
+    return True
+
+
 def get_last_completed_dialog_part_from_db(user_id: int,
                                            intervention_component_id: int):
     """Get last completed dialog part from db."""

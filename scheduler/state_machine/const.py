@@ -18,6 +18,7 @@ REDIS_URL = os.getenv('REDIS_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
 TRIGGER_COMPONENT = 'celery_tasks.trigger_intervention_component'
 SCHEDULE_TRIGGER_COMPONENT = 'celery_tasks.trigger_scheduled_intervention_component'
+TRIGGER_MENU = 'celery_tasks.trigger_menu'
 TIMEZONE = tz.gettz("Europe/Amsterdam")
 
 # dialog states definitions

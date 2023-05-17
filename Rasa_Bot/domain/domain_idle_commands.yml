@@ -21,6 +21,7 @@ responses:
     - text: "Het spijt me, er is geen onafgemaakte dialoog om te voltooien."
 
 actions:
+  - action_select_menu
   - action_trigger_relapse_dialog
   - action_trigger_first_aid_dialog
   - action_trigger_explanation_first_aid_video_dialog

@@ -4,9 +4,10 @@ from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
 from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
-                                 SCHEDULE_TRIGGER_COMPONENT)
+                                 SCHEDULE_TRIGGER_COMPONENT, TRIGGER_MENU)
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
                                               InterventionComponents)
+from virtual_coach_db.helper.definitions import Components, ComponentsTriggers
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -506,6 +507,84 @@ def update_execution_week(user_id: int, week_number: int):
     selected.execution_week = week_number
 
     session.commit()
+
+
+def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
+    """
+    Checks if a dialog has to be completed and, in this case returns it. If no dialogs have to be
+    completed, it triggers the menu message without the option of resuming a dialog
+
+    Args:
+        user_id: ID of the user
+    Returns:
+        The component to be completed
+
+    """
+    # only the goal setting and the weekly reflection dialogs can be resumed, so we search
+    # only for this two dialogs
+    id_goal_setting = get_intervention_component(Components.GOAL_SETTING).intervention_component_id
+    id_weekly = get_intervention_component(Components.WEEKLY_REFLECTION).intervention_component_id
+
+    session = get_db_session(db_url=DATABASE_URL)
+
+    uncompleted = (
+        session.query(
+            UserInterventionState
+        ).order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id)
+        .filter(
+            (UserInterventionState.intervention_component_id == id_goal_setting)
+            | (UserInterventionState.intervention_component_id == id_weekly)
+        )
+        .first()
+    )
+
+    if uncompleted is not None:
+        return uncompleted
+
+    return None
+
+
+def run_uncompleted_dialog(user_id: int):
+    """
+    Checks if a dialog has to be completed and, in this case runs it. Runs the default options
+    menu otherwise
+
+    Args:
+        user_id: ID of the user
+
+    """
+
+    uncompleted = dialog_to_be_completed(user_id)
+
+    if uncompleted is not None:
+        # update the time in the DB and trigger it
+        session = get_db_session(db_url=DATABASE_URL)
+
+        component = (session.query(UserInterventionState)
+                     .filter(UserInterventionState.id == uncompleted.id)
+                     .first())
+
+        component.last_time = datetime.now().astimezone(TIMEZONE)
+        session.commit()
+        celery.send_task(
+            TRIGGER_COMPONENT,
+            (user_id, component.intervention_component.intervention_component_trigger)
+        )
+
+    run_option_menu(user_id)
+
+
+def run_option_menu(user_id: int):
+    """
+    Runs a celery task for showing the options menu without the 'verder' option
+
+    Args:
+        user_id: ID of the user
+
+    """
+    celery.send_task(TRIGGER_MENU, (user_id, ComponentsTriggers.CENTRAL_OPTIONS))
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

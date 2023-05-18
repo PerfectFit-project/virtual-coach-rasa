@@ -4,6 +4,21 @@ intents:
   - EXTERNAL_weekly_reflection
 
 slots:
+  # Previously completed dialog part (weekly-reflection dialog has 6 parts)
+  # -1 means no uncompleted weekly reflection dialog,
+  # 1 is first part of dialog, 2 second part, 3 third part.
+  last_completed_weekly_reflection_dialog_part:
+    type: categorical
+    values:
+      - -1
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    influence_conversation: true
+    mappings:
+      - type: custom
   completed_hrs:
     type: categorical
     values:
@@ -1348,6 +1363,13 @@ responses:
     - text: "Laat je niet ontmoedigen, blijf ervoor gaan. Ik steun je 100%. 💪🏼"
 
 actions:
+  - action_get_last_completed_weekly_reflection_part
+  - action_save_weekly_reflection_dialog_part1
+  - action_save_weekly_reflection_dialog_part2
+  - action_save_weekly_reflection_dialog_part3
+  - action_save_weekly_reflection_dialog_part4
+  - action_save_weekly_reflection_dialog_part5
+  - action_save_weekly_reflection_dialog_part6
   - action_which_pa_group
   - action_set_pa_group
   - action_set_intensity_minutes

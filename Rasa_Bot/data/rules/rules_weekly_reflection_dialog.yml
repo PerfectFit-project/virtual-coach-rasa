@@ -2,14 +2,18 @@ version: "3.1"
 
 rules:
 
-## Rules for the weekly reflection dialog
-## 1. Congratulate & 2. Explanation Reflection
+#### Rules for the weekly reflection dialog
 
+### Start: last completed weekly reflection dialog part is -1
+## 1. Congratulate & 2. Explanation Reflection
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
   - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_last_completed_weekly_reflection_part
+  - slot_was_set:
+    - last_completed_weekly_reflection_dialog_part: -1
   - action: utter_congratulate_1
   - action: utter_congratulate_2
   - action: utter_congratulate_3
@@ -18,6 +22,124 @@ rules:
   - action: utter_explain_reflection_3
   - action: how_are_you_form
   - active_loop: how_are_you_form
+  
+
+### Start: last completed weekly reflection dialog part is 1
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
+  - action: action_get_last_completed_weekly_reflection_part
+  - slot_was_set:
+    - last_completed_weekly_reflection_dialog_part: 1
+  - action: specific_moments_form  # here starts part 2
+  - active_loop: specific_moments_form
+  wait_for_user_input: false
+  
+  
+### Start: last completed weekly reflection dialog part is 2 - pa_group 2
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
+  - action: action_get_last_completed_weekly_reflection_part
+  - slot_was_set:
+    - last_completed_weekly_reflection_dialog_part: 2
+  - action: action_which_pa_group  # here starts part 3
+  - slot_was_set:
+      - pa_group: 2
+  - action: action_set_intensity_minutes_goal
+  - action: utter_overview_group2_1  
+  - action: utter_overview_group2_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: action_set_intensity_minutes
+  - action: action_set_step_goal_days
+  - action: utter_overview_group2_3
+  - action: action_step_goal_utterances
+  - action: how_went_pa_form
+  - active_loop: how_went_pa_form
+  wait_for_user_input: false
+  
+
+### Start: last completed weekly reflection dialog part is 2 - pa_group 1
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
+  - action: action_get_last_completed_weekly_reflection_part
+  - slot_was_set:
+    - last_completed_weekly_reflection_dialog_part: 2
+  - action: action_which_pa_group  # here starts part 3
+  - slot_was_set:
+      - pa_group: 1
+  - action: utter_overview_group1_1  
+  - action: utter_overview_group1_2
+  - action: action_show_pa_overview
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: action_set_step_goal_days
+  - action: utter_overview_group1_3
+  - action: action_step_goal_utterances
+  - action: how_went_pa_form
+  - active_loop: how_went_pa_form
+  wait_for_user_input: false
+  
+  
+### Start: last completed weekly reflection dialog part is 3
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
+  - action: action_get_last_completed_weekly_reflection_part
+  - slot_was_set:
+    - last_completed_weekly_reflection_dialog_part: 3
+  - action: difficult_moments_form  # here starts part 4
+  - active_loop: difficult_moments_form
+  wait_for_user_input: false
+  
+  
+### Start: last completed weekly reflection dialog part is 4 - pa_group 2 only
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
+  - action: action_get_last_completed_weekly_reflection_part
+  - slot_was_set:
+    - last_completed_weekly_reflection_dialog_part: 4
+  - action: action_get_long_term_pa_goal  # need this slot later
+  - action: utter_increase_intensity_2  # here starts part 5
+  - action: utter_increase_intensity_3
+  - action: utter_increase_intensity_4
+  - action: utter_increase_intensity_5
+  - action: action_set_intensity_minutes_goal
+  - action: utter_increase_intensity_6
+  - action: if_doable_form
+  - active_loop: if_doable_form
+  wait_for_user_input: false
+  
+
+### Start: last completed weekly reflection dialog part is 5
+- rule: Trigger weekly reflection dialog
+  steps:
+  - intent: EXTERNAL_weekly_reflection
+  - action: action_get_week_number
+  - action: action_set_slot_weekly_reflection
+  - action: action_get_last_completed_weekly_reflection_part
+  - slot_was_set:
+    - last_completed_weekly_reflection_dialog_part: 5
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
+  wait_for_user_input: false
+
 
 ## 3. How are you?
 - rule: How are you
@@ -87,7 +209,8 @@ rules:
     - how_went_non_smoke: 4
   - action: utter_reflect_non_smoke_5
   - action: utter_reflect_non_smoke_6
-  - action: specific_moments_form
+  - action: action_save_weekly_reflection_dialog_part1
+  - action: specific_moments_form  # here starts part 2
   - active_loop: specific_moments_form
   wait_for_user_input: false
 
@@ -102,7 +225,8 @@ rules:
     - how_went_non_smoke: 5
   - action: utter_reflect_non_smoke_5
   - action: utter_reflect_non_smoke_6
-  - action: specific_moments_form
+  - action: action_save_weekly_reflection_dialog_part1
+  - action: specific_moments_form  # here starts part 2
   - active_loop: specific_moments_form
   wait_for_user_input: false
 
@@ -114,7 +238,8 @@ rules:
   - action: free_reflect_1_form
   - active_loop: null
   - action: utter_reflect_non_smoke_2
-  - action: specific_moments_form
+  - action: action_save_weekly_reflection_dialog_part1
+  - action: specific_moments_form  # here starts part 2
   - active_loop: specific_moments_form
   wait_for_user_input: false
 
@@ -126,7 +251,8 @@ rules:
   - action: free_reflect_2_form
   - active_loop: null
   - action: utter_reflect_non_smoke_4
-  - action: specific_moments_form
+  - action: action_save_weekly_reflection_dialog_part1
+  - action: specific_moments_form  # here starts part 2
   - active_loop: specific_moments_form
   wait_for_user_input: false
 
@@ -298,10 +424,11 @@ rules:
   - active_loop: null
   - action: utter_look_forward_20
   - action: utter_look_forward_21
-  - action: action_which_pa_group
+  - action: action_save_weekly_reflection_dialog_part2
+  - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 1
-  - action: utter_overview_group1_1
+  - action: utter_overview_group1_1  
   - action: utter_overview_group1_2
   - action: action_show_pa_overview
   - action: action_upload_file
@@ -321,10 +448,11 @@ rules:
   - action: user_ready_1_form
   - active_loop: null
   - action: utter_look_forward_13
-  - action: action_which_pa_group
+  - action: action_save_weekly_reflection_dialog_part2
+  - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 1
-  - action: utter_overview_group1_1
+  - action: utter_overview_group1_1  
   - action: utter_overview_group1_2
   - action: action_show_pa_overview
   - action: action_upload_file
@@ -346,11 +474,12 @@ rules:
   - active_loop: null
   - action: utter_look_forward_20
   - action: utter_look_forward_21
-  - action: action_which_pa_group
+  - action: action_save_weekly_reflection_dialog_part2
+  - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 2
   - action: action_set_intensity_minutes_goal
-  - action: utter_overview_group2_1
+  - action: utter_overview_group2_1  
   - action: utter_overview_group2_2
   - action: action_show_pa_overview
   - action: action_upload_file
@@ -371,11 +500,12 @@ rules:
   - action: user_ready_1_form
   - active_loop: null
   - action: utter_look_forward_13
-  - action: action_which_pa_group
+  - action: action_save_weekly_reflection_dialog_part2
+  - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 2
   - action: action_set_intensity_minutes_goal
-  - action: utter_overview_group2_1
+  - action: utter_overview_group2_1  
   - action: utter_overview_group2_2
   - action: action_show_pa_overview
   - action: action_upload_file
@@ -441,7 +571,8 @@ rules:
   - action: utter_how_went_2
   - action: utter_how_went_3
   - action: action_user_completed_hrs
-  - action: difficult_moments_form
+  - action: action_save_weekly_reflection_dialog_part3
+  - action: difficult_moments_form  # here starts part 4
   - active_loop: difficult_moments_form
   wait_for_user_input: false
 
@@ -457,7 +588,8 @@ rules:
   - action: utter_how_went_2
   - action: utter_how_went_3
   - action: action_user_completed_hrs
-  - action: difficult_moments_form
+  - action: action_save_weekly_reflection_dialog_part3
+  - action: difficult_moments_form  # here starts part 4
   - active_loop: difficult_moments_form
   wait_for_user_input: false
 
@@ -470,7 +602,8 @@ rules:
   - active_loop: null
   - action: utter_how_went_1
   - action: action_user_completed_hrs
-  - action: difficult_moments_form
+  - action: action_save_weekly_reflection_dialog_part3
+  - action: difficult_moments_form  # here starts part 4
   - active_loop: difficult_moments_form
   wait_for_user_input: false
 
@@ -483,7 +616,8 @@ rules:
   - active_loop: null
   - action: utter_how_went_1
   - action: action_user_completed_hrs
-  - action: difficult_moments_form
+  - action: action_save_weekly_reflection_dialog_part3
+  - action: difficult_moments_form  # here starts part 4
   - active_loop: difficult_moments_form
   wait_for_user_input: false
 
@@ -555,14 +689,16 @@ rules:
       - pa_group: 1
   - action: utter_steps_next_week_1
   - action: utter_steps_next_week_2
-  - action: utter_steps_next_week_3
+  - action: action_get_long_term_pa_goal
+  - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
   - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
   - action: utter_predict_difficult_moments_2
-  - action: utter_predict_difficult_moments_3
+  - action: action_save_weekly_reflection_dialog_part5
+  - action: utter_predict_difficult_moments_3  # here starts part 6
   - action: difficult_moments_next_week_form
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
@@ -610,7 +746,8 @@ rules:
   - action: action_send_metadata
   - action: action_delete_file
   - action: utter_predict_difficult_moments_2
-  - action: utter_predict_difficult_moments_3
+  - action: action_save_weekly_reflection_dialog_part5
+  - action: utter_predict_difficult_moments_3  # here starts part 6
   - action: difficult_moments_next_week_form
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
@@ -636,7 +773,8 @@ rules:
   - action: action_send_metadata
   - action: action_delete_file
   - action: utter_predict_difficult_moments_2
-  - action: utter_predict_difficult_moments_3
+  - action: action_save_weekly_reflection_dialog_part4
+  - action: utter_predict_difficult_moments_3  # here starts part 6
   - action: difficult_moments_next_week_form
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
@@ -655,7 +793,8 @@ rules:
       - pa_group: 2
   - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
-  - action: utter_increase_intensity_2
+  - action: action_save_weekly_reflection_dialog_part4
+  - action: utter_increase_intensity_2  # here starts part 5
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
@@ -680,7 +819,8 @@ rules:
     - pa_group: 2
   - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
-  - action: utter_increase_intensity_2
+  - action: action_save_weekly_reflection_dialog_part4
+  - action: utter_increase_intensity_2  # here starts part 5
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
@@ -705,7 +845,8 @@ rules:
       - pa_group: 2
   - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
-  - action: utter_increase_intensity_2
+  - action: action_save_weekly_reflection_dialog_part4
+  - action: utter_increase_intensity_2  # here starts part 5
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
@@ -729,7 +870,8 @@ rules:
       - pa_group: 2
   - action: action_get_long_term_pa_goal
   - action: utter_increase_intensity_1
-  - action: utter_increase_intensity_2
+  - action: action_save_weekly_reflection_dialog_part4
+  - action: utter_increase_intensity_2  # here starts part 5
   - action: utter_increase_intensity_3
   - action: utter_increase_intensity_4
   - action: utter_increase_intensity_5
@@ -753,7 +895,8 @@ rules:
   - action: utter_increase_intensity_9
   - action: utter_predict_difficult_moments_1
   - action: utter_predict_difficult_moments_2
-  - action: utter_predict_difficult_moments_3
+  - action: action_save_weekly_reflection_dialog_part5
+  - action: utter_predict_difficult_moments_3  # here starts part 6
   - action: difficult_moments_next_week_form
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
@@ -798,7 +941,8 @@ rules:
   - action: utter_increase_intensity_23
   - action: utter_predict_difficult_moments_1
   - action: utter_predict_difficult_moments_2
-  - action: utter_predict_difficult_moments_3
+  - action: action_save_weekly_reflection_dialog_part5
+  - action: utter_predict_difficult_moments_3  # here starts part 6
   - action: difficult_moments_next_week_form
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
@@ -855,6 +999,9 @@ rules:
   - action: utter_closing_weekly_reflection_4
   - action: utter_closing_weekly_reflection_5
   - action: utter_closing_weekly_reflection_6
+  - action: action_save_weekly_reflection_dialog_part6
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
 
 - rule: Closing from difficult moments
   condition:
@@ -870,7 +1017,6 @@ rules:
   - action: utter_closing_weekly_reflection_4
   - action: utter_closing_weekly_reflection_5
   - action: utter_closing_weekly_reflection_6
-
-
-
-
+  - action: action_save_weekly_reflection_dialog_part6
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog

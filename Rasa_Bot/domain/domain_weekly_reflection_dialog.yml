@@ -273,6 +273,16 @@ slots:
       - type: custom
 
 responses:
+  
+  utter_weekly_reflection_continue:
+    - text: "Leuk dat je er weer bent. Laten we doorgaan."
+    - text: "Goed om je weer te zien. Laten we doorgaan."
+    - text: "Wat fijn dat je terug bent. Laten we doorgaan."
+    - text: "Fijn om je terug te zien. Laten we verder gaan."
+    - text: "Het is goed je weer te zien. Laten we doorgaan met waar we gebleven waren."
+    - text: "Leuk dat je er weer bent. Laten we de draad weer oppakken."
+    - text: "Ik ben blij je weer te zien. Laten we doorgaan met waar we gebleven waren."
+
   # 1. Congratulate
   utter_congratulate_1:
     - text: "Hallo, 👋🏼"

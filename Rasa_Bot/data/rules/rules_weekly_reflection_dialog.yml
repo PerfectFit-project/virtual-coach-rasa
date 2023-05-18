@@ -4,7 +4,7 @@ rules:
 
 #### Rules for the weekly reflection dialog
 
-### Start: last completed weekly reflection dialog part is -1
+### Start: last completed weekly reflection dialog part is -1 -> do everything
 ## 1. Congratulate & 2. Explanation Reflection
 - rule: Trigger weekly reflection dialog
   steps:
@@ -33,6 +33,7 @@ rules:
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 1
+  - action: utter_weekly_reflection_continue
   - action: specific_moments_form  # here starts part 2
   - active_loop: specific_moments_form
   wait_for_user_input: false
@@ -47,6 +48,7 @@ rules:
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 2
+  - action: utter_weekly_reflection_continue
   - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 2
@@ -75,10 +77,11 @@ rules:
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 2
+  - action: utter_weekly_reflection_continue
   - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 1
-  - action: utter_overview_group1_1  
+  - action: utter_overview_group1_1
   - action: utter_overview_group1_2
   - action: action_show_pa_overview
   - action: action_upload_file
@@ -101,6 +104,7 @@ rules:
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 3
+  - action: utter_weekly_reflection_continue
   - action: difficult_moments_form  # here starts part 4
   - active_loop: difficult_moments_form
   wait_for_user_input: false
@@ -115,6 +119,7 @@ rules:
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 4
+  - action: utter_weekly_reflection_continue
   - action: action_get_long_term_pa_goal  # need this slot later
   - action: utter_increase_intensity_2  # here starts part 5
   - action: utter_increase_intensity_3
@@ -136,6 +141,8 @@ rules:
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 5
+  - action: utter_weekly_reflection_continue
+  - action: utter_predict_difficult_moments_3  # here starts part 6
   - action: difficult_moments_next_week_form
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
@@ -428,7 +435,7 @@ rules:
   - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 1
-  - action: utter_overview_group1_1  
+  - action: utter_overview_group1_1
   - action: utter_overview_group1_2
   - action: action_show_pa_overview
   - action: action_upload_file
@@ -452,7 +459,7 @@ rules:
   - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 1
-  - action: utter_overview_group1_1  
+  - action: utter_overview_group1_1
   - action: utter_overview_group1_2
   - action: action_show_pa_overview
   - action: action_upload_file
@@ -739,7 +746,8 @@ rules:
       - pa_group: 1
   - action: utter_steps_next_week_1
   - action: utter_steps_next_week_2
-  - action: utter_steps_next_week_3
+  - action: action_get_long_term_pa_goal
+  - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
   - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
   - action: action_upload_file
@@ -766,14 +774,15 @@ rules:
       - pa_group: 1
   - action: utter_steps_next_week_1
   - action: utter_steps_next_week_2
-  - action: utter_steps_next_week_3
+  - action: action_get_long_term_pa_goal
+  - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
   - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
   - action: utter_predict_difficult_moments_2
-  - action: action_save_weekly_reflection_dialog_part4
+  - action: action_save_weekly_reflection_dialog_part5
   - action: utter_predict_difficult_moments_3  # here starts part 6
   - action: difficult_moments_next_week_form
   - active_loop: difficult_moments_next_week_form

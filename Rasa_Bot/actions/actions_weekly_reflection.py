@@ -109,7 +109,7 @@ class SetStepGoalDays(Action):
 
     async def run(self, dispatcher, tracker, domain):
         ## TODO This method should get step goal days and set accordingly
-        step_goal_days = 7
+        step_goal_days = 4
         return [SlotSet('step_goal_days', step_goal_days)]
 
 

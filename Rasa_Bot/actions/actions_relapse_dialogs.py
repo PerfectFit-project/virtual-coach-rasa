@@ -3,10 +3,11 @@ Contains custom actions related to the relapse dialogs
 """
 
 import logging
+import secrets
 
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
-from .helper import (get_latest_bot_utterance, get_random_activities,
+from .helper import (get_latest_bot_utterance, get_random_activities, get_possible_activities,
                      store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
                      store_dialog_closed_answer_list_to_db, store_user_intervention_state,
                      populate_fig)
@@ -342,11 +343,14 @@ class ShowFirstCopingActivity(Action):
         return "show_first_coping_activity"
 
     async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])
         activity_id = tracker.get_slot('hrs_coping_activities_performed')
-        # TODO: choose activities in list of advised list for smoking
-        activities_list = get_random_activities(int(activity_id), 1)
 
-        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
+        _, activities_list = get_possible_activities(user_id=user_id,
+                                                     avoid_activity_id=activity_id)
+        random_choice = secrets.choice(activities_list)
+
+        dispatcher.utter_message(random_choice.intervention_activity_full_instructions)
 
         return [SlotSet('hrs_coping_activities_performed', activity_id)]
 

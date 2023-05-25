@@ -308,6 +308,13 @@ slots:
         conditions:
           - active_loop: hrs_choose_coping_activity_form
 
+  # alternatives to display for the activity choice
+  hrs_coping_activity_activities_options_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
  # name of first proposed coping activity
   coping_activity1_name:
     type: text
@@ -380,10 +387,10 @@ responses:
     - text: "Zou je me kunnen vertellen wat er aan de hand is?"
     - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken.\n 
-             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.\n
-             Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.\n
-             Typ '4' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
+    - text: "Typ '1' als je zin hebt om te roken.1️ \n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.2️ \n
+             Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum.3️ \n
+             Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
@@ -724,24 +731,25 @@ responses:
             Typ '2' als je weetjes wilt. \n
             Typ '3' voor oefeningen met handige tips. \n
             Typ '4' om jezelf te belonen. \n
-            Typ '5' voor meer zelfvertrouwen en motivatie. \n
-            Super! Dan kun je kiezen uit de volgende oefeningen: \n"
-    - text: "Je kunt kiezen uit meerdere oefeningen. Wat voor oefening wil je doen?\n
-            Om een oefening te doen die over jezelf gaat, typ dan '1'.\n
-            Kies optie 2 als je geïnteresseerd bent in weetjes.\n
-            Kies optie '3' om oefeningen te krijgen met nuttige tips.\n
-            Wil je jezelf belonen? Typ '4' om daar een oefening voor te krigen.\n
-            Kies '5' als je behoefte hebt aan extra motivatie en zelfvertrouwen.\n
-            Oké, je kunt dan één van de volgende oefeningen kiezen:"
-    - text: "Er zijn meerdere oefeningen om uit te kiezen. Welke soort oefening wil je doen?\n
-            Als je een oefening wilt doen om meer inzicht te krijgen in jezelf, typ dan '1'.\n
-            Indien je wat interessante feitjes wilt, typ dan '2'.\n
-            Selecteer '3' als je oefeningen wilt met handige tips.\n
-            Het is belangrijk om jezelf te belonen voor je prestaties.\n
-            Typ '4' om te zien hoe je jezelf kunt belonen.\n
-            Als je wat extra motivatie en zelfvertrouwen kunt gebruiken, typ dan '5'.\n
-            Goed! Kies nu welke oefening je wilt doen:"
-
+            Typ '5' voor meer zelfvertrouwen en motivatie. \n"
+    - text: "Je kunt kiezen uit meerdere oefeningen. Wat voor oefening wil je doen? 
+            Om een oefening te doen die over jezelf gaat, typ dan '1'. \n
+            Kies optie 2 als je geïnteresseerd bent in weetjes. \n
+            Kies optie '3' om oefeningen te krijgen met nuttige tips. \n
+            Wil je jezelf belonen? Typ '4' om daar een oefening voor te kriigen. \n
+            Kies '5' als je behoefte hebt aan extra motivatie en zelfvertrouwen. \n"
+    - text: "Er zijn meerdere oefeningen om uit te kiezen. Welke soort oefening wil je doen? \n
+            Als je een oefening wilt doen om meer inzicht te krijgen in jezelf, typ dan '1'. \n
+            Indien je wat interessante feitjes wilt, typ dan '2'. \n
+            Selecteer '3' als je oefeningen wilt met handige tips. \n
+            Het is belangrijk om jezelf te belonen voor je prestaties. Typ '4' om te zien hoe je jezelf kunt belonen. \n
+            Als je wat extra motivatie en zelfvertrouwen kunt gebruiken, typ dan '5'. \n"
+  utter_ask_hrs_choose_coping_activity2:
+    - text: "Super! Dan kun je kiezen uit de volgende oefeningen: \n"
+    - text: "Oké, je kunt dan één van de volgende oefeningen kiezen: \n"
+    - text: "Goed! Kies nu welke oefening je wilt doen: \n"
+  utter_ask_coping_activity_next_activity_slot:
+    - text: "'{hrs_coping_activity_activities_options_slot}'"
 
 # 3c smoking - relapse
   utter_smoke_relapse_1:

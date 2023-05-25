@@ -367,9 +367,12 @@ responses:
     - text: "Betreft het roken of fysieke activiteit?"
     - text: "Gaat het over roken of lichaamsbeweging?"
   utter_ask_smoke_or_pa_form_smoke_or_pa:
-    - text: "Typ '1' als je het gaat om roken. 🚬. Typ '2' als het gaat om lichamelijke beweging. 🚶/"
-    - text: "Als het om roken gaat, typ dan 1. 🚬. Als het over lichaamsbeweging gaat, typ dan 2. 🚶"
-    - text: "Typ '1' als het gaat om roken. 🚬. Typ '2' als het gaat om fysieke activiteit. 🚶"
+    - text: "Typ '1' als je het gaat om roken. 🚬.
+            \nTyp '2' als het gaat om lichamelijke beweging. 🚶"
+    - text: "Als het om roken gaat, typ dan 1. 🚬.
+            \nAls het over lichaamsbeweging gaat, typ dan 2. 🚶"
+    - text: "Typ '1' als het gaat om roken. 🚬.
+            \nTyp '2' als het gaat om fysieke activiteit. 🚶"
 
  # Smoke
   utter_specify_smoke:
@@ -377,10 +380,10 @@ responses:
     - text: "Zou je me kunnen vertellen wat er aan de hand is?"
     - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken.1️ \n 
-             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.2️ \n
-             Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.3️ \n
-             Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
+    - text: "Typ '1' als je zin hebt om te roken.\n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.\n
+             Type '3' als je meer dan één dag hebt gerookt sinds je stopdatum.\n
+             Typ '4' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
@@ -414,9 +417,16 @@ responses:
     - text: "Ik ben er om je te ondersteunen."
     - text: "Ik ben er om je te helpen."
   utter_ask_ehbo_me_self:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰 Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀 Typ '3' als je zelf een oefening wilt kiezen. 📱"
-    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen? Typ dan '1' 🧰 Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'."
-    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰 Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 Wil je zelf een oefening uitkiezen? Typ dan '3'."
+    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten.\n
+            Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰\n
+            Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀\n
+            Typ '3' als je zelf een oefening wilt kiezen. 📱"
+    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen?\nTyp dan '1'\n
+            🧰 Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'.\n
+            🔀 Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'."
+    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰\n
+            Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'.\n
+            🔀 Wil je zelf een oefening uitkiezen? Typ dan '3'."
 
 # smoke lapse
 
@@ -425,10 +435,10 @@ responses:
     - text: "Bedankt dat je dit deelt!"
     - text: "Bedankt dat je hier open over bent."
   utter_ask_type_smoke:
-    - text: "Kun je aangeven wat je hebt gerookt? 
-            Typ 1 voor sigaretten. 
-            Typ 2 voor e-sigaretten. 
-            Typ 3 voor shags. 
+    - text: "Kun je aangeven wat je hebt gerookt?\n
+            Typ 1 voor sigaretten.\n
+            Typ 2 voor e-sigaretten.\n
+            Typ 3 voor shags.\n
             Typ 4 als je iets anders hebt gerookt."
   utter_ask_number_smoke:
     - text: "Hoeveel heb je daarvan gerookt?"
@@ -503,7 +513,7 @@ responses:
     - text: "Het is niet altijd makkelijk om aan te geven hoe je je voelt, dus knap gedaan.👍"
   utter_ask_with_whom_smoke:
     - text: "Met wie was je toen je rookte? \n
-            Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer.     \n
+            Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer.\n
             Typ '1' als je met je partner was. \n
             Typ '2' als je alleen was. \n
             Typ '3' als je met vrienden en/of familie was. \n
@@ -659,9 +669,12 @@ responses:
     - text: "Mooi dat je dit zo kan benoemen."
     - text: "Het is goed om te zien dat je in staat bent om dit zo te verwoorden."
   utter_ask_hrs_enough_motivation_slot:
-    - text: "Heb je weer genoeg motivatie en vertrouwen om verder te gaan? Typ '1' voor ja, typ '2' voor nee."
+    - text: "Heb je weer genoeg motivatie en vertrouwen om verder te gaan?\n
+            Typ '1' voor ja,\n
+            typ '2' voor nee."
     - text: "Voel je motivatie en vertrouwen om door te gaan? Laat het me weten door '1' te typen voor ja en '2' voor nee."
-    - text: "Heb je nu genoeg motivatie en vertrouwen om verder te gaan? Typ '1' voor ja en '2' voor nee."
+    - text: "Heb je nu genoeg motivatie en vertrouwen om verder te gaan?\n
+            Typ '1' voor ja en '2' voor nee."
   utter_good_to_hear_1:
     - text: "Wat goed om te horen!"
     - text: "Het is fijn om dat te horen!"
@@ -713,8 +726,21 @@ responses:
             Typ '4' om jezelf te belonen. \n
             Typ '5' voor meer zelfvertrouwen en motivatie. \n
             Super! Dan kun je kiezen uit de volgende oefeningen: \n"
-    - text: "Je kunt kiezen uit meerdere oefeningen. Wat voor oefening wil je doen? Om een oefening te doen die over jezelf gaat, typ dan '1'. Kies optie 2 als je geïnteresseerd bent in weetjes. Kies optie '3' om oefeningen te krijgen met nuttige tips. Wil je jezelf belonen? Typ '4' om daar een oefening voor te krigen. Kies '5' als je behoefte hebt aan extra motivatie en zelfvertrouwen. Oké, je kunt dan één van de volgende oefeningen kiezen:"
-    - text: "Er zijn meerdere oefeningen om uit te kiezen. Welke soort oefening wil je doen? Als je een oefening wilt doen om meer inzicht te krijgen in jezelf, typ dan '1'. Indien je wat interessante feitjes wilt, typ dan '2'. Selecteer '3' als je oefeningen wilt met handige tips. Het is belangrijk om jezelf te belonen voor je prestaties. Typ '4' om te zien hoe je jezelf kunt belonen. Als je wat extra motivatie en zelfvertrouwen kunt gebruiken, typ dan '5'. Goed! Kies nu welke oefening je wilt doen:"
+    - text: "Je kunt kiezen uit meerdere oefeningen. Wat voor oefening wil je doen?\n
+            Om een oefening te doen die over jezelf gaat, typ dan '1'.\n
+            Kies optie 2 als je geïnteresseerd bent in weetjes.\n
+            Kies optie '3' om oefeningen te krijgen met nuttige tips.\n
+            Wil je jezelf belonen? Typ '4' om daar een oefening voor te krigen.\n
+            Kies '5' als je behoefte hebt aan extra motivatie en zelfvertrouwen.\n
+            Oké, je kunt dan één van de volgende oefeningen kiezen:"
+    - text: "Er zijn meerdere oefeningen om uit te kiezen. Welke soort oefening wil je doen?\n
+            Als je een oefening wilt doen om meer inzicht te krijgen in jezelf, typ dan '1'.\n
+            Indien je wat interessante feitjes wilt, typ dan '2'.\n
+            Selecteer '3' als je oefeningen wilt met handige tips.\n
+            Het is belangrijk om jezelf te belonen voor je prestaties.\n
+            Typ '4' om te zien hoe je jezelf kunt belonen.\n
+            Als je wat extra motivatie en zelfvertrouwen kunt gebruiken, typ dan '5'.\n
+            Goed! Kies nu welke oefening je wilt doen:"
 
 
 # 3c smoking - relapse
@@ -789,9 +815,12 @@ responses:
     - text: "Zou je willen delen wat er op dit moment speelt?"
     - text: "Wat is er gaande?"
   utter_ask_pa_specify_pa_slot:
-    - text: "Typ '1' als je gepland had om te bewegen, maar dit nu niet lukt. Typ '2' als je merkt dat het bewegen over het algemeen niet zo goed gaat als je zou willen."
-    - text: "Typ '1' als het nu niet lukt om te bewegen hoewel je het had gepland. Typ '2' als het bewegen over het algemeen niet gaat zoals gehoopt of gepland."
-    - text: "Typ '1' als je merkt je dat het nu niet lukt om te bewegen, hoewel je het had gepland. typ '2' als je merkt dat het bewegen over het algemeen niet zo soepel gaat als je zou willen."
+    - text: "Typ '1' als je gepland had om te bewegen, maar dit nu niet lukt.\n
+            Typ '2' als je merkt dat het bewegen over het algemeen niet zo goed gaat als je zou willen."
+    - text: "Typ '1' als het nu niet lukt om te bewegen hoewel je het had gepland.\n
+            Typ '2' als het bewegen over het algemeen niet gaat zoals gehoopt of gepland."
+    - text: "Typ '1' als je merkt je dat het nu niet lukt om te bewegen, hoewel je het had gepland.\n
+            Typ '2' als je merkt dat het bewegen over het algemeen niet zo soepel gaat als je zou willen."
   utter_pa_lapse_1:
     - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan lastig zijn. 
             Hoe vervelend ook, het kan dus gebeuren dat het even niet lukt. Wees dus niet te hard voor jezelf. Daardoor 

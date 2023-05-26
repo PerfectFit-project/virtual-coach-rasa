@@ -221,13 +221,19 @@ class ValidateHrsChooseCopingActivityForm(FormValidationAction):
         user_id = tracker.current_state()['sender_id']
 
         activity_type_slot = int(value)
-        activity_id = tracker.get_slot('last_activity_id_slot')
 
         activity_type = activities_categories[int(activity_type_slot)]
 
+        smoke_or_pa = int(tracker.get_slot('smoke_or_pa'))
+
+        # in the PA branch an activity (22) has to be avoided
+        avoid_id = None
+        if smoke_or_pa == 2:
+            avoid_id = 22
+
         _, available = get_possible_activities(user_id,
-                                                       activity_type,
-                                                       activity_id)
+                                               activity_type,
+                                               avoid_id)
 
         available_activities_ids = [activity.intervention_activity_id for activity in available]
 
@@ -386,15 +392,11 @@ class ShowFirstCopingActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])
-        activity_id = tracker.get_slot('hrs_coping_activities_performed')
 
-        _, activities_list = get_possible_activities(user_id=user_id,
-                                                     avoid_activity_id=activity_id)
+        _, activities_list = get_possible_activities(user_id=user_id)
         random_choice = secrets.choice(activities_list)
 
         dispatcher.utter_message(random_choice.intervention_activity_full_instructions)
-
-        return [SlotSet('hrs_coping_activities_performed', activity_id)]
 
 
 class ShowFirstCopingActivityPa(Action):
@@ -402,13 +404,15 @@ class ShowFirstCopingActivityPa(Action):
         return "show_first_coping_activity_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        activity_id = tracker.get_slot('hrs_coping_activities_performed')
-        # TODO: choose activities in list of advised list for pa
-        activities_list = get_random_activities(int(activity_id), 1)
+        user_id = int(tracker.current_state()['sender_id'])
+        # this activity has to be excluded for the PA branch
+        avoid_activity = 22
 
-        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
+        _, activities_list = get_possible_activities(user_id=user_id,
+                                                     avoid_activity_id=avoid_activity)
+        random_choice = secrets.choice(activities_list)
 
-        return [SlotSet('hrs_coping_activities_performed', activity_id)]
+        dispatcher.utter_message(random_choice.intervention_activity_full_instructions)
 
 
 class StoreEventSmoke(Action):

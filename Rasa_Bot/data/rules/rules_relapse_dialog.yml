@@ -9,7 +9,8 @@ rules:
   steps:
   - intent: EXTERNAL_relapse_dialog
   - action: utter_relapse_intro_codeword
-  - action: utter_relapse_intro_offer_help
+  - action: utter_relapse_intro_offer_help_pt1
+  - action: utter_relapse_intro_offer_help_pt2
   - action: utter_relapse_smoke_or_pa
   - action: smoke_or_pa_form
   - active_loop: smoke_or_pa_form
@@ -309,7 +310,6 @@ rules:
   - slot_was_set:
     - ehbo_me_self: 3
   - active_loop: null
-  - action: populate_coping_activities_list
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
   wait_for_user_input: false
@@ -324,6 +324,7 @@ rules:
     - smoke_or_pa: 1 # smoke branch
   - slot_was_set:
     - crave_lapse_relapse: 1 # hrs
+  - action: utter_general_activity_next_user
   - action: show_chosen_coping_activity
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
@@ -511,7 +512,6 @@ rules:
       - slot_was_set:
           - crave_lapse_relapse: 3
   - action: utter_hrs_list_activities_intro
-  - action: populate_coping_activities_list
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
   wait_for_user_input: false
@@ -529,6 +529,7 @@ rules:
           - crave_lapse_relapse: 2
       - slot_was_set:
           - crave_lapse_relapse: 3
+  - action: utter_general_activity_next_user
   - action: show_chosen_coping_activity
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
@@ -941,7 +942,6 @@ rules:
   - slot_was_set:
     - crave_lapse_relapse: null
   - action: utter_hrs_list_activities_intro
-  - action: populate_coping_activities_list_pa
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
   wait_for_user_input: false
@@ -973,6 +973,7 @@ rules:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
       - crave_lapse_relapse: null
+  - action: utter_general_activity_next_user
   - action: show_chosen_coping_activity
   - action: pa_enough_motivation_form
   - active_loop: pa_enough_motivation_form

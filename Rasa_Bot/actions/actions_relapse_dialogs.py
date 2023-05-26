@@ -3,13 +3,13 @@ Contains custom actions related to the relapse dialogs
 """
 
 import logging
+import secrets
 
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL
-from .helper import (get_latest_bot_utterance, get_random_activities,
-                     store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state,
-                     populate_fig)
+from .definitions import DATABASE_URL, REDIS_URL, activities_categories
+from .helper import (get_latest_bot_utterance, store_dialog_closed_answer_to_db,
+                     store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db,
+                     store_user_intervention_state, populate_fig, get_possible_activities)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -185,39 +185,6 @@ class ActionSetSlotRelapseDialogRelapse(Action):
                         Components.RELAPSE_DIALOG_RELAPSE)]
 
 
-class PopulateCopingActivitiesList(Action):
-    def name(self):
-        return "populate_coping_activities_list"
-
-    async def run(self, dispatcher, tracker, domain):
-        # TODO: instead of querying the whole list of activities,
-        #  use only the selected ones for smoking
-        # list of activities to be provided by content team
-        rnd_activities = get_random_activities(-1, 3)
-        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
-
-        return [SlotSet('coping_activities_ids', rnd_activities_ids),
-                SlotSet('coping_activity1_name', rnd_activities[0].intervention_activity_title),
-                SlotSet('coping_activity2_name', rnd_activities[1].intervention_activity_title),
-                SlotSet('coping_activity3_name', rnd_activities[2].intervention_activity_title)]
-
-
-class PopulateCopingActivitiesListPa(Action):
-    def name(self):
-        return "populate_coping_activities_list_pa"
-
-    async def run(self, dispatcher, tracker, domain):
-        # TODO: instead of querying the whole list of activities, use only the selected ones for pa
-        # list of activities to be provided by content team
-        rnd_activities = get_random_activities(-1, 3)
-        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
-
-        return [SlotSet('coping_activities_ids', rnd_activities_ids),
-                SlotSet('coping_activity1_name', rnd_activities[0].intervention_activity_title),
-                SlotSet('coping_activity2_name', rnd_activities[1].intervention_activity_title),
-                SlotSet('coping_activity3_name', rnd_activities[2].intervention_activity_title)]
-
-
 # Trigger relapse phase through celery
 class TriggerRelapseDialog(Action):
     def name(self):
@@ -232,13 +199,94 @@ class TriggerRelapseDialog(Action):
         return []
 
 
+class ValidateHrsChooseCopingActivityForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_hrs_choose_coping_activity_form'
+
+    def validate_hrs_choose_coping_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate persuasion_effort_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_hrs_choose_coping_activity_slot':
+            return {"hrs_choose_coping_activity_slot": None}
+
+        if not validator.validate_number_in_range_response(1, 5, value):
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
+            return {"hrs_choose_coping_activity_slot": None}
+
+        user_id = tracker.current_state()['sender_id']
+
+        activity_type_slot = int(value)
+
+        activity_type = activities_categories[int(activity_type_slot)]
+
+        smoke_or_pa = int(tracker.get_slot('smoke_or_pa'))
+
+        # in the PA branch an activity (22) has to be avoided
+        avoid_id = None
+        if smoke_or_pa == 2:
+            avoid_id = 22
+
+        _, available = get_possible_activities(user_id,
+                                               activity_type,
+                                               avoid_id)
+
+        available_activities_ids = [activity.intervention_activity_id for activity in available]
+
+        options = ["Typ " + str(i + 1) + " als je " +
+                   available[i].intervention_activity_title +
+                   " wilt doen.\n"
+                   for i in range(len(available))]
+
+        sentence = ''.join(options)
+
+        sentence += "Typ " + \
+                    str(len(available) + 1) + \
+                    " als je toch een andere soort oefening wilt doen."
+
+        dispatcher.utter_message(response="utter_ask_hrs_choose_coping_activity2")
+
+        return {"hrs_choose_coping_activity_slot": float(value),
+                "hrs_coping_activity_activities_options_slot": sentence,
+                "rnd_activities_ids": available_activities_ids}
+
+    def validate_coping_activity_next_activity_slot(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate coping_activity_next_activity_slot input."""
+        last_utterance = get_latest_bot_utterance(tracker.events)
+
+        if last_utterance != 'utter_ask_coping_activity_next_activity_slot':
+            return {"coping_activity_next_activity_slot": None}
+
+        opt_number = len(tracker.get_slot('rnd_activities_ids')) + 1
+
+        if not validator.validate_number_in_range_response(1, opt_number, value):
+            dispatcher.utter_message(text="Kun je een geheel getal tussen 1 en "
+                                          + str(opt_number) + " opgeven? ...")
+            return {"coping_activity_next_activity_slot": None}
+
+        if value == str(opt_number):
+            return {"hrs_choose_coping_activity_slot": None,
+                    "coping_activity_next_activity_slot": None}
+
+        activity_type_slot = tracker.get_slot('hrs_choose_coping_activity_slot')
+
+        return {"hrs_choose_coping_activity_slot": activity_type_slot,
+                "coping_activity_next_activity_slot": value}
+
+
 class ShowChosenCopingActivity(Action):
     def name(self):
         return "show_chosen_coping_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        chosen_option = int(tracker.get_slot('hrs_choose_coping_activity_slot'))
-        activities_slot = tracker.get_slot('coping_activities_ids')
+        chosen_option = int(tracker.get_slot('coping_activity_next_activity_slot'))
+        activities_slot = tracker.get_slot('rnd_activities_ids')
 
         activity_id = activities_slot[chosen_option - 1]
 
@@ -250,11 +298,11 @@ class ShowChosenCopingActivity(Action):
             )
             .filter(
                 InterventionActivity.intervention_activity_id == activity_id
-            ).all()
+            ).first()
         )
 
         # prompt the message
-        dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
+        dispatcher.utter_message(text=instructions.intervention_activity_full_instructions)
 
         return []
 
@@ -342,13 +390,12 @@ class ShowFirstCopingActivity(Action):
         return "show_first_coping_activity"
 
     async def run(self, dispatcher, tracker, domain):
-        activity_id = tracker.get_slot('hrs_coping_activities_performed')
-        # TODO: choose activities in list of advised list for smoking
-        activities_list = get_random_activities(int(activity_id), 1)
+        user_id = int(tracker.current_state()['sender_id'])
 
-        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
+        _, activities_list = get_possible_activities(user_id=user_id)
+        random_choice = secrets.choice(activities_list)
 
-        return [SlotSet('hrs_coping_activities_performed', activity_id)]
+        dispatcher.utter_message(random_choice.intervention_activity_full_instructions)
 
 
 class ShowFirstCopingActivityPa(Action):
@@ -356,13 +403,15 @@ class ShowFirstCopingActivityPa(Action):
         return "show_first_coping_activity_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        activity_id = tracker.get_slot('hrs_coping_activities_performed')
-        # TODO: choose activities in list of advised list for pa
-        activities_list = get_random_activities(int(activity_id), 1)
+        user_id = int(tracker.current_state()['sender_id'])
+        # this activity has to be excluded for the PA branch
+        avoid_activity = 22
 
-        dispatcher.utter_message(activities_list[0].intervention_activity_full_instructions)
+        _, activities_list = get_possible_activities(user_id=user_id,
+                                                     avoid_activity_id=avoid_activity)
+        random_choice = secrets.choice(activities_list)
 
-        return [SlotSet('hrs_coping_activities_performed', activity_id)]
+        dispatcher.utter_message(random_choice.intervention_activity_full_instructions)
 
 
 class StoreEventSmoke(Action):
@@ -762,25 +811,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
 
         return {"type_smoke": value}
 
-    def validate_type_smoke_confirm(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate type of smoke input confirmation"""
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_type_smoke_confirm':
-            return {"type_smoke_confirm": None}
-
-        if not validator.validate_yes_no_answer(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_yes_no")
-            return {"type_smoke_confirm": None}
-
-        if value.lower() in ['Nee', 'nee', "nee."]:
-            return {"type_smoke": None, "type_smoke_confirm": None}
-        return {"type_smoke_confirm": value}
-
     def validate_number_smoke(
             self, value: Text, dispatcher: CollectingDispatcher,
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
@@ -797,26 +827,6 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             return {"number_smoke": None}
 
         return {"number_smoke": value}
-
-    def validate_number_smoke_confirm(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate number of smoke input confirmation"""
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_number_smoke_confirm':
-            return {"number_smoke_confirm": None}
-
-        if not validator.validate_yes_no_answer(value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_yes_no")
-            return {"number_smoke_confirm": None}
-
-        if value.lower() in ['Nee', 'nee', "nee."]:
-            return {"number_smoke": None, "number_smoke_confirm": None}
-        return {"number_smoke_confirm": value}
-
 
 class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
     def name(self) -> Text:
@@ -852,7 +862,7 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
         if last_utterance != 'utter_ask_how_feel_smoke':
             return {"how_feel_smoke": None}
 
-        valid = validator.validate_list(value, 0, 5)
+        valid = validator.validate_list(value, 0, 9)
 
         if not valid:
             dispatcher.utter_message(response="utter_did_not_understand")
@@ -1119,37 +1129,6 @@ class ValidateHrsActivityForm(FormValidationAction):
         return {"hrs_activity_slot": value}
 
 
-class ValidateHrsChooseCopingActivityForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_hrs_choose_coping_activity_form'
-
-    def validate_hrs_choose_coping_activity_slot(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate hrs_choose_coping_activity_slot"""
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_hrs_choose_coping_activity_slot':
-            return {"hrs_choose_coping_activity_slot": None}
-
-        if not validator.validate_number_in_range_response(1, 4, value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-            return {"hrs_choose_coping_activity_slot": None}
-
-        if value == '4':
-            rnd_activities = get_random_activities(-1, 3)
-            rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
-
-            return {"hrs_choose_coping_activity_slot": None,
-                    "coping_activities_ids": rnd_activities_ids,
-                    "coping_activity1_name": rnd_activities[0].intervention_activity_title,
-                    "coping_activity2_name": rnd_activities[1].intervention_activity_title,
-                    "coping_activity3_name": rnd_activities[2].intervention_activity_title}
-
-        return {"hrs_choose_coping_activity_slot": value}
-
-
 class ValidateEhboMeSelfLapseForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_ehbo_me_self_lapse_form'
@@ -1271,7 +1250,7 @@ class ValidatePaContextEventsForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate pa_doing_today_slot"""
-        max_value = 5
+        max_value = 7
 
         last_utterance = get_latest_bot_utterance(tracker.events)
 

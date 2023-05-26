@@ -250,41 +250,94 @@ responses:
             Dit kan handig zijn als je bijvoorbeeld gebruik maakt van hulpmiddelen of medicatie die helpen bij het stoppen met roken. 
             Je kunt dan nog een weekje wachten tot je hieraan gewend bent. 
             Hulpmiddelen of medicatie vergroten de kans om blijvend te stoppen."
+    - text: "Als je dat wilt, kun je morgen al beginnen met stoppen met roken. Maar je kunt ook een latere stopdatum
+            kiezen, bijvoorbeeld over een week. Dit kan vooral handig zijn als je gebruik maakt van hulpmiddelen of
+            medicatie. Zo krijg je nog even de tijd om aan deze hulpmiddelen te wennen, wat de kans op stoppen kan 
+            vergroten. ⬆️"
+    - text: "Je hebt de mogelijkheid om morgen al te stoppen met roken als je dat wilt. Een andere optie is om een
+            latere stopdatum te kiezen, bijvoorbeeld over een week. Dit is vooral handig als je hulpmiddelen of
+            medicatie wilt gebruiken om te stoppen. Dit geeft je de tijd om te wennen aan deze hulpmiddelen, wat de 
+            kans op stoppen kan vergroten. ⬆️"
   utter_goal_setting_choose_date_2:
-    - text: "Ik help jou de komende weken en ik geef je tips, zodat je het niet alleen hoeft te doen!."
+    - text: "Ik help jou de komende weken en ik geef je tips, zodat je het niet alleen hoeft te doen!🤝"
+    - text: "De komende weken zal ik je helpen en je nuttige tips geven, zodat je het niet alleen hoeft te doen. Samen 
+            kunnen we werken aan het bereiken van je doelen! 🤝"
+    - text: "Ik ben er de komende weken voor je en zal je helpen met advies en tips. Laten we samenwerken om jouw
+            doelen te bereiken! 🤝"
   utter_goal_setting_choose_date_3:
     - text: "Kies dus een datum tussen {first_possible_quit_date} en {last_possible_quit_date}.
-            Typ de datum op deze manier: dd-mm-jjjj. Dus eerst de dag-dan de maand-en dan het jaar. 
-            Je typt in totaal dus 8 getallen."
+            Welke datum wil je stoppen met roken? Typ de datum op deze manier: dd/mm/jjjj. Dus eerst de
+            dag/dan de maand/en dan het jaar. Je typt in totaal dus 8 getallen."
   utter_goal_setting_choose_date_4:
     - text: "Super! Je hebt nu een stop-datum. Deze is op {chosen_quit_date_slot}."
+    - text: "Fantastisch! Je hebt nu een datum om naar uit te kijken. Je stopdatum is op {chosen_quit_date_slot}."
+    - text: "Geweldig! Je hebt nu een concrete datum om naartoe te werken. Je stopdatum is op {chosen_quit_date_slot}."
   utter_goal_setting_choose_date_5:
-    - text: "Je weet nu wanneer je wilt stoppen met roken. 
-            Nu kunnen we gaan nadenken over hoe je gaat stoppen met roken. 
-            Laten we een plan opstellen."
+    - text: "Je weet nu wanneer je wilt stoppen met roken. Nu kunnen we gaan nadenken over hoe je gaat stoppen met 
+            roken. Laten we een plan opstellen."
+    - text: "Nu je weet wanneer je wilt stoppen met roken, kunnen we samen een plan opstellen om dat doel te bereiken. 
+            Laten we brainstormen over de mogelijke stappen die je kunt nemen."
+    - text: "Het is goed dat je een datum hebt gekozen om te stoppen met roken. Om je te helpen slagen, gaan we nu een 
+            plan opstellen. Laten we nadenken over de acties die je kunt ondernemen om je doel te bereiken."
   utter_goal_setting_choose_date_6:
-    - text: "Een plan helpt om je doel te bereiken. 
-            In het plan denken we na over de stappen die je moet nemen om je doel te bereiken. "
+    - text: "Een plan helpt om je doel te bereiken.🏆 In het plan denken we na over de stappen die je moet nemen om je 
+            doel te bereiken."
+    - text: "Het opstellen van een plan kan je helpen om je doel te bereiken. 🏆 Door een plan te maken, denk je na over
+            de concrete stappen die je moet nemen om je doel te bereiken."
+    - text: "Een plan kan bijdragen aan het behalen van je doel.🏆 In het plan schrijf je de stappen op die je moet 
+            zetten om jouw doel te bereiken."
   utter_goal_setting_choose_date_7:
     - text: "Hoe kun jij jezelf helpen met stoppen met roken? Het helpt om je plan in kleine stapjes op te delen."
+    - text: "Om jezelf te helpen bij het stoppen met roken, is het vaak handig om je plan op te delen in kleine stapjes."
+    - text: "Een goede manier om jezelf te ondersteunen bij het stoppen met roken is door je plan in kleine stappen op 
+            te delen. Dit geeft je meer grip op het proces."
   utter_goal_setting_choose_date_8:
-    - text: "Ik raad je aan om je sigaretten en asbakken weg te gooien."
+    - text: "Ik raad je aan om je sigaretten en asbakken weg te gooien.🗑️"
+    - text: "Het kan helpen om jezelf te motiveren door je sigaretten en asbakken weg te doen. Zo voorkom je dat je in
+            de verleiding komt om te roken.🗑️"
+    - text: "Om jezelf te helpen stoppen met roken, is het verstandig om je sigaretten en asbakken weg te gooien. Dit 
+            helpt je om afscheid te nemen van het roken en geeft je een duidelijk signaal dat je serieus bent over je
+            besluit om te stoppen.🗑️"
   utter_goal_setting_choose_date_9:
     - text: "Andere kleine stapjes zijn bijvoorbeeld nadenken over mensen in jouw omgeving die je kunnen helpen, 
-            activiteiten bedenken die je kunt doen in plaats van roken (zoals fruit eten, een rondje wandelen) 
-            en uitrekenen hoeveel geld je kunt besparen met stoppen-met-roken."
+            activiteiten bedenken die je kunt doen in plaats van roken (zoals fruit eten, een rondje wandelen) en 
+            uitrekenen hoeveel geld je kunt besparen met stoppen-met-roken.💰"
+    - text: "Overweeg ook om andere kleine stappen te nemen, zoals mensen in jouw omgeving vinden die je kunnen steunen,
+            het bedenken van activiteiten die je kunt doen als alternatief voor roken (zoals fruit eten, een wandeling
+            maken) en het berekenen van het geld dat je kunt besparen door te stoppen met roken.💰"
+    - text: "Er zijn nog meer kleine stappen die je kunt nemen, zoals nadenken over mensen in jouw omgeving die je 
+            kunnen ondersteunen, het bedenken van activiteiten ter vervanging van roken (zoals fruit eten, sporten) en 
+            het uitrekenen van hoeveel geld je kunt besparen door te stoppen met roken.💰"
   utter_goal_setting_choose_date_10:
-    - text: "Denk nu eens na over welke stappen jij kunt zetten om jezelf te helpen met stoppen met roken. 
-            Neem hier wat tijd voor. 
-            Pak pen en papier en schrijf 3 dingen op die jij komende dagen kunt doen om jezelf te helpen."
+    - text: "Denk nu eens na over welke stappen jij kunt zetten om jezelf te helpen met stoppen met roken. Neem hier 
+            wat tijd voor. Pak pen en papier en schrijf 3 dingen op die jij komende dagen kunt doen om jezelf te 
+            helpen.✍️ Typ 'klaar' als je hier klaar mee bent."
+    - text: "Laten we nu even nadenken over welke stappen je kunt zetten om jezelf te helpen stoppen met roken. Neem 
+            hiervoor de tijd en pak pen en papier. Noteer drie dingen die je de komende dagen kunt doen om jezelf te 
+            helpen. ✍️Typ 'klaar' wanneer je hiermee klaar bent."
+    - text: "Wat zijn de stappen die jij kunt zetten om jezelf te helpen bij het stoppen met roken? Neem even de tijd 
+            om hierover na te denken en pak pen en papier. Schrijf drie dingen op die je de komende dagen kunt doen om 
+            jezelf te ondersteunen. ✍️ Typ 'klaar' als je klaar bent."
   utter_goal_setting_choose_date_11:
     - text: "Je kunt dit papier ook op een plek hangen waar je het vaak ziet, om jezelf hieraan te herinneren."
+    - text: "Overweeg om dit papier op een plek te hangen waar je het vaak tegenkomt, als een constante herinnering 
+            aan jezelf."
+    - text: "Hang het papier op een zichtbare plek om jezelf eraan te herinneren en het makkelijker te maken om deze 
+            informatie in je dagelijks leven op te nemen.."
   utter_goal_setting_choose_date_12:
     - text: "Mooi! Door na te denken over een plan, heb je de eerste stappen naar het stoppen met roken gezet."
+    - text: "Geweldig! Je hebt nu de eerste stappen gezet om te stoppen met roken door een plan te bedenken."
+    - text: "Fantastisch! Het nadenken over een plan betekent dat je al goed op weg bent om te stoppen met roken."
   utter_goal_setting_choose_date_13:
-    - text: "Ik zal er de komende tijd steeds voor je zijn en je blijven helpen. 
-            Dit zal ik bijvoorbeeld doen door je meer uitleg te geven over stoppen met roken, je tips te geven en oefeningen te laten doen. 
-            Deze oefeningen helpen je om vol te blijven houden!"
+    - text: "Ik zal er de komende tijd steeds voor je zijn en je blijven helpen. Dit zal ik bijvoorbeeld doen door je
+            meer uitleg te geven over stoppen met roken, je tips te geven en oefeningen te laten doen. Deze oefeningen 
+            helpen je om vol te blijven houden!💪"
+    - text: "Ik zal de komende tijd altijd voor je beschikbaar zijn om je te blijven helpen. Dit doe ik bijvoorbeeld 
+            door meer informatie te geven over stoppen met roken, praktische tips geef en oefeningen met je doe. Deze 
+            oefeningen zijn bedoeld om je te helpen volhouden en door te zetten!💪"
+    - text: "De komende tijd zal ik je bijstaan en ondersteunen door je meer inzicht te geven over stoppen met roken, 
+            handige tips te geven en samen oefeningen te doen. Deze oefeningen zijn ontworpen om je te helpen doorgaan
+            en doorzettingsvermogen te tonen!💪"
 
 
 # Branch 3a explanation on goal setting PA
@@ -522,10 +575,12 @@ responses:
     - text: "Ik ga je helpen met het halen van je beweegdoelen. Ik zal je de komende tijd meer uitleg geven over bewegen
             en je tips en oefeningen geven. 💡 Deze oefeningen helpen je om vol te blijven houden!"
   utter_goal_setting_wrong_date:
-    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13-07-2023. 
-
-            Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. 
-            Kun je je stop-datum nog een keer typen? "
+    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13/07/2023.
+            Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. Kun je je stop-datum nog
+            een keer typen?"
+    - text: "Het lijkt erop dat de datum die je hebt ingevoerd niet geldig is. Dit is een voorbeeld van hoe de datum 
+            kunt invoeren: 13/07/2023. Dit betekent dat je de dag, de maand en het jaar in deze volgorde moet typen.
+            Zou je alsjeblieft je stop-datum opnieuw kunnen invoeren met 8 cijfers in deze volgorde?"
 
 # 4 closing
   utter_closing_1:

@@ -1,30 +1,36 @@
 """
 Helper functions for rasa actions.
 """
+import logging
 import numpy as np
+import pandas as pd
 import plotly.graph_objects as go
 import secrets
 
 from datetime import datetime, date
-from typing import List, Optional, Any, Tuple
+from typing import Any, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
-                          DATABASE_URL, EVENING_SEND_TIME,
+                          DATABASE_URL, 
+                          EVENING_SEND_TIME,
                           MORNING_SEND_TIME,
+                          NUM_TOP_ACTIVITIES,
                           PROFILE_CREATION_CONF_SLOTS,
-                          TIMEZONE, NUM_TOP_ACTIVITIES,
+                          TIMEZONE,
                           FsmStates)
 
-from virtual_coach_db.dbschema.models import (Users, DialogClosedAnswers,
+from virtual_coach_db.dbschema.models import (ClosedAnswers,
+                                              DialogClosedAnswers,
                                               DialogOpenAnswers,
+                                              FirstAidKit,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
                                               InterventionPhases,
-                                              UserInterventionState, FirstAidKit,
-                                              ClosedAnswers, UserStateMachine)
+                                              UserInterventionState,
+                                              UserStateMachine,
+                                              Users)
+                                         
 from virtual_coach_db.helper.definitions import Components
-import pandas as pd
-
 from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 
@@ -96,8 +102,142 @@ def compute_preferred_time(tracker):
     return preferred_time
 
 
-def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
-                                      running_walking_pref: int,
+def dialog_to_be_completed(user_id: int) -> bool:
+    """
+    Checks if a dialog has to be completed.
+
+    Args:
+        user_id: ID of the user
+    Returns:
+        True if a dialog has to be completed, false otherwise
+
+    """
+    # only the goal setting and the weekly reflection dialogs can be resumed, so we search
+    # only for the goal setting and the weekly reflection
+
+    session = get_db_session(db_url=DATABASE_URL)
+
+    uncompleted = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(False))
+        .filter(
+            (InterventionComponents
+             .intervention_component_name == Components.GOAL_SETTING)
+            | (InterventionComponents
+               .intervention_component_name == Components.WEEKLY_REFLECTION)
+        )
+        .first()
+    )
+
+    if uncompleted is None:
+        return False
+
+    return True
+
+
+def get_last_completed_dialog_part_from_db(user_id: int,
+                                           intervention_component_id: int):
+    """Get last completed dialog part from db."""
+    
+    session = get_db_session(db_url=DATABASE_URL)
+
+    # Get most recent uncompleted entry for component from db
+    selected = (
+        session.query(
+            UserInterventionState
+        ).order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_id == intervention_component_id,
+            UserInterventionState.completed.is_(False)
+        )
+        .first()
+    )
+    
+    if selected is not None:
+        return selected.last_part
+    
+    # No dialog part previously completed
+    return -1
+
+
+def get_goal_setting_chosen_sport_from_db(user_id: int):
+    """Get chosen sport from db for user."""
+    
+    session = get_db_session(db_url=DATABASE_URL)
+
+    selected = (
+        session.query(
+            Users
+        )
+        .filter(
+            Users.nicedayuid == user_id
+        )
+        .first()
+    )
+    
+    if selected is not None:
+        return selected.goal_setting_chosen_sport
+    
+    return None
+
+
+def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
+                            part: int):
+    """Store that part of dialog has been completed in db."""
+    
+    session = get_db_session(db_url=DATABASE_URL)
+
+    selected = (
+        session.query(
+            UserInterventionState
+        ).order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_id == intervention_component_id,
+            UserInterventionState.completed.is_(False)
+        )
+        .first()
+    )
+
+    # Current time to be saved in database
+    last_time = datetime.now().astimezone(TIMEZONE)
+
+    # If already an entry for the user for the component exists
+    # in the intervention state table
+    if selected is not None:
+        # Update time and part of component
+        selected.last_time = last_time
+        selected.last_part = part
+
+    # No entry exists yet for user for the component in
+    # the intervention state table
+    else:
+        selected_user = session.query(Users).filter_by(nicedayuid=user_id).one_or_none()
+
+        # User exists in Users table
+        if selected_user is not None:
+            entry = UserInterventionState(intervention_component_id=intervention_component_id,
+                                          last_time=last_time,
+                                          last_part=part,
+                                          completed=False)
+            selected_user.user_intervention_state.append(entry)
+
+        # User does not exist in Users table
+        else:
+            logging.error("Error: User not in Users table")
+
+    session.commit()  # Update database
+
+
+def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int, 
+                                      running_walking_pref: int, 
                                       self_efficacy_pref: float,
                                       sim_cluster_1: float, sim_cluster_3: float,
                                       participant_code: str, week_days: str,
@@ -172,6 +312,24 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
     session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.quit_date = datetime.strptime(quit_date, '%d-%m-%Y')
+    session.commit()
+    
+    
+def store_goal_setting_chosen_sport_to_db(user_id: int, chosen_sport: str):
+    """
+    Store the chosen sport for a user in the database.
+
+    Args:
+        user_id (int): The id of the user.
+        chosen_sport (str): The chosen sport.
+
+    Returns:
+        Nothing
+    """
+
+    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    selected.goal_setting_chosen_sport = chosen_sport
     session.commit()
 
 
@@ -751,8 +909,8 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
                 user_id: the user_id of the user to retrieve the answers for
                 question_id: the question_id for which the answers should be retrieved
 
-            Returns:
-                    The open answers that the user has given for the question
+        Returns:
+                The open answers that the user has given for the question.
 
     """
     session = get_db_session(db_url=DATABASE_URL)

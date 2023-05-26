@@ -4,15 +4,98 @@ version: "3.1"
 rules:
 
 
-## 1 Introduce goal setting dialog
+## 1 Introduce goal setting dialog: never done before or entirely done before
 - rule: introduce goal setting dialog
   steps:
   - intent: EXTERNAL_trigger_goal_setting
   - action: action_set_slot_goal_setting_dialog
+  - action: action_get_last_completed_goal_setting_part
+  - slot_was_set:
+    - last_completed_goal_setting_dialog_part: -1
   - action: utter_goal_setting_greeting
   - action: how_doing_form
   - active_loop: how_doing_form
   wait_for_user_input: false
+  
+
+## 1 Introduce goal setting dialog: part 1 done before
+- rule: introduce goal setting dialog
+  steps:
+  - intent: EXTERNAL_trigger_goal_setting
+  - action: action_set_slot_goal_setting_dialog
+  - action: action_get_last_completed_goal_setting_part
+  - slot_was_set:
+    - last_completed_goal_setting_dialog_part: 1
+  - action: utter_goal_setting_continue
+  - action: utter_goal_setting_choose_date_5 # here starts part 2
+  - action: utter_goal_setting_choose_date_6
+  - action: utter_goal_setting_choose_date_7
+  - action: utter_goal_setting_choose_date_8
+  - action: utter_goal_setting_choose_date_9
+  - action: utter_goal_setting_choose_date_10
+  - action: goal_setting_plan_finished_form
+  - active_loop: goal_setting_plan_finished_form
+  - active_loop: null
+  - action: utter_goal_setting_choose_date_11
+  - action: utter_goal_setting_choose_date_12
+  - action: utter_goal_setting_choose_date_13
+  - action: action_goal_setting_continue_after_plan
+
+
+## 1 Introduce goal setting dialog: part 2 done before
+- rule: introduce goal setting dialog
+  steps:
+  - intent: EXTERNAL_trigger_goal_setting
+  - action: action_set_slot_goal_setting_dialog
+  - action: action_get_last_completed_goal_setting_part
+  - slot_was_set:
+    - last_completed_goal_setting_dialog_part: 2
+  - action: utter_goal_setting_continue
+  - action: utter_goal_setting_pa_set_6  # here starts part 3
+  - action: first_pa_goal_form
+  - active_loop: first_pa_goal_form
+  - active_loop: null
+  - action: utter_goal_setting_pa_set_7
+  - action: utter_goal_setting_pa_set_8
+  - action: action_goal_setting_choose_testimonials
+  - action: utter_goal_setting_pa_set_9
+  - action: testimonial_one_read_form
+  - active_loop: testimonial_one_read_form
+  - active_loop: null
+  - action: read_second_testimonial_form
+  - active_loop: read_second_testimonial_form
+  wait_for_user_input: false
+  
+  
+## 1 Introduce goal setting dialog: part 3 done before
+- rule: introduce goal setting dialog
+  steps:
+  - intent: EXTERNAL_trigger_goal_setting
+  - action: action_set_slot_goal_setting_dialog
+  - action: action_get_last_completed_goal_setting_part
+  - slot_was_set:
+    - last_completed_goal_setting_dialog_part: 3
+  - action: utter_goal_setting_continue
+  - action: utter_step_goal_pa_1  # part 4 starts here
+  - action: utter_step_goal_pa_2
+  - action: utter_step_goal_pa_3
+  - action: utter_step_goal_pa_4
+  - action: utter_step_goal_pa_5
+  - action: utter_step_goal_pa_6
+  - action: utter_step_goal_pa_7
+  - action: utter_step_goal_pa_8
+  - action: finished_writing_pa_form
+  - active_loop: finished_writing_pa_form
+  - active_loop: null
+  - action: utter_step_goal_pa_9
+  - action: utter_step_goal_pa_10
+  - action: utter_step_goal_pa_11
+  - action: utter_closing_1
+  - action: utter_closing_2
+  - action: utter_closing_3
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
+
 
 ## 1 + 2: introduce goal setting and ask for extra explanation
 - rule: ask if explanation is needed
@@ -78,7 +161,8 @@ rules:
   - action: chosen_quit_date_form
   - active_loop: null
   - action: utter_goal_setting_choose_date_4
-  - action: utter_goal_setting_choose_date_5
+  - action: action_save_goal_setting_dialog_part1
+  - action: utter_goal_setting_choose_date_5 # here starts part 2
   - action: utter_goal_setting_choose_date_6
   - action: utter_goal_setting_choose_date_7
   - action: utter_goal_setting_choose_date_8
@@ -116,7 +200,8 @@ rules:
   - active_loop: which_sport_form
   - active_loop: null
   - action: utter_goal_setting_pa_set_5
-  - action: utter_goal_setting_pa_set_6
+  - action: action_save_goal_setting_dialog_part2
+  - action: utter_goal_setting_pa_set_6  # here starts part 3
   - action: first_pa_goal_form
   - active_loop: first_pa_goal_form
   - active_loop: null
@@ -228,7 +313,8 @@ rules:
 
 - rule: step goal pa  # 3c
   steps:
-  - action: utter_step_goal_pa_1
+  - action: action_save_goal_setting_dialog_part3
+  - action: utter_step_goal_pa_1  # part 4 starts here
   - action: utter_step_goal_pa_2
   - action: utter_step_goal_pa_3
   - action: utter_step_goal_pa_4
@@ -245,5 +331,6 @@ rules:
   - action: utter_closing_1
   - action: utter_closing_2
   - action: utter_closing_3
+  - action: action_save_goal_setting_dialog_part4
   - action: mark_dialog_as_completed
   - action: action_end_dialog

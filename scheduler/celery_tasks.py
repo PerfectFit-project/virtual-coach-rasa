@@ -9,7 +9,7 @@ from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED)
 from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
-                          send_fsm_event)
+                          send_fsm_event, set_dialog_running_status)
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
@@ -210,3 +210,25 @@ def user_trigger_dialog(self,  # pylint: disable=unused-argument
     """
     send_fsm_event(user_id=user_id,
                    event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
+
+
+@app.task(bind=True)
+def trigger_menu(self,  # pylint: disable=unused-argument
+                 user_id: int,
+                 trigger: str):
+    """
+    This task sends a trigger to Rasa immediately.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
+    """
+
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
+    headers = {'Content-Type': 'application/json'}
+    params = {'output_channel': 'niceday_trigger_input_channel'}
+    data = '{"name": "' + trigger + '" }'
+    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+
+    # the state machine status as to be marked as not running
+    # to allow new dialogs to be administered
+    set_dialog_running_status(user_id, False)

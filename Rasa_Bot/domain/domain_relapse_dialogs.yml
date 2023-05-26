@@ -812,11 +812,11 @@ responses:
     - text: "Zou je willen delen wat er op dit moment speelt?"
     - text: "Wat is er gaande?"
   utter_ask_pa_specify_pa_slot:
-    - text: "Typ '1' als je gepland had om te bewegen, maar dit nu niet lukt.\n
+    - text: "Typ '1' als je gepland had om te bewegen, maar dit NU niet lukt.\n
             Typ '2' als je merkt dat het bewegen over het algemeen niet zo goed gaat als je zou willen."
-    - text: "Typ '1' als het nu niet lukt om te bewegen hoewel je het had gepland.\n
+    - text: "Typ '1' als het NU niet lukt om te bewegen hoewel je het had gepland.\n
             Typ '2' als het bewegen over het algemeen niet gaat zoals gehoopt of gepland."
-    - text: "Typ '1' als je merkt je dat het nu niet lukt om te bewegen, hoewel je het had gepland.\n
+    - text: "Typ '1' als je merkt je dat het NU niet lukt om te bewegen, hoewel je het had gepland.\n
             Typ '2' als je merkt dat het bewegen over het algemeen niet zo soepel gaat als je zou willen."
   utter_pa_lapse_1:
     - text: "Meer bewegen is een proces. Voordat je gaat moet je soms over een hobbel, en dat kan lastig zijn. 
@@ -844,10 +844,16 @@ responses:
   utter_ask_pa_together:
     - text: "Zou je dit met iemand samen doen? Typ '1' voor ja, typ '2' voor nee."
   utter_ask_pa_why_fail:
-    - text: "Kun je aangeven wat de reden is dat dat je nu niet lukt? Je mag meerdere
-             antwoorden geven. Typ 1 als je geen zin hebt. Typ 2 als je moe bent en geen energie
-             hebt. Typ 3 als je geen tijd hebt. Typ 4 als er iets tussen is gekomen. Typ 5 als het
-             ligt aan het weer. Typ 6 als je ziek of geblesseerd bent. Typ 7 als er iets anders is."
+    - text: "Kun je aangeven wat de reden is dat de lichamelijke activiteit niet lukt(e)?\n
+            Je mag meerdere antwoorden geven.\n
+            Typ een spatie tussen elk cijfer.\n
+            Typ '1' als je geen zin hebt/had.\n
+            Typ '2' als je moe bent en geen energie hebt/had.\n
+            Typ '3' als je geen tijd hebt/had.\n
+            Typ '4' als er iets tussen is/was gekomen.\n
+            Typ '5' als het ligt/lag aan het weer.\n
+            Typ '6' als je ziek of geblesseerd bent/was.\n
+            Typ '7' als er iets anders is/was."
   utter_ask_pa_doing_today_slot:
     - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. 
             Typ '1' als je aan het werk was. 💼 \n
@@ -863,7 +869,7 @@ responses:
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_pa_lapse_5:
-    - text: "Wat heb je vandaag verder gedaan?"
+    - text: "Wat heb je verder overdag?"
   utter_pa_lapse_6:
     - text: "Door vaker te kijken naar situaties waarin je geen zin hebt om in beweging te komen, kun je leren patronen 
             herkennen.💡 Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
@@ -948,8 +954,9 @@ responses:
             huisarts. Hij of zij kan je informeren over de opties die beschikbaar zijn in jouw buurt.  Dit was alles 
             voor vandaag. Tot de volgende keer!"
   utter_pa_sick:
-    - text: "Wat vervelend voor je, ik hoop dat je je snel weer beter voelt. 
-            Typ '...' [command] in de chat wanneer je weer beter bent en klaar om weer in beweging te komen" # TODO: add command
+    - text: "Wat vervelend voor je, ik hoop dat je snel weer beter bent. Laten wij over binnenkort 
+            weer contact hebben. Mocht je in de tussentijd beter zijn en iets willen doen, stuur 
+            mij een berichtje en dan kijken we samen waar je zin in hebt. Veel beterschap!"
   utter_test_utterance:
     - text: "This is a test utterance"
   utter_test_utterance2:

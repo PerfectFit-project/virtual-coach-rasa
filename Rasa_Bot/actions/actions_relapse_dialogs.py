@@ -1247,7 +1247,7 @@ class ValidatePaContextEventsForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate pa_doing_today_slot"""
-        max_value = 5
+        max_value = 7
 
         last_utterance = get_latest_bot_utterance(tracker.events)
 

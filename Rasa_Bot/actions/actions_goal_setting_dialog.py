@@ -117,7 +117,7 @@ class ActionGoalSettingContinueAfterPlan(Action):
         # checks in which dialog the user is, and resumes the correct flow accordingly
         current_dialog = tracker.get_slot('current_intervention_component')
 
-        if current_dialog == Components.RELAPSE_DIALOG:
+        if current_dialog == Components.RELAPSE_DIALOG_RELAPSE:
             # resumes the relapse dialog from rule: smoke relapse decide to get medication info
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]

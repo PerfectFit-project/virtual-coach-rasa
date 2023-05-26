@@ -233,7 +233,6 @@ class TriggerRelapseDialog(Action):
         return []
 
 
-
 class ValidateHrsChooseCopingActivityForm(FormValidationAction):
     def name(self) -> Text:
         return 'validate_hrs_choose_coping_activity_form'
@@ -267,7 +266,7 @@ class ValidateHrsChooseCopingActivityForm(FormValidationAction):
 
         options = ["Typ " + str(i + 1) + " als je " +
                    available[i].intervention_activity_title +
-                   "wilt doen.\n"
+                   " wilt doen.\n"
                    for i in range(len(available))]
 
         sentence = ''.join(options)
@@ -307,6 +306,33 @@ class ValidateHrsChooseCopingActivityForm(FormValidationAction):
 
         return {"hrs_choose_coping_activity_slot": activity_type_slot,
                 "coping_activity_next_activity_slot": value}
+
+
+class ShowChosenCopingActivity(Action):
+    def name(self):
+        return "show_chosen_coping_activity"
+
+    async def run(self, dispatcher, tracker, domain):
+        chosen_option = int(tracker.get_slot('coping_activity_next_activity_slot'))
+        activities_slot = tracker.get_slot('rnd_activities_ids')
+
+        activity_id = activities_slot[chosen_option - 1]
+
+        session = get_db_session(db_url=DATABASE_URL)
+
+        instructions = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id == activity_id
+            ).first()
+        )
+
+        # prompt the message
+        dispatcher.utter_message(text=instructions.intervention_activity_full_instructions)
+
+        return []
 
 
 class ShowBarchartDifficultSituations(Action):
@@ -1131,27 +1157,6 @@ class ValidateHrsActivityForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"hrs_activity_slot": None}
         return {"hrs_activity_slot": value}
-
-
-class ValidateHrsChooseCopingActivityForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_hrs_choose_coping_activity_form'
-
-    def validate_hrs_choose_coping_activity_slot(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate hrs_choose_coping_activity_slot"""
-
-        last_utterance = get_latest_bot_utterance(tracker.events)
-        if last_utterance != 'utter_ask_hrs_choose_coping_activity_slot':
-            return {"hrs_choose_coping_activity_slot": None}
-
-        if not validator.validate_number_in_range_response(1, 5, value):
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4_5")
-            return {"hrs_choose_coping_activity_slot": None}
-
-        return {"hrs_choose_coping_activity_slot": value}
 
 
 class ValidateEhboMeSelfLapseForm(FormValidationAction):

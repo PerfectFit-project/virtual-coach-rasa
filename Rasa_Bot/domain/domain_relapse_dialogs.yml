@@ -296,17 +296,22 @@ slots:
       - type: custom
 
   hrs_choose_coping_activity_slot:
-    type: categorical
-    values:
-      - 1
-      - 2
-      - 3
-      - 4
+    type: float
     influence_conversation: false
     mappings:
       - type: from_text
         conditions:
           - active_loop: hrs_choose_coping_activity_form
+            requested_slot: hrs_choose_coping_activity_slot
+
+  coping_activity_next_activity_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: hrs_choose_coping_activity_form
+            requested_slot: coping_activity_next_activity_slot
 
   # alternatives to display for the activity choice
   hrs_coping_activity_activities_options_slot:
@@ -390,7 +395,7 @@ responses:
     - text: "Typ '1' als je zin hebt om te roken.1️ \n 
              Typ '2' als je vandaag één of meer sigaretten hebt gerookt.2️ \n
              Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum.3️ \n
-             Typ '4'als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
+             Typ '4' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
@@ -598,18 +603,16 @@ responses:
 
 
 # 4a
-  utter_ask_hrs_new_activity_slot_pt1:
-    - text: "Is de trek weg of wil je nog een oefening doen?"
-    - text: "Heb je de trek onder controle of wil je nog een oefening doen?"
-    - text: "Is de hevige trek verdwenen of wil je nog een andere oefening uitproberen?"
-  utter_ask_hrs_new_activity_slot_pt2:
-    - text: "Typ '1' als de trek weg is."
-    - text: "Als de trek weg is, typ dan '1'."
-    - text: "Voel je de trek niet meer? Typ dan '1'."
   utter_ask_hrs_new_activity_slot:
-    - text: "Typ '2' als de trek nog niet weg is en je nog een oefening wil doen."
-    - text: "Als de trek nog niet is weggegaan, kun je nog een oefening doen door '2' te typen."
-    - text: "Wil je nog een oefening doen omdat de trek nog niet weg is? Typ dan '2'."
+    - text: "Is de trek weg of wil je nog een oefening doen?\n
+            Typ '1' als de trek weg is.\n
+            Typ '2' als de trek nog niet weg is en je nog een oefening wil doen."
+    - text: "Heb je de trek onder controle of wil je nog een oefening doen?\n
+            Als de trek weg is, typ dan '1'.\n
+            Als de trek nog niet is weggegaan, kun je nog een oefening doen door '2' te typen."
+    - text: "Is de hevige trek verdwenen of wil je nog een andere oefening uitproberen?\n
+            Voel je de trek niet meer? Typ dan '1'.\n
+            Wil je nog een oefening doen omdat de trek nog niet weg is? Typ dan '2'."
   utter_hrs_reasons_1:
     - text: "Je kan trots zijn op jezelf dat je deze trek hebt weerstaan. Goed bezig!💪"
     - text: "Het is fantastisch dat je deze trek hebt overwonnen. Je doet het geweldig! 💪"
@@ -750,6 +753,10 @@ responses:
     - text: "Goed! Kies nu welke oefening je wilt doen: \n"
   utter_ask_coping_activity_next_activity_slot:
     - text: "'{hrs_coping_activity_activities_options_slot}'"
+  utter_hrs_next_activity_user:
+    - text: "Oké, goede keuze!"
+    - text: "Oké, mooie keuze!"
+    - text: "Oké, goede beslissing!"
 
 # 3c smoking - relapse
   utter_smoke_relapse_1:
@@ -1091,6 +1098,7 @@ forms:
   hrs_choose_coping_activity_form:
     required_slots:
       - hrs_choose_coping_activity_slot
+      - coping_activity_next_activity_slot
 
   relapse_stop_now_later_form:
     required_slots:

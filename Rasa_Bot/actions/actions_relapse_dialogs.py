@@ -7,10 +7,9 @@ import secrets
 
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL, activities_categories
-from .helper import (get_latest_bot_utterance, get_random_activities,
-                     store_dialog_closed_answer_to_db, store_dialog_open_answer_to_db,
-                     store_dialog_closed_answer_list_to_db, store_user_intervention_state,
-                     populate_fig, get_possible_activities)
+from .helper import (get_latest_bot_utterance, store_dialog_closed_answer_to_db,
+                     store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db,
+                     store_user_intervention_state, populate_fig, get_possible_activities)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction

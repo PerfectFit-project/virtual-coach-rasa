@@ -6,6 +6,6 @@ python-dateutil==2.8.1
 python-dotenv
 redis
 sqlalchemy
-git+https://github.com/PerfectFit-project/virtual-coach-db@340-revirew-hrs
+git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.19
 git+https://github.com/PerfectFit-project/pa-algorithms
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.3

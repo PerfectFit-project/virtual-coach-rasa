@@ -186,39 +186,6 @@ class ActionSetSlotRelapseDialogRelapse(Action):
                         Components.RELAPSE_DIALOG_RELAPSE)]
 
 
-class PopulateCopingActivitiesList(Action):
-    def name(self):
-        return "populate_coping_activities_list"
-
-    async def run(self, dispatcher, tracker, domain):
-        # TODO: instead of querying the whole list of activities,
-        #  use only the selected ones for smoking
-        # list of activities to be provided by content team
-        rnd_activities = get_random_activities(-1, 3)
-        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
-
-        return [SlotSet('coping_activities_ids', rnd_activities_ids),
-                SlotSet('coping_activity1_name', rnd_activities[0].intervention_activity_title),
-                SlotSet('coping_activity2_name', rnd_activities[1].intervention_activity_title),
-                SlotSet('coping_activity3_name', rnd_activities[2].intervention_activity_title)]
-
-
-class PopulateCopingActivitiesListPa(Action):
-    def name(self):
-        return "populate_coping_activities_list_pa"
-
-    async def run(self, dispatcher, tracker, domain):
-        # TODO: instead of querying the whole list of activities, use only the selected ones for pa
-        # list of activities to be provided by content team
-        rnd_activities = get_random_activities(-1, 3)
-        rnd_activities_ids = [activity.intervention_activity_id for activity in rnd_activities]
-
-        return [SlotSet('coping_activities_ids', rnd_activities_ids),
-                SlotSet('coping_activity1_name', rnd_activities[0].intervention_activity_title),
-                SlotSet('coping_activity2_name', rnd_activities[1].intervention_activity_title),
-                SlotSet('coping_activity3_name', rnd_activities[2].intervention_activity_title)]
-
-
 # Trigger relapse phase through celery
 class TriggerRelapseDialog(Action):
     def name(self):
@@ -892,7 +859,7 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
         if last_utterance != 'utter_ask_how_feel_smoke':
             return {"how_feel_smoke": None}
 
-        valid = validator.validate_list(value, 0, 5)
+        valid = validator.validate_list(value, 0, 9)
 
         if not valid:
             dispatcher.utter_message(response="utter_did_not_understand")

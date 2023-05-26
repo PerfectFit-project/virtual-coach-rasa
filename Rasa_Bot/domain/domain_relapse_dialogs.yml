@@ -96,24 +96,6 @@ slots:
           - active_loop: type_and_number_smoke_form
             requested_slot: number_smoke
 
-  number_smoke_confirm:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: type_and_number_smoke_form
-            requested_slot: number_smoke_confirm
-
-  type_smoke_confirm:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: type_and_number_smoke_form
-            requested_slot: type_smoke_confirm
-
   what_doing_smoke:
     type: text
     influence_conversation: false
@@ -1052,9 +1034,7 @@ forms:
   type_and_number_smoke_form:
     required_slots:
       - type_smoke
-      - type_smoke_confirm
       - number_smoke
-      - number_smoke_confirm
   what_doing_how_feel_smoke_form:
     required_slots:
       - what_doing_smoke

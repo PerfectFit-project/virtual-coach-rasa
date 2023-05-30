@@ -107,8 +107,8 @@ def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
         send_fsm_event(user_id=item.machine_id, event=Event(EventEnum.NEW_DAY, current_date))
 
     # schedule the task for tomorrow
-    tomorrow = datetime.today() + timedelta(days=1)
-    notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
+    # tomorrow = datetime.today() + timedelta(days=1)
+    # notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
 
 
 @app.task

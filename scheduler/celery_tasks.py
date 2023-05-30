@@ -108,7 +108,7 @@ def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
 
     # schedule the task for tomorrow
     tomorrow = datetime.today() + timedelta(days=1)
-    notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
+    # notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
 
 
 @app.task

@@ -28,8 +28,8 @@ rules:
 - rule: inactive users notification
   steps:
   - intent: EXTERNAL_inactive_user_notification  # TODO: set trigger if user inactive for 10 days
-  - action: utter_notifications_user_inactive_1  # TODO: go to utter_central_mode_options
-  - action: utter_central_mode_options
+  - action: utter_notifications_user_inactive_1
+  - action: action_select_menu
   - action: action_end_dialog
 
 ## New quit date tomorrow notification

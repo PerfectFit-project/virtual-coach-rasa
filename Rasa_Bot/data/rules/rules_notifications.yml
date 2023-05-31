@@ -4,7 +4,7 @@ rules:
 ## Tracking notification
 - rule: send tracking notification
   steps:
-  - intent: EXTERNAL_trigger_track_notification  # TODO: set trigger
+  - intent: EXTERNAL_trigger_track_notification
   - action: utter_notifications_tracking_1
   - action: utter_notifications_tracking_2
   - action: utter_notifications_tracking_3

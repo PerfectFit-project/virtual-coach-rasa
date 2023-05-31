@@ -33,7 +33,7 @@ rules:
   - action: action_end_dialog
 
 ## New quit date tomorrow notification
-- rule: new quit date tomorrow notification  # TODO: trigger if user set new quit date, day before date
+- rule: new quit date tomorrow notification 
   steps:
     - intent: EXTERNAL_before_quit_notification
     - action: utter_notifications_new_quit_date_tomorrow_1
@@ -49,7 +49,7 @@ rules:
     - action: utter_notifications_step_goal_intensive_pa_3
 
 ## new quit date notification
-- rule: new quit date tomorrow notification  # TODO: trigger if user set new quit date, day of quitting
+- rule: new quit date tomorrow notification
   steps:
     - intent: EXTERNAL_quit_date_notification
     - action: utter_notifications_new_quit_date_notification_1

@@ -417,42 +417,7 @@ responses:
   utter_second_testimonial_11:
     - text: "Ah, mooie keus!"
   utter_ask_why_pa_goal_important_nuance:
-  - condition:
-        - type: slot
-          name: why_pa_goal_important_values
-          value: "1"
-    text: "Ik kan me voorstellen dat jouw familie belangrijk voor je is. Kun je me iets
-          meer vertellen over waarom dit doel belangrijk is voor jouw familie?"
-  - condition:
-        - type: slot
-          name: why_pa_goal_important_values
-          value: "2"
-    text: "Ik kan me voorstellen dat jouw gezondheid belangrijk voor je is. Kun je me iets
-          meer vertellen over waarom dit doel belangrijk is voor jouw gezondheid?"
-  - condition:
-        - type: slot
-          name: why_pa_goal_important_values
-          value: "3"
-    text: "Ik kan me voorstellen dat jouw relaties belangrijk voor je zijn. Kun je me iets
-          meer vertellen over waarom dit doel belangrijk is voor jouw relaties?"
-  - condition:
-        - type: slot
-          name: why_pa_goal_important_values
-          value: "4"
-    text: "Ik kan me voorstellen dat jouw ontwikkeling belangrijk voor je is. Kun je me iets
-          meer vertellen over waarom dit doel belangrijk is voor jouw ontwikkeling?"
-  - condition:
-        - type: slot
-          name: why_pa_goal_important_values
-          value: "5"
-    text: "Ik kan me voorstellen dat jouw werk belangrijk voor je is. Kun je me iets
-          meer vertellen over waarom dit doel belangrijk is voor jouw werk?"
-  - condition:
-        - type: slot
-          name: why_pa_goal_important_values
-          value: "6"
-    text: "Ik kan me voorstellen dat jouw vrienden belangrijk voor je zijn. Kun je me iets
-          meer vertellen over waarom dit doel belangrijk is voor jouw vrienden?"
+    text: "Ik kan me voorstellen dat dit belangrijk voor je is. Kun je me vertellen waarom je dit hebt gekozen?"
   utter_second_testimonial_12:
     - text: "Mooi! Goed dat je nagedacht hebt over waarom jouw beweegdoel belangrijk voor je is. 💭"
   utter_second_testimonial_13:

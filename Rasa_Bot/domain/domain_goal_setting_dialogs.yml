@@ -417,7 +417,7 @@ responses:
   utter_second_testimonial_11:
     - text: "Ah, mooie keus!"
   utter_ask_why_pa_goal_important_nuance:
-    text: "Ik kan me voorstellen dat dit belangrijk voor je is. Kun je me vertellen waarom je dit hebt gekozen?"
+    - text: "Ik kan me voorstellen dat dit belangrijk voor je is. Kun je me vertellen waarom je dit hebt gekozen?"
   utter_second_testimonial_12:
     - text: "Mooi! Goed dat je nagedacht hebt over waarom jouw beweegdoel belangrijk voor je is. 💭"
   utter_second_testimonial_13:

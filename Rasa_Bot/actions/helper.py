@@ -871,11 +871,8 @@ def get_daily_step_goal_from_db(user_id: int) -> int:
     int: The daily step goal for the given user, retrieved from the database.
     """
 
-    # Creat session object to connect db
-    session = get_db_session(db_url=DATABASE_URL)
-    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
-    pa_goal = selected.pa_steps_daily_goal
-    session.close()
+    # TODO: get data from sensors app and compute goal
+    pa_goal = 15
 
     return pa_goal
 

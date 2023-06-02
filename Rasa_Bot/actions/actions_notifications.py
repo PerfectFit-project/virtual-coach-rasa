@@ -13,7 +13,7 @@ class ActionGetDailyStepGoalFromDb(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Get pa daily step goal
-        pa_goal = get_daily_step_goal_from_db(user_id)
+        pa_goal = get_daily_step_goal_from_db()
 
         return [SlotSet("notifications_daily_step_goal", pa_goal)]
 

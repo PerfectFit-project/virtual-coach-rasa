@@ -1221,7 +1221,7 @@ def get_faik_text(user_id):
     return kit_text, filled, activity_ids_list
 
 
-def get_daily_step_goal_from_db(user_id: int) -> int:
+def get_daily_step_goal_from_db() -> int:
     """
     Get daily step goal for a given user from the database.
 

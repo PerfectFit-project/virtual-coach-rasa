@@ -1,8 +1,7 @@
 import logging
-import os
 import requests
 from celery import Celery
-from celery.signals import worker_ready
+from celery.schedules import crontab
 from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
@@ -16,18 +15,15 @@ app = Celery('celery_tasks', broker=REDIS_URL)
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
 
-TEST_USER = int(os.getenv('TEST_USER_ID'))
 
-
-@worker_ready.connect
-def at_start(sender, **k):  # pylint: disable=unused-argument
+@app.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     """
     When celery is ready, the watchdogs for the new day notification
     and for the dialogs status check are started
     """
-    notify_new_day.apply_async(args=[datetime.today()])
-    ## TODO: uncomment and solve issue
-    # check_dialogs_status.apply_async()
+    sender.add_periodic_task(crontab(hour=13, minute=37), notify_new_day.s(datetime.today()))
+    sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
 
 
 @app.task
@@ -68,15 +64,11 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)
 
-            next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)
+            next_day = datetime.now().replace(hour=00, minute=00) + timedelta(days=1)
 
             reschedule_dialog.apply_async(args=[fsm.machine_id,
                                                 dialog,
                                                 next_day])
-
-    # schedule the task every max_dialog_duration
-    next_execution_time = datetime.now() + timedelta(seconds=MAXIMUM_DIALOG_DURATION)
-    check_dialogs_status.apply_async(eta=next_execution_time)
 
 
 @app.task(bind=True)
@@ -105,10 +97,6 @@ def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
     state_machines = get_all_fsm()
     for item in state_machines:
         send_fsm_event(user_id=item.machine_id, event=Event(EventEnum.NEW_DAY, current_date))
-
-    # schedule the task for tomorrow
-    # tomorrow = datetime.today() + timedelta(days=1)
-    # notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
 
 
 @app.task

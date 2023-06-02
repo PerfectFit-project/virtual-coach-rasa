@@ -22,7 +22,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     When celery is ready, the watchdogs for the new day notification
     and for the dialogs status check are started
     """
-    sender.add_periodic_task(crontab(hour=13, minute=37), notify_new_day.s(datetime.today()))
+    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
 
 

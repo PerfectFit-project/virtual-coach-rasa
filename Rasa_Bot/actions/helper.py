@@ -1219,3 +1219,40 @@ def get_faik_text(user_id):
         filled = True
 
     return kit_text, filled, activity_ids_list
+
+
+def get_daily_step_goal_from_db() -> int:
+    """
+    Get daily step goal for a given user from the database.
+
+    Args:
+    user_id (int): The user ID for whom the daily step goal is to be retrieved from the database.
+
+    Returns:
+    int: The daily step goal for the given user, retrieved from the database.
+    """
+
+    # TODO: get data from sensors app and compute goal
+    pa_goal = 15
+
+    return pa_goal
+
+
+def get_weekly_intensity_minutes_goal_from_db(user_id: int) -> int:
+    """
+    Get intensity minutes goal for a given user from the database.
+
+    Args:
+    user_id (int): The user ID for whom the daily step goal is to be retrieved from the database.
+
+    Returns:
+    int: The weekly intensity minutes for the given user, retrieved from the database.
+    """
+
+    # Creat session object to connect db
+    session = get_db_session(db_url=DATABASE_URL)
+    selected = session.query(Users).filter_by(nicedayuid=user_id).one()
+    pa_goal = selected.pa_intensity_minutes_weekly_goal
+    session.close()
+
+    return pa_goal

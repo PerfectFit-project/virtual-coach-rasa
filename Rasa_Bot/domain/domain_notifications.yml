@@ -1,0 +1,86 @@
+version: "3.1"
+
+intents:
+  - EXTERNAL_trigger_track_notification
+  - EXTERNAL_pa_step_goal_notification
+  - EXTERNAL_finish_dialog_notification
+  - EXTERNAL_inactive_user_notification
+  - EXTERNAL_before_quit_notification
+  - EXTERNAL_pa_intensity_notification
+  - EXTERNAL_quit_date_notification
+
+slots:
+  notifications_daily_step_goal:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  notifications_pa_intensity_goal:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+# Tracking notification
+responses:
+  utter_notifications_tracking_1:
+    - text: "Vergeet vandaag niet om je rookmomenten bij te houden! ✍🏽"
+  utter_notifications_tracking_2:
+    - text: "Je kunt (aan het einde van de dag) in de app invullen hoeveel je gerookt hebt. Uitleg over hoe je dit kunt
+            doen, kun je vinden in de handleiding die je gekregen hebt aan het begin van het Perfect Fit programma. 📋"
+  utter_notifications_tracking_3:
+    - text: "Vergeet ook niet om je horloge weer om te doen. ⌚ Ben je benieuwd hoe actief je vandaag bent? Dan hoef je
+            alleen maar op je horloge te kijken!"
+
+# Step goal notification
+  utter_notifications_step_goal_1:
+    - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm op weer!"
+  utter_notifications_step_goal_2:
+    - text: "Wil je weten hoeveel stappen je al gezet hebt, kijk dan op je horloge. ⌚"
+
+# Finish dialog notification
+  utter_notifications_finish_dialog_1:
+    - text: "Hoi! Je hebt al een tijdje niet geantwoord. Heb je misschien nog tijd om ons gesprek af te maken? ☺️ 
+            Je was al goed op weg!"
+  utter_notifications_finish_dialog_2:
+    - text: "Als je klaar bent om het gesprek af te maken, typ 'verder' in het gesprek."
+
+# Inactive users notification
+  utter_notifications_user_inactive_1:
+    - text: "Hallo! Ik heb je al een tijdje niet gesproken. Hopelijk gaat alles goed met je."
+
+# New quit date tomorrow notification
+  utter_notifications_new_quit_date_tomorrow_1:
+    - text: "Hoi! Morgen is je stop-dag. 📅 Het kan helpen om alvast je sigaretten en asbakken weg te gooien of anderen
+            te vertellen dat je morgen stopt. Je kunt ook terugkijken naar jouw eigen plan. Als het goed is heb je 3
+            dingen opgeschreven die je kunt doen om jezelf te helpen bij het stoppen met roken. 📝 Heb je al deze dingen
+            kunnen doen?"
+  utter_notifications_new_quit_date_tomorrow_2:
+    - text: "Je kunt mij ook altijd een berichtje sturen. Ik sta voor je klaar! Alvast veel succes! 🍀"
+
+# Step goal and intensive pa notification
+  utter_notifications_step_goal_intensive_pa_1:
+    - text: "Deze week is je doel om elke dag 8000 stappen te zetten 🚶🏿 en minimaal {notifications_pa_intensity_goal}
+             minuten intensief te bewegen. 🏊 🚴 🤸"
+  utter_notifications_step_goal_intensive_pa_2:
+    - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
+            je horloge. ⌚ "
+  utter_notifications_step_goal_intensive_pa_3:
+    - text: "Blijf doorzetten! 💪🏼"
+
+# New quit date notification
+  utter_notifications_new_quit_date_notification_1:
+    - text: "Hallo! Vandaag is je stop-dag. 📅 Stoppen met roken is niet altijd makkelijk, maar blijf doorzetten. Wees
+            lief voor jezelf en zet 'm op! Elke sigaret niet gerookt, is een overwinning. 🏆"
+  utter_notifications_new_quit_date_notification_2:
+    - text: "Je kunt mij ook altijd een berichtje sturen, mocht je me nodig hebben. Succes! 💪🏼"
+
+#forms:
+
+
+actions:
+  - action_notifications_get_daily_step_goal_from_db
+  - action_notifications_weekly_intensity_minutes_from_db
+  - action_go_to_central_mode_options
+

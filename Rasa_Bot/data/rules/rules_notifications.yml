@@ -1,0 +1,56 @@
+version: "3.1"
+
+rules:
+## Tracking notification
+- rule: send tracking notification
+  steps:
+  - intent: EXTERNAL_trigger_track_notification
+  - action: utter_notifications_tracking_1
+  - action: utter_notifications_tracking_2
+  - action: utter_notifications_tracking_3
+
+## Step goal notification
+- rule: send step goal notification
+  steps:
+  - intent: EXTERNAL_pa_step_goal_notification  # TODO: set trigger
+  - action: action_notifications_get_daily_step_goal_from_db
+  - action: utter_notifications_step_goal_1
+  - action: utter_notifications_step_goal_2
+
+## finish dialog notification
+- rule: finish dialog notification
+  steps:
+  - intent: EXTERNAL_finish_dialog_notification  # TODO: set trigger if user is inactive for 1hour
+  - action: utter_notifications_finish_dialog_1
+  - action: utter_notifications_finish_dialog_2
+
+## Inactive users notification
+- rule: inactive users notification
+  steps:
+  - intent: EXTERNAL_inactive_user_notification  # TODO: set trigger if user inactive for 10 days
+  - action: utter_notifications_user_inactive_1
+  - action: action_select_menu
+  - action: action_end_dialog
+
+## New quit date tomorrow notification
+- rule: new quit date tomorrow notification 
+  steps:
+    - intent: EXTERNAL_before_quit_notification
+    - action: utter_notifications_new_quit_date_tomorrow_1
+    - action: utter_notifications_new_quit_date_tomorrow_2
+
+## Step goal and intensive pa notification
+- rule: step goal and intensive pa notification  # TODO: set trigger
+  steps:
+    - intent: EXTERNAL_pa_intensity_notification
+    - action: action_notifications_weekly_intensity_minutes_from_db
+    - action: utter_notifications_step_goal_intensive_pa_1
+    - action: utter_notifications_step_goal_intensive_pa_2
+    - action: utter_notifications_step_goal_intensive_pa_3
+
+## new quit date notification
+- rule: new quit date tomorrow notification
+  steps:
+    - intent: EXTERNAL_quit_date_notification
+    - action: utter_notifications_new_quit_date_notification_1
+    - action: utter_notifications_new_quit_date_notification_2

@@ -37,7 +37,3 @@ actions:
 - action_set_slot_profile_creation
 - action_set_slot_medication_talk
 - action_set_slot_track_behavior
-- action_set_slot_cold_turkey
-- action_set_slot_plan_quit_start_date
-- action_set_slot_mental_contrasting
-- action_set_slot_goal_setting

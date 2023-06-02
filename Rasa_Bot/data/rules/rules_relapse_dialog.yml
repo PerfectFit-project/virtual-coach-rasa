@@ -9,7 +9,8 @@ rules:
   steps:
   - intent: EXTERNAL_relapse_dialog
   - action: utter_relapse_intro_codeword
-  - action: utter_relapse_intro_offer_help
+  - action: utter_relapse_intro_offer_help_pt1
+  - action: utter_relapse_intro_offer_help_pt2
   - action: utter_relapse_smoke_or_pa
   - action: smoke_or_pa_form
   - active_loop: smoke_or_pa_form
@@ -154,6 +155,9 @@ rules:
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
+  - action: action_set_slot_weekly_or_relapse
+  - action: action_set_slot_crave_lapse_relapse_1
+  - action: action_set_slot_smoke_or_pa_1
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false
@@ -170,8 +174,38 @@ rules:
     - crave_lapse_relapse: 1
   - action: store_reflect_barchart
   - action: utter_hrs_look_back_3
+  - slot_was_set:
+    - weekly_or_relapse: 1
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
+  wait_for_user_input: false
+
+- rule: smoke hrs after fak 6, return to weekly reflection
+  condition:
+    - active_loop: reflect_bar_chart_form
+  steps:
+  - action: reflect_bar_chart_form
+  - active_loop: null
+  - slot_was_set: # smoke branch
+    - smoke_or_pa: 1
+  - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
+    - crave_lapse_relapse: 1
+  - action: store_reflect_barchart
+  - action: utter_hrs_look_back_3
+  - slot_was_set:
+    - weekly_or_relapse: 2
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
   wait_for_user_input: false
 
 - rule: smoke hrs after fak end dialog
@@ -276,7 +310,6 @@ rules:
   - slot_was_set:
     - ehbo_me_self: 3
   - active_loop: null
-  - action: populate_coping_activities_list
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
   wait_for_user_input: false
@@ -291,6 +324,7 @@ rules:
     - smoke_or_pa: 1 # smoke branch
   - slot_was_set:
     - crave_lapse_relapse: 1 # hrs
+  - action: utter_general_activity_next_user
   - action: show_chosen_coping_activity
   - action: hrs_new_activity_form
   - active_loop: hrs_new_activity_form
@@ -362,6 +396,8 @@ rules:
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
+  - action: action_set_slot_weekly_or_relapse
+  - action: action_set_slot_smoke_or_pa_1
   - action: reflect_bar_chart_form
   - active_loop: reflect_bar_chart_form
   wait_for_user_input: false
@@ -377,12 +413,43 @@ rules:
   - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
     - crave_lapse_relapse: 2
   - action: store_reflect_barchart
-  - action: utter_smoke_lapse_15
+  - action: utter_smoke_lapse_19
+  - slot_was_set:
+    - weekly_or_relapse: 1
   - action: utter_smoke_lapse_16
   - action: utter_smoke_lapse_17
   - action: utter_smoke_lapse_18
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
+  wait_for_user_input: false
+
+
+- rule: smoke lapse 4, return to weekly reflection
+  condition:
+    - active_loop: reflect_bar_chart_form
+  steps:
+  - action: reflect_bar_chart_form
+  - active_loop: null
+  - slot_was_set: # smoke branch
+    - smoke_or_pa: 1
+  - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
+    - crave_lapse_relapse: 2
+  - action: store_reflect_barchart
+  - action: utter_smoke_lapse_19
+  - slot_was_set:
+    - weekly_or_relapse: 2
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
   wait_for_user_input: false
 #  checkpoint: ehbo_me_self_lapse_checkpoint
 
@@ -445,7 +512,6 @@ rules:
       - slot_was_set:
           - crave_lapse_relapse: 3
   - action: utter_hrs_list_activities_intro
-  - action: populate_coping_activities_list
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
   wait_for_user_input: false
@@ -463,6 +529,7 @@ rules:
           - crave_lapse_relapse: 2
       - slot_was_set:
           - crave_lapse_relapse: 3
+  - action: utter_general_activity_next_user
   - action: show_chosen_coping_activity
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
@@ -608,6 +675,7 @@ rules:
   - action: utter_smoke_relapse_6
   - action: utter_smoke_relapse_7
   - action: utter_smoke_relapse_8
+  - action: action_set_slot_weekly_or_relapse
   - action: relapse_medication_info_form
   - active_loop: relapse_medication_info_form
   wait_for_user_input: false  # checkpoint: relapse_medication_info_checkpoint.
@@ -632,6 +700,11 @@ rules:
   - active_loop: null
   - slot_was_set:
     - medication_info_slot: 1
+  - or:
+      - slot_was_set:
+          - weekly_or_relapse: 1
+      - slot_was_set:
+          - weekly_or_relapse: 2
   - action: action_set_medication_video_link # set the video link to the medication video
   - action: action_launch_watch_video_dialog # launch the video dialog
 #  - action: ehbo_me_self_lapse_form
@@ -646,9 +719,25 @@ rules:
   - active_loop: null
   - slot_was_set:
     - medication_info_slot: 2
+  - slot_was_set:
+      - weekly_or_relapse: 1
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false # checkpoint: relapse_ehbo_checkpoint
+
+- rule: smoke relapse decide not to get medication info, return to weekly reflection # checkpoint: relapse_medication_info_checkpoint.
+  condition:
+    - active_loop: relapse_medication_info_form
+  steps:
+  - action: relapse_medication_info_form
+  - active_loop: null
+  - slot_was_set:
+    - medication_info_slot: 2
+  - slot_was_set:
+      - weekly_or_relapse: 2
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
 
 - rule: smoke lapse open ehbo #  checkpoint: ehbo_me_self_lapse_checkpoint
   condition:
@@ -759,7 +848,10 @@ rules:
   - slot_was_set: # slot for smoke branching not set
     - crave_lapse_relapse: null
   - action: store_reflect_barchart
+  - action: action_set_slot_weekly_or_relapse
   - action: utter_hrs_look_back_3
+  - slot_was_set:
+    - weekly_or_relapse: 1
   - action: utter_pa_lapse_8
   - action: utter_pa_lapse_9
   - action: utter_pa_lapse_10
@@ -768,6 +860,35 @@ rules:
   - action: utter_pa_lapse_13
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
+  wait_for_user_input: false
+
+- rule: Relapse phase triggered PA 5, return to weekly reflection
+  condition:
+  - active_loop: reflect_bar_chart_form
+  steps:
+  - action: reflect_bar_chart_form
+  - active_loop: null
+  - slot_was_set: # PA branch
+    - smoke_or_pa: 2
+  - slot_was_set: # slot for smoke branching not set
+    - crave_lapse_relapse: null
+  - action: store_reflect_barchart
+  - action: action_set_slot_weekly_or_relapse
+  - action: utter_hrs_look_back_3
+  - slot_was_set:
+    - weekly_or_relapse: 2
+  - action: utter_steps_next_week_1
+  - action: utter_steps_next_week_2
+  - action: utter_steps_next_week_3
+  - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_predict_difficult_moments_2
+  - action: utter_predict_difficult_moments_3
+  - action: difficult_moments_next_week_form
+  - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
 
 - rule: pa open ehbo #
@@ -821,7 +942,6 @@ rules:
   - slot_was_set:
     - crave_lapse_relapse: null
   - action: utter_hrs_list_activities_intro
-  - action: populate_coping_activities_list_pa
   - action: hrs_choose_coping_activity_form
   - active_loop: hrs_choose_coping_activity_form
   wait_for_user_input: false
@@ -853,6 +973,7 @@ rules:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
       - crave_lapse_relapse: null
+  - action: utter_general_activity_next_user
   - action: show_chosen_coping_activity
   - action: pa_enough_motivation_form
   - active_loop: pa_enough_motivation_form

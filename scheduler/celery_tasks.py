@@ -1,32 +1,29 @@
 import logging
-import os
 import requests
 from celery import Celery
-from celery.signals import worker_ready
+from celery.schedules import crontab
 from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED)
 from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
-                          send_fsm_event)
+                          send_fsm_event, set_dialog_running_status)
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
 
-TEST_USER = int(os.getenv('TEST_USER_ID'))
 
-
-@worker_ready.connect
-def at_start(sender, **k):  # pylint: disable=unused-argument
+@app.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     """
     When celery is ready, the watchdogs for the new day notification
     and for the dialogs status check are started
     """
-    notify_new_day.apply_async(args=[datetime.today()])
-    check_dialogs_status.apply_async()
+    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
+    sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
 
 
 @app.task
@@ -67,15 +64,11 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)
 
-            next_day = datetime.now().replace(hour=10, minute=00) + timedelta(days=1)
+            next_day = datetime.now().replace(hour=00, minute=00) + timedelta(days=1)
 
             reschedule_dialog.apply_async(args=[fsm.machine_id,
                                                 dialog,
                                                 next_day])
-
-    # schedule the task every max_dialog_duration
-    next_execution_time = datetime.now() + timedelta(seconds=MAXIMUM_DIALOG_DURATION)
-    check_dialogs_status.apply_async(eta=next_execution_time)
 
 
 @app.task(bind=True)
@@ -104,10 +97,6 @@ def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
     state_machines = get_all_fsm()
     for item in state_machines:
         send_fsm_event(user_id=item.machine_id, event=Event(EventEnum.NEW_DAY, current_date))
-
-    # schedule the task for tomorrow
-    tomorrow = datetime.today() + timedelta(days=1)
-    notify_new_day.apply_async(args=[tomorrow], eta=tomorrow)
 
 
 @app.task
@@ -209,3 +198,25 @@ def user_trigger_dialog(self,  # pylint: disable=unused-argument
     """
     send_fsm_event(user_id=user_id,
                    event=Event(EventEnum.USER_TRIGGER, intervention_component_name))
+
+
+@app.task(bind=True)
+def trigger_menu(self,  # pylint: disable=unused-argument
+                 user_id: int,
+                 trigger: str):
+    """
+    This task sends a trigger to Rasa immediately.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
+    """
+
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
+    headers = {'Content-Type': 'application/json'}
+    params = {'output_channel': 'niceday_trigger_input_channel'}
+    data = '{"name": "' + trigger + '" }'
+    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+
+    # the state machine status as to be marked as not running
+    # to allow new dialogs to be administered
+    set_dialog_running_status(user_id, False)

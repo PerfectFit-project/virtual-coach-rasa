@@ -5,7 +5,7 @@ from virtual_coach_db.helper.definitions import VideoLinks, Components
 
 # set video links
 class SetFakLink(Action):
-    """ set the link to the medication video"""
+    """ set the link to the first aid kit video"""
 
     def name(self):
         return "action_set_fak_video_link"
@@ -16,7 +16,7 @@ class SetFakLink(Action):
 
 
 class SetFSLongVideoLink(Action):
-    """ set the link to the medication video"""
+    """ set the link to the long future self video"""
 
     def name(self):
         return "action_set_future_self_long_video_link"
@@ -27,7 +27,7 @@ class SetFSLongVideoLink(Action):
 
 
 class SetFSShortVideoLink(Action):
-    """ set the link to the medication video"""
+    """ set the link to the short future self video"""
 
     def name(self):
         return "action_set_future_self_short_video_link"
@@ -38,7 +38,7 @@ class SetFSShortVideoLink(Action):
 
 
 class SetExecutionIntroductionVideoLink(Action):
-    """ set the link to the medication video"""
+    """ set the link to the execution introduction video"""
 
     def name(self):
         return "action_set_execution_introduction_video_link"
@@ -49,7 +49,7 @@ class SetExecutionIntroductionVideoLink(Action):
 
 
 class SetPreparationIntroductionVideoLink(Action):
-    """ set the link to the medication video"""
+    """ set the link to the preparation introduction video"""
 
     def name(self):
         return "action_set_preparation_introduction_video_link"
@@ -71,7 +71,7 @@ class SetMedicationVideoLink(Action):
 
 
 class SetTrackBehaviorVideoLink(Action):
-    """ set the link to the medication video"""
+    """ set the link to the track behavior video"""
 
     def name(self):
         return "action_set_track_behavior_video_link"

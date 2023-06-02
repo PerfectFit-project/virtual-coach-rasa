@@ -73,7 +73,6 @@ rules:
   - action: utter_first_aid_kit_end_1
   - action: utter_first_aid_kit_end_2
   - action: action_resume_after_fak
-  wait_for_user_input: false
   
 ## 4b: User wants to repeat dialog
 - rule: Repeat first aid kit dialog

@@ -6,9 +6,16 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from . import validator
 from .definitions import REDIS_URL
-from .helper import (get_latest_bot_utterance, get_user, get_pa_group, set_pa_group,
-                     get_user_intervention_state_hrs, make_step_overview,
-                     get_intensity_minutes_goal)
+from .helper import (get_intensity_minutes_goal,
+                     get_intervention_component_id, 
+                     get_last_completed_dialog_part_from_db,
+                     get_latest_bot_utterance, 
+                     get_pa_group,
+                     get_user, 
+                     get_user_intervention_state_hrs,
+                     make_step_overview,
+                     set_pa_group,
+                     store_dialog_part_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -20,6 +27,113 @@ import logging
 
 
 celery = Celery(broker=REDIS_URL)
+
+
+class ActionSaveWeeklyReflectionDialogPart1(Action):
+    """To save first part of weekly-reflection dialog"""
+
+    def name(self):
+        return "action_save_weekly_reflection_dialog_part1"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.WEEKLY_REFLECTION), 
+                                part = 1)
+
+        return []
+    
+    
+class ActionSaveWeeklyReflectionDialogPart2(Action):
+    """To save first part of weekly-reflection dialog"""
+
+    def name(self):
+        return "action_save_weekly_reflection_dialog_part2"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.WEEKLY_REFLECTION), 
+                                part = 2)
+
+        return []
+    
+
+class ActionSaveWeeklyReflectionDialogPart3(Action):
+    """To save first part of weekly-reflection dialog"""
+
+    def name(self):
+        return "action_save_weekly_reflection_dialog_part3"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.WEEKLY_REFLECTION), 
+                                part = 3)
+
+        return []
+    
+    
+class ActionSaveWeeklyReflectionDialogPart4(Action):
+    """To save first part of weekly-reflection dialog"""
+
+    def name(self):
+        return "action_save_weekly_reflection_dialog_part4"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.WEEKLY_REFLECTION), 
+                                part = 4)
+
+        return []
+    
+    
+class ActionSaveWeeklyReflectionDialogPart5(Action):
+    """To save first part of weekly-reflection dialog"""
+
+    def name(self):
+        return "action_save_weekly_reflection_dialog_part5"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.WEEKLY_REFLECTION), 
+                                part = 5)
+
+        return []
+    
+    
+class ActionSaveWeeklyReflectionDialogPart6(Action):
+    """To save first part of weekly-reflection dialog"""
+
+    def name(self):
+        return "action_save_weekly_reflection_dialog_part6"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
+                                get_intervention_component_id(Components.WEEKLY_REFLECTION), 
+                                part = 0)
+
+        return []
+    
+
+class ActionGetLastCompletedWeeklyReflectionPart(Action):
+    def name(self):
+        return "action_get_last_completed_weekly_reflection_part"
+
+    async def run(self, dispatcher, tracker, domain):
+        
+        user_id = tracker.current_state()['sender_id']
+        comp_id = get_intervention_component_id(Components.WEEKLY_REFLECTION)
+
+        # Return value can be -1, 1, 2, 3, 4, or 5
+        last_part = get_last_completed_dialog_part_from_db(user_id, 
+                                                           comp_id)
+
+        return [SlotSet('last_completed_weekly_reflection_dialog_part',
+                last_part)]
 
 
 class SetSlotWeeklyReflection(Action):

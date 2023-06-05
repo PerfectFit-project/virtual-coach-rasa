@@ -9,7 +9,7 @@ from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, N
                                  RUNNING, EXPIRED, INVITES_CHECK_INTERVAL)
 from celery_utils import (create_new_user, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db,
-                          send_fsm_event, set_dialog_running_status)
+                          send_fsm_event, set_dialog_running_status, check_if_user_exists)
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
@@ -40,9 +40,15 @@ def check_new_connection_request():
     pending_requests = client.get_invitation_requests()
 
     for request in pending_requests:
-        client.accept_invitation_request(str(request['invitationId']))
-        create_new_user(request['id'])
-        start_user_intervention(request['id'])
+        user_id = request['id']
+        user_exists = check_if_user_exists(user_id)
+        # the request is accepted only if the user is not yet registered.
+        # The users will be disconnected from the VC at the end of the intervention, and
+        # it should not be possible to re-connect
+        if not user_exists:
+            client.accept_invitation_request(str(request['invitationId']))
+            create_new_user(user_id)
+            start_user_intervention(user_id)
 
 
 @app.task(bind=True)

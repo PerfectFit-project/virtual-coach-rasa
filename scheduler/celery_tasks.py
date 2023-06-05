@@ -3,11 +3,12 @@ import requests
 from celery import Celery
 from celery.schedules import crontab
 from datetime import date, datetime, timedelta
+from niceday_client import NicedayClient
 from state_machine.state_machine import EventEnum, Event
-from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
-                                 RUNNING, EXPIRED)
-from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
-                          get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
+from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
+                                 RUNNING, EXPIRED, INVITES_CHECK_INTERVAL)
+from celery_utils import (create_new_user, get_component_name, get_user_fsm, get_dialog_state,
+                          get_all_fsm, save_state_machine_to_db,
                           send_fsm_event, set_dialog_running_status)
 
 app = Celery('celery_tasks', broker=REDIS_URL)
@@ -24,24 +25,24 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     """
     sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
+    sender.add_periodic_task(INVITES_CHECK_INTERVAL, check_new_connection_request.s())
 
 
 @app.task
-def create_new_user(user_id: int):
+def check_new_connection_request():
     """
-    This task creates a new StateMachine for the user specified.
-    Args:
-        user_id: the ID of the user
+    This tasks checks if there are pending connection requests and, in case there are,
+    accepts them and creates a new user in the db.
     """
+    logging.info('checking new connections')
+    client = NicedayClient(NICEDAY_API_ENDPOINT)
 
-    user_exists = check_if_user_exists(user_id)
+    pending_requests = client.get_invitation_requests()
 
-    if not user_exists:
-        new_fsm = create_new_user_fsm(user_id)
-        save_state_machine_to_db(new_fsm)
-
-    else:
-        logging.warning('The user already exists in the database')
+    for request in pending_requests:
+        client.accept_invitation_request(str(request['invitationId']))
+        create_new_user(request['id'])
+        start_user_intervention(request['id'])
 
 
 @app.task(bind=True)

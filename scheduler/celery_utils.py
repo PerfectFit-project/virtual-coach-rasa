@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
@@ -30,9 +30,42 @@ def check_if_user_exists(user_id: int) -> bool:
     return False
 
 
+def create_new_user(user_id: int):
+    """
+    Initialize the DB for a new user.
+    Args:
+        user_id: the ID of the user
+    """
+
+    user_exists = check_if_user_exists(user_id)
+
+    if not user_exists:
+        new_user_profile = create_new_user_profile(user_id)
+        save_user_to_db(new_user_profile)
+        new_fsm = create_new_user_fsm(user_id)
+        save_state_machine_to_db(new_fsm)
+
+    else:
+        logging.warning('The user already exists in the database')
+
+
+def create_new_user_profile(user_id: int) -> Users:
+    """
+    Creates a new Users object for the user specified.
+    Args:
+        user_id: the ID of the user
+    Returns: The StateMachine instance for a new user
+    """
+
+    user = Users(nicedayuid=user_id,
+                 start_date=date.today())
+
+    return user
+
+
 def create_new_user_fsm(user_id: int) -> StateMachine:
     """
-   Creates a new StateMachine for the user specified.
+    Creates a new StateMachine for the user specified.
     Args:
         user_id: the ID of the user
     Returns: The StateMachine instance for a new user
@@ -252,6 +285,25 @@ def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:
                                         intervention_component_id=dialog.intervention_component_id)
 
     return db_state_machine
+
+
+def save_user_to_db(user: Users):
+    """
+    Saves the Users object to the database. if the user id exists, a warning is displayed.
+    Args:
+        user: Users object to be stored
+
+    """
+    user_id = user.nicedayuid
+
+    # if a user exists already, print an error message
+    if check_if_user_exists(user_id):
+        logging.warning('User profile already in the DB')
+        return
+
+    session = get_db_session(DATABASE_URL)
+    session.merge(user)
+    session.commit()
 
 
 def save_state_machine_to_db(state_machine: StateMachine):

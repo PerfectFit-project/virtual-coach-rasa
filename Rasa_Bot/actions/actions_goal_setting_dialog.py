@@ -496,7 +496,7 @@ class ValidateWhyPaGoalImportantForm(FormValidationAction):
         if last_utterance != 'utter_ask_why_pa_goal_important_values':
             return {"why_pa_goal_important_values": None}
 
-        if not validator.validate_list(value, 1, 6):
+        if not validator.validate_number_in_range_response(1, 6, value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_numbers")
             return {"why_pa_goal_important_values": None}

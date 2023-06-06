@@ -37,16 +37,18 @@ def create_new_user(user_id: int):
         user_id: the ID of the user
     """
 
-    user_exists = check_if_user_exists(user_id)
+    # if a user exists already, print an error message
+    if check_if_user_exists(user_id):
+        logging.warning('User profile already in the DB')
+        return
 
-    if not user_exists:
-        new_user_profile = create_new_user_profile(user_id)
-        save_user_to_db(new_user_profile)
-        new_fsm = create_new_user_fsm(user_id)
-        save_state_machine_to_db(new_fsm)
+    new_user_profile = create_new_user_profile(user_id)
+    new_fsm = create_new_user_fsm(user_id)
 
-    else:
-        logging.warning('The user already exists in the database')
+    session = get_db_session(DATABASE_URL)
+    session.merge(new_user_profile)
+    session.merge(new_fsm)
+    session.commit()
 
 
 def create_new_user_profile(user_id: int) -> Users:
@@ -63,7 +65,7 @@ def create_new_user_profile(user_id: int) -> Users:
     return user
 
 
-def create_new_user_fsm(user_id: int) -> StateMachine:
+def create_new_user_fsm(user_id: int) -> UserStateMachine:
     """
     Creates a new StateMachine for the user specified.
     Args:
@@ -76,7 +78,15 @@ def create_new_user_fsm(user_id: int) -> StateMachine:
 
     new_fsm = StateMachine(OnboardingState(user_id), dialog_state)
 
-    return new_fsm
+    fsm_db = map_state_machine_to_db(new_fsm)
+
+    user_fsm = get_user_fsm_from_db(user_id)
+
+    # if a machine already exists, use the same primary key to update the row
+    if user_fsm is not None:
+        fsm_db.state_machine_id = user_fsm.state_machine_id
+
+    return fsm_db
 
 
 def get_all_fsm() -> List[StateMachine]:

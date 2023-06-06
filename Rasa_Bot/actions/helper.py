@@ -1,21 +1,29 @@
 """
 Helper functions for rasa actions.
 """
+import jwt
 import logging
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import requests
 import secrets
 
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 from datetime import datetime, date
-from typing import Any, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL, 
                           EVENING_SEND_TIME,
+                          INTENSITY_URL,
+                          KEY_PATH,
                           MORNING_SEND_TIME,
                           NUM_TOP_ACTIVITIES,
                           PROFILE_CREATION_CONF_SLOTS,
+                          STEPS_URL,
                           TIMEZONE,
+                          TOKEN_HEADER,
                           FsmStates)
 
 from virtual_coach_db.dbschema.models import (ClosedAnswers,
@@ -1256,3 +1264,71 @@ def get_weekly_intensity_minutes_goal_from_db(user_id: int) -> int:
     session.close()
 
     return pa_goal
+
+
+# functions for sensors data querying
+def get_jwt_token(user_id: int) -> str:
+    """
+    Get the encoded JWT token for querying the sensors' data.
+    Args:
+        user_id: ID of the user whom data needs to be queried.
+
+    Returns: the encoded JWD token
+
+    """
+
+    with open(KEY_PATH, 'rb') as f:
+        private_key = serialization.load_ssh_private_key(
+            f.read(), password=None, backend=default_backend()
+        )
+
+    encoded = jwt.encode({"sub": user_id, "iat": int(round(datetime.now().timestamp()))},
+                         private_key, algorithm="RS256")
+
+    return encoded
+
+
+# functions for sensors data querying
+def get_steps_data(user_id: int, start_date: date, end_date: date) -> List[Dict[Any, Any]]:
+    """
+    Get the encoded JWT token for querying the sensors' data.
+    Args:
+        user_id: ID of the user whom data needs to be queried.
+        start_date: start of the range of days to query. This day is included in the interval.
+        end_date: end of the range of days to query. This day is not included in the interval.
+
+    Returns: A list of dictionary containing, for each day, the date and the number of steps.
+
+    """
+
+    token = get_jwt_token(user_id)
+
+    query_params = {'start': start_date.__str__(),
+                    'end': end_date.__str__()}
+
+    headers = {TOKEN_HEADER: token}
+
+    res = requests.get(STEPS_URL, params=query_params, headers=headers)
+    res_json = res.json()
+
+    mapped_results = [{'date': format_sensors_date(day['localTime']), 'steps': day['value']}
+                      for day in res_json]
+
+    return mapped_results
+
+
+def format_sensors_date(sensors_date: str) -> date:
+    """
+    Convert the time format returned by the sensors data into date format.
+    Args:
+        sensors_date: time value returned by sensors' data.
+
+    Returns: The formatted date.
+
+    """
+
+    original_format = '%Y-%m-%dT%H:%M:%S.%f'
+
+    formatted_date = datetime.strptime(sensors_date, original_format).date()
+
+    return formatted_date

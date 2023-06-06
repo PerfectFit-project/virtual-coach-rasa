@@ -5,7 +5,7 @@ from dateutil import tz
 MAXIMUM_DIALOG_DURATION = 90*60
 
 # time interval in seconds for checking for new connection requests
-INVITES_CHECK_INTERVAL = 30*60
+INVITES_CHECK_INTERVAL = 10*60
 
 # intervention times (days)
 ACTIVITY_C2_9_DAY_TRIGGER = 7

@@ -14,7 +14,7 @@ from cryptography.hazmat.primitives import serialization
 from datetime import datetime, date
 from typing import Any, Dict, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
-                          DATABASE_URL, 
+                          DATABASE_URL,
                           EVENING_SEND_TIME,
                           SENSOR_KEY_PATH,
                           MORNING_SEND_TIME,
@@ -36,7 +36,7 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers,
                                               UserInterventionState,
                                               UserStateMachine,
                                               Users)
-                                         
+
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
@@ -151,7 +151,7 @@ def dialog_to_be_completed(user_id: int) -> bool:
 def get_last_completed_dialog_part_from_db(user_id: int,
                                            intervention_component_id: int):
     """Get last completed dialog part from db."""
-    
+
     session = get_db_session(db_url=DATABASE_URL)
 
     # Get most recent uncompleted entry for component from db
@@ -166,17 +166,17 @@ def get_last_completed_dialog_part_from_db(user_id: int,
         )
         .first()
     )
-    
+
     if selected is not None:
         return selected.last_part
-    
+
     # No dialog part previously completed
     return -1
 
 
 def get_goal_setting_chosen_sport_from_db(user_id: int):
     """Get chosen sport from db for user."""
-    
+
     session = get_db_session(db_url=DATABASE_URL)
 
     selected = (
@@ -188,17 +188,17 @@ def get_goal_setting_chosen_sport_from_db(user_id: int):
         )
         .first()
     )
-    
+
     if selected is not None:
         return selected.goal_setting_chosen_sport
-    
+
     return None
 
 
 def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
                             part: int):
     """Store that part of dialog has been completed in db."""
-    
+
     session = get_db_session(db_url=DATABASE_URL)
 
     selected = (
@@ -243,8 +243,8 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
     session.commit()  # Update database
 
 
-def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int, 
-                                      running_walking_pref: int, 
+def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
+                                      running_walking_pref: int,
                                       self_efficacy_pref: float,
                                       sim_cluster_1: float, sim_cluster_3: float,
                                       participant_code: str, week_days: str,
@@ -320,8 +320,8 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.quit_date = datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
-    
-    
+
+
 def store_goal_setting_chosen_sport_to_db(user_id: int, chosen_sport: str):
     """
     Store the chosen sport for a user in the database.
@@ -1181,7 +1181,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                            xshift=5)
 
     for i, step in enumerate(data['steps']):
-        fig.add_annotation(x=step/2,
+        fig.add_annotation(x=step / 2,
                            y=i,
                            text=f'Steps: {step}',
                            showarrow=False,
@@ -1288,7 +1288,9 @@ def get_jwt_token(user_id: int) -> str:
 
 
 # functions for sensors data querying
-def get_steps_data(user_id: int, start_date: date, end_date: date) -> List[Dict[Any, Any]]:
+def get_steps_data(user_id: int,
+                   start_date: date,
+                   end_date: date) -> Optional[List[Dict[Any, Any]]]:
     """
     Get the steps data of a user in the specified time interval.
     Args:
@@ -1308,12 +1310,17 @@ def get_steps_data(user_id: int, start_date: date, end_date: date) -> List[Dict[
     headers = {TOKEN_HEADER: token}
 
     res = requests.get(STEPS_URL, params=query_params, headers=headers, timeout=60)
-    res_json = res.json()
 
-    mapped_results = [{'date': format_sensors_date(day['localTime']), 'steps': day['value']}
-                      for day in res_json]
+    try:
+        res_json = res.json()
+        mapped_results = [{'date': format_sensors_date(day['localTime']), 'steps': day['value']}
+                          for day in res_json]
 
-    return mapped_results
+        return mapped_results
+
+    except ValueError:
+        logging.error(f"Error in returned value from sensors: '{res}'")
+        return None
 
 
 def format_sensors_date(sensors_date: str) -> date:

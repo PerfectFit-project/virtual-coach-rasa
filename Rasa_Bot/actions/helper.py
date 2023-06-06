@@ -1290,7 +1290,7 @@ def get_jwt_token(user_id: int) -> str:
 # functions for sensors data querying
 def get_steps_data(user_id: int, start_date: date, end_date: date) -> List[Dict[Any, Any]]:
     """
-    Get the encoded JWT token for querying the sensors' data.
+    Get the steps data of a user in the specified time interval.
     Args:
         user_id: ID of the user whom data needs to be queried.
         start_date: start of the range of days to query. This day is included in the interval.

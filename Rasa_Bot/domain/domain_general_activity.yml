@@ -362,10 +362,10 @@ responses:
     - text: "Ik zou je nu graag wat willen vragen over de oefening die je gaat doen."
   utter_persuasion_questions_intro_2:
     - text: "Kun je mij laten weten wat je van de volgende uitspraken vindt?"
-  utter_ask_persuasion_prompts_slot_intro:
-    - text: "1) Ik heb dingen die mij eraan herinneren om de oefening te doen."
   # Persuasion state questions translated to Dutch from the ones used in 
   # the paper by Albers et al. (2023)
+  utter_ask_persuasion_prompts_slot_intro:
+    - text: "1) Ik heb dingen die mij eraan herinneren om de oefening te doen."
   utter_ask_persuasion_prompts_slot:
     - text: "1. Helemaal mee oneens\n 
             2. Mee oneens\n

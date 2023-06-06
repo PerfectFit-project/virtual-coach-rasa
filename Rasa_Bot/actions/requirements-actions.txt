@@ -1,4 +1,6 @@
 celery
+cryptography
+jwt
 pandas
 plotly
 kaleido

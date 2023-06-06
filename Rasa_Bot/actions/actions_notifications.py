@@ -8,10 +8,6 @@ class ActionGetDailyStepGoalFromDb(Action):
         return "action_notifications_get_daily_step_goal_from_db"
 
     async def run(self, dispatcher, tracker, domain):
-
-        # Get sender ID from slot, this is a string
-        user_id = tracker.current_state()['sender_id']
-
         # Get pa daily step goal
         pa_goal = get_daily_step_goal_from_db()
 

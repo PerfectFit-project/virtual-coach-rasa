@@ -16,7 +16,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL, 
                           EVENING_SEND_TIME,
-                          INTENSITY_URL,
                           KEY_PATH,
                           MORNING_SEND_TIME,
                           NUM_TOP_ACTIVITIES,
@@ -1303,12 +1302,12 @@ def get_steps_data(user_id: int, start_date: date, end_date: date) -> List[Dict[
 
     token = get_jwt_token(user_id)
 
-    query_params = {'start': start_date.__str__(),
-                    'end': end_date.__str__()}
+    query_params = {'start': str(start_date),
+                    'end': str(end_date)}
 
     headers = {TOKEN_HEADER: token}
 
-    res = requests.get(STEPS_URL, params=query_params, headers=headers)
+    res = requests.get(STEPS_URL, params=query_params, headers=headers, timeout=60)
     res_json = res.json()
 
     mapped_results = [{'date': format_sensors_date(day['localTime']), 'steps': day['value']}

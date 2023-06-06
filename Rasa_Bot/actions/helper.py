@@ -16,7 +16,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL, 
                           EVENING_SEND_TIME,
-                          KEY_PATH,
+                          SENSOR_KEY_PATH,
                           MORNING_SEND_TIME,
                           NUM_TOP_ACTIVITIES,
                           PROFILE_CREATION_CONF_SLOTS,
@@ -1276,7 +1276,7 @@ def get_jwt_token(user_id: int) -> str:
 
     """
 
-    with open(KEY_PATH, 'rb') as f:
+    with open(SENSOR_KEY_PATH, 'rb') as f:
         private_key = serialization.load_ssh_private_key(
             f.read(), password=None, backend=default_backend()
         )

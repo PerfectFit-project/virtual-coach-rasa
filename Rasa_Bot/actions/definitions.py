@@ -14,7 +14,7 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 
 # information for reading sensors data
-KEY_PATH = '/app/sensorprivatekey'
+SENSOR_KEY_PATH = '/app/sensorprivatekey'
 
 if ENVIRONMENT == 'prod':
     STEPS_URL = 'https://portal.rrdweb.nl/servlets/r2d2/v6.0.4/project/perfectfit/table' \

@@ -8,7 +8,6 @@ class ActionGetDailyStepGoalFromDb(Action):
         return "action_notifications_get_daily_step_goal_from_db"
 
     async def run(self, dispatcher, tracker, domain):
-
         # Get pa daily step goal
         pa_goal = get_daily_step_goal_from_db()
 

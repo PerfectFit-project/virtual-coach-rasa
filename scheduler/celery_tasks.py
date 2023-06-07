@@ -1,6 +1,5 @@
 import logging
 import requests
-import time
 from celery import Celery
 from celery.schedules import crontab
 from contextlib import contextmanager
@@ -59,7 +58,7 @@ def check_new_connection_request(self):
     accepts them and creates a new user in the db.
     """
 
-    lock_id = '{0}-lock'.format(self.name)
+    lock_id = f'{self.name}-lock'
     with memcache_lock(lock_id, self.app.oid) as acquired:
         if acquired:
             logging.info('checking new connections')

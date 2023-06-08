@@ -8,6 +8,7 @@ rules:
   - action: utter_notifications_tracking_1
   - action: utter_notifications_tracking_2
   - action: utter_notifications_tracking_3
+  - action: pause_one_minute
 
 ## Step goal notification
 - rule: send step goal notification
@@ -16,6 +17,7 @@ rules:
   - action: action_notifications_get_daily_step_goal_from_db
   - action: utter_notifications_step_goal_1
   - action: utter_notifications_step_goal_2
+  - action: pause_one_minute
 
 ## finish dialog notification
 - rule: finish dialog notification
@@ -23,6 +25,7 @@ rules:
   - intent: EXTERNAL_finish_dialog_notification  # TODO: set trigger if user is inactive for 1hour
   - action: utter_notifications_finish_dialog_1
   - action: utter_notifications_finish_dialog_2
+  - action: pause_one_minute
 
 ## Inactive users notification
 - rule: inactive users notification
@@ -38,6 +41,7 @@ rules:
     - intent: EXTERNAL_before_quit_notification
     - action: utter_notifications_new_quit_date_tomorrow_1
     - action: utter_notifications_new_quit_date_tomorrow_2
+    - action: pause_one_minute
 
 ## Step goal and intensive pa notification
 - rule: step goal and intensive pa notification  # TODO: set trigger
@@ -47,6 +51,7 @@ rules:
     - action: utter_notifications_step_goal_intensive_pa_1
     - action: utter_notifications_step_goal_intensive_pa_2
     - action: utter_notifications_step_goal_intensive_pa_3
+    - action: pause_one_minute
 
 ## new quit date notification
 - rule: new quit date tomorrow notification
@@ -54,3 +59,4 @@ rules:
     - intent: EXTERNAL_quit_date_notification
     - action: utter_notifications_new_quit_date_notification_1
     - action: utter_notifications_new_quit_date_notification_2
+    - action: pause_one_minute

@@ -244,7 +244,6 @@ def pause_conversation(self,  # pylint: disable=unused-argument
 @app.task(bind=True)
 def pause_and_resume(self,  # pylint: disable=unused-argument
                      user_id: int,
-                     trigger: str,
                      time: datetime):
     """
     This task sends a pause the dialog and schedules the resume.
@@ -254,7 +253,37 @@ def pause_and_resume(self,  # pylint: disable=unused-argument
         time: time for scheduling the dialog resume
     """
     pause_conversation.apply_async(args=[user_id])
+    resume.apply_async(args=[user_id], eta=time)
+
+
+@app.task(bind=True)
+def pause_and_trigger(self,  # pylint: disable=unused-argument
+                      user_id: int,
+                      trigger: str,
+                      time: datetime):
+    """
+    This task sends a pause the dialog and schedules the resume.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
+        time: time for scheduling the dialog resume
+    """
+    pause_conversation.apply_async(args=[user_id])
     resume_and_trigger.apply_async(args=[user_id, trigger], eta=time)
+
+
+@app.task(bind=True)
+def resume(self,  # pylint: disable=unused-argument
+           user_id: int):
+    """
+    This task sends a resume event to Rasa.
+    Args:
+        user_id: the ID of the user to send the trigger to
+    """
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
+    headers = {'Content-Type': 'application/json'}
+    data = '[{"event": "resume"}]'
+    requests.post(endpoint, headers=headers, data=data, timeout=60)
 
 
 @app.task(bind=True)

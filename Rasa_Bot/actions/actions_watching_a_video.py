@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -77,7 +76,7 @@ class DelayedMessage(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DONE_VIDEO
         time = datetime.datetime.now() + datetime.timedelta(seconds=30)
-        celery.send_task('celery_tasks.pause_and_resume',
+        celery.send_task('celery_tasks.pause_and_trigger',
                          (user_id, new_intent, time))
         return []
 

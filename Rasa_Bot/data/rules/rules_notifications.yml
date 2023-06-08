@@ -25,7 +25,6 @@ rules:
   - intent: EXTERNAL_finish_dialog_notification  # TODO: set trigger if user is inactive for 1hour
   - action: utter_notifications_finish_dialog_1
   - action: utter_notifications_finish_dialog_2
-  - action: pause_one_minute
 
 ## Inactive users notification
 - rule: inactive users notification

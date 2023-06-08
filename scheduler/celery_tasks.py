@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED)
+from virtual_coach_db.helper.definitions import NotificationsTriggers
 from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
                           send_fsm_event, set_dialog_running_status)
@@ -64,11 +65,15 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)
 
-            next_day = datetime.now().replace(hour=00, minute=00) + timedelta(days=1)
-
-            reschedule_dialog.apply_async(args=[fsm.machine_id,
-                                                dialog,
-                                                next_day])
+            # if the dialog can be resumed, send notification to invite the user in finishing
+            # if check_notification_needed(fsm.machine_id, dialog):
+            #     trigger_intervention_component(fsm.machine_id,
+            #                                    NotificationsTriggers.FINISH_DIALOG_NOTIFICATION)
+            # else:
+            #     next_day = datetime.now() + timedelta(days=1)
+            #     reschedule_dialog.apply_async(args=[fsm.machine_id,
+            #                                         dialog,
+            #                                         next_day])
 
 
 @app.task(bind=True)
@@ -220,3 +225,53 @@ def trigger_menu(self,  # pylint: disable=unused-argument
     # the state machine status as to be marked as not running
     # to allow new dialogs to be administered
     set_dialog_running_status(user_id, False)
+
+
+@app.task(bind=True)
+def pause_conversation(self,  # pylint: disable=unused-argument
+                 user_id: int):
+    """
+    This task sends a trigger to Rasa immediately.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
+    """
+    print('Pausing from celery')
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
+    headers = {'Content-Type': 'application/json'}
+    data = '[{"event": "pause"}]'
+    requests.post(endpoint, headers=headers, data=data, timeout=60)
+
+
+@app.task(bind=True)
+def resume_conversation(self,  # pylint: disable=unused-argument
+                 user_id: int,
+                 trigger: str,
+                 time: datetime):
+    """
+    This task sends a trigger to Rasa immediately.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
+    """
+    print('Schedule resuming from celery')
+    pause_conversation.apply_async(args=[user_id])
+    resume.apply_async(args=[user_id, trigger], eta=time)
+
+
+@app.task(bind=True)
+def resume(self,  # pylint: disable=unused-argument
+                 user_id: int,
+                 trigger: str):
+    """
+    This task sends a trigger to Rasa immediately.
+    Args:
+        user_id: the ID of the user to send the trigger to
+        trigger: the intent to be sent
+    """
+    print('Resuming from celery')
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
+    headers = {'Content-Type': 'application/json'}
+    data = '[{"event": "resume"}]'
+    requests.post(endpoint, headers=headers, data=data, timeout=60)
+    trigger_intervention_component.apply_async(args=[user_id, trigger])

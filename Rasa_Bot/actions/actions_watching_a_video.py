@@ -1,7 +1,9 @@
 import datetime
+import logging
+
 from celery import Celery
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, FollowupAction
+from rasa_sdk.events import SlotSet, FollowupAction, ConversationPaused, ConversationResumed
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
@@ -74,9 +76,10 @@ class DelayedMessage(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = 'EXTERNAL_done_with_video'
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=30))
+        time = datetime.datetime.now() + datetime.timedelta(seconds=30)
+        celery.send_task('celery_tasks.resume_conversation',
+                         (user_id, new_intent, time))
+        logging.info("Conversation paused")
         return []
 
 

@@ -2,7 +2,7 @@ import datetime
 
 from celery import Celery
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, FollowupAction, ConversationPaused, ConversationResumed
+from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any

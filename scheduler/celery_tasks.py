@@ -6,7 +6,6 @@ from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED)
-from virtual_coach_db.helper.definitions import NotificationsTriggers
 from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
                           send_fsm_event, set_dialog_running_status)
@@ -65,15 +64,11 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)
 
-            # if the dialog can be resumed, send notification to invite the user in finishing
-            # if check_notification_needed(fsm.machine_id, dialog):
-            #     trigger_intervention_component(fsm.machine_id,
-            #                                    NotificationsTriggers.FINISH_DIALOG_NOTIFICATION)
-            # else:
-            #     next_day = datetime.now() + timedelta(days=1)
-            #     reschedule_dialog.apply_async(args=[fsm.machine_id,
-            #                                         dialog,
-            #                                         next_day])
+            next_day = datetime.now().replace(hour=00, minute=00) + timedelta(days=1)
+
+            reschedule_dialog.apply_async(args=[fsm.machine_id,
+                                                dialog,
+                                                next_day])
 
 
 @app.task(bind=True)

@@ -225,9 +225,9 @@ class ActionClosingDelayedMessageAfterSmokeLapse(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DELAYED_MSG_LAPSE
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=10))
+        time = datetime.datetime.now() + datetime.timedelta(seconds=10)
+        celery.send_task('celery_tasks.pause_and_resume',
+                         (user_id, new_intent, time))
         return []
 
 
@@ -240,9 +240,9 @@ class ActionClosingDelayedMessageAfterSmoke(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DELAYED_MSG_SMOKE
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=10))
+        time = datetime.datetime.now() + datetime.timedelta(seconds=10)
+        celery.send_task('celery_tasks.pause_and_resume',
+                         (user_id, new_intent, time))
         return []
 
 

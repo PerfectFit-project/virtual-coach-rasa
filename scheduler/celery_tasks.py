@@ -60,7 +60,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
 
         if dialog_state == EXPIRED:
             dialog = fsm.dialog_state.get_current_dialog()
-            
+
             # the dialog is idle now
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)
@@ -229,14 +229,12 @@ def trigger_menu(self,  # pylint: disable=unused-argument
 
 @app.task(bind=True)
 def pause_conversation(self,  # pylint: disable=unused-argument
-                 user_id: int):
+                       user_id: int):
     """
-    This task sends a trigger to Rasa immediately.
+    This task sends a pause event to rasa to pause the current dialog.
     Args:
         user_id: the ID of the user to send the trigger to
-        trigger: the intent to be sent
     """
-    print('Pausing from celery')
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
     headers = {'Content-Type': 'application/json'}
     data = '[{"event": "pause"}]'
@@ -244,32 +242,31 @@ def pause_conversation(self,  # pylint: disable=unused-argument
 
 
 @app.task(bind=True)
-def resume_conversation(self,  # pylint: disable=unused-argument
-                 user_id: int,
-                 trigger: str,
-                 time: datetime):
+def pause_and_resume(self,  # pylint: disable=unused-argument
+                     user_id: int,
+                     trigger: str,
+                     time: datetime):
     """
-    This task sends a trigger to Rasa immediately.
+    This task sends a pause the dialog and schedules the resume.
     Args:
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
+        time: time for scheduling the dialog resume
     """
-    print('Schedule resuming from celery')
     pause_conversation.apply_async(args=[user_id])
-    resume.apply_async(args=[user_id, trigger], eta=time)
+    resume_and_trigger.apply_async(args=[user_id, trigger], eta=time)
 
 
 @app.task(bind=True)
-def resume(self,  # pylint: disable=unused-argument
-                 user_id: int,
-                 trigger: str):
+def resume_and_trigger(self,  # pylint: disable=unused-argument
+                       user_id: int,
+                       trigger: str):
     """
-    This task sends a trigger to Rasa immediately.
+    This task sends a resume event to Rasa and triggers a new intent.
     Args:
         user_id: the ID of the user to send the trigger to
-        trigger: the intent to be sent
+        trigger: the intent to be sent after the dialog is resumed
     """
-    print('Resuming from celery')
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
     headers = {'Content-Type': 'application/json'}
     data = '[{"event": "resume"}]'

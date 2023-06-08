@@ -75,11 +75,10 @@ class DelayedMessage(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        new_intent = 'EXTERNAL_done_with_video'
+        new_intent = ComponentsTriggers.DONE_VIDEO
         time = datetime.datetime.now() + datetime.timedelta(seconds=30)
-        celery.send_task('celery_tasks.resume_conversation',
+        celery.send_task('celery_tasks.pause_and_resume',
                          (user_id, new_intent, time))
-        logging.info("Conversation paused")
         return []
 
 

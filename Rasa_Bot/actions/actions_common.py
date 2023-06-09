@@ -6,7 +6,7 @@ from niceday_client import NicedayClient
 from rasa_sdk import Action
 from rasa_sdk.events import FollowupAction, SlotSet
 
-from .definitions import REDIS_URL, NICEDAY_API_ENDPOINT
+from .definitions import REDIS_URL, NICEDAY_API_ENDPOINT, TRIGGER_INTENT
 from virtual_coach_db.helper.definitions import ComponentsTriggers
 
 celery = Celery(broker=REDIS_URL)
@@ -22,7 +22,7 @@ class ActionLaunchReschedulingPrep(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
 
-        celery.send_task('celery_tasks.trigger_menu',
+        celery.send_task(TRIGGER_INTENT,
                          (user_id, new_intent))
         return []
 

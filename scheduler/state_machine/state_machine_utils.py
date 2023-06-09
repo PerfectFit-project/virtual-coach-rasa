@@ -4,7 +4,7 @@ from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
 from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
-                                 SCHEDULE_TRIGGER_COMPONENT, TRIGGER_MENU)
+                                 SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
                                               InterventionComponents)
 from virtual_coach_db.helper.definitions import Components, ComponentsTriggers
@@ -584,7 +584,7 @@ def run_option_menu(user_id: int):
         user_id: ID of the user
 
     """
-    celery.send_task(TRIGGER_MENU, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
+    celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

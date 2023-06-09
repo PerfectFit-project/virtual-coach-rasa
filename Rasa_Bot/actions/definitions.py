@@ -119,6 +119,9 @@ activities_categories = {1: 'self-related',
                          4: 'reinforcement',
                          5: 'motivational'}
 
+# celery tasks
+TRIGGER_INTENT = 'celery_tasks.trigger_intent'
+
 
 class FsmStates:
     ONBOARDING = "Onboarding"

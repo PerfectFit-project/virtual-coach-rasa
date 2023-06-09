@@ -204,7 +204,7 @@ def user_trigger_dialog(self,  # pylint: disable=unused-argument
 
 
 @app.task(bind=True)
-def trigger_menu(self,  # pylint: disable=unused-argument
+def trigger_intent(self,  # pylint: disable=unused-argument
                  user_id: int,
                  trigger: str,
                  dialog_state: bool = None):

@@ -584,7 +584,7 @@ def run_option_menu(user_id: int):
         user_id: ID of the user
 
     """
-    celery.send_task(TRIGGER_MENU, (user_id, ComponentsTriggers.CENTRAL_OPTIONS))
+    celery.send_task(TRIGGER_MENU, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

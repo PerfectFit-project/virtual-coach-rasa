@@ -5,10 +5,11 @@ from celery.schedules import crontab
 from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
-                                 RUNNING, EXPIRED)
+                                 RUNNING, EXPIRED, NOTIFIED)
 from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
                           send_fsm_event, set_dialog_running_status)
+from virtual_coach_db.helper.definitions import NotificationsTriggers
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 
@@ -56,15 +57,17 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
 
     for fsm in state_machines:
         dialog_state = get_dialog_state(fsm)
+        dialog = fsm.dialog_state.get_current_dialog()
 
         if dialog_state == EXPIRED:
-            dialog = fsm.dialog_state.get_current_dialog()
-            
+            trigger_menu.apply_async(args=[fsm.machine_id,
+                                           NotificationsTriggers.FINISH_DIALOG_NOTIFICATION])
+        if dialog_state == NOTIFIED:
             # the dialog is idle now
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)
 
-            next_day = datetime.now().replace(hour=00, minute=00) + timedelta(days=1)
+            next_day = datetime.now() + timedelta(days=1)
 
             reschedule_dialog.apply_async(args=[fsm.machine_id,
                                                 dialog,
@@ -203,12 +206,14 @@ def user_trigger_dialog(self,  # pylint: disable=unused-argument
 @app.task(bind=True)
 def trigger_menu(self,  # pylint: disable=unused-argument
                  user_id: int,
-                 trigger: str):
+                 trigger: str,
+                 dialog_state: bool = None):
     """
     This task sends a trigger to Rasa immediately.
     Args:
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
+        dialog_state: set the dialog state in the fsm
     """
 
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
@@ -217,6 +222,7 @@ def trigger_menu(self,  # pylint: disable=unused-argument
     data = '{"name": "' + trigger + '" }'
     requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
-    # the state machine status as to be marked as not running
-    # to allow new dialogs to be administered
-    set_dialog_running_status(user_id, False)
+    if dialog_state is not None:
+        # the state machine status as to be marked as not running
+        # to allow new dialogs to be administered
+        set_dialog_running_status(user_id, dialog_state)

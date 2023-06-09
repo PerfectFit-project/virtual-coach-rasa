@@ -22,22 +22,7 @@ class ActionLaunchWatchVideoDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.WATCH_VIDEO
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent))
-        return []
-
-
-class ActionLaunchReschedulingPrep(Action):
-    """Trigger the preparation dialogs rescheduling"""
-
-    def name(self):
-        return "action_launch_rescheduling_prep"
-
-    async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
-
-        celery.send_task('celery_tasks.trigger_intervention_component',
+        celery.send_task('celery_tasks.trigger_menu',
                          (user_id, new_intent))
         return []
 
@@ -73,8 +58,8 @@ class DelayedMessage(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        new_intent = 'EXTERNAL_done_with_video'
-        celery.send_task('celery_tasks.trigger_intervention_component',
+        new_intent = ComponentsTriggers.DONE_VIDEO
+        celery.send_task('celery_tasks.trigger_menu',
                          (user_id, new_intent),
                          eta=datetime.datetime.now() + datetime.timedelta(seconds=30))
         return []

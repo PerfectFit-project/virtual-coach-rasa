@@ -22,7 +22,7 @@ class ActionLaunchReschedulingPrep(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
 
-        celery.send_task('celery_tasks.trigger_intervention_component',
+        celery.send_task('celery_tasks.trigger_menu',
                          (user_id, new_intent))
         return []
 

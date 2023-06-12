@@ -22,10 +22,11 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 TRIGGER_COMPONENT = 'celery_tasks.trigger_intervention_component'
 SCHEDULE_TRIGGER_COMPONENT = 'celery_tasks.trigger_scheduled_intervention_component'
-TRIGGER_MENU = 'celery_tasks.trigger_menu'
+TRIGGER_INTENT = 'celery_tasks.trigger_intent'
 TIMEZONE = tz.gettz("Europe/Amsterdam")
 
 # dialog states definitions
 NOT_RUNNING = 0
 RUNNING = 1
 EXPIRED = 2
+NOTIFIED = 3

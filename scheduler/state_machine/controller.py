@@ -11,7 +11,8 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                store_completed_dialog, update_execution_week)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
-                                 MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP)
+                                 MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
+                                 EXECUTION_DURATION_WEEKS)
 from state_machine.state import State
 from virtual_coach_db.helper.definitions import (Components, Notifications)
 
@@ -367,7 +368,7 @@ class ExecutionRunState(State):
                 self.schedule_pa_notifications()
 
             # if in week 12, the execution is finished. Start the closing state
-            elif week == 12:
+            elif week == EXECUTION_DURATION_WEEKS:
                 self.set_new_state(ClosingState(self.user_id))
 
             # in the other weeks, plan the next execution of the weekly reflection

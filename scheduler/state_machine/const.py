@@ -7,6 +7,10 @@ MAXIMUM_DIALOG_DURATION = 90*60
 # time interval in seconds for checking for new connection requests
 INVITES_CHECK_INTERVAL = 10*60
 
+# PA groups
+LOW_PA_GROUP = 1
+HIGH_PA_GROUP = 2
+
 # intervention times (days)
 ACTIVITY_C2_9_DAY_TRIGGER = 7
 FUTURE_SELF_INTRO = 8

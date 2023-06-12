@@ -3,6 +3,7 @@ protobuf==3.19.4
 typeguard==2.13.3
 chardet==3.0.4
 multidict==5.2.0
+pyTelegramBotAPI==3.8.3
 websockets==10.2
 rasa==3.2.8 # NB! when updating, make sure to also update:
             # * rasa base image in actions/Dockerfile,

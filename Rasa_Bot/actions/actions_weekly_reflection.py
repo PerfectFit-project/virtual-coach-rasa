@@ -607,7 +607,7 @@ class ValidateUserReady1Form(FormValidationAction):
         if last_utterance != 'utter_ask_user_ready_1':
             return {"user_ready_1": None}
 
-        if value.lower() != "klaar":
+        if not validator.validate_klaar(value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_klaar")
             return {"user_ready_1": None}
@@ -628,7 +628,7 @@ class ValidateUserReady2Form(FormValidationAction):
         if last_utterance != 'utter_ask_user_ready_2':
             return {"user_ready_2": None}
 
-        if value.lower() != "klaar":
+        if not validator.validate_klaar(value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_klaar")
             return {"user_ready_2": None}
@@ -649,7 +649,7 @@ class ValidateUserReady3Form(FormValidationAction):
         if last_utterance != 'utter_ask_user_ready_3':
             return {"user_ready_3": None}
 
-        if value.lower() != "klaar":
+        if not validator.validate_klaar(value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_klaar")
             return {"user_ready_3": None}
@@ -670,7 +670,7 @@ class ValidateUserReady4Form(FormValidationAction):
         if last_utterance != 'utter_ask_user_ready_4':
             return {"user_ready_4": None}
 
-        if value.lower() != "klaar":
+        if not validator.validate_klaar(value):
             dispatcher.utter_message(response="utter_did_not_understand")
             dispatcher.utter_message(response="utter_please_answer_klaar")
             return {"user_ready_4": None}
@@ -692,6 +692,7 @@ class ValidateHaveEquipment(FormValidationAction):
             return {"have_equipment": None}
 
         if not validator.validate_klaar(value):
+            dispatcher.utter_message(response="utter_please_answer_klaar")
             return {"have_equipment": None}
 
         return {"have_equipment": value}

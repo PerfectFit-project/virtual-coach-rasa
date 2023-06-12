@@ -713,6 +713,7 @@ def store_scheduled_dialog(user_id: int,   # pylint: disable=too-many-arguments
         phase_id: id of the intervention phase
         planned_date: date when the dialog is to be delivered
         task_uuid: celery task uuid
+        last_time: date of the last time the dialog was presented to the user
 
     """
     # get the id of the dialog

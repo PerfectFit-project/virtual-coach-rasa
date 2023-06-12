@@ -6,9 +6,9 @@ from datetime import date, datetime, timedelta
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION,
                                  RUNNING, EXPIRED, NOTIFIED)
-from celery_utils import (check_if_user_exists, get_component_name, get_user_fsm, get_dialog_state,
-                          get_all_fsm, save_state_machine_to_db, create_new_user_fsm,
-                          send_fsm_event, set_dialog_running_status)
+from celery_utils import (check_if_user_exists, check_if_task_executed, get_component_name,
+                          get_user_fsm, get_dialog_state, get_all_fsm, save_state_machine_to_db,
+                          create_new_user_fsm, send_fsm_event, set_dialog_running_status)
 from virtual_coach_db.helper.definitions import NotificationsTriggers
 
 app = Celery('celery_tasks', broker=REDIS_URL)
@@ -60,8 +60,8 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
         dialog = fsm.dialog_state.get_current_dialog()
 
         if dialog_state == EXPIRED:
-            trigger_menu.apply_async(args=[fsm.machine_id,
-                                           NotificationsTriggers.FINISH_DIALOG_NOTIFICATION])
+            trigger_intent.apply_async(args=[fsm.machine_id,
+                                             NotificationsTriggers.FINISH_DIALOG_NOTIFICATION])
         if dialog_state == NOTIFIED:
             # the dialog is idle now
             fsm.dialog_state.set_to_idle()
@@ -140,7 +140,6 @@ def trigger_intervention_component(self,  # pylint: disable=unused-argument
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
     """
-
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
@@ -154,7 +153,7 @@ def trigger_intervention_component(self,  # pylint: disable=unused-argument
 
 
 @app.task(bind=True)
-def trigger_scheduled_intervention_component(self,  # pylint: disable=unused-argument
+def trigger_scheduled_intervention_component(self,
                                              user_id: int,
                                              trigger: str):
     """
@@ -165,6 +164,11 @@ def trigger_scheduled_intervention_component(self,  # pylint: disable=unused-arg
         trigger: the intent to be sent
     """
 
+    # check if the scheduled dialog has been already completed by the user
+    # in case it has already been completed, do not execute
+    if check_if_task_executed(self.request.id):
+        return
+
     user_fsm = get_user_fsm(user_id)
 
     dialog_state = get_dialog_state(user_fsm)
@@ -174,9 +178,6 @@ def trigger_scheduled_intervention_component(self,  # pylint: disable=unused-arg
 
     # if a dialog is not running or the time has expired (Rasa session reset)
     # send the trigger
-
-    logging.info("scheduled dialog trigger received")
-
     if dialog_state != RUNNING:
         user_fsm.dialog_state.set_to_running(dialog=name)
         trigger_intervention_component.apply_async(args=[user_id, trigger])

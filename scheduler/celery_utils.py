@@ -6,7 +6,8 @@ from state_machine.controller import (OnboardingState, TrackingState, GoalsSetti
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
-from virtual_coach_db.dbschema.models import InterventionComponents, Users, UserStateMachine
+from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
+                                              UserStateMachine)
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -28,6 +29,30 @@ def check_if_user_exists(user_id: int) -> bool:
         return True
 
     return False
+
+
+def check_if_task_executed(task_uuid: str) -> bool:
+    """
+    Check if the dialog triggered by a scheduled task has been already completed.
+    In the user_intervention_state table, the tasks uuids are logged and assigned
+    to the scheduled dialog they have to trigger.
+    Args:
+        task_uuid: the ID of the task
+    Returns: True if the dialog has been already completed
+    """
+    session = get_db_session(DATABASE_URL)
+
+    tasks = (session.query(UserInterventionState)
+             .filter(
+        UserInterventionState.task_uuid == task_uuid,
+        UserInterventionState.completed.is_(False)
+    )
+             .all())
+
+    if len(tasks) > 0:
+        return False
+
+    return True
 
 
 def create_new_user_fsm(user_id: int) -> StateMachine:

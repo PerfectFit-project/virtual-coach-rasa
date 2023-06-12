@@ -11,7 +11,7 @@ from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
                                  RUNNING, EXPIRED, NOTIFIED, INVITES_CHECK_INTERVAL)
 from celery_utils import (check_if_task_executed, check_if_user_exists, create_new_user,
-                          get_component_name, get_user_fsm, get_dialog_state, 
+                          get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, send_fsm_event,
                           set_dialog_running_status)
 from virtual_coach_db.helper.definitions import NotificationsTriggers

@@ -7,7 +7,7 @@ from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMP
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
                                               InterventionComponents)
-from virtual_coach_db.helper.definitions import Components, ComponentsTriggers
+from virtual_coach_db.helper.definitions import ComponentsTriggers
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -698,7 +698,7 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
         store_intervention_component_to_db(state)
 
 
-def store_scheduled_dialog(user_id: int,
+def store_scheduled_dialog(user_id: int,   # pylint: disable=too-many-arguments
                            dialog_id: int,
                            phase_id: int,
                            planned_date: datetime = datetime.now().astimezone(TIMEZONE),

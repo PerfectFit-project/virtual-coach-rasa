@@ -20,7 +20,7 @@ rules:
 ## finish dialog notification
 - rule: finish dialog notification
   steps:
-  - intent: EXTERNAL_finish_dialog_notification  # TODO: set trigger if user is inactive for 1hour
+  - intent: EXTERNAL_finish_dialog_notification
   - action: utter_notifications_finish_dialog_1
   - action: utter_notifications_finish_dialog_2
 

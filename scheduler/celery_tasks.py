@@ -47,6 +47,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     and for the dialogs status check are started
     """
     sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
+    sender.add_periodic_task(crontab(hour=10, minute=00), notify_new_day.s(datetime.today()))
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     sender.add_periodic_task(INVITES_CHECK_INTERVAL, check_new_connection_request.s())
 
@@ -105,6 +106,19 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             reschedule_dialog.apply_async(args=[fsm.machine_id,
                                                 dialog,
                                                 next_day])
+
+
+@app.task
+def check_inactivity(current_date: date):
+    """
+    This task checks for all the users if they have been inactive for at least 10 days.
+    If they have been inactive, the correspondent notification is sent
+    Args:
+        current_date: the date to be sent to the state machines
+    """
+    state_machines = get_all_fsm()
+    for item in state_machines:
+        send_fsm_event(user_id=item.machine_id, event=Event(EventEnum.NEW_DAY, current_date))
 
 
 @app.task(bind=True)

@@ -30,6 +30,23 @@ def check_if_user_exists(user_id: int) -> bool:
     return False
 
 
+def check_if_user_active(user_id: int) -> bool:
+    """
+   Check if a user has been inactive (a dialog has been completed) for a certain number of days.
+    Args:
+        user_id: the ID of the user
+    Returns: True if the user has been active, false otherwise
+    """
+    session = get_db_session(DATABASE_URL)
+
+    users = (session.query(Users).filter(Users.nicedayuid == user_id).one())
+
+    if len(users) > 0:
+        return True
+
+    return False
+
+
 def create_new_user(user_id: int):
     """
     Initialize the DB for a new user.

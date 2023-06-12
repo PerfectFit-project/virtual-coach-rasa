@@ -1,2 +1,2 @@
-git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.19
+git+https://github.com/PerfectFit-project/virtual-coach-db@297-complete-dialog-reminder
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.3

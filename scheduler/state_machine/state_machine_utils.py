@@ -520,10 +520,6 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
         The component to be completed
 
     """
-    # only the goal setting and the weekly reflection dialogs can be resumed, so we search
-    # only for this two dialogs
-    id_goal_setting = get_intervention_component(Components.GOAL_SETTING).intervention_component_id
-    id_weekly = get_intervention_component(Components.WEEKLY_REFLECTION).intervention_component_id
 
     session = get_db_session(db_url=DATABASE_URL)
 
@@ -532,10 +528,9 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
             UserInterventionState
         ).order_by(UserInterventionState.last_time.desc())
         .filter(
-            UserInterventionState.users_nicedayuid == user_id)
-        .filter(
-            (UserInterventionState.intervention_component_id == id_goal_setting)
-            | (UserInterventionState.intervention_component_id == id_weekly)
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(False),
+            UserInterventionState.last_time.isnot(None)
         )
         .first()
     )
@@ -548,8 +543,7 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
 
 def run_uncompleted_dialog(user_id: int):
     """
-    Checks if a dialog has to be completed and, in this case runs it. Runs the default options
-    menu otherwise
+    Checks if a dialog has to be completed and, in this case runs it from the latest completed part.
 
     Args:
         user_id: ID of the user
@@ -572,8 +566,8 @@ def run_uncompleted_dialog(user_id: int):
             TRIGGER_COMPONENT,
             (user_id, component.intervention_component.intervention_component_trigger)
         )
-
-    run_option_menu(user_id)
+    else:
+        run_option_menu(user_id)
 
 
 def run_option_menu(user_id: int):

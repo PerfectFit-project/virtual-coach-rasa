@@ -1168,10 +1168,10 @@ responses:
     - text: "5. Doe je deze beweging alleen of ben je van plan om iemand mee te nemen?"
     - text: "5. Weet je iemand om samen met jou de activiteit te doen of doe je deze alleen?"
   utter_ask_have_equipment:
-    - text: "6. Heb je alle spullen voor je intensieve beweging of moet je eerst nog iets halen?"
-    - text: "6. Zijn alle dingen die je nodig hebt voor de intensieve beweging aanwezig of moet je nog iets halen?"
-    - text: "6. Heb je alle spullen die je nodig hebt voor de intensieve beweging of moet je nog iets halen?"
-    - text: "6. Heb je alles wat je nodig hebt voor de intensieve beweging of moet je nog iets halen of kopen?"
+    - text: "6. Heb je alle spullen voor je intensieve beweging of moet je eerst nog iets halen? Typ ‘klaar’ als je de vragen hebt beantwoordt."
+    - text: "6. Zijn alle dingen die je nodig hebt voor de intensieve beweging aanwezig of moet je nog iets halen? Laat me weten dat je de vragen hebt beantwoord door 'klaar' te typen."
+    - text: "6. Heb je alle spullen die je nodig hebt voor de intensieve beweging of moet je nog iets halen? Wanneer je klaar bent met het beantwoorden van de vragen, typ dan 'klaar'"
+    - text: "6. Heb je alles wat je nodig hebt voor de intensieve beweging of moet je nog iets halen of kopen? Typ ‘klaar’ als je de vragen hebt beantwoordt."
   utter_increase_intensity_22:
     - text: "Mooi. Nu heb je concrete beweegdoelen voor komende week. "
     - text: "Goed gedaan! Je hebt nu duidelijke beweegdoelen voor de komende week."

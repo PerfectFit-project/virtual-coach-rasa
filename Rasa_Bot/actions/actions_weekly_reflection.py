@@ -692,7 +692,7 @@ class ValidateHaveEquipment(FormValidationAction):
             return {"have_equipment": None}
 
         if not validator.validate_klaar(value):
-            dispatcher.utter_message(response="utter_please_answer_klaar")
+            dispatcher.utter_message(response="utter_answer_klaar")
             return {"have_equipment": None}
 
         return {"have_equipment": value}

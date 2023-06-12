@@ -3,6 +3,8 @@ from dateutil import tz
 
 # maximum duration of the dialog in seconds
 MAXIMUM_DIALOG_DURATION = 90*60
+# maximum number of days of inactivity before sending a notification
+MAXIMUM_INACTIVE_DAYS = 10
 
 # time interval in seconds for checking for new connection requests
 INVITES_CHECK_INTERVAL = 10*60

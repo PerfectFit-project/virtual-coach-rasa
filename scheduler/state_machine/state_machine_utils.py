@@ -703,7 +703,8 @@ def store_scheduled_dialog(user_id: int,
                            dialog_id: int,
                            phase_id: int,
                            planned_date: datetime = datetime.now().astimezone(TIMEZONE),
-                           task_uuid: Optional[str] = None):
+                           task_uuid: Optional[str] = None,
+                           last_time: Optional[datetime] = None):
     """
     This function marks when a dialog has been completed, by update or creating
     the entry in the DB
@@ -722,7 +723,7 @@ def store_scheduled_dialog(user_id: int,
         intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
         intervention_component_id=dialog_id,
         completed=False,
-        last_time=None,
+        last_time=last_time,
         last_part=0,
         next_planned_date=planned_date,
         task_uuid=task_uuid
@@ -734,7 +735,8 @@ def store_scheduled_dialog(user_id: int,
 def plan_and_store(user_id: int,
                    dialog: str,
                    phase_id: int,
-                   planned_date: Optional[datetime] = None):
+                   planned_date: Optional[datetime] = None,
+                   last_time: Optional[datetime] = None):
     """
     Program a celery task for the planned_date, or sends it immediately in case
     planned_date is None, and stores the new component to the DB
@@ -756,7 +758,8 @@ def plan_and_store(user_id: int,
 
         store_scheduled_dialog(user_id=user_id,
                                dialog_id=dialog_id,
-                               phase_id=phase_id)
+                               phase_id=phase_id,
+                               last_time=datetime.now().astimezone(TIMEZONE))
     else:
         task = celery.send_task(SCHEDULE_TRIGGER_COMPONENT,
                                 (user_id, trigger),
@@ -766,7 +769,8 @@ def plan_and_store(user_id: int,
                                dialog_id=dialog_id,
                                phase_id=phase_id,
                                planned_date=planned_date,
-                               task_uuid=str(task.task_id))
+                               task_uuid=str(task.task_id),
+                               last_time=last_time)
 
 
 def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: int):

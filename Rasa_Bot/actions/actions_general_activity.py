@@ -210,7 +210,7 @@ class GetGeneralActivitiesOptions(Action):
 
         options = ["Typ " + str(i + 1) + " als je " +
                    available[i].intervention_activity_title +
-                   "wilt doen.\n"
+                   " wilt doen.\n"
                    for i in range(len(available))]
 
         sentence = ''.join(options)
@@ -402,7 +402,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
 
         options = ["Typ " + str(i + 1) + " als je " +
                    available[i].intervention_activity_title +
-                   "wilt doen.\n"
+                   " wilt doen.\n"
                    for i in range(len(available))]
 
         sentence = ''.join(options)

@@ -168,6 +168,8 @@ def get_last_completed_dialog_part_from_db(user_id: int,
     )
 
     if selected is not None:
+        if selected.last_part == 0:
+            selected.last_part = -1
         return selected.last_part
 
     # No dialog part previously completed

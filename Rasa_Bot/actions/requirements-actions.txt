@@ -6,6 +6,7 @@ plotly
 kaleido
 python-dateutil==2.8.1
 python-dotenv
+rasa-sdk==3.2.3
 redis
 sqlalchemy
 git+https://github.com/PerfectFit-project/virtual-coach-db@297-complete-dialog-reminder

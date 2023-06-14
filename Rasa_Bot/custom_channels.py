@@ -76,9 +76,7 @@ class NicedayTriggerOutputChannel(OutputChannel):
         for message_part in text.strip().split("\n\n"):
             self.niceday_client.post_message(int(recipient_id), message_part)
             delay = len(message_part.split(' '))/WORDS_PER_SECOND
-            print(delay)
-            if delay > MAX_DELAY:
-                delay = MAX_DELAY
+            delay = min(delay, MAX_DELAY)
             time.sleep(delay)
 
 

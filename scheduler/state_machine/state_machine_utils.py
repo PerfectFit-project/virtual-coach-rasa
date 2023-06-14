@@ -4,10 +4,10 @@ from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
 from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
-                                 SCHEDULE_TRIGGER_COMPONENT, TRIGGER_MENU)
+                                 SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
                                               InterventionComponents)
-from virtual_coach_db.helper.definitions import Components, ComponentsTriggers
+from virtual_coach_db.helper.definitions import ComponentsTriggers
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -520,10 +520,6 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
         The component to be completed
 
     """
-    # only the goal setting and the weekly reflection dialogs can be resumed, so we search
-    # only for this two dialogs
-    id_goal_setting = get_intervention_component(Components.GOAL_SETTING).intervention_component_id
-    id_weekly = get_intervention_component(Components.WEEKLY_REFLECTION).intervention_component_id
 
     session = get_db_session(db_url=DATABASE_URL)
 
@@ -532,10 +528,9 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
             UserInterventionState
         ).order_by(UserInterventionState.last_time.desc())
         .filter(
-            UserInterventionState.users_nicedayuid == user_id)
-        .filter(
-            (UserInterventionState.intervention_component_id == id_goal_setting)
-            | (UserInterventionState.intervention_component_id == id_weekly)
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(False),
+            UserInterventionState.last_time.isnot(None)
         )
         .first()
     )
@@ -548,8 +543,7 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
 
 def run_uncompleted_dialog(user_id: int):
     """
-    Checks if a dialog has to be completed and, in this case runs it. Runs the default options
-    menu otherwise
+    Checks if a dialog has to be completed and, in this case runs it from the latest completed part.
 
     Args:
         user_id: ID of the user
@@ -572,8 +566,8 @@ def run_uncompleted_dialog(user_id: int):
             TRIGGER_COMPONENT,
             (user_id, component.intervention_component.intervention_component_trigger)
         )
-
-    run_option_menu(user_id)
+    else:
+        run_option_menu(user_id)
 
 
 def run_option_menu(user_id: int):
@@ -584,7 +578,7 @@ def run_option_menu(user_id: int):
         user_id: ID of the user
 
     """
-    celery.send_task(TRIGGER_MENU, (user_id, ComponentsTriggers.CENTRAL_OPTIONS))
+    celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:
@@ -683,6 +677,11 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
         selected.completed = True
 
         session.commit()
+        # if the user completes a dialog which was scheduled, we don't
+        # want that to be re-proposed
+        if selected.task_uuid is not None:
+            celery.control.revoke(selected.task_uuid)
+
     # if for any reason the dialog starting was not recorded in the DB, create the entry
     else:
         state = UserInterventionState(
@@ -699,11 +698,12 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
         store_intervention_component_to_db(state)
 
 
-def store_scheduled_dialog(user_id: int,
+def store_scheduled_dialog(user_id: int,   # pylint: disable=too-many-arguments
                            dialog_id: int,
                            phase_id: int,
                            planned_date: datetime = datetime.now().astimezone(TIMEZONE),
-                           task_uuid: Optional[str] = None):
+                           task_uuid: Optional[str] = None,
+                           last_time: Optional[datetime] = None):
     """
     This function marks when a dialog has been completed, by update or creating
     the entry in the DB
@@ -713,6 +713,7 @@ def store_scheduled_dialog(user_id: int,
         phase_id: id of the intervention phase
         planned_date: date when the dialog is to be delivered
         task_uuid: celery task uuid
+        last_time: date of the last time the dialog was presented to the user
 
     """
     # get the id of the dialog
@@ -722,7 +723,7 @@ def store_scheduled_dialog(user_id: int,
         intervention_phase_id=phase_id,  # probably we don't need this any longer in the DB
         intervention_component_id=dialog_id,
         completed=False,
-        last_time=None,
+        last_time=last_time,
         last_part=0,
         next_planned_date=planned_date,
         task_uuid=task_uuid
@@ -734,7 +735,8 @@ def store_scheduled_dialog(user_id: int,
 def plan_and_store(user_id: int,
                    dialog: str,
                    phase_id: int,
-                   planned_date: Optional[datetime] = None):
+                   planned_date: Optional[datetime] = None,
+                   last_time: Optional[datetime] = None):
     """
     Program a celery task for the planned_date, or sends it immediately in case
     planned_date is None, and stores the new component to the DB
@@ -756,7 +758,8 @@ def plan_and_store(user_id: int,
 
         store_scheduled_dialog(user_id=user_id,
                                dialog_id=dialog_id,
-                               phase_id=phase_id)
+                               phase_id=phase_id,
+                               last_time=datetime.now().astimezone(TIMEZONE))
     else:
         task = celery.send_task(SCHEDULE_TRIGGER_COMPONENT,
                                 (user_id, trigger),
@@ -766,7 +769,8 @@ def plan_and_store(user_id: int,
                                dialog_id=dialog_id,
                                phase_id=phase_id,
                                planned_date=planned_date,
-                               task_uuid=str(task.task_id))
+                               task_uuid=str(task.task_id),
+                               last_time=last_time)
 
 
 def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: int):

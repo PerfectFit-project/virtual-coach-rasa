@@ -1,5 +1,6 @@
 import inspect
 import os
+import time
 import typing
 from typing import Text, Callable, Awaitable, Any, Dict, List
 
@@ -13,6 +14,11 @@ from niceday_client import NicedayClient
 
 
 NICEDAY_API_URL = os.getenv('NICEDAY_API_ENDPOINT')
+# proportional factor between the number of words in a message and the time to wait before the
+# newt message is delivered
+WORDS_PER_SECOND = 5
+# maximum delay between a message and the next one
+MAX_DELAY = 10
 
 
 class NicedayOutputChannel(CollectingOutputChannel):
@@ -50,10 +56,12 @@ class NicedayOutputChannel(CollectingOutputChannel):
         # filter out any values that are `None`
         return {k: v for k, v in obj.items() if v is not None}
 
+
 class NicedayTriggerOutputChannel(OutputChannel):
     """
     Output channel that sends messages to Niceday server
     """
+
     def __init__(self):
         self.niceday_client = NicedayClient(niceday_api_uri=NICEDAY_API_URL)
 
@@ -67,6 +75,12 @@ class NicedayTriggerOutputChannel(OutputChannel):
         """Send a message through this channel."""
         for message_part in text.strip().split("\n\n"):
             self.niceday_client.post_message(int(recipient_id), message_part)
+            delay = len(message_part.split(' '))/WORDS_PER_SECOND
+            print(delay)
+            if delay > MAX_DELAY:
+                delay = MAX_DELAY
+            time.sleep(delay)
+
 
 class NicedayInputChannel(InputChannel):
     """

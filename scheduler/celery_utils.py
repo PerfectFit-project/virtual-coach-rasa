@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFIED,
+from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
                                  NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
                                       BufferState, ExecutionRunState, RelapseState, ClosingState)
@@ -195,19 +195,15 @@ def get_dialog_state(state_machine: StateMachine) -> int:
         dialog_state = NOT_RUNNING
 
     else:
-        print("TIME SPENT", (now - last_time).seconds)
         # dialog running and in the maximum allowed time
         if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
             dialog_state = RUNNING
-            print('RUNNING')
         # dialog not completed, user notified to resume the dialog
         elif (now - last_time).seconds > 2*MAXIMUM_DIALOG_DURATION:
-            dialog_state = NOTIFIED
-            print('NOTIFIED')
+            dialog_state = EXPIRED
         else:
             # dialog running but the maximum time elapsed
-            dialog_state = EXPIRED
-            print('EXPIRED')
+            dialog_state = NOTIFY
 
     return dialog_state
 

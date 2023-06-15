@@ -1,5 +1,6 @@
 import datetime
 
+from niceday_client import NicedayClient
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -269,6 +270,21 @@ class ActionClosingGetTotalNumberSteps(Action):
         number_steps = 99  # Placeholder TODO: fill with number from database
 
         return [SlotSet('closing_total_steps_number', number_steps)]
+
+
+class ActionDisconnectUser(Action):
+    """Disconnect user from therapist."""
+
+    def name(self):
+        return "action_disconnect_user"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+        client = NicedayClient()
+
+        client.remove_contact(user_id)
+
+        return []
 
 
 class SetSlotClosingDialog(Action):

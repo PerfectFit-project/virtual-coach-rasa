@@ -1,12 +1,13 @@
-from datetime import datetime
-from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION,
+from datetime import date, datetime
+from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
                                  NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
                                       BufferState, ExecutionRunState, RelapseState, ClosingState)
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
-from virtual_coach_db.dbschema.models import InterventionComponents, Users, UserStateMachine
+from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
+                                              UserStateMachine)
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -30,9 +31,68 @@ def check_if_user_exists(user_id: int) -> bool:
     return False
 
 
-def create_new_user_fsm(user_id: int) -> StateMachine:
+def check_if_task_executed(task_uuid: str) -> bool:
     """
-   Creates a new StateMachine for the user specified.
+    Check if the dialog triggered by a scheduled task has been already completed.
+    In the user_intervention_state table, the tasks uuids are logged and assigned
+    to the scheduled dialog they have to trigger.
+    Args:
+        task_uuid: the ID of the task
+    Returns: True if the dialog has been already completed
+    """
+    session = get_db_session(DATABASE_URL)
+
+    tasks = (session.query(UserInterventionState)
+             .filter(
+        UserInterventionState.task_uuid == task_uuid,
+        UserInterventionState.completed.is_(False)
+    )
+             .all())
+
+    if len(tasks) > 0:
+        return False
+
+    return True
+
+
+def create_new_user(user_id: int):
+    """
+    Initialize the DB for a new user.
+    Args:
+        user_id: the ID of the user
+    """
+
+    # if a user exists already, print an error message
+    if check_if_user_exists(user_id):
+        logging.warning('User profile already in the DB')
+        return
+
+    new_user_profile = create_new_user_profile(user_id)
+    new_fsm = create_new_user_fsm(user_id)
+
+    session = get_db_session(DATABASE_URL)
+    session.merge(new_user_profile)
+    session.merge(new_fsm)
+    session.commit()
+
+
+def create_new_user_profile(user_id: int) -> Users:
+    """
+    Creates a new Users object for the user specified.
+    Args:
+        user_id: the ID of the user
+    Returns: The StateMachine instance for a new user
+    """
+
+    user = Users(nicedayuid=user_id,
+                 start_date=date.today())
+
+    return user
+
+
+def create_new_user_fsm(user_id: int) -> UserStateMachine:
+    """
+    Creates a new StateMachine for the user specified.
     Args:
         user_id: the ID of the user
     Returns: The StateMachine instance for a new user
@@ -43,7 +103,15 @@ def create_new_user_fsm(user_id: int) -> StateMachine:
 
     new_fsm = StateMachine(OnboardingState(user_id), dialog_state)
 
-    return new_fsm
+    fsm_db = map_state_machine_to_db(new_fsm)
+
+    user_fsm = get_user_fsm_from_db(user_id)
+
+    # if a machine already exists, use the same primary key to update the row
+    if user_fsm is not None:
+        fsm_db.state_machine_id = user_fsm.state_machine_id
+
+    return fsm_db
 
 
 def get_all_fsm() -> List[StateMachine]:
@@ -130,9 +198,12 @@ def get_dialog_state(state_machine: StateMachine) -> int:
         # dialog running and in the maximum allowed time
         if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
             dialog_state = RUNNING
+        # dialog not completed, user notified to resume the dialog
+        elif (now - last_time).seconds > 2*MAXIMUM_DIALOG_DURATION:
+            dialog_state = EXPIRED
         else:
             # dialog running but the maximum time elapsed
-            dialog_state = EXPIRED
+            dialog_state = NOTIFY
 
     return dialog_state
 
@@ -252,6 +323,25 @@ def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:
                                         intervention_component_id=dialog.intervention_component_id)
 
     return db_state_machine
+
+
+def save_user_to_db(user: Users):
+    """
+    Saves the Users object to the database. if the user id exists, a warning is displayed.
+    Args:
+        user: Users object to be stored
+
+    """
+    user_id = user.nicedayuid
+
+    # if a user exists already, print an error message
+    if check_if_user_exists(user_id):
+        logging.warning('User profile already in the DB')
+        return
+
+    session = get_db_session(DATABASE_URL)
+    session.merge(user)
+    session.commit()
 
 
 def save_state_machine_to_db(state_machine: StateMachine):

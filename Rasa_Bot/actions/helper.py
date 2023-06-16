@@ -119,8 +119,6 @@ def dialog_to_be_completed(user_id: int) -> bool:
         True if a dialog has to be completed, false otherwise
 
     """
-    # only the goal setting and the weekly reflection dialogs can be resumed, so we search
-    # only for the goal setting and the weekly reflection
 
     session = get_db_session(db_url=DATABASE_URL)
 
@@ -132,12 +130,8 @@ def dialog_to_be_completed(user_id: int) -> bool:
         .order_by(UserInterventionState.last_time.desc())
         .filter(
             UserInterventionState.users_nicedayuid == user_id,
-            UserInterventionState.completed.is_(False))
-        .filter(
-            (InterventionComponents
-             .intervention_component_name == Components.GOAL_SETTING)
-            | (InterventionComponents
-               .intervention_component_name == Components.WEEKLY_REFLECTION)
+            UserInterventionState.completed.is_(False),
+            UserInterventionState.last_time.isnot(None)
         )
         .first()
     )

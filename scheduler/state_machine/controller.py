@@ -6,9 +6,9 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_last_scheduled_occurrence, get_quit_date,
                                                get_start_date, is_new_week, plan_and_store,
                                                reschedule_dialog, retrieve_intervention_day,
-                                               revoke_execution, run_option_menu,
-                                               run_uncompleted_dialog, schedule_next_execution,
-                                               store_completed_dialog, update_execution_week)
+                                               revoke_execution, run_uncompleted_dialog,
+                                               schedule_next_execution, store_completed_dialog,
+                                               update_execution_week)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER ,FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
                                  MAX_PREPARATION_DURATION, EXECUTION_DURATION)
@@ -71,9 +71,8 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -143,9 +142,8 @@ class TrackingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -317,9 +315,8 @@ class BufferState(State):
         self.check_if_end_date(current_date)
 
     def on_user_trigger(self, dialog: str):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -490,9 +487,8 @@ class RelapseState(State):
                 self.set_new_state(ExecutionRunState(self.user_id))
 
     def on_user_trigger(self, dialog: str):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -582,9 +578,8 @@ class ClosingState(State):
                        phase_id=2)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,

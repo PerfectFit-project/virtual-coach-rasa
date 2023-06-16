@@ -26,23 +26,44 @@ slots:
 responses:
   utter_notifications_tracking_1:
     - text: "Vergeet vandaag niet om je rookmomenten bij te houden! ✍🏽"
+    - text: "Let er vandaag op dat je je rookmomenten noteert! ✍🏽"
+    - text: "Vergeet niet om vandaag bij te houden wanneer je rookt! ✍🏽"
   utter_notifications_tracking_2:
     - text: "Je kunt (aan het einde van de dag) in de app invullen hoeveel je gerookt hebt. Uitleg over hoe je dit kunt
             doen, kun je vinden in de handleiding die je gekregen hebt aan het begin van het Perfect Fit programma. 📋"
+    - text: "Je kunt (aan het einde van de dag) in de app aangeven hoeveel sigaretten je gerookt hebt. In de handleiding
+             van het Perfect Fit programma, die je aan het begin hebt gekregen, staat uitgelegd hoe je dit kunt
+             doen. 📋"
+    - text: "Je kunt (aan het einde van de dag) in de app te registreren hoeveel sigaretten je hebt gerookt. In de
+            handleiding van het Perfect Fit programma, die je aan het begin hebt ontvangen, vind je instructies over hoe
+            je dit kunt doen. 📋"
   utter_notifications_tracking_3:
     - text: "Vergeet ook niet om je horloge weer om te doen. ⌚ Ben je benieuwd hoe actief je vandaag bent? Dan hoef je
             alleen maar op je horloge te kijken!"
+    - text: "Vergeet niet om je horloge weer om te doen. ⌚ Als je wilt weten hoe actief je vandaag bent geweest, kun je
+             op je horloge kijken! "
+    - text: "Vergeet ook niet om je horloge om te doen. ⌚ Wil je weten hoe actief je vandaag bent geweest? Kijk dan
+             gewoon op je horloge!"
 
 # Step goal notification
   utter_notifications_step_goal_1:
     - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm op weer!"
+    - text: "Voor vandaag heb je als stappendoel:  {notifications_daily_step_goal}.
+             🚶🏿 Succes, zet 'm op!"
+    - text: "Vandaag is je stappendoel: {notifications_daily_step_goal}. 🚶🏿 Je kunt het!"
   utter_notifications_step_goal_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt, kijk dan op je horloge. ⌚"
+    - text: "Als je wilt weten hoeveel stappen je al gezet hebt, kun je op je horloge kijken. ⌚"
+    - text: "Door op je horloge te kijken, kun je zien hoeveel stappen je al hebt gezet. ⌚"
 
 # Finish dialog notification
   utter_notifications_finish_dialog_1:
     - text: "Hoi! Je hebt al een tijdje niet geantwoord. Heb je misschien nog tijd om ons gesprek af te maken? ☺️ 
             Je was al goed op weg!"
+    - text: "Hé daar! Ik heb al even niets van je gehoord. Is er nog tijd om ons gesprek af te ronden? ☺
+            Je was al goed bezig!"
+    - text: "Hallo! Ik heb een tijdje niets van je gehoord. Zou je nog even tijd hebben om met mij verder te praten? ☺
+             Je hebt al een goed begin gemaakt!"
   utter_notifications_finish_dialog_2:
     - text: "Als je klaar bent om het gesprek af te maken, typ 'verder' in het gesprek."
 
@@ -63,11 +84,17 @@ responses:
   utter_notifications_step_goal_intensive_pa_1:
     - text: "Deze week is je doel om elke dag 8000 stappen te zetten 🚶🏿 en minimaal {notifications_pa_intensity_goal}
              minuten intensief te bewegen. 🏊 🚴 🤸"
+    - text: "Je doel voor deze week is om elke dag 8000 stappen te zetten 🚶🏿 en ten minste
+             {notifications_pa_intensity_goal}  minuten intensief te bewegen 🏊 🚴 🤸"
+    - text: "Het weekdoel is om dagelijks 8000 stappen te zetten 🚶🏿 en ten minste
+             {notifications_pa_intensity_goal} minuten intensief te bewegen 🏊 🚴🤸 "
   utter_notifications_step_goal_intensive_pa_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
             je horloge. ⌚ "
   utter_notifications_step_goal_intensive_pa_3:
     - text: "Blijf doorzetten! 💪🏼"
+    - text: "Blijf zo doorgaan! 💪🏼"
+    - text: "Ga zo door! 💪🏼"
 
 # New quit date notification
   utter_notifications_new_quit_date_notification_1:

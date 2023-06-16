@@ -78,7 +78,7 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"closing_lapse_info_correct": None}
 
-        if value == 2:
+        if value == '2':
             closing_smoking_status = 2
             return {"closing_smoking_status": closing_smoking_status,
                     "closing_lapse_info_correct": value}

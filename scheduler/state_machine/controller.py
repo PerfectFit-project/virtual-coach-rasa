@@ -6,8 +6,7 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
                                                retrieve_intervention_day, revoke_execution,
-                                               run_option_menu, run_uncompleted_dialog,
-                                               schedule_next_execution,
+                                               run_uncompleted_dialog, schedule_next_execution,
                                                store_completed_dialog, update_execution_week)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA,

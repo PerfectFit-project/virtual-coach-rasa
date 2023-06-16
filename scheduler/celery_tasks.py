@@ -9,9 +9,10 @@ from django.core.cache import cache
 from niceday_client import NicedayClient
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
-                                 RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL)
-from celery_utils import (check_if_task_executed, check_if_user_exists, create_new_user,
-                          get_component_name, get_user_fsm, get_dialog_state,
+                                 RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL,
+                                 MAXIMUM_INACTIVE_DAYS)
+from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
+                          create_new_user, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, send_fsm_event,
                           set_dialog_running_status)
 from virtual_coach_db.helper.definitions import NotificationsTriggers
@@ -48,8 +49,13 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     When celery is ready, the watchdogs for the new day notification
     and for the dialogs status check are started
     """
+    # notify the FSM that a new day started
     sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
+    # check if the user is active and send notification
+    sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
+    # check if a dialog has been completed
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
+    # check if new connections are pending and, in case, accept them
     sender.add_periodic_task(INVITES_CHECK_INTERVAL, check_new_connection_request.s())
 
 
@@ -108,6 +114,21 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             reschedule_dialog.apply_async(args=[fsm.machine_id,
                                                 dialog,
                                                 next_day])
+
+
+@app.task
+def check_inactivity():
+    """
+    This task checks for all the users if they have been inactive for at least 10 days.
+    If they have been inactive, the correspondent notification is sent
+    Args:
+    """
+    current_date = date.today()
+    state_machines = get_all_fsm()
+    for item in state_machines:
+        if not check_if_user_active(item.machine_id, current_date, MAXIMUM_INACTIVE_DAYS):
+            trigger_intent.apply_async(args=[item.machine_id,
+                                             NotificationsTriggers.INACTIVE_USER_NOTIFICATION])
 
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
@@ -246,28 +267,34 @@ def user_trigger_dialog(self,  # pylint: disable=unused-argument
 def trigger_intent(self,  # pylint: disable=unused-argument
                    user_id: int,
                    trigger: str,
-                   dialog_state: bool = None):
+                   dialog_status: bool = None):
     """
     This task sends a trigger to Rasa immediately.
     Args:
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
-        dialog_state: set the dialog state in the fsm
+        dialog_status: set the dialog state in the fsm
     """
-    print('Trying task')
+
+    # nake sure that a dialog is not running when sending the intent
+    user_fsm = get_user_fsm(user_id)
+    current_dialog_state = get_dialog_state(user_fsm)
+    if current_dialog_state == RUNNING:
+        return
+
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
     response = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
-    if response != 200:
+    if response.status_code != 200:
         raise Exception()
 
-    if dialog_state is not None:
+    if dialog_status is not None:
         # the state machine status as to be marked as not running
         # to allow new dialogs to be administered
-        set_dialog_running_status(user_id, dialog_state)
+        set_dialog_running_status(user_id, dialog_status)
 
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
@@ -283,7 +310,7 @@ def pause_conversation(self,  # pylint: disable=unused-argument
     data = '[{"event": "pause"}]'
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
 
-    if response != 200:
+    if response.status_code != 200:
         raise Exception()
 
 
@@ -331,7 +358,7 @@ def resume(self,  # pylint: disable=unused-argument
     data = '[{"event": "resume"}]'
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
 
-    if response != 200:
+    if response.status_code != 200:
         raise Exception()
 
 
@@ -351,5 +378,5 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
     trigger_intervention_component.apply_async(args=[user_id, trigger])
 
-    if response != 200:
+    if response.status_code != 200:
         raise Exception()

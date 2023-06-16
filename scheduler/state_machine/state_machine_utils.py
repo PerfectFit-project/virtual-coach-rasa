@@ -305,6 +305,23 @@ def get_next_planned_date(user_id: int,
     return next_planned_date
 
 
+def get_pa_group(user_id: int) -> int:
+    """
+        Get the physical activity group of a user.
+
+        Args:
+            user_id: the id of the user
+
+        Returns:
+                The PA group (1 or 2)
+        """
+    session = get_db_session(DATABASE_URL)
+
+    user = (session.query(Users).filter(Users.users_nicedayuid == user_id).first())
+
+    return user.pa_intervention_group
+
+
 def get_phase_object(phase_name: str) -> InterventionPhases:
     """
     Get the phase as stored in the DB from the phase name.

@@ -52,7 +52,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     # notify the FSM that a new day started
     sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
     # check if the user is active and send notification
-    sender.add_periodic_task(crontab(hour=15, minute=40), check_inactivity.s())
+    sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if a dialog has been completed
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them
@@ -285,7 +285,11 @@ def trigger_intent(self,  # pylint: disable=unused-argument
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
-    requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    response = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+
+    if response.status_code != 200:
+        # if the request failed resend it
+        requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
     if dialog_status is not None:
         # the state machine status as to be marked as not running

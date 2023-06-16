@@ -15,7 +15,7 @@ from niceday_client import NicedayClient
 
 NICEDAY_API_URL = os.getenv('NICEDAY_API_ENDPOINT')
 # proportional factor between the number of words in a message and the time to wait before the
-# newt message is delivered
+# next message is delivered
 WORDS_PER_SECOND = 5
 # maximum delay between a message and the next one
 MAX_DELAY = 10

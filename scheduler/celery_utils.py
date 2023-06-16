@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
                                  NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
@@ -26,6 +26,39 @@ def check_if_user_exists(user_id: int) -> bool:
     users = (session.query(Users).filter(Users.nicedayuid == user_id).all())
 
     if len(users) > 0:
+        return True
+
+    return False
+
+
+def check_if_user_active(user_id: int, current_date: date, days_number) -> bool:
+    """
+   Check if a user has been inactive (a dialog has been completed) for a certain number of days.
+    Args:
+        user_id: the ID of the user
+        current_date: the date to start looking backward from
+        days_number: number of days to check the inactivity
+    Returns: True if the user has been active, false otherwise
+    """
+    session = get_db_session(DATABASE_URL)
+
+    latest_date = current_date - timedelta(days=days_number)
+
+    # get the latest completed dialog
+    last_completed = (
+        session.query(
+            UserInterventionState
+        ).order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(True),
+            UserInterventionState.last_time > latest_date
+        )
+        .first()
+    )
+
+    # there is at least one completed dialog in past days
+    if last_completed is not None:
         return True
 
     return False

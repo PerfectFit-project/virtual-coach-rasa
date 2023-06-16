@@ -72,9 +72,8 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -144,9 +143,8 @@ class TrackingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -296,9 +294,8 @@ class BufferState(State):
         self.check_if_end_date(current_date)
 
     def on_user_trigger(self, dialog: str):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -512,9 +509,8 @@ class RelapseState(State):
                 self.set_new_state(ExecutionRunState(self.user_id))
 
     def on_user_trigger(self, dialog: str):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -582,9 +578,8 @@ class ClosingState(State):
                        phase_id=2)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,

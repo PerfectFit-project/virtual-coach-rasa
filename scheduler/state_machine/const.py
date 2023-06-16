@@ -31,4 +31,4 @@ TIMEZONE = tz.gettz("Europe/Amsterdam")
 NOT_RUNNING = 0
 RUNNING = 1
 EXPIRED = 2
-NOTIFIED = 3
+NOTIFY = 3

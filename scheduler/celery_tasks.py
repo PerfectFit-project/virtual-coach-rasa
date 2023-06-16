@@ -9,7 +9,7 @@ from django.core.cache import cache
 from niceday_client import NicedayClient
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
-                                 RUNNING, EXPIRED, NOTIFIED, INVITES_CHECK_INTERVAL,
+                                 RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL,
                                  MAXIMUM_INACTIVE_DAYS)
 from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
                           create_new_user, get_component_name, get_user_fsm, get_dialog_state,
@@ -102,10 +102,10 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
         dialog_state = get_dialog_state(fsm)
         dialog = fsm.dialog_state.get_current_dialog()
 
-        if dialog_state == EXPIRED:
+        if dialog_state == NOTIFY:
             trigger_intent.apply_async(args=[fsm.machine_id,
                                              NotificationsTriggers.FINISH_DIALOG_NOTIFICATION])
-        if dialog_state == NOTIFIED:
+        if dialog_state == EXPIRED:
             # the dialog is idle now
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)

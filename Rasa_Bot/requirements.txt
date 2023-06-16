@@ -10,4 +10,4 @@ rasa==3.2.8 # NB! when updating, make sure to also update:
             # * rasa base image in actions/Dockerfile,
             # * version number in nlu.yml, story files, rules.yml,
             # * format of stories, domain.yml etc. if necessary
-rocketchat-API==1.16.0
+rocketchat-API==1.25.0

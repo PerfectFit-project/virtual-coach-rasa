@@ -266,8 +266,8 @@ responses:
             doelen te bereiken! 🤝"
   utter_goal_setting_choose_date_3:
     - text: "Kies dus een datum tussen {first_possible_quit_date} en {last_possible_quit_date}.
-            Welke datum wil je stoppen met roken? Typ de datum op deze manier: dd/mm/jjjj. Dus eerst de
-            dag/dan de maand/en dan het jaar. Je typt in totaal dus 8 getallen."
+            Welke datum wil je stoppen met roken? Typ de datum op deze manier: dd-mm-jjjj. Dus eerst de
+            dag- dan de maand- en dan het jaar. Je typt in totaal dus 8 getallen."
   utter_goal_setting_choose_date_4:
     - text: "Super! Je hebt nu een stop-datum. Deze is op {chosen_quit_date_slot}."
     - text: "Fantastisch! Je hebt nu een datum om naar uit te kijken. Je stopdatum is op {chosen_quit_date_slot}."
@@ -610,11 +610,11 @@ responses:
     - text: "Ik ga je helpen met het halen van je beweegdoelen. Ik zal je de komende tijd meer uitleg geven over bewegen
             en je tips en oefeningen geven. 💡 Deze oefeningen helpen je om vol te blijven houden!"
   utter_goal_setting_wrong_date:
-    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13/07/2023.
+    - text: "Het lijkt erop dat de datum niet geldig is. Een voorbeeld van hoe je de datum kunt typen is: 13-07-2023.
             Dus eerst de dag, dan de maand, en dan het jaar. Je typt in totaal dus 8 getallen. Kun je je stop-datum nog
             een keer typen?"
     - text: "Het lijkt erop dat de datum die je hebt ingevoerd niet geldig is. Dit is een voorbeeld van hoe de datum 
-            kunt invoeren: 13/07/2023. Dit betekent dat je de dag, de maand en het jaar in deze volgorde moet typen.
+            kunt invoeren: 13-07-2023. Dit betekent dat je de dag, de maand en het jaar in deze volgorde moet typen.
             Zou je alsjeblieft je stop-datum opnieuw kunnen invoeren met 8 cijfers in deze volgorde?"
 
 # 4 closing

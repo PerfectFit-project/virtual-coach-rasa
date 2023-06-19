@@ -90,7 +90,14 @@ responses:
              {notifications_pa_intensity_goal} minuten intensief te bewegen 🏊 🚴🤸 "
   utter_notifications_step_goal_intensive_pa_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
-            je horloge. ⌚ "
+            je horloge. ⌚ Uitleg over hoe je dit kunt doen, kun je vinden in de handleiding die je gekregen hebt aan 
+            het begin van het Perfect Fit programma. 📋"
+    - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
+            je horloge. ⌚ In de handleiding van het Perfect Fit programma, die je aan het begin hebt gekregen, staat
+            uitgelegd hoe je dit kunt doen. 📋"
+    - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
+            je horloge. ⌚ In de handleiding van het Perfect Fit programma, die je aan het begin hebt ontvangen, vind je
+            instructies over hoe je dit kunt doen. 📋"
   utter_notifications_step_goal_intensive_pa_3:
     - text: "Blijf doorzetten! 💪🏼"
     - text: "Blijf zo doorgaan! 💪🏼"

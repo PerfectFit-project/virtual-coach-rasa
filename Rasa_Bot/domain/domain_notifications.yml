@@ -78,7 +78,7 @@ responses:
             dingen opgeschreven die je kunt doen om jezelf te helpen bij het stoppen met roken. 📝 Heb je al deze dingen
             kunnen doen?"
   utter_notifications_new_quit_date_tomorrow_2:
-    - text: "Je kunt mij ook altijd een berichtje sturen. Ik sta voor je klaar! Alvast veel succes! 🍀"
+    - text: "Alvast veel succes! 🍀"
 
 # Step goal and intensive pa notification
   utter_notifications_step_goal_intensive_pa_1:
@@ -108,7 +108,7 @@ responses:
     - text: "Hallo! Vandaag is je stop-dag. 📅 Stoppen met roken is niet altijd makkelijk, maar blijf doorzetten. Wees
             lief voor jezelf en zet 'm op! Elke sigaret niet gerookt, is een overwinning. 🏆"
   utter_notifications_new_quit_date_notification_2:
-    - text: "Je kunt mij ook altijd een berichtje sturen, mocht je me nodig hebben. Succes! 💪🏼"
+    - text: "Succes! 💪🏼"
 
 #forms:
 

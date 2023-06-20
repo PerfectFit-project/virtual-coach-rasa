@@ -41,7 +41,7 @@ responses:
     - text: "Vergeet ook niet om je horloge weer om te doen. ⌚ Ben je benieuwd hoe actief je vandaag bent? Dan hoef je
             alleen maar op je horloge te kijken!"
     - text: "Vergeet niet om je horloge weer om te doen. ⌚ Als je wilt weten hoe actief je vandaag bent geweest, kun je
-             op je horloge kijken! "
+             op je horloge kijken!"
     - text: "Vergeet ook niet om je horloge om te doen. ⌚ Wil je weten hoe actief je vandaag bent geweest? Kijk dan
              gewoon op je horloge!"
 
@@ -86,7 +86,7 @@ responses:
     - text: "Je doel voor deze week is om elke dag 8000 stappen te zetten 🚶🏿 en ten minste
              {notifications_pa_intensity_goal}  minuten intensief te bewegen 🏊 🚴 🤸"
     - text: "Het weekdoel is om dagelijks 8000 stappen te zetten 🚶🏿 en ten minste
-             {notifications_pa_intensity_goal} minuten intensief te bewegen 🏊 🚴🤸 "
+             {notifications_pa_intensity_goal} minuten intensief te bewegen 🏊 🚴🤸"
   utter_notifications_step_goal_intensive_pa_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
             je horloge. ⌚ Uitleg over hoe je dit kunt doen, kun je vinden in de handleiding die je gekregen hebt aan 

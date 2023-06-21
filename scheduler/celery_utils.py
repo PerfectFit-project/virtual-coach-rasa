@@ -1,12 +1,13 @@
-from datetime import date, datetime
-from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION,
+from datetime import date, datetime, timedelta
+from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
                                  NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
                                       BufferState, ExecutionRunState, RelapseState, ClosingState)
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
-from virtual_coach_db.dbschema.models import InterventionComponents, Users, UserStateMachine
+from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
+                                              UserStateMachine)
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -28,6 +29,63 @@ def check_if_user_exists(user_id: int) -> bool:
         return True
 
     return False
+
+
+def check_if_user_active(user_id: int, current_date: date, days_number) -> bool:
+    """
+   Check if a user has been inactive (a dialog has been completed) for a certain number of days.
+    Args:
+        user_id: the ID of the user
+        current_date: the date to start looking backward from
+        days_number: number of days to check the inactivity
+    Returns: True if the user has been active, false otherwise
+    """
+    session = get_db_session(DATABASE_URL)
+
+    latest_date = current_date - timedelta(days=days_number)
+
+    # get the latest completed dialog
+    last_completed = (
+        session.query(
+            UserInterventionState
+        ).order_by(UserInterventionState.last_time.desc())
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(True),
+            UserInterventionState.last_time > latest_date
+        )
+        .first()
+    )
+
+    # there is at least one completed dialog in past days
+    if last_completed is not None:
+        return True
+
+    return False
+
+
+def check_if_task_executed(task_uuid: str) -> bool:
+    """
+    Check if the dialog triggered by a scheduled task has been already completed.
+    In the user_intervention_state table, the tasks uuids are logged and assigned
+    to the scheduled dialog they have to trigger.
+    Args:
+        task_uuid: the ID of the task
+    Returns: True if the dialog has been already completed
+    """
+    session = get_db_session(DATABASE_URL)
+
+    tasks = (session.query(UserInterventionState)
+             .filter(
+        UserInterventionState.task_uuid == task_uuid,
+        UserInterventionState.completed.is_(False)
+    )
+             .all())
+
+    if len(tasks) > 0:
+        return False
+
+    return True
 
 
 def create_new_user(user_id: int):
@@ -173,9 +231,12 @@ def get_dialog_state(state_machine: StateMachine) -> int:
         # dialog running and in the maximum allowed time
         if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
             dialog_state = RUNNING
+        # dialog not completed, user notified to resume the dialog
+        elif (now - last_time).seconds > 2*MAXIMUM_DIALOG_DURATION:
+            dialog_state = EXPIRED
         else:
             # dialog running but the maximum time elapsed
-            dialog_state = EXPIRED
+            dialog_state = NOTIFY
 
     return dialog_state
 

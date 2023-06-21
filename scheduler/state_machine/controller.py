@@ -3,15 +3,15 @@ from datetime import date, datetime, timedelta
 from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
                                                get_next_planned_date, get_next_scheduled_occurrence,
-                                               get_last_scheduled_occurrence, get_quit_date,
-                                               get_start_date, is_new_week, plan_and_store,
-                                               reschedule_dialog, retrieve_intervention_day,
-                                               revoke_execution, run_option_menu,
+                                               get_quit_date, get_pa_group, get_start_date,
+                                               is_new_week, plan_and_store, reschedule_dialog,
+                                               retrieve_intervention_day, revoke_execution,
                                                run_uncompleted_dialog, schedule_next_execution,
                                                store_completed_dialog, update_execution_week)
-from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER ,FUTURE_SELF_INTRO, GOAL_SETTING,
+from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
-                                 MAX_PREPARATION_DURATION, EXECUTION_DURATION)
+                                 MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
+                                 EXECUTION_DURATION_WEEKS,TIME_DELTA_PA_NOTIFICATION)
 from state_machine.state import State
 from virtual_coach_db.helper.definitions import (Components, Notifications)
 
@@ -71,9 +71,8 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -143,9 +142,8 @@ class TrackingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -163,7 +161,7 @@ class TrackingState(State):
 
         start_date = get_start_date(self.user_id)
 
-        if(current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER:
+        if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER:
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)
@@ -207,7 +205,6 @@ class GoalsSettingState(State):
             # phase can be planned
             self.plan_buffer_phase_dialogs()
             self.plan_execution_start_dialog()
-            self.activate_pa_notifications()
 
         elif dialog == Components.FIRST_AID_KIT_VIDEO:
             logging.info('First aid kit completed, starting buffering state')
@@ -259,27 +256,6 @@ class GoalsSettingState(State):
                        planned_date=planned_date,
                        phase_id=1)
 
-    def activate_pa_notifications(self):
-        # the notifications start from the dey after the goal setting dialog has been completed
-        # and go on every day until the end of the intervention. The intervention end date
-        # is 12 weeks from the quit date.
-        first_date = date.today() + timedelta(days=1)
-
-        # the time span to quit date
-        buffer_length = (get_quit_date(self.user_id) - first_date).days
-
-        total_duration = buffer_length + EXECUTION_DURATION
-        last_date = first_date + timedelta(days=total_duration)
-
-        for day in range((last_date - first_date).days):
-            planned_date = create_new_date(start_date=first_date,
-                                           time_delta=day)
-
-            plan_and_store(user_id=self.user_id,
-                           dialog=Notifications.PA_NOTIFICATION,
-                           planned_date=planned_date,
-                           phase_id=1)
-
     def run(self):
 
         start_date = get_start_date(self.user_id)
@@ -317,9 +293,8 @@ class BufferState(State):
         self.check_if_end_date(current_date)
 
     def on_user_trigger(self, dialog: str):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -363,15 +338,18 @@ class ExecutionRunState(State):
             logging.info('Weekly reflection completed')
 
             week = get_execution_week(user_id=self.user_id)
-            
+
             # on the first week, the execution of the general activity dialog 
             # has to be planned for week 2
             if week == 1:
                 schedule_next_execution(user_id=self.user_id,
+                                        dialog=Components.GENERAL_ACTIVITY,
+                                        current_date=datetime.now(),
+                                        phase_id=2)
 
-                                      dialog=Components.GENERAL_ACTIVITY,
-                                      current_date=datetime.now(),
-                                      phase_id=2)
+                # after the weekly reflection is completed, the notifications
+                # for the next week are planned
+                self.schedule_pa_notifications()
 
             # if in week 3 or 8 of the execution, run future self after
             # completing the weekly reflection
@@ -381,8 +359,12 @@ class ExecutionRunState(State):
                                dialog=Components.FUTURE_SELF_SHORT,
                                phase_id=2)
 
+                # after the weekly reflection is completed, the notifications
+                # for the next week are planned
+                self.schedule_pa_notifications()
+
             # if in week 12, the execution is finished. Start the closing state
-            elif week == 12:
+            elif week >= EXECUTION_DURATION_WEEKS:
                 self.set_new_state(ClosingState(self.user_id))
 
             # in the other weeks, plan the next execution of the weekly reflection
@@ -391,6 +373,10 @@ class ExecutionRunState(State):
                                         dialog=Components.WEEKLY_REFLECTION,
                                         current_date=datetime.now(),
                                         phase_id=2)
+
+                # after the weekly reflection is completed, the notifications
+                # for the next week are planned
+                self.schedule_pa_notifications()
 
         # after the completion of the future self, schedule the next weekly reflection
         elif dialog == Components.FUTURE_SELF_SHORT:
@@ -437,6 +423,39 @@ class ExecutionRunState(State):
     def run(self):
         logging.info("Running state %s", self.state)
 
+    def schedule_pa_notifications(self):
+        # the notifications are delivered according to the group of the user. Group 1 gets
+        # a notification with the steps goal every day. Group 2 gets a notification with steps
+        # and intensity goal once a wek, 4 days after the GA dialog. The group is determined during
+        # the GA dialog.
+
+        pa_group = get_pa_group(self.user_id)
+
+        if pa_group == LOW_PA_GROUP:
+
+            first_date = date.today() + timedelta(days=1)
+            # until the next GA dialog
+            last_date = first_date + timedelta(days=6)
+
+            for day in range((last_date - first_date).days):
+                planned_date = create_new_date(start_date=first_date,
+                                               time_delta=day)
+
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                               planned_date=planned_date,
+                               phase_id=2)
+
+        elif pa_group == HIGH_PA_GROUP:
+
+            planned_date = create_new_date(start_date=date.today(),
+                                           time_delta=TIME_DELTA_PA_NOTIFICATION)
+
+            plan_and_store(user_id=self.user_id,
+                           dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
+                           planned_date=planned_date,
+                           phase_id=2)
+
 
 class RelapseState(State):
 
@@ -480,7 +499,6 @@ class RelapseState(State):
                 # a notification on the day before and on the new date are planned.
                 # Then we go back to the buffer state
                 self.reschedule_weekly_reflection(quit_date)
-                self.extend_pa_notifications(quit_date)
                 self.plan_new_date_notifications(quit_date)
                 self.set_new_state(BufferState(self.user_id))
 
@@ -490,9 +508,8 @@ class RelapseState(State):
                 self.set_new_state(ExecutionRunState(self.user_id))
 
     def on_user_trigger(self, dialog: str):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -535,28 +552,6 @@ class RelapseState(State):
                                     current_date=quit_datetime,
                                     phase_id=2)
 
-    def extend_pa_notifications(self, quit_date: date):
-        # the notifications start from the dey after the goal setting dialog has been completed
-        # and go on every day until the end of the intervention. The intervention end date
-        # is 12 weeks from the quit date.
-
-        tomorrow = date.today() + timedelta(days=1)
-        additional_days = (quit_date - tomorrow).days
-
-        component = get_intervention_component(Notifications.PA_NOTIFICATION)
-
-        last_planned = get_last_scheduled_occurrence(self.user_id,
-                                                     component.intervention_component_id)
-
-        for day in range(additional_days):
-            planned_date = create_new_date(start_date=last_planned.next_planned_date,
-                                           time_delta=day)
-
-            plan_and_store(user_id=self.user_id,
-                           dialog=Notifications.PA_NOTIFICATION,
-                           planned_date=planned_date,
-                           phase_id=2)
-
 
 class ClosingState(State):
 
@@ -582,9 +577,8 @@ class ClosingState(State):
                        phase_id=2)
 
     def on_user_trigger(self, dialog):
-        # in this phase no dialog can be resumed
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_option_menu(self.user_id)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,

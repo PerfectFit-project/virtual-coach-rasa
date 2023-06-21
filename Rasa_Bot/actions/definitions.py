@@ -119,6 +119,12 @@ activities_categories = {1: 'self-related',
                          4: 'reinforcement',
                          5: 'motivational'}
 
+# celery tasks
+# trigger an intent immediately
+TRIGGER_INTENT = 'celery_tasks.trigger_intent'
+# pause the conversation and trigger a new component afterwards
+PAUSE_AND_TRIGGER = 'celery_tasks.pause_and_trigger'
+
 
 class FsmStates:
     ONBOARDING = "Onboarding"

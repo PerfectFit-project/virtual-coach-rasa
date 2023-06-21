@@ -7,7 +7,7 @@ from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
 from virtual_coach_db.helper.definitions import VideoLinks, Components, ComponentsTriggers
 from . import validator
-from .definitions import REDIS_URL
+from .definitions import PAUSE_AND_TRIGGER, REDIS_URL
 from .helper import get_latest_bot_utterance
 
 celery = Celery(broker=REDIS_URL)
@@ -73,10 +73,10 @@ class DelayedMessage(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        new_intent = 'EXTERNAL_done_with_video'
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=30))
+        new_intent = ComponentsTriggers.DONE_VIDEO
+        time = datetime.datetime.now() + datetime.timedelta(seconds=30)
+        celery.send_task(PAUSE_AND_TRIGGER,
+                         (user_id, new_intent, time))
         return []
 
 

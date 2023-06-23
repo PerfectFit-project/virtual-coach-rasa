@@ -67,20 +67,20 @@ Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, 
 
 ## Sources
 
-Our dialogs are based on the following sources:
+Our dialogs and algorithms therein are based on the following sources:
 
-Albers N. 2022. Reinforcement learning-based persuasion for a conversational agent to support behavior change: code. DOI 10.5281/zenodo.6319356.
+   Albers N. 2022. Reinforcement learning-based persuasion for a conversational agent to support behavior change: code. https://doi.org/10.5281/zenodo.6319356.
 
-Albers, N., Hizli, B., Scheltinga, B. L., Meijer, E., & Brinkman, W. P. (2023). Setting physical activity goals with a virtual coach: vicarious experiences, personalization and acceptance. Journal of Medical Systems, 47(1), 15.
+   Albers, N., Hizli, B., Scheltinga, B. L., Meijer, E., & Brinkman, W. P. (2023). Setting physical activity goals with a virtual coach: vicarious experiences, personalization and acceptance. Journal of Medical Systems, 47(1), 15.
 
-Albers, N., Neerincx, M. A., & Brinkman, W. P. (2023, May). Persuading to Prepare for Quitting Smoking with a Virtual Coach: Using States and User Characteristics to Predict Behavior. In Proceedings of the 2023 International Conference on Autonomous Agents and Multiagent Systems (pp. 717-726).
+   Albers, N., Neerincx, M. A., & Brinkman, W. P. (2023, May). Persuading to Prepare for Quitting Smoking with a Virtual Coach: Using States and User Characteristics to Predict Behavior. In Proceedings of the 2023 International Conference on Autonomous Agents and Multiagent Systems (pp. 717-726).
 
-Godin, G. (2011). The Godin-Shephard leisure-time physical activity questionnaire. The Health & Fitness Journal of Canada, 4(1), 18-22.
+   Godin, G. (2011). The Godin-Shephard leisure-time physical activity questionnaire. The Health & Fitness Journal of Canada, 4(1), 18-22.
 
-Hizli B (2022) Goal-setting dialogue for physical activity with a virtual coach: code. https://doi.org/10.5281/zenodo.6647381. https://github.com/PerfectFit-project/goal_setting_virtual_coach.
+   Hizli B (2022) Goal-setting dialogue for physical activity with a virtual coach: code. https://doi.org/10.5281/zenodo.6647381. https://github.com/PerfectFit-project/goal_setting_virtual_coach.
 
-Hizli, B., Albers, N., & Brinkman, W.-P. (2022). Data and code underlying the master thesis: Goal-setting dialogue for physical activity with a virtual coach (Version 1) [Data set]. 4TU.ResearchData. https://doi.org/10.4121/20047328.V1
+   Hizli, B., Albers, N., & Brinkman, W.-P. (2022). Data and code underlying the master thesis: Goal-setting dialogue for physical activity with a virtual coach (Version 1) [Data set]. 4TU.ResearchData. https://doi.org/10.4121/20047328.V1
 
-Leipold, N., Lurz, M., Wintergerst, M., & Groh, G. (2022). Goal-Setting Characteristics of Nutrition-Related mHealth Systems: A Morphological Analysis. In ECIS 2022-30TH EUROPEAN CONFERENCE ON INFORMATION SYSTEMS.
+   Leipold, N., Lurz, M., Wintergerst, M., & Groh, G. (2022). Goal-Setting Characteristics of Nutrition-Related mHealth Systems: A Morphological Analysis. In ECIS 2022-30TH EUROPEAN CONFERENCE ON INFORMATION SYSTEMS.
 
-McAuley, E. (1993). Self-efficacy and the maintenance of exercise participation in older adults. Journal of behavioral medicine, 16(1), 103-113.
+   McAuley, E. (1993). Self-efficacy and the maintenance of exercise participation in older adults. Journal of behavioral medicine, 16(1), 103-113.

@@ -65,17 +65,14 @@ In case the new custom action code requires any libraries, these need to be adde
 ### Retraining when making changes to language model
 Any changes made to domain.yml, nlu.yml, config.yml, stories.yml, among others, require retraining the model via `rasa train --domain domain/`. It is important to pay attention to the Rasa version that is used for this training. If the Rasa version is changed, then the Rasa SDK version in the Dockerfile and the Rasa version in the docker-compose.yml file also need to be updated.
 
+
 ## Sources
 
-### Profile creation dialog
+### General activity dialog
 
-Albers, N., Hizli, B., Scheltinga, B. L., Meijer, E., & Brinkman, W. P. (2023). Setting physical activity goals with a virtual coach: vicarious experiences, personalization and acceptance. Journal of Medical Systems, 47(1), 15.
+Albers N. 2022. Reinforcement learning-based persuasion for a conversational agent to support behavior change: code. https://doi.org/10.5281/zenodo.6319356.
 
-Godin, G. (2011). The Godin-Shephard leisure-time physical activity questionnaire. The Health & Fitness Journal of Canada, 4(1), 18-22.
-
-Hizli, B., Albers, N., & Brinkman, W.-P. (2022). Data and code underlying the master thesis: Goal-setting dialogue for physical activity with a virtual coach (Version 1) [Data set]. 4TU.ResearchData. https://doi.org/10.4121/20047328.V1
-
-McAuley, E. (1993). Self-efficacy and the maintenance of exercise participation in older adults. Journal of Behavioral Medicine, 16(1), 103-113.
+Albers, N., Neerincx, M. A., & Brinkman, W. P. (2023, May). Persuading to Prepare for Quitting Smoking with a Virtual Coach: Using States and User Characteristics to Predict Behavior. In Proceedings of the 2023 International Conference on Autonomous Agents and Multiagent Systems (pp. 717-726).
 
 
 ### Goal-setting dialog
@@ -89,8 +86,12 @@ Hizli, B., Albers, N., & Brinkman, W.-P. (2022). Data and code underlying the ma
 Leipold, N., Lurz, M., Wintergerst, M., & Groh, G. (2022). Goal-Setting Characteristics of Nutrition-Related mHealth Systems: A Morphological Analysis. In ECIS 2022-30TH EUROPEAN CONFERENCE ON INFORMATION SYSTEMS.
 
 
-### General activity dialog
+### Profile creation dialog
 
-Albers N. 2022. Reinforcement learning-based persuasion for a conversational agent to support behavior change: code. https://doi.org/10.5281/zenodo.6319356.
+Albers, N., Hizli, B., Scheltinga, B. L., Meijer, E., & Brinkman, W. P. (2023). Setting physical activity goals with a virtual coach: vicarious experiences, personalization and acceptance. Journal of Medical Systems, 47(1), 15.
 
-Albers, N., Neerincx, M. A., & Brinkman, W. P. (2023, May). Persuading to Prepare for Quitting Smoking with a Virtual Coach: Using States and User Characteristics to Predict Behavior. In Proceedings of the 2023 International Conference on Autonomous Agents and Multiagent Systems (pp. 717-726).
+Godin, G. (2011). The Godin-Shephard leisure-time physical activity questionnaire. The Health & Fitness Journal of Canada, 4(1), 18-22.
+
+Hizli, B., Albers, N., & Brinkman, W.-P. (2022). Data and code underlying the master thesis: Goal-setting dialogue for physical activity with a virtual coach (Version 1) [Data set]. 4TU.ResearchData. https://doi.org/10.4121/20047328.V1
+
+McAuley, E. (1993). Self-efficacy and the maintenance of exercise participation in older adults. Journal of Behavioral Medicine, 16(1), 103-113.

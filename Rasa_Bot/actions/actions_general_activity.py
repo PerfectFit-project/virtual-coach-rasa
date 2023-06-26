@@ -210,7 +210,7 @@ class GetGeneralActivitiesOptions(Action):
 
         options = ["Typ " + str(i + 1) + " als je " +
                    available[i].intervention_activity_title +
-                   "wilt doen.\n"
+                   " wilt doen.\n"
                    for i in range(len(available))]
 
         sentence = ''.join(options)
@@ -402,7 +402,7 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
 
         options = ["Typ " + str(i + 1) + " als je " +
                    available[i].intervention_activity_title +
-                   "wilt doen.\n"
+                   " wilt doen.\n"
                    for i in range(len(available))]
 
         sentence = ''.join(options)
@@ -518,7 +518,7 @@ class LoadActivity(Action):
 
     async def run(self, dispatcher, tracker, domain):
 
-        chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
+        chosen_option = int(tracker.get_slot('general_activity_next_activity_slot')) - 1
         activities_slot = tracker.get_slot('rnd_activities_ids')
         user_id = tracker.current_state()['sender_id']
 

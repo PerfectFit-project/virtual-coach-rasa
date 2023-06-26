@@ -376,7 +376,7 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
     headers = {'Content-Type': 'application/json'}
     data = '[{"event": "resume"}]'
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
-    trigger_intervention_component.apply_async(args=[user_id, trigger])
+    trigger_intent.apply_async(args=[user_id, trigger])
 
     if response.status_code != 200:
         raise Exception()

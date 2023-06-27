@@ -559,7 +559,7 @@ class ClosingState(State):
     def __init__(self, user_id):
         super().__init__(user_id)
         self.user_id = user_id
-        self.state = State.CLOSING
+        self.state = State.COMPLETED
 
     def run(self):
         logging.info("Running state %s", self.state)

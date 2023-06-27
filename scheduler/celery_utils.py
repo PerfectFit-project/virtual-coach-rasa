@@ -2,7 +2,8 @@ from datetime import date, datetime
 from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
                                  NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
-                                      BufferState, ExecutionRunState, RelapseState, ClosingState)
+                                      BufferState, ExecutionRunState, RelapseState, ClosingState,
+                                      CompletedState)
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
@@ -272,6 +273,9 @@ def get_user_fsm(user_id: int) -> StateMachine:
 
     elif state_saved == State.CLOSING:
         state = ClosingState(user_id)
+
+    elif state_saved == State.COMPLETED:
+        state = CompletedState(user_id)
 
     else:
         state = OnboardingState(user_id)

@@ -594,9 +594,24 @@ class ClosingState(State):
 
         if dialog == Components.CLOSING_DIALOG:
             logging.info('Closing dialog completed. Intervention finished')
+            self.set_new_state(CompletedState(self.user_id))
 
     def on_dialog_rescheduled(self, dialog, new_date):
         reschedule_dialog(user_id=self.user_id,
                           dialog=dialog,
                           planned_date=new_date,
                           phase=2)
+
+
+class CompletedState(State):
+
+    def __init__(self, user_id):
+        super().__init__(user_id)
+        self.user_id = user_id
+        self.state = State.COMPLETED
+
+    def run(self):
+        logging.info("Running state %s", self.state)
+
+    def on_user_trigger(self, dialog):
+        return

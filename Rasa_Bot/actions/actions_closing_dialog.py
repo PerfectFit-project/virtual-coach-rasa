@@ -12,7 +12,7 @@ from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
-from .definitions import REDIS_URL, DATABASE_URL
+from .definitions import REDIS_URL, DATABASE_URL, NICEDAY_API_ENDPOINT
 from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
 
 
@@ -280,8 +280,8 @@ class ActionDisconnectUser(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        client = NicedayClient()
 
+        client = NicedayClient(NICEDAY_API_ENDPOINT)
         client.remove_contact(user_id)
 
         return []

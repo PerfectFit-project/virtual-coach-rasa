@@ -43,6 +43,6 @@ class ActionPauseOneMinute(Action):
 
         time = datetime.datetime.now() + datetime.timedelta(seconds=60)
         celery.send_task('celery_tasks.pause_and_resume',
-                         (user_id, time))
+                         (user_id, time, False))
 
         return []

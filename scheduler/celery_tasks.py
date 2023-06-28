@@ -317,16 +317,17 @@ def pause_conversation(self,  # pylint: disable=unused-argument
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def pause_and_resume(self,  # pylint: disable=unused-argument
                      user_id: int,
-                     time: datetime):
+                     time: datetime,
+                     dialog_status: bool = None):
     """
     This task sends a pause the dialog and schedules the resume.
     Args:
         user_id: the ID of the user to send the trigger to
-        trigger: the intent to be sent
         time: time for scheduling the dialog resume
+        dialog_status: set the dialog state in the fsm after resuming
     """
     pause_conversation.apply_async(args=[user_id])
-    resume.apply_async(args=[user_id], eta=time)
+    resume.apply_async(args=[user_id, dialog_status], eta=time)
 
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
@@ -347,11 +348,13 @@ def pause_and_trigger(self,  # pylint: disable=unused-argument
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def resume(self,  # pylint: disable=unused-argument
-           user_id: int):
+           user_id: int,
+           dialog_status: bool = None):
     """
     This task sends a resume event to Rasa.
     Args:
         user_id: the ID of the user to send the trigger to
+        dialog_status: set the dialog state in the fsm
     """
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
     headers = {'Content-Type': 'application/json'}
@@ -361,6 +364,10 @@ def resume(self,  # pylint: disable=unused-argument
     if response.status_code != 200:
         raise Exception()
 
+    if dialog_status is not None:
+        # the state machine status as to be marked as not running
+        # to allow new dialogs to be administered
+        set_dialog_running_status(user_id, dialog_status)
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def resume_and_trigger(self,  # pylint: disable=unused-argument

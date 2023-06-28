@@ -384,7 +384,7 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
-    response_trigger = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    response_intent = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
-    if response_trigger.status_code != 200:
+    if response_intent.status_code != 200:
         raise Exception()

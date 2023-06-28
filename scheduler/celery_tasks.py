@@ -375,8 +375,16 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
     headers = {'Content-Type': 'application/json'}
     data = '[{"event": "resume"}]'
-    response = requests.post(endpoint, headers=headers, data=data, timeout=60)
-    trigger_intervention_component.apply_async(args=[user_id, trigger])
+    response_resume = requests.post(endpoint, headers=headers, data=data, timeout=60)
 
-    if response.status_code != 200:
+    if response_resume.status_code != 200:
+        raise Exception()
+
+    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
+    headers = {'Content-Type': 'application/json'}
+    params = {'output_channel': 'niceday_trigger_input_channel'}
+    data = '{"name": "' + trigger + '" }'
+    response_trigger = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+
+    if response_trigger.status_code != 200:
         raise Exception()

@@ -87,6 +87,7 @@ rules:
     - active_loop: closing_lapse_info_correct_form
   steps:
   - action: closing_lapse_info_correct_form
+  - active_loop: null
   - slot_was_set:
     - closing_lapse_info_correct: 1
   - active_loop: null

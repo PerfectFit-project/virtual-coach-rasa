@@ -12,7 +12,7 @@ from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
-from .definitions import REDIS_URL, DATABASE_URL, NICEDAY_API_ENDPOINT
+from .definitions import DATABASE_URL, NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
 from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
 
 
@@ -79,7 +79,7 @@ class ValidateClosingLapseInfoCorrectForm(FormValidationAction):
             dispatcher.utter_message(response="utter_please_answer_1_2")
             return {"closing_lapse_info_correct": None}
 
-        if value == 2:
+        if value == '2':
             closing_smoking_status = 2
             return {"closing_smoking_status": closing_smoking_status,
                     "closing_lapse_info_correct": value}
@@ -226,9 +226,9 @@ class ActionClosingDelayedMessageAfterSmokeLapse(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DELAYED_MSG_LAPSE
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=10))
+        time = datetime.datetime.now() + datetime.timedelta(seconds=10)
+        celery.send_task(PAUSE_AND_TRIGGER,
+                         (user_id, new_intent, time))
         return []
 
 
@@ -241,9 +241,9 @@ class ActionClosingDelayedMessageAfterSmoke(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DELAYED_MSG_SMOKE
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent),
-                         eta=datetime.datetime.now() + datetime.timedelta(seconds=10))
+        time = datetime.datetime.now() + datetime.timedelta(seconds=10)
+        celery.send_task(PAUSE_AND_TRIGGER,
+                         (user_id, new_intent, time))
         return []
 
 

@@ -187,8 +187,8 @@ responses:
   utter_closing_smoke_lapse_4:
     - text: "Roken is heel verslavend. Maar jij hebt de moed om dit te veranderen!💪"
   utter_closing_smoke_lapse_5:
-    - text: "Een tijdje geleden hebben we samen nagedacht over wie je wilde zijn, als je zou stoppen met roken en meer
-             zou bewegen."
+    - text: "We hebben een paar keer samen nagedacht over wie je wilde zijn, als je zou stoppen met roken en meer zou
+             bewegen."
   utter_closing_smoke_lapse_6:
     - text: "Weet je nog hoe dat er uit zag? Probeer dat weer voor je te zien.💭"
   utter_closing_smoke_lapse_7:

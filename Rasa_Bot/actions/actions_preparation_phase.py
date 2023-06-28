@@ -29,7 +29,8 @@ class ExpectedTimeNextPart(Action):
 
         if len(DialogExpectedDuration[next_dialog]) == 1:
             duration = DialogExpectedDuration[next_dialog]
-            message = "Ik verwacht dat het volgende onderdeel " + str(duration) + " minuten zal duren.⏱️"
+            message = "Ik verwacht dat het volgende onderdeel " + str(duration) \
+                      + " minuten zal duren.⏱️"
         else:
             min_duration = DialogExpectedDuration[next_dialog][0]
             max_duration = DialogExpectedDuration[next_dialog][1]

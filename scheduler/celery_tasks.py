@@ -50,7 +50,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     and for the dialogs status check are started
     """
     # notify the FSM that a new day started
-    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
+    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(date.today()))
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if a dialog has been completed
@@ -98,7 +98,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
 
     for fsm in state_machines:
         dialog_state = get_dialog_state(fsm)
-        dialog = fsm.dialog_state.get_current_dialog()
+        logging.info(f"User ${fsm.machine_id} current dialog state ${dialog_state}")
 
         if dialog_state == NOTIFY:
             trigger_intent.apply_async(args=[fsm.machine_id,

@@ -20,6 +20,8 @@ from virtual_coach_db.helper.definitions import NotificationsTriggers
 app = Celery('celery_tasks', broker=REDIS_URL)
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
+# 1 month visibility. Temporary fix
+app.conf.broker_transport_options = {'visibility_timeout': 2678400}
 
 # Django configuration for cache memory usage
 CACHES = {

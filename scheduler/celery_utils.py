@@ -164,7 +164,8 @@ def get_all_fsm() -> List[StateMachine]:
 
 def get_all_fsm_from_db() -> List[UserStateMachine]:
     """
-       Get a list of state machines as saved in the DB for all the users
+       Get a list of state machines as saved in the DB for all the users. The users
+       who completed the intervention are excluded.
 
        Returns: A list of UserStateMachine objects representing the
        user_state_machine table on the DB
@@ -172,7 +173,9 @@ def get_all_fsm_from_db() -> List[UserStateMachine]:
        """
     session = get_db_session(DATABASE_URL)
 
-    fsm_db = (session.query(UserStateMachine).all())
+    fsm_db = (session.query(UserStateMachine)
+              .filter(UserStateMachine.state != State.COMPLETED)
+              .all())
 
     return fsm_db
 
@@ -232,7 +235,7 @@ def get_dialog_state(state_machine: StateMachine) -> int:
         if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
             dialog_state = RUNNING
         # dialog not completed, user notified to resume the dialog
-        elif (now - last_time).seconds > 2*MAXIMUM_DIALOG_DURATION:
+        elif (now - last_time).seconds > 2 * MAXIMUM_DIALOG_DURATION:
             dialog_state = EXPIRED
         else:
             # dialog running but the maximum time elapsed

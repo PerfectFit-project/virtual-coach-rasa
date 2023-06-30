@@ -232,7 +232,7 @@ def get_dialog_state(state_machine: StateMachine) -> int:
         if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
             dialog_state = RUNNING
         # dialog not completed, user notified to resume the dialog
-        elif (now - last_time).seconds > 2*MAXIMUM_DIALOG_DURATION:
+        elif (now - last_time).seconds > 2 * MAXIMUM_DIALOG_DURATION:
             dialog_state = EXPIRED
         else:
             # dialog running but the maximum time elapsed
@@ -316,6 +316,28 @@ def get_user_fsm(user_id: int) -> StateMachine:
     user_fsm = StateMachine(state, dialog_state)
 
     return user_fsm
+
+
+def get_scheduled_task_from_db() -> List[UserInterventionState]:
+    """
+    Get the list of all the tasks scheduled and not yet executed as they are stored in the DB.
+    Returns: A list of elements of type UserInterventionState. Each element contains the scheduled
+    dialog, the delivery time and the task uuid.
+    """
+
+    now = datetime.now().astimezone(TIMEZONE)
+
+    session = get_db_session(DATABASE_URL)
+
+    tasks = (session.query(UserInterventionState)
+             .filter(
+        UserInterventionState.completed.is_(False),
+        UserInterventionState.task_uuid.isnot(None),
+        UserInterventionState.next_planned_date.isnot(None),
+        UserInterventionState.next_planned_date >= now)
+             .all())
+
+    return tasks
 
 
 def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
@@ -436,3 +458,26 @@ def set_dialog_running_status(user_id: int, state: bool):
         user_fsm.dialog_state.set_to_idle()
 
     save_state_machine_to_db(user_fsm)
+
+
+def update_task_uuid_db(old_uuid: str, new_uuid: str):
+    """
+    Update the uuid of a scheduled task stored in the DB to a new one
+    Args:
+        old_uuid: uuid already stored in the DB
+        new_uuid: the uuid to be used
+
+    """
+
+    session = get_db_session(DATABASE_URL)
+
+    task = (session.query(UserInterventionState)
+            .filter(
+        UserInterventionState.task_uuid == old_uuid
+    )
+            .one_or_none())
+
+    if task is not None:
+        task.task_uuid = new_uuid
+
+        session.commit()

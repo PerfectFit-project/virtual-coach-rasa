@@ -309,7 +309,7 @@ responses:
     - text: "Dat is goed! "
   utter_general_activity_edit_2:
     - text: "Kun je in een paar zinnen vertellen wat je geleerd hebt van deze oefening? Dus wat je wilt onthouden van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos terechtkomen."
-    - text: "/Wat heb je geleerd van deze oefening? Kun je in een paar zinnen vertellen wat je graag wilt onthouden? Deze zinnen zullen uiteindelijk in je EHBO-doos bewaard worden."
+    - text: "Wat heb je geleerd van deze oefening? Kun je in een paar zinnen vertellen wat je graag wilt onthouden? Deze zinnen zullen uiteindelijk in je EHBO-doos bewaard worden."
     - text: "Kun je in een paar zinnen beschrijven wat je van deze oefening hebt geleerd? Dus wat wil je meenemen van deze oefening? Deze zinnen zullen uiteindelijk in je EHBO-doos komen."
     - text: "Kun je in een paar zinnen uitleggen wat je geleerd hebt van deze oefening? Wat is het belangrijkste wat je wilt onthouden van deze oefening? Deze zinnen zullen later worden opgeslagen in je EHBO-doos."
     - text: "Kun je in een paar zinnen beschrijven wat je geleerd hebt van deze oefening? Wat is het belangrijkste wat je wilt onthouden van deze oefening? Deze zinnen zullen later toegevoegd worden aan je EHBO-doos."

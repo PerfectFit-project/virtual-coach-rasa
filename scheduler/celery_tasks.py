@@ -2,7 +2,6 @@ import logging
 import requests
 from celery import Celery
 from celery.schedules import crontab
-from celery.signals import task_received, worker_init, after_task_publish
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from django.conf import settings
@@ -60,20 +59,17 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them
     sender.add_periodic_task(INVITES_CHECK_INTERVAL, check_new_connection_request.s())
-    restore_scheduled_tasks.apply_async(eta=datetime.now() + timedelta(seconds=20))
+    # check if there are tasks pending and cancelled from the scheduler queue
+    restore_scheduled_tasks.apply_async(eta=datetime.now() + timedelta(minutes=1))
 
 
 @app.task
 def restore_scheduled_tasks():
-    print('NOW')
     # get all the already scheduled tasks
     scheduled_task = app.control.inspect().scheduled()
     tasks_list = [task['request']['id']
                   for workers in scheduled_task
                   for task in scheduled_task[workers]]
-
-    for sched in tasks_list:
-        print(f'Task found: {sched}')
 
     # get all the tasks scheduled in the DB
     db_tasks = get_scheduled_task_from_db()
@@ -86,7 +82,7 @@ def restore_scheduled_tasks():
             new_task = trigger_scheduled_intervention_component.apply_async(
                 args=[db_task.users_nicedayuid,
                       db_task.intervention_component.intervention_component_trigger],
-                eta=db_task.next_planned_date)
+                eta=db_task.next_planned_date.astimezone(TIMEZONE))
 
             # update the uuid in the DB
             update_task_uuid_db(old_uuid=db_task.task_uuid, new_uuid=str(new_task.task_id))

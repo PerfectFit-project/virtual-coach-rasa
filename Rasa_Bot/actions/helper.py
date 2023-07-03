@@ -21,6 +21,8 @@ from .definitions import (AFTERNOON_SEND_TIME,
                           NUM_TOP_ACTIVITIES,
                           PROFILE_CREATION_CONF_SLOTS,
                           STEPS_URL,
+                          HR_URL,
+                          HR_INTENSITY_THRESHOLD,
                           TIMEZONE,
                           TOKEN_HEADER,
                           FsmStates)
@@ -1295,13 +1297,12 @@ def get_steps_data(user_id: int,
         end_date: end of the range of days to query. This day is not included in the interval.
 
     Returns: A list of dictionary containing, for each day, the date and the number of steps.
-
     """
 
     token = get_jwt_token(user_id)
 
-    query_params = {'start': str(start_date),
-                    'end': str(end_date)}
+    query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
+                    'end': end_date.strftime("%Y-%m-%dT%X")}
 
     headers = {TOKEN_HEADER: token}
 
@@ -1334,3 +1335,41 @@ def format_sensors_date(sensors_date: str) -> date:
     formatted_date = datetime.strptime(sensors_date, original_format).date()
 
     return formatted_date
+
+
+def get_intensity_minutes_data(user_id: int,
+                               start_date: date,
+                               end_date: date) -> Optional[int]:
+    """
+    Retrieves the intensity minutes data for a specific user within a given date range.
+
+    Args:
+        user_id (int): The ID of the user.
+        start_date (date): The start date of the data range.
+        end_date (date): The end date of the data range.
+
+    Returns:
+        Optional[int]: The total number of intensity minutes recorded during the specified
+        date range. Returns None if there was an error in retrieving or processing the data.
+    """
+
+    token = get_jwt_token(user_id)
+
+    query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
+                    'end': end_date.strftime("%Y-%m-%dT%X")}
+
+    headers = {TOKEN_HEADER: token}
+
+    res = requests.get(HR_URL, params=query_params, headers=headers, timeout=60)
+
+    try:
+        res_json = res.json()
+        intensity_minutes = 0
+        for hour in res_json:
+            intensity_minutes += sum([val > HR_INTENSITY_THRESHOLD for val in hour['values']])
+
+        return intensity_minutes
+
+    except ValueError:
+        logging.error(f"Error in returned value from sensors: '{res}'")
+        return None

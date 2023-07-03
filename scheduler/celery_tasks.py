@@ -20,6 +20,8 @@ from virtual_coach_db.helper.definitions import NotificationsTriggers
 app = Celery('celery_tasks', broker=REDIS_URL)
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
+# 1 month visibility. Temporary fix
+app.conf.broker_transport_options = {'visibility_timeout': 2678400}
 
 # Django configuration for cache memory usage
 CACHES = {
@@ -50,7 +52,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     and for the dialogs status check are started
     """
     # notify the FSM that a new day started
-    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(datetime.today()))
+    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(date.today()))
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if a dialog has been completed
@@ -98,7 +100,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
 
     for fsm in state_machines:
         dialog_state = get_dialog_state(fsm)
-        dialog = fsm.dialog_state.get_current_dialog()
+        logging.info(f"User ${fsm.machine_id} current dialog state ${dialog_state}")
 
         if dialog_state == NOTIFY:
             trigger_intent.apply_async(args=[fsm.machine_id,
@@ -317,16 +319,17 @@ def pause_conversation(self,  # pylint: disable=unused-argument
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def pause_and_resume(self,  # pylint: disable=unused-argument
                      user_id: int,
-                     time: datetime):
+                     time: datetime,
+                     dialog_status: bool = None):
     """
     This task sends a pause the dialog and schedules the resume.
     Args:
         user_id: the ID of the user to send the trigger to
-        trigger: the intent to be sent
         time: time for scheduling the dialog resume
+        dialog_status: set the dialog state in the fsm after resuming
     """
     pause_conversation.apply_async(args=[user_id])
-    resume.apply_async(args=[user_id], eta=time)
+    resume.apply_async(args=[user_id, dialog_status], eta=time)
 
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
@@ -347,11 +350,13 @@ def pause_and_trigger(self,  # pylint: disable=unused-argument
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def resume(self,  # pylint: disable=unused-argument
-           user_id: int):
+           user_id: int,
+           dialog_status: bool = None):
     """
     This task sends a resume event to Rasa.
     Args:
         user_id: the ID of the user to send the trigger to
+        dialog_status: set the dialog state in the fsm
     """
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
     headers = {'Content-Type': 'application/json'}
@@ -361,6 +366,10 @@ def resume(self,  # pylint: disable=unused-argument
     if response.status_code != 200:
         raise Exception()
 
+    if dialog_status is not None:
+        # the state machine status as to be marked as not running
+        # to allow new dialogs to be administered
+        set_dialog_running_status(user_id, dialog_status)
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def resume_and_trigger(self,  # pylint: disable=unused-argument
@@ -384,8 +393,7 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'niceday_trigger_input_channel'}
     data = '{"name": "' + trigger + '" }'
-    response_trigger = requests.post(endpoint, headers=headers, params=params,
-                                     data=data, timeout=60)
+    response_intent = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
-    if response_trigger.status_code != 200:
+    if response_intent.status_code != 200:
         raise Exception()

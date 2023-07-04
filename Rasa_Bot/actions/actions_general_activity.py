@@ -14,7 +14,7 @@ from .definitions import (activities_categories, COMMITMENT, CONSENSUS,
                           REFLECTIVE_QUESTION_COMMITMENT,
                           REFLECTIVE_QUESTION_COMMITMENT_IDENTITY,
                           REFLECTIVE_QUESTION_CONSENSUS,
-                          REDIS_URL)
+                          RABBITMQ_URL)
 from .helper import (get_latest_bot_utterance,
                      get_possible_activities,
                      get_user_intervention_activity_inputs,
@@ -26,7 +26,7 @@ from typing import Any, Dict, Text
 
 from celery import Celery
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 # Trigger relapse phase through celery

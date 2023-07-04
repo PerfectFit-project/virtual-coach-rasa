@@ -1,7 +1,7 @@
 import logging
 
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL
+from .definitions import DATABASE_URL, RABBITMQ_URL
 from .helper import (get_latest_bot_utterance,
                      get_user_intervention_activity_inputs,
                      get_faik_text)
@@ -17,7 +17,7 @@ from virtual_coach_db.dbschema.models import InterventionActivity
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ActionStartFak(Action):

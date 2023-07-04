@@ -11,11 +11,11 @@ from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
-from .definitions import DATABASE_URL, PAUSE_AND_TRIGGER, REDIS_URL
+from .definitions import DATABASE_URL, PAUSE_AND_TRIGGER, RABBITMQ_URL
 from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
 
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ValidateClosingPaEvaluationForm(FormValidationAction):

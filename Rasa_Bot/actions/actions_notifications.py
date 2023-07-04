@@ -1,11 +1,11 @@
 from celery import Celery
 from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
-from .definitions import REDIS_URL
+from .definitions import RABBITMQ_URL
 from .helper import get_daily_step_goal_from_db, get_weekly_intensity_minutes_goal_from_db
 import datetime
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 class ActionGetDailyStepGoalFromDb(Action):
     def name(self):

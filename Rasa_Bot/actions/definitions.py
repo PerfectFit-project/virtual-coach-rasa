@@ -32,7 +32,7 @@ TOKEN_HEADER = 'X-PerfectFit-Auth-Token'
 # Timezone for saving data to database
 TIMEZONE = tz.gettz("Europe/Amsterdam")
 
-REDIS_URL = os.getenv('REDIS_URL')
+RABBITMQ_URL = os.getenv('RABBITMQ_URL')
 
 MORNING = (6, 12)
 AFTERNOON = (12, 18)

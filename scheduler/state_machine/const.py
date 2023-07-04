@@ -29,6 +29,7 @@ EXECUTION_DURATION = EXECUTION_DURATION_WEEKS * 7  # 12 weeks
 #
 
 REDIS_URL = os.getenv('REDIS_URL')
+RABBITMQ_URL = os.getenv('RABBITMQ_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 TRIGGER_COMPONENT = 'celery_tasks.trigger_intervention_component'

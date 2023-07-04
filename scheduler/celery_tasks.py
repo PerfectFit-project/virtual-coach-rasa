@@ -1,4 +1,6 @@
 import logging
+import time
+
 import requests
 from celery import Celery
 from celery.schedules import crontab
@@ -10,18 +12,20 @@ from niceday_client import NicedayClient
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
                                  RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL,
-                                 MAXIMUM_INACTIVE_DAYS)
+                                 MAXIMUM_INACTIVE_DAYS, RABBITMQ_URL)
 from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
                           create_new_user, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, send_fsm_event,
                           set_dialog_running_status)
 from virtual_coach_db.helper.definitions import NotificationsTriggers
 
-app = Celery('celery_tasks', broker=REDIS_URL)
+print(RABBITMQ_URL)
+
+app = Celery('celery_tasks', broker=RABBITMQ_URL)
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
 # 1 month visibility. Temporary fix
-app.conf.broker_transport_options = {'visibility_timeout': 2678400}
+# app.conf.broker_transport_options = {'visibility_timeout': 2678400}
 
 # Django configuration for cache memory usage
 CACHES = {
@@ -86,6 +90,8 @@ def check_new_connection_request(self):
                     client.accept_invitation_request(str(request['invitationId']))
                     create_new_user(user_id)
                     start_user_intervention(user_id)
+        else:
+            logging.info('Locked')
 
 
 @app.task(bind=True)

@@ -10,14 +10,14 @@ from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 
-from .definitions import REDIS_URL
+from .definitions import RABBITMQ_URL
 from .definitions import TIMEZONE
 from .definitions import MORNING, AFTERNOON, EVENING
 from .helper import get_latest_bot_utterance
 from . import validator
 
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ActionContinueGeneralActivityDialog(Action):

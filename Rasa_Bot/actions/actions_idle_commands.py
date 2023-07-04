@@ -2,9 +2,9 @@ from celery import Celery
 from rasa_sdk import Action
 from .helper import dialog_to_be_completed
 from virtual_coach_db.helper.definitions import Components
-from .definitions import REDIS_URL
+from .definitions import RABBITMQ_URL
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ActionTriggerRelapseDialog(Action):

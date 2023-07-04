@@ -7,10 +7,10 @@ from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
 from virtual_coach_db.helper.definitions import VideoLinks, Components, ComponentsTriggers
 from . import validator
-from .definitions import PAUSE_AND_TRIGGER, REDIS_URL
+from .definitions import PAUSE_AND_TRIGGER, RABBITMQ_URL
 from .helper import get_latest_bot_utterance
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ActionLaunchWatchVideoDialog(Action):

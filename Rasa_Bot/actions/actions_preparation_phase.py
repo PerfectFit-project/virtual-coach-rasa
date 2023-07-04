@@ -9,13 +9,13 @@ from virtual_coach_db.helper.definitions import (Components,
                                                  DialogExpectedDuration)
 
 from . import validator
-from .definitions import MORNING, AFTERNOON, REDIS_URL, TIMEZONE
+from .definitions import MORNING, AFTERNOON, RABBITMQ_URL, TIMEZONE
 from .helper import get_latest_bot_utterance
 from .actions_rescheduling_dialog import get_reschedule_date
 
 import datetime
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ExpectedTimeNextPart(Action):

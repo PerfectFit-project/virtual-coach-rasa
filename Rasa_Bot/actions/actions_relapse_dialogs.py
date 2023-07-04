@@ -6,7 +6,7 @@ import logging
 import secrets
 
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL, activities_categories
+from .definitions import DATABASE_URL, RABBITMQ_URL, activities_categories
 from .helper import (get_latest_bot_utterance, store_dialog_closed_answer_to_db,
                      store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db,
                      store_user_intervention_state, populate_fig, get_possible_activities)
@@ -22,7 +22,7 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
 from plotly.subplots import make_subplots
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ActionCheckReasons(Action):

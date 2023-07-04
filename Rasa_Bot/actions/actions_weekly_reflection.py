@@ -5,7 +5,7 @@ Contains custom actions related to the weekly reflection dialogue
 import datetime
 from dateutil.relativedelta import relativedelta
 from . import validator
-from .definitions import REDIS_URL
+from .definitions import RABBITMQ_URL
 from .helper import (get_intensity_minutes_goal,
                      get_intervention_component_id, 
                      get_last_completed_dialog_part_from_db,
@@ -26,7 +26,7 @@ from virtual_coach_db.helper.definitions import Components
 import logging
 
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 class ActionSaveWeeklyReflectionDialogPart1(Action):

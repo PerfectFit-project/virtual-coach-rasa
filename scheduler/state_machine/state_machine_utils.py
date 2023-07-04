@@ -3,14 +3,14 @@ from typing import Optional
 from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
-from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
+from state_machine.const import (DATABASE_URL, RABBITMQ_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
 from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
                                               InterventionComponents)
 from virtual_coach_db.helper.definitions import ComponentsTriggers
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-celery = Celery(broker=REDIS_URL)
+celery = Celery(broker=RABBITMQ_URL)
 
 
 def compute_next_day(selectable_days: list, current_date: datetime) -> date:

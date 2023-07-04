@@ -6,8 +6,9 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
                                                retrieve_intervention_day, revoke_execution,
-                                               run_uncompleted_dialog, schedule_next_execution,
-                                               store_completed_dialog, update_execution_week)
+                                               run_uncompleted_dialog, run_option_menu,
+                                               schedule_next_execution, store_completed_dialog,
+                                               update_execution_week)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
                                  MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
@@ -71,7 +72,10 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+        if dialog == Components.FIRST_AID_KIT:
+            # dialog not available in this phase
+            run_option_menu(self.user_id)
+        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
@@ -146,7 +150,12 @@ class TrackingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+        if dialog == Components.FIRST_AID_KIT and not get_dialog_completion_state(
+                self.user_id, Components.FIRST_AID_KIT_VIDEO):
+            # if the introductory video of the first aid kit has not been executed,
+            # the first aid kit cannot be executed
+            run_option_menu(self.user_id)
+        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,

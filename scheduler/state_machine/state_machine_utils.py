@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from celery import Celery
 from datetime import datetime, date, timedelta
@@ -74,7 +74,7 @@ def create_new_date(start_date: date,
     return new_timedate
 
 
-def get_dialog_completion_state(user_id: int, dialog_name: str) -> bool:
+def get_dialog_completion_state(user_id: int, dialog_name: str) -> Optional[bool]:
     """
     Get the completion state of the last dialog occurrence in the DB
     Args:
@@ -99,10 +99,13 @@ def get_dialog_completion_state(user_id: int, dialog_name: str) -> bool:
         )
         .order_by(UserInterventionState.last_time.desc())  # order by descending date
         .limit(1)  # get only the first result
-        .one()
+        .one_or_none()
     )
 
-    return selected.completed
+    if selected is not None:
+        return selected.completed
+
+    return None
 
 
 def get_last_component_state(user_id: int, intervention_component_id: int) -> UserInterventionState:

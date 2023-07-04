@@ -9,11 +9,13 @@ import plotly.graph_objects as go
 import requests
 import secrets
 
+from celery import Celery
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from datetime import datetime, date
 from typing import Any, Dict, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
+                          REDIS_URL,
                           DATABASE_URL,
                           EVENING_SEND_TIME,
                           SENSOR_KEY_PATH,
@@ -39,6 +41,15 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers,
 
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
+
+celery = Celery(broker=REDIS_URL)
+
+
+def mark_completion(user_id, dialog):
+
+    celery.send_task('celery_tasks.intervention_component_completed', (user_id, dialog))
+
+    return []
 
 
 def compute_godin_level(tracker) -> int:
@@ -1210,7 +1221,7 @@ def get_faik_text(user_id):
         .limit(NUM_TOP_ACTIVITIES).all()
     )
 
-    if top_five_activities is not None:
+    if len(top_five_activities) > 0:
         for activity_idx, activity in enumerate(top_five_activities):
             kit_text += str(activity_idx + 1) + ") "
             kit_text += activity.intervention_activity.intervention_activity_title

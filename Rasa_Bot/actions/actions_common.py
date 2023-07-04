@@ -7,6 +7,8 @@ from rasa_sdk import Action
 from rasa_sdk.events import FollowupAction, SlotSet
 
 from .definitions import REDIS_URL, NICEDAY_API_ENDPOINT, TRIGGER_INTENT
+from .helper import mark_completion
+
 from virtual_coach_db.helper.definitions import ComponentsTriggers
 
 celery = Celery(broker=REDIS_URL)
@@ -49,10 +51,7 @@ class MarkDialogAsCompleted(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         slot = tracker.get_slot("current_intervention_component")
-        logging.info(slot)
-
-        celery.send_task('celery_tasks.intervention_component_completed', (user_id, slot))
-        logging.info("no celery error")
+        mark_completion(user_id, slot)
 
         return []
 

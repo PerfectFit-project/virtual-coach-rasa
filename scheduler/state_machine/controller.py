@@ -73,7 +73,7 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog == Components.FIRST_AID_KIT or dialog == Components.FIRST_AID_KIT_VIDEO:
+        if dialog in(Components.FIRST_AID_KIT, dialog == Components.FIRST_AID_KIT_VIDEO):
             # dialog not available in this phase
             if dialog_to_be_completed(self.user_id) is None:
                 complete = False
@@ -155,7 +155,7 @@ class TrackingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if (dialog == Components.FIRST_AID_KIT or dialog == Components.FIRST_AID_KIT_VIDEO) \
+        if (dialog in (Components.FIRST_AID_KIT, Components.FIRST_AID_KIT_VIDEO)) \
                 and not get_dialog_completion_state(self.user_id, Components.FIRST_AID_KIT_VIDEO):
             # if the introductory video of the first aid kit has not been executed,
             # the first aid kit cannot be executed

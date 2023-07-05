@@ -99,7 +99,7 @@ class ValidateFirstAidKitChosenActivityForm(FormValidationAction):
         if not validator.validate_number_in_range_response(n_min=1, n_max=len(activity_ids_list),
                                                            response=value):
             text_msg = 'Typ '
-            for num, i in enumerate(activity_ids_list):
+            for (num, _) in enumerate(activity_ids_list):
                 # we need + 1 to start from 1 instead of from 0
                 text_msg += ' ' + str(num + 1) + ','
 

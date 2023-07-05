@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Optional
 
 from celery import Celery
 from datetime import datetime, date, timedelta

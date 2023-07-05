@@ -561,12 +561,13 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
     return None
 
 
-def run_uncompleted_dialog(user_id: int):
+def run_uncompleted_dialog(user_id: int, show_ehbo: bool = True):
     """
     Checks if a dialog has to be completed and, in this case runs it from the latest completed part.
 
     Args:
         user_id: ID of the user
+        show_ehbo: show the menu with ehbo command if true
 
     """
 
@@ -587,7 +588,7 @@ def run_uncompleted_dialog(user_id: int):
             (user_id, component.intervention_component.intervention_component_trigger)
         )
     else:
-        run_option_menu(user_id)
+        run_option_menu(user_id, ehbo=show_ehbo, complete_dialog=False)
 
 
 def run_option_menu(user_id: int, ehbo: bool = True, complete_dialog: bool = False):
@@ -596,6 +597,8 @@ def run_option_menu(user_id: int, ehbo: bool = True, complete_dialog: bool = Fal
 
     Args:
         user_id: ID of the user
+        ehbo: show ehbo command if true
+        complete_dialog: show verder command if true
 
     """
     if ehbo and complete_dialog:

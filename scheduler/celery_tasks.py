@@ -14,7 +14,7 @@ from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, N
 from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
                           create_new_user, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, send_fsm_event,
-                          set_dialog_running_status)
+                          set_dialog_running_status, update_scheduled_task_db)
 from virtual_coach_db.helper.definitions import NotificationsTriggers
 
 app = Celery('celery_tasks', broker=REDIS_URL)
@@ -242,6 +242,7 @@ def trigger_scheduled_intervention_component(self,
     if dialog_state != RUNNING:
         user_fsm.dialog_state.set_to_running(dialog=name)
         trigger_intervention_component.apply_async(args=[user_id, trigger])
+        update_scheduled_task_db(user_id, self.request.id)
 
     else:
         # if a dialog is running, reschedule the trigger

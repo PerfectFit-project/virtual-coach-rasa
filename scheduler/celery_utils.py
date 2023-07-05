@@ -8,7 +8,7 @@ from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
 from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
                                               UserStateMachine)
-from virtual_coach_db.helper.definitions import Components
+from virtual_coach_db.helper.definitions import Components, Notifications
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 import logging
@@ -232,7 +232,7 @@ def get_dialog_state(state_machine: StateMachine) -> int:
         if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
             dialog_state = RUNNING
         # dialog not completed, user notified to resume the dialog
-        elif (now - last_time).seconds > 2*MAXIMUM_DIALOG_DURATION:
+        elif (now - last_time).seconds > 2 * MAXIMUM_DIALOG_DURATION:
             dialog_state = EXPIRED
         else:
             # dialog running but the maximum time elapsed
@@ -356,6 +356,37 @@ def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:
                                         intervention_component_id=dialog.intervention_component_id)
 
     return db_state_machine
+
+
+def update_scheduled_task_db(user_id: int, task_uuid: str):
+    """
+    Update the last time and the completion status of a task that was triggered
+    after its scheduling
+    Args:
+        user_id: the ID of the user to send the trigger to
+        task_uuid: uuid of the task
+    """
+    session = get_db_session(DATABASE_URL)
+
+    task_entry = (session.query(UserInterventionState)
+                  .filter(UserInterventionState.users_nicedayuid == user_id,
+                          UserInterventionState.task_uuid == task_uuid)
+                  .one_or_none())
+
+    if task_entry is None:
+        return
+
+    # update the last time value to the current time
+    task_entry.last_time = datetime.now().astimezone(TIMEZONE)
+
+    component = task_entry.intervention_component
+
+    # if a notification has been triggered, it must be marked as completed
+    # (no further interactions needed)
+    if component.intervention_component_name in Notifications._value2member_map_:
+        task_entry.completed = True
+
+    session.commit()
 
 
 def save_user_to_db(user: Users):

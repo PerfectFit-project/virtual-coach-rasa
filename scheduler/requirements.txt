@@ -1,7 +1,7 @@
 celery
 Django==4.2.2
 python-dotenv
-git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.21
+git+https://github.com/PerfectFit-project/virtual-coach-db@377-review-fak
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.4
 redis
 requests

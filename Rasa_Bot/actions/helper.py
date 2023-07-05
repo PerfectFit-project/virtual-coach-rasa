@@ -601,6 +601,39 @@ def get_days_from_start(user_id: int) -> int:
     return spent_days
 
 
+def get_dialog_completion_state(user_id: int, dialog: str) -> Optional[bool]:
+    """
+    Get the completion state of the last dialog occurrence in the DB
+    Args:
+        user_id: the id of the user
+        dialog: name of the dialog
+
+    Returns: True if the dialog has been completed, False otherwise
+
+    """
+
+    session = get_db_session(DATABASE_URL)
+
+    selected = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(True),
+            InterventionComponents.intervention_component_name == dialog
+        )
+        .limit(1)  # get only the first result
+        .one_or_none()
+    )
+
+    if selected is not None:
+        return True
+
+    return None
+
+
 def get_execution_week(user_id: int) -> int:
     """
     Retrieve the week number in the execution phase

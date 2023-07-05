@@ -1,6 +1,6 @@
 from celery import Celery
 from rasa_sdk import Action
-from .helper import dialog_to_be_completed
+from .helper import dialog_to_be_completed, get_dialog_completion_state
 from virtual_coach_db.helper.definitions import Components
 from .definitions import REDIS_URL
 
@@ -78,10 +78,19 @@ class ActionSelectMenu(Action):
 
         user_id = tracker.current_state()['sender_id']
 
-        if dialog_to_be_completed(user_id):
+        # is there a dialog to be completed
+        complete_dialog = dialog_to_be_completed(user_id)
+        # is the ehbo option to be shown (the explanatory video has been shown)
+        show_ehbo = get_dialog_completion_state(user_id, Components.FIRST_AID_KIT_VIDEO)
+
+        if complete_dialog and show_ehbo:
             dispatcher.utter_message(response="utter_central_mode_options")
-        else:
+        elif not complete_dialog and show_ehbo:
             dispatcher.utter_message(response="utter_central_mode_options_without_verder")
+        elif complete_dialog and not show_ehbo:
+            dispatcher.utter_message(response="utter_central_mode_options_no_ehbo")
+        else:
+            dispatcher.utter_message(response="utter_central_mode_options_without_verder_no_ehbo")
 
 
 class ActionTriggerUncompletedDialog(Action):

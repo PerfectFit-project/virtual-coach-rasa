@@ -1366,7 +1366,7 @@ def get_intensity_minutes_data(user_id: int,
         res_json = res.json()
         intensity_minutes = 0
         for hour in res_json:
-            intensity_minutes += sum([val > HR_INTENSITY_THRESHOLD for val in hour['values']])
+            intensity_minutes += sum(val > HR_INTENSITY_THRESHOLD for val in hour['values'])
 
         return intensity_minutes
 

@@ -590,7 +590,7 @@ def run_uncompleted_dialog(user_id: int):
         run_option_menu(user_id)
 
 
-def run_option_menu(user_id: int):
+def run_option_menu(user_id: int, ehbo: bool = True, complete_dialog: bool = False):
     """
     Runs a celery task for showing the options menu without the 'verder' option
 
@@ -598,7 +598,17 @@ def run_option_menu(user_id: int):
         user_id: ID of the user
 
     """
-    celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
+    if ehbo and complete_dialog:
+        celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
+    elif ehbo and not complete_dialog:
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_COMPLETE, False))
+    elif not ehbo and complete_dialog:
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_EHBO, False))
+    elif not ehbo and not complete_dialog:
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_EHBO_NO_COMPLETE, False))
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

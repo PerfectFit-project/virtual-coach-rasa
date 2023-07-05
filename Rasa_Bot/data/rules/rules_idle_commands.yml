@@ -39,10 +39,29 @@ rules:
   steps:
   - intent: continue_dialog_intent
   - action: action_trigger_uncompleted_dialog
+
+- rule: central mode without all options
+  steps:
+  - intent: EXTERNAL_central_options
+  - action: utter_central_mode_options
+  - action: action_end_dialog
+
+- rule: central mode without ehbo
+  steps:
+  - intent: EXTERNAL_central_options_no_ehbo
+  - action: utter_central_mode_options_no_ehbo
+  - action: action_end_dialog
   
-- rule: no valid uncompleted dialog
+- rule: no valid uncompleted dialog with ehbo
   steps:
   - intent: EXTERNAL_no_valid_uncompleted_dialog
   - action: utter_no_valid_uncompleted_dialog
   - action: utter_central_mode_options_without_verder
+  - action: action_end_dialog
+
+- rule: no valid uncompleted dialog without ehbo
+  steps:
+  - intent: EXTERNAL_no_valid_uncompleted_dialog_no_ehbo
+  - action: utter_no_valid_uncompleted_dialog
+  - action: utter_central_mode_options_without_verder_no_ehbo
   - action: action_end_dialog

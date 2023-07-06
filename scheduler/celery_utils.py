@@ -383,7 +383,8 @@ def update_scheduled_task_db(user_id: int, task_uuid: str):
 
     # if a notification has been triggered, it must be marked as completed
     # (no further interactions needed)
-    if component.intervention_component_name in Notifications._value2member_map_:
+    values = [item.value for item in Notifications]
+    if component.intervention_component_name in values:
         task_entry.completed = True
 
     session.commit()

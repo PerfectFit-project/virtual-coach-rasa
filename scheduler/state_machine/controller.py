@@ -165,8 +165,8 @@ class TrackingState(State):
         # at day 7 activity C2.9 has to be proposed
 
         start_date = get_start_date(self.user_id)
-
-        if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER:
+        ga_completed = get_dialog_completion_state(self.user_id, Components.GENERAL_ACTIVITY)
+        if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER and not ga_completed:
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)
@@ -424,8 +424,8 @@ class ExecutionRunState(State):
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets
         # a notification with the steps goal every day. Group 2 gets a notification with steps
-        # and intensity goal once a wek, 4 days after the GA dialog. The group is determined during
-        # the GA dialog.
+        # and intensity goal twice a week, 1 and 4 days after the GA dialog.
+        # The group is determined during the GA dialog.
 
         pa_group = get_pa_group(self.user_id)
 
@@ -446,12 +446,20 @@ class ExecutionRunState(State):
 
         elif pa_group == HIGH_PA_GROUP:
 
-            planned_date = create_new_date(start_date=date.today(),
-                                           time_delta=TIME_DELTA_PA_NOTIFICATION)
+            planned_date_1 = create_new_date(start_date=date.today(),
+                                             time_delta=1)
 
             plan_and_store(user_id=self.user_id,
                            dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
-                           planned_date=planned_date,
+                           planned_date=planned_date_1,
+                           phase_id=2)
+
+            planned_date_4 = create_new_date(start_date=date.today(),
+                                             time_delta=TIME_DELTA_PA_NOTIFICATION)
+
+            plan_and_store(user_id=self.user_id,
+                           dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
+                           planned_date=planned_date_4,
                            phase_id=2)
 
 

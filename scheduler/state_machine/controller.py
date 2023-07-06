@@ -137,6 +137,7 @@ class TrackingState(State):
 
         if dialog == Components.FUTURE_SELF_SHORT:
             logging.info('Future self completed')
+            self.set_new_state(GoalsSettingState(self.user_id))
 
     def on_dialog_rescheduled(self, dialog, new_date):
 
@@ -169,13 +170,6 @@ class TrackingState(State):
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)
-
-        # if it's time and the self dialog has been completed,
-        # move to new state
-        self_completed = get_dialog_completion_state(self.user_id, Components.FUTURE_SELF_SHORT)
-        if (self.check_if_end_date(current_date) and
-                self_completed):
-            self.set_new_state(GoalsSettingState(self.user_id))
 
     def check_if_end_date(self, date_to_check: date) -> bool:
         intervention_day = retrieve_intervention_day(self.user_id, date_to_check)
@@ -270,9 +264,9 @@ class GoalsSettingState(State):
             gs_time = None
 
         else:
-            # on day 10 at 10 a.m. send future self plan goal setting
-            gs_time = create_new_date(start_date=start_date,
-                                      time_delta=GOAL_SETTING)
+            # plan the Goals setting dialog for tomorrow
+            gs_time = create_new_date(start_date=date.today(),
+                                      time_delta=1)
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.GOAL_SETTING,

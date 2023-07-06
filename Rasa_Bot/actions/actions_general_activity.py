@@ -147,7 +147,10 @@ class GeneralActivityCheckRating(Action):
             .all()
         )
 
-        lowest_score = top_five_activities[-1].activity_rating
+        if len(top_five_activities) > 0:
+            lowest_score = top_five_activities[-1].activity_rating
+        else:
+            lowest_score = 0
 
         # if the activity is not in the FAK, add it
         if not current_record:

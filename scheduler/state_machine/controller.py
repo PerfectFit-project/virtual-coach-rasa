@@ -269,7 +269,7 @@ class GoalsSettingState(State):
         # every day
         if pa_group == LOW_PA_GROUP:
 
-            for day in range((last_date - first_date).days+1):
+            for day in range((last_date - first_date).days + 1):
                 planned_date = create_new_date(start_date=first_date,
                                                time_delta=day)
 
@@ -335,7 +335,6 @@ class BufferState(State):
 
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
-
         if current_date >= quit_date:
             logging.info('Buffer sate ended, starting execution state')
             self.set_new_state(ExecutionRunState(self.user_id))
@@ -455,6 +454,7 @@ class ExecutionRunState(State):
 
     def run(self):
         logging.info("Running state %s", self.state)
+        update_execution_week(self.user_id, 1)
 
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets

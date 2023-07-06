@@ -203,6 +203,7 @@ class GoalsSettingState(State):
             # phase can be planned
             self.plan_buffer_phase_dialogs()
             self.plan_execution_start_dialog()
+            self.schedule_pa_notifications()
 
         elif dialog == Components.FIRST_AID_KIT_VIDEO:
             logging.info('First aid kit completed, starting buffering state')
@@ -253,6 +254,40 @@ class GoalsSettingState(State):
                        dialog=Components.EXECUTION_INTRODUCTION,
                        planned_date=planned_date,
                        phase_id=1)
+
+    def schedule_pa_notifications(self):
+        # the notifications are delivered according to the group of the user. Group 1 gets
+        # a notification with the steps goal every day. Group 2 gets a notification with steps
+        # and intensity goal twice a week, 1 and 4 days after the GA dialog.
+        # The group is determined during the GA dialog.
+
+        pa_group = get_pa_group(self.user_id)
+
+        first_date = date.today() + timedelta(days=1)
+        # until the execution starts
+        last_date = get_quit_date(self.user_id)
+        # every day
+        if pa_group == LOW_PA_GROUP:
+
+            for day in range((last_date - first_date).days+1):
+                planned_date = create_new_date(start_date=first_date,
+                                               time_delta=day)
+
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                               planned_date=planned_date,
+                               phase_id=2)
+
+        else:
+            # every 3 days
+            for day in range((last_date - first_date).days)[0::3]:
+                planned_date = create_new_date(start_date=first_date,
+                                               time_delta=day)
+
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
+                               planned_date=planned_date,
+                               phase_id=2)
 
     def run(self):
 

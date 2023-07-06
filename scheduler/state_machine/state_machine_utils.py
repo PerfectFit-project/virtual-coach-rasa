@@ -317,7 +317,7 @@ def get_pa_group(user_id: int) -> int:
         """
     session = get_db_session(DATABASE_URL)
 
-    user = (session.query(Users).filter(Users.users_nicedayuid == user_id).first())
+    user = (session.query(Users).filter(Users.nicedayuid == user_id).first())
 
     return user.pa_intervention_group
 

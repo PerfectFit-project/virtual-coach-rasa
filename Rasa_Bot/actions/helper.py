@@ -564,7 +564,7 @@ def get_current_phase_time(user_id: int, phase: str) -> int:
                     The number of days or weeks in the current state
 
     """
-    if phase not in [FsmStates.TRACKING, FsmStates.GOALS_SETTING, FsmStates.GOALS_SETTING]:
+    if phase not in [FsmStates.EXECUTION_RUN, FsmStates.RELAPSE]:
         time = get_days_from_start(user_id)
     else:
         time = get_execution_week(user_id)
@@ -756,7 +756,7 @@ def get_possible_activities(user_id: int, activity_category: Optional[str] = Non
     # check if the mandatory activities have been already performed
     for activity in mandatory:
         # if the activity has been completed, do not report it as mandatory
-        if is_activity_done(activity):
+        if not is_activity_done(activity):
             mandatory_ids.append(activity)
 
     mandatory_ids = [get_activities_from_id(mandatory_id) for mandatory_id in mandatory_ids]

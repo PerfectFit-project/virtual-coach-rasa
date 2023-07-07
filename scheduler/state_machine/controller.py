@@ -109,7 +109,7 @@ class OnboardingState(State):
         to day 9 of the preparation phase
         """
         first_date = date.today() + timedelta(days=1)
-        last_date = get_start_date(self.user_id) + timedelta(days=8)
+        last_date = get_start_date(self.user_id) + timedelta(days=9)
 
         for day in range((last_date - first_date).days):
             planned_date = create_new_date(start_date=first_date,
@@ -137,6 +137,7 @@ class TrackingState(State):
 
         if dialog == Components.FUTURE_SELF_SHORT:
             logging.info('Future self completed')
+            self.set_new_state(GoalsSettingState(self.user_id))
 
     def on_dialog_rescheduled(self, dialog, new_date):
 
@@ -164,18 +165,11 @@ class TrackingState(State):
         # at day 7 activity C2.9 has to be proposed
 
         start_date = get_start_date(self.user_id)
-
-        if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER:
+        ga_completed = get_dialog_completion_state(self.user_id, Components.GENERAL_ACTIVITY)
+        if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER and not ga_completed:
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)
-
-        # if it's time and the self dialog has been completed,
-        # move to new state
-        self_completed = get_dialog_completion_state(self.user_id, Components.FUTURE_SELF_SHORT)
-        if (self.check_if_end_date(current_date) and
-                self_completed):
-            self.set_new_state(GoalsSettingState(self.user_id))
 
     def check_if_end_date(self, date_to_check: date) -> bool:
         intervention_day = retrieve_intervention_day(self.user_id, date_to_check)
@@ -209,6 +203,7 @@ class GoalsSettingState(State):
             # phase can be planned
             self.plan_buffer_phase_dialogs()
             self.plan_execution_start_dialog()
+            self.schedule_pa_notifications()
 
         elif dialog == Components.FIRST_AID_KIT_VIDEO:
             logging.info('First aid kit completed, starting buffering state')
@@ -260,6 +255,40 @@ class GoalsSettingState(State):
                        planned_date=planned_date,
                        phase_id=1)
 
+    def schedule_pa_notifications(self):
+        # the notifications are delivered according to the group of the user. Group 1 gets
+        # a notification with the steps goal every day. Group 2 gets a notification with steps
+        # and intensity goal twice a week, 1 and 4 days after the GA dialog.
+        # The group is determined during the GA dialog.
+
+        pa_group = get_pa_group(self.user_id)
+
+        first_date = date.today() + timedelta(days=1)
+        # until the execution starts
+        last_date = get_quit_date(self.user_id)
+        # every day
+        if pa_group == LOW_PA_GROUP:
+
+            for day in range((last_date - first_date).days + 1):
+                planned_date = create_new_date(start_date=first_date,
+                                               time_delta=day)
+
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                               planned_date=planned_date,
+                               phase_id=2)
+
+        else:
+            # every 3 days
+            for day in range((last_date - first_date).days)[0::3]:
+                planned_date = create_new_date(start_date=first_date,
+                                               time_delta=day)
+
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
+                               planned_date=planned_date,
+                               phase_id=2)
+
     def run(self):
 
         start_date = get_start_date(self.user_id)
@@ -270,9 +299,9 @@ class GoalsSettingState(State):
             gs_time = None
 
         else:
-            # on day 10 at 10 a.m. send future self plan goal setting
-            gs_time = create_new_date(start_date=start_date,
-                                      time_delta=GOAL_SETTING)
+            # plan the Goals setting dialog for tomorrow
+            gs_time = create_new_date(start_date=date.today(),
+                                      time_delta=1)
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.GOAL_SETTING,
@@ -306,7 +335,6 @@ class BufferState(State):
 
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
-
         if current_date >= quit_date:
             logging.info('Buffer sate ended, starting execution state')
             self.set_new_state(ExecutionRunState(self.user_id))
@@ -426,12 +454,13 @@ class ExecutionRunState(State):
 
     def run(self):
         logging.info("Running state %s", self.state)
+        update_execution_week(self.user_id, 1)
 
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets
         # a notification with the steps goal every day. Group 2 gets a notification with steps
-        # and intensity goal once a wek, 4 days after the GA dialog. The group is determined during
-        # the GA dialog.
+        # and intensity goal twice a week, 1 and 4 days after the GA dialog.
+        # The group is determined during the GA dialog.
 
         pa_group = get_pa_group(self.user_id)
 
@@ -452,12 +481,20 @@ class ExecutionRunState(State):
 
         elif pa_group == HIGH_PA_GROUP:
 
-            planned_date = create_new_date(start_date=date.today(),
-                                           time_delta=TIME_DELTA_PA_NOTIFICATION)
+            planned_date_1 = create_new_date(start_date=date.today(),
+                                             time_delta=1)
 
             plan_and_store(user_id=self.user_id,
                            dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
-                           planned_date=planned_date,
+                           planned_date=planned_date_1,
+                           phase_id=2)
+
+            planned_date_4 = create_new_date(start_date=date.today(),
+                                             time_delta=TIME_DELTA_PA_NOTIFICATION)
+
+            plan_and_store(user_id=self.user_id,
+                           dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
+                           planned_date=planned_date_4,
                            phase_id=2)
 
 

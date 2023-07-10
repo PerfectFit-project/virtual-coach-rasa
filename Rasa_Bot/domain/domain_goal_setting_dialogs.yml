@@ -377,7 +377,7 @@ responses:
             zet. 🚶"
   utter_goal_setting_pa_expl_11:
     - text: "In de afgelopen 9 dagen zette je ongeveer [Insert average amount of steps during previous 9 days] stappen
-            per dag!"
+            per dag!"  # TODO: add number of steps
 
 
 # Branch 3b set longterm goal pa

@@ -41,6 +41,7 @@ class OnboardingState(State):
             logging.info('Profile creation completed, starting med talk')
             plan_and_store(user_id=self.user_id,
                            dialog=Components.MEDICATION_TALK,
+                           planned_date=datetime.now() + timedelta(seconds=30),
                            phase_id=1)
 
         elif dialog == Components.MEDICATION_TALK:
@@ -198,6 +199,7 @@ class GoalsSettingState(State):
             logging.info('Goal setting completed, starting first aid kit')
             plan_and_store(user_id=self.user_id,
                            dialog=Components.FIRST_AID_KIT_VIDEO,
+                           planned_date=datetime.now() + timedelta(minutes=1),
                            phase_id=1)
             # after the completion of the goal setting dialog, the execution
             # phase can be planned
@@ -364,6 +366,7 @@ class ExecutionRunState(State):
             logging.info('General activity completed, starting weekly reflection')
             plan_and_store(user_id=self.user_id,
                            dialog=Components.WEEKLY_REFLECTION,
+                           planned_date=datetime.now()+timedelta(minutes=1),
                            phase_id=2)
 
         elif dialog == Components.WEEKLY_REFLECTION:

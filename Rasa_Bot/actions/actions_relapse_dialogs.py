@@ -17,7 +17,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.helper.definitions import (Components,
-                                                 DialogQuestionsEnum, Phases)
+                                                 DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
 from plotly.subplots import make_subplots
@@ -125,7 +125,6 @@ class ActionSetSlotRelapseDialog(Action):
         return "action_set_slot_relapse_dialog_hrs"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_HRS)]
@@ -136,7 +135,6 @@ class ActionSetSlotRelapseDialogLapse(Action):
         return "action_set_slot_relapse_dialog_lapse"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_LAPSE)]
@@ -147,7 +145,7 @@ class ActionSetSlotRelapseDialogPa(Action):
         return "action_set_slot_relapse_dialog_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+
         logging.info('set PA slot')
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_PA)]
@@ -158,7 +156,6 @@ class ActionSetSlotRelapseDialogRelapse(Action):
         return "action_set_slot_relapse_dialog_relapse"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_RELAPSE)]

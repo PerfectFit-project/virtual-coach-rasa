@@ -109,7 +109,7 @@ class OnboardingState(State):
         to day 9 of the preparation phase
         """
         first_date = date.today() + timedelta(days=1)
-        last_date = get_start_date(self.user_id) + timedelta(days=9)
+        last_date = get_start_date(self.user_id) + timedelta(days=TRACKING_DURATION-1)
 
         for day in range((last_date - first_date).days):
             planned_date = create_new_date(start_date=first_date,

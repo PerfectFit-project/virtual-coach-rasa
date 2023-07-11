@@ -34,7 +34,6 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
-                                              InterventionPhases,
                                               UserInterventionState,
                                               UserStateMachine,
                                               Users)

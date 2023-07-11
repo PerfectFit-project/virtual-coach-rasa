@@ -52,7 +52,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     and for the dialogs status check are started
     """
     # notify the FSM that a new day started
-    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s(date.today()))
+    sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s())
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if a dialog has been completed
@@ -150,12 +150,15 @@ def intervention_component_completed(self,  # pylint: disable=unused-argument
 
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
-def notify_new_day(self, current_date: date):  # pylint: disable=unused-argument
+def notify_new_day(self, current_date: date = None):  # pylint: disable=unused-argument
     """
     This task notifies all the state machines that a day has begun.
     Args:
-        current_date: the date to be sent to the state machines
+        current_date: the date to be sent to the state machines. If None, uses the current date
     """
+    if current_date is None:
+        current_date=date.today()
+
     state_machines = get_all_fsm()
     for item in state_machines:
         send_fsm_event(user_id=item.machine_id, event=Event(EventEnum.NEW_DAY, current_date))

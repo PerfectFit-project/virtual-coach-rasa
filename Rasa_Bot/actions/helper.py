@@ -34,7 +34,6 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
-                                              InterventionPhases,
                                               UserInterventionState,
                                               UserStateMachine,
                                               Users)
@@ -446,62 +445,6 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
                               answer_value=answer_value,
                               datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_open_answers.append(entry)
-    session.commit()  # Update database
-
-
-def store_user_intervention_state(user_id: int, intervention_component: str, phase: str):
-    """
-    Updater the user_intervention_state table, adding a new row with the intervention_component
-
-    Args:
-        user_id: niceday user id
-        intervention_component: the name of the intervention component.
-                                The names are listed in virtual_coach_db.helper.definitions
-                                in the Components class
-        phase: the name of the phase. The names are listed in virtual_coach_db.helper.definitions
-               Phases class
-
-    Returns:
-            nothing
-
-    """
-    session = get_db_session(db_url=DATABASE_URL)
-
-    phases = (
-        session.query(
-            InterventionPhases
-        )
-        .filter(
-            InterventionPhases.phase_name == phase
-        )
-        .first()
-    )
-
-    components = (
-        session.query(
-            InterventionComponents
-        )
-        .filter(
-            InterventionComponents.intervention_component_name == intervention_component
-        )
-        .first()
-    )
-
-    # if the list of phases of components is empty, it is not in the DB
-    if not phase or not components:
-        raise ValueError('component or phase not found')
-
-    session.add(UserInterventionState(
-        users_nicedayuid=user_id,
-        intervention_phase_id=phases.phase_id,
-        intervention_component_id=components.intervention_component_id,
-        completed=False,
-        last_time=datetime.now().astimezone(TIMEZONE),
-        last_part=0,
-        next_planned_date=None,
-        task_uuid=None
-    )
-    )
     session.commit()  # Update database
 
 

@@ -12,7 +12,7 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
 from .definitions import DATABASE_URL, PAUSE_AND_TRIGGER, REDIS_URL
-from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
+from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text, get_steps_data)
 
 
 celery = Celery(broker=REDIS_URL)
@@ -266,9 +266,14 @@ class ActionClosingGetTotalNumberSteps(Action):
         return "action_closing_get_total_number_steps"
 
     async def run(self, dispatcher, tracker, domain):
-        number_steps = 99  # Placeholder TODO: fill with number from database
+        # Get sender ID from slot, this is a string
+        user_id = tracker.current_state()['sender_id']
+        # Get all steps stored
+        steps_data = get_steps_data(user_id)
+        # Sum all data
+        total_steps = sum(day['steps'] for day in steps_data)
 
-        return [SlotSet('closing_total_steps_number', number_steps)]
+        return [SlotSet('closing_total_steps_number', total_steps)]
 
 
 class SetSlotClosingDialog(Action):

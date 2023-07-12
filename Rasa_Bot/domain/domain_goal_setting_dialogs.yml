@@ -196,6 +196,12 @@ slots:
     mappings:
       - type: custom
 
+  goal_setting_baseline_steps:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
 responses:
   
   utter_goal_setting_continue:
@@ -376,8 +382,7 @@ responses:
             belangrijk om te weten hoeveel je nu beweegt. We kijken hiervoor naar het aantal stappen dat jij elke dag
             zet. 🚶"
   utter_goal_setting_pa_expl_11:
-    - text: "In de afgelopen 9 dagen zette je ongeveer [Insert average amount of steps during previous 9 days] stappen
-            per dag!"  # TODO: add number of steps
+    - text: "In de afgelopen 9 dagen zette je ongeveer {goal_setting_baseline_steps} stappen per dag!"
 
 
 # Branch 3b set longterm goal pa
@@ -557,8 +562,7 @@ responses:
             het aantal stappen dat je de dagen ervoor gezet hebt. Zo heb je elke dag een persoonlijk stappendoel die
             haalbaar en uitdagend is. "
   utter_step_goal_pa_4:
-    - text: "Daarom wordt je stappendoel voor morgen: [Insert 7th highest amount of steps during previous 9 days]
-            stappen. 🚶 "  # TODO: add this number
+    - text: "Daarom wordt je stappendoel voor morgen: {notifications_daily_step_goal} stappen. 🚶 "
   utter_step_goal_pa_5:
     - text: "Nu we je stappendoel weten, kunnen we nadenken over hoe je dit doel gaat bereiken. Laten we daarom een
             plan opstellen, net zoals je gedaan hebt voor stoppen met roken. 📝 Dit plan kan helpen om je stappendoelen
@@ -641,6 +645,7 @@ actions:
   - action_continue_testimonial_evaluation
   - action_continue_change_pa_goal
   - action_continue_step_goal_pa
+  - action_get_goal_setting_baseline_steps
 
   - validate_chosen_quit_date_form
   - validate_goal_setting_plan_finished_form

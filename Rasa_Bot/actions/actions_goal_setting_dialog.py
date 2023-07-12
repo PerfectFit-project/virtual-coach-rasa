@@ -1,7 +1,7 @@
 """
 Contains custom actions related to the relapse dialogs
 """
-from virtual_coach_db.dbschema.models import (Testimonials, 
+from virtual_coach_db.dbschema.models import (Testimonials,
                                               Users)
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
@@ -14,7 +14,8 @@ from .helper import (get_goal_setting_chosen_sport_from_db,
                      store_dialog_part_to_db,
                      store_goal_setting_chosen_sport_to_db,
                      store_long_term_pa_goal_to_db,
-                     store_quit_date_to_db)
+                     store_quit_date_to_db,
+                     get_steps_data)
 from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import FollowupAction, SlotSet
@@ -612,3 +613,22 @@ class SetFilePathPaImage(Action):
         filepath = FILE_PATH_IMAGE_PA
 
         return[SlotSet("upload_file_path", filepath)]
+
+
+class ActionGetGoalSettingBaselineSteps(Action):
+    def name(self):
+        return "action_get_goal_setting_baseline_steps"
+
+    async def run(self, dispatcher, tracker, domain):
+        # Get sender ID from slot, this is a string
+        user_id = tracker.current_state()['sender_id']
+        # Get pa daily step goal
+        start = datetime.now()
+        end = start - timedelta(days=9)
+        steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+        baseline_steps_total = sum(day['steps'] for day in steps_data)
+
+        baseline_steps = round(baseline_steps_total/len(steps_data))  # Calculate avg. per day
+
+        return [SlotSet("goal_setting_baseline_steps", baseline_steps)]

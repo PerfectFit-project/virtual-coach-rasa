@@ -11,7 +11,7 @@ import secrets
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
                           DATABASE_URL,
@@ -1228,7 +1228,14 @@ def get_faik_text(user_id):
 
 def get_daily_step_goal_from_db() -> int:
     """
-    Get daily step goal for a given user from the database.
+    Get daily step goal for a given user using data from the step count database.
+
+    For example, for a single participant, daily step count over the last 9 days (ranked from
+    lowest to highest) was 1250, 1332, 3136, 5431, 5552, 5890, 6402, 7301, 10,103. In this case, the 60th percentile
+    represents a goal of 5890 steps. The 6th element is used.
+
+    If there is not data for 9 days available, the number of days will be supplemented to 9 by adding the
+    average of the days with data.
 
     Args:
     user_id (int): The user ID for whom the daily step goal is to be retrieved from the database.
@@ -1236,9 +1243,21 @@ def get_daily_step_goal_from_db() -> int:
     Returns:
     int: The daily step goal for the given user, retrieved from the database.
     """
+    steps_per_day = []
 
-    # TODO: get data from sensors app and compute goal
-    pa_goal = 15
+    start = datetime.now()
+    end = start - timedelta(days=9)
+    steps_data = get_steps_data(user_id=id, start_date=start, end_date=end)
+
+    for day in steps_data:
+        steps_per_day.append(day['steps'])
+
+    if len(steps_per_day) < 9:
+        while len(steps_per_day) < 9:
+            steps_per_day.append(np.mean(steps_per_day))  # Supplement with the average value up to 9 values
+
+    steps_per_day.sort()
+    pa_goal = int(round(steps_per_day[5], -1))
 
     return pa_goal
 
@@ -1287,26 +1306,30 @@ def get_jwt_token(user_id: int) -> str:
 
 # functions for sensors data querying
 def get_steps_data(user_id: int,
-                   start_date: date,
-                   end_date: date) -> Optional[List[Dict[Any, Any]]]:
+                   start_date: date = None,
+                   end_date: date = None) -> Optional[List[Dict[Any, Any]]]:
     """
     Get the steps data of a user in the specified time interval.
     Args:
         user_id: ID of the user whom data needs to be queried.
-        start_date: start of the range of days to query. This day is included in the interval.
-        end_date: end of the range of days to query. This day is not included in the interval.
+        start_date, datetime, optional: start of the range of days to query. This day is included in the interval.
+        end_date, datetime, optional: end of the range of days to query. This day is not included in the interval.
 
-    Returns: A list of dictionary containing, for each day, the date and the number of steps.
+    Returns: A list of dictionary containing, for each day, the date and the number of steps. If no start or end date
+    is specified, it will return all available step data.
     """
 
     token = get_jwt_token(user_id)
-
-    query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
-                    'end': end_date.strftime("%Y-%m-%dT%X")}
-
     headers = {TOKEN_HEADER: token}
 
-    res = requests.get(STEPS_URL, params=query_params, headers=headers, timeout=60)
+    if start_date is not None and end_date is not None:
+        query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
+                        'end': end_date.strftime("%Y-%m-%dT%X")}
+
+        res = requests.get(STEPS_URL, params=query_params, headers=headers, timeout=60)
+
+    else:
+        res = requests.get(STEPS_URL, headers=headers, timeout=60)
 
     try:
         res_json = res.json()

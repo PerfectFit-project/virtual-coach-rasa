@@ -120,6 +120,7 @@ class ActionSetSlotWeeklyOrRelapse(Action):
 
         return [SlotSet('weekly_or_relapse', 1)]
 
+
 class ActionSetSlotRelapseDialog(Action):
     def name(self):
         return "action_set_slot_relapse_dialog_hrs"
@@ -159,6 +160,16 @@ class ActionSetSlotRelapseDialogRelapse(Action):
 
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_RELAPSE)]
+
+
+class ActionSetSlotRelapseDialogSystem(Action):
+    def name(self):
+        return "action_set_slot_relapse_dialog_system"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        return [SlotSet('current_intervention_component',
+                        Components.RELAPSE_DIALOG_SYSTEM)]
 
 
 # Trigger relapse phase through celery

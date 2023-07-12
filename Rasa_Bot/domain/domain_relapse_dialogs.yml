@@ -6,6 +6,7 @@ intents:
   - EXTERNAL_relapse_dialog_relapse
   - EXTERNAL_relapse_dialog_lapse
   - EXTERNAL_relapse_dialog_pa
+  - EXTERNAL_relapse_dialog_system
 
 slots:
   smoke_or_pa:
@@ -956,10 +957,10 @@ responses:
     - text: "Wat vervelend voor je, ik hoop dat je snel weer beter bent. Laten wij over binnenkort 
             weer contact hebben. Mocht je in de tussentijd beter zijn en iets willen doen, stuur 
             mij een berichtje en dan kijken we samen waar je zin in hebt. Veel beterschap!"
-  utter_test_utterance:
-    - text: "This is a test utterance"
-  utter_test_utterance2:
-    - text: "This is a second test utterance"
+
+  # system initiated
+  utter_system_initiated:
+    - text: "Hi,ik zie dat jij een aantal dagen je stappendoel niet hebt gehaald. Laten we hier even over praten"
 
 actions:
   - action_check_reasons
@@ -968,6 +969,7 @@ actions:
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa
   - action_set_slot_relapse_dialog_relapse
+  - action_set_slot_relapse_dialog_system
   - action_set_slot_weekly_or_relapse
   - action_set_slot_smoke_or_pa_1
   - action_set_slot_smoke_or_pa_2

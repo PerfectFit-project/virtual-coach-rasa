@@ -261,8 +261,8 @@ def get_current_steps_goal(user_id: int, day: date) -> Optional[int]:
     """
     steps_per_day = []
 
-    start = day
-    end = start - timedelta(days=9)
+    end = day
+    start = end - timedelta(days=9)
     steps_data = connector.get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
     for day in steps_data:

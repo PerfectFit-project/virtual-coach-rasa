@@ -5,7 +5,7 @@ from state_machine.controller import (OnboardingState, TrackingState, GoalsSetti
                                       BufferState, ExecutionRunState, RelapseState, ClosingState)
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
-from typing import List
+from typing import List, Optional
 from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
                                               UserStateMachine)
 from virtual_coach_db.helper.definitions import Components, Notifications
@@ -203,6 +203,18 @@ def get_component_name(intervention_component_trigger: str) -> str:
     )
 
     return selected.intervention_component_name
+
+
+def get_current_steps_goal(user_id: int) -> Optional[int]:
+    session = get_db_session(DATABASE_URL)
+
+    steps_goal = (session.query(Users)
+                  .filter(Users.nicedayuid == user_id).one_or_none())
+
+    if steps_goal is not None:
+        return steps_goal.pa_steps_daily_goal
+
+    return None
 
 
 def get_dialog_state(state_machine: StateMachine) -> int:

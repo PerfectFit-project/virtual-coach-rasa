@@ -8,16 +8,18 @@ from datetime import date, datetime, timedelta
 from django.conf import settings
 from django.core.cache import cache
 from niceday_client import NicedayClient
+from state_machine.state import State
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
                                  RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL,
                                  MAXIMUM_INACTIVE_DAYS)
+from sensorapi import connector
 from typing import Optional
 from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
                           create_new_user, get_component_name, get_user_fsm, get_dialog_state,
                           get_all_fsm, save_state_machine_to_db, send_fsm_event,
                           set_dialog_running_status, update_scheduled_task_db)
-from virtual_coach_db.helper.definitions import NotificationsTriggers
+from virtual_coach_db.helper.definitions import NotificationsTriggers, ComponentsTriggers
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 app.conf.enable_utc = True
@@ -57,10 +59,45 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     sender.add_periodic_task(crontab(hour=00, minute=00), notify_new_day.s())
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
+    # check if the user is in physical relapse
+    sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
     # check if a dialog has been completed
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them
     sender.add_periodic_task(INVITES_CHECK_INTERVAL, check_new_connection_request.s())
+
+
+@app.task(bind=True)
+def check_physical_relapse(self):
+    """
+    This tasks checks if the user has fallen into a physical activity relapse state and,
+    in this case, triggers the correspondent dialog
+    """
+
+    range_start = date.today() - timedelta(days=1)
+    range_end = range_start - timedelta(days=5)
+
+    state_machines = get_all_fsm()
+
+    for fsm in state_machines:
+        relapse = False
+        user_id = fsm.machine_id
+        if fsm.dialog_state == State.EXECUTION_RUN:
+            current_goal = get_current_steps_goal(user_id)
+            steps_taken = connector.get_steps_data(user_id, range_end, range_start)
+            if steps_taken is None:
+                relapse = True
+            elif steps_taken[-1]['date'] != range_start or steps_taken[-1]['steps'] < 8000:
+                if len(steps_taken) < 3:
+                    relapse = True
+                else:
+                    not_reached = [entry for entry in steps_taken if entry['steps'] < 8000]
+                    if len(not_reached) >= 4 or (len(not_reached) == 3 and not_reached[-1] == range_start - timedelta(days=2)):
+                        relapse = True
+
+        if relapse:
+            trigger_intervention_component.apply_async(
+                args=[user_id, ComponentsTriggers.RELAPSE_DIALOG_SYSTEM])
 
 
 @app.task(bind=True)

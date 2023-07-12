@@ -855,7 +855,7 @@ responses:
             Typ '6' als je ziek of geblesseerd bent/was.\n
             Typ '7' als er iets anders is/was."
   utter_ask_pa_doing_today_slot:
-    - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. 
+    - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
             Typ '1' als je aan het werk was. 💼 \n
             Typ '2' als je thuis bezig was met klusjes of huishouden. 🧹🛠️ \n
             Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken).☀️ \n
@@ -960,7 +960,7 @@ responses:
 
   # system initiated
   utter_system_initiated:
-    - text: "Hi,ik zie dat jij een aantal dagen je stappendoel niet hebt gehaald. Laten we hier even over praten"
+    - text: "Hi, ik zie dat jij een aantal dagen je stappendoel niet hebt gehaald. Laten we hier even over praten"
 
 actions:
   - action_check_reasons

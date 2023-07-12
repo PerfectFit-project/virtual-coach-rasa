@@ -167,9 +167,11 @@ class ActionSetSlotRelapseDialogSystem(Action):
         return "action_set_slot_relapse_dialog_system"
 
     async def run(self, dispatcher, tracker, domain):
-
-        return [SlotSet('current_intervention_component',
-                        Components.RELAPSE_DIALOG_SYSTEM)]
+        # set the current intervention component and the slots needed
+        # to proceed correctly in the dialog
+        return [SlotSet('current_intervention_component', Components.RELAPSE_DIALOG_SYSTEM),
+                SlotSet('smoke_or_pa', 2),
+                SlotSet('weekly_or_relapse', 1)]
 
 
 # Trigger relapse phase through celery
@@ -927,11 +929,12 @@ class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
             tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
         # pylint: disable=unused-argument
         """Validate pa_type"""
-
         last_utterance = get_latest_bot_utterance(tracker.events)
+        print(f'Last utterace: {last_utterance}')
         if last_utterance != 'utter_ask_pa_type':
             return {"pa_type": None}
 
+        print(f'pa_type: {value}')
         return {"pa_type": value}
 
     def validate_pa_together(

@@ -18,7 +18,8 @@ from celery_utils import (check_if_physical_relapse, check_if_task_executed, che
                           check_if_user_exists, create_new_user, get_component_name, get_user_fsm,
                           get_dialog_state, get_all_fsm, save_state_machine_to_db,
                           send_fsm_event, set_dialog_running_status, update_scheduled_task_db)
-from virtual_coach_db.helper.definitions import NotificationsTriggers, ComponentsTriggers
+from virtual_coach_db.helper.definitions import NotificationsTriggers, ComponentsTriggers, \
+    Components
 
 app = Celery('celery_tasks', broker=REDIS_URL)
 app.conf.enable_utc = True
@@ -83,6 +84,12 @@ def check_physical_relapse(self):
             relapse = check_if_physical_relapse(user_id, range_start)
 
             if relapse:
+                current_dialog_state = get_dialog_state(fsm)
+                if current_dialog_state == RUNNING:
+                    new_time = datetime.now() + timedelta(seconds=MAXIMUM_DIALOG_DURATION)
+                    reschedule_dialog.apply_async(
+                        args=[user_id, Components.RELAPSE_DIALOG_SYSTEM, new_time])
+
                 trigger_intervention_component.apply_async(
                     args=[user_id, ComponentsTriggers.RELAPSE_DIALOG_SYSTEM])
 

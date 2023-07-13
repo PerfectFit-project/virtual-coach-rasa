@@ -79,15 +79,13 @@ def check_if_physical_relapse(user_id: int, start_date: date) -> bool:
     range_start = start_date
     range_end = range_start - timedelta(days=5)
 
-    # get the steps goal for the last day
-    current_goal = get_current_steps_goal(user_id, range_start)
     # get the list of steps per day
     steps_taken = connector.get_steps_data(user_id, range_end, range_start)
     # if no steps have been recorded in the past 5 days
     if steps_taken is None:
         relapse = True
     # if no recordings are available for the day, or the value is lower than the threshold
-    elif steps_taken[-1]['date'] != range_start or steps_taken[-1]['steps'] < current_goal:
+    elif steps_taken[-1]['date'] != range_start or steps_taken[-1]['steps'] < 8000:
         # if there are less than 3 days with recording is the same thing as having not reached
         # the goal 4 times in 5 days
         if len(steps_taken) < 2:

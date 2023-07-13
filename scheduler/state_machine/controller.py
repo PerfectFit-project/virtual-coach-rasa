@@ -335,6 +335,13 @@ class BufferState(State):
                            dialog=dialog,
                            phase_id=1)
 
+    def on_dialog_completed(self, dialog):
+        logging.info('A dialog has been completed  %s ', dialog)
+
+        store_completed_dialog(user_id=self.user_id,
+                               dialog=dialog,
+                               phase_id=2)
+
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
         if current_date >= quit_date:

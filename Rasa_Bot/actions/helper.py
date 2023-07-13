@@ -816,7 +816,7 @@ def get_pa_group(user_id: int) -> int:
     return user_info.pa_intervention_group
 
 
-def set_pa_group(user_id: int, pa_group: int):
+def set_pa_group_to_db(user_id: int, pa_group: int):
     """
     Set the physical activity group of a user
     Args:
@@ -1226,7 +1226,7 @@ def get_faik_text(user_id):
     return kit_text, filled, activity_ids_list
 
 
-def get_daily_step_goal_from_db() -> int:
+def get_daily_step_goal_from_db(user_id) -> int:
     """
     Get daily step goal for a given user using data from the step count database.
 
@@ -1245,8 +1245,8 @@ def get_daily_step_goal_from_db() -> int:
     """
     steps_per_day = []
 
-    start = datetime.now()
-    end = start - timedelta(days=9)
+    end = datetime.now()
+    start = end - timedelta(days=9)
     steps_data = get_steps_data(user_id=id, start_date=start, end_date=end)
 
     for day in steps_data:
@@ -1306,14 +1306,14 @@ def get_jwt_token(user_id: int) -> str:
 
 # functions for sensors data querying
 def get_steps_data(user_id: int,
-                   start_date: date = None,
-                   end_date: date = None) -> Optional[List[Dict[Any, Any]]]:
+                   start_date: Optional[date] = None,
+                   end_date: Optional[date] = None) -> Optional[List[Dict[Any, Any]]]:
     """
     Get the steps data of a user in the specified time interval.
     Args:
-        user_id: ID of the user whom data needs to be queried.
-        start_date, datetime, optional: start of the range of days to query. This day is included in the interval.
-        end_date, datetime, optional: end of the range of days to query. This day is not included in the interval.
+        user_id (int): ID of the user whom data needs to be queried.
+        start_date (Optional[date]): start of the range of days to query. This day is  included in the interval.
+        end_date (Optional[date]): end of the range of days to query. This day is not included in the interval.
 
     Returns: A list of dictionary containing, for each day, the date and the number of steps. If no start or end date
     is specified, it will return all available step data.
@@ -1323,8 +1323,8 @@ def get_steps_data(user_id: int,
     headers = {TOKEN_HEADER: token}
 
     if start_date is not None and end_date is not None:
-        query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
-                        'end': end_date.strftime("%Y-%m-%dT%X")}
+        query_params = {'start': start_date.strftime("%Y-%m-%d"),
+                        'end': end_date.strftime("%Y-%m-%d")}
 
         res = requests.get(STEPS_URL, params=query_params, headers=headers, timeout=60)
 

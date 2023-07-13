@@ -7,14 +7,16 @@ from dateutil.relativedelta import relativedelta
 from . import validator
 from .definitions import REDIS_URL
 from .helper import (get_intensity_minutes_goal,
-                     get_intervention_component_id, 
+                     get_intervention_component_id,
                      get_last_completed_dialog_part_from_db,
-                     get_latest_bot_utterance, 
+                     get_latest_bot_utterance,
                      get_pa_group,
-                     get_user, 
+                     get_steps_data,
+                     get_step_goals_and_steps,
+                     get_user,
                      get_user_intervention_state_hrs,
                      make_step_overview,
-                     set_pa_group,
+                     set_pa_group_to_db,
                      store_dialog_part_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
@@ -208,11 +210,27 @@ class SetPaGroup(Action):
         return "action_set_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
+        # Get user id and set constants
         user_id = int(tracker.current_state()['sender_id'])
-        ## TODO retrieve the steps number to decide which is the group
-        pa_group = 2
+        group_2_threshold_total_steps = 56000
+        sufficient_daily_steps = 8000
+        group_2_threshold_daily_steps = 4
 
-        set_pa_group(user_id, pa_group)
+        # Get steps data last 7 days
+        end = datetime.now()
+        start = end - datetime.timedelta(days=7)
+        steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+        total_steps = sum(day['steps'] for day in steps_data)
+        daily_steps = sum((day['steps'] >= sufficient_daily_steps) for day in steps_data)
+
+        if (total_steps >= group_2_threshold_total_steps) and (daily_steps >= group_2_threshold_daily_steps):
+            pa_group = 2
+
+        else:
+            pa_group = 1
+
+        set_pa_group_to_db(user_id, pa_group)
 
         return [SlotSet('pa_group', pa_group)]
 
@@ -223,7 +241,17 @@ class SetStepGoalDays(Action):
 
     async def run(self, dispatcher, tracker, domain):
         ## TODO This method should get step goal days and set accordingly
-        step_goal_days = 4
+        # (1) get steps data, (2) calculate goals, (3) compare goal with actual steps
+        # Get steps data last 7+9
+        user_id = int(tracker.current_state()['sender_id'])
+
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=16)
+        steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+        step_goals, actual_steps = get_step_goals_and_steps(steps_data, start, end)
+
+
         return [SlotSet('step_goal_days', step_goal_days)]
 
 
@@ -232,8 +260,7 @@ class StepGoalUtterances(Action):
         return "action_step_goal_utterances"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO retrieve amount of days that step goal was met, then set the slot
-        step_goal_days = 7
+        step_goal_days = tracker.current_state()['step_goal_days']
         if step_goal_days > 5:
             dispatcher.utter_message(response="utter_overview_group1_4")
         elif 3 < step_goal_days < 6:

@@ -1247,7 +1247,7 @@ def get_daily_step_goal_from_db(user_id) -> int:
 
     end = datetime.now()
     start = end - timedelta(days=9)
-    steps_data = get_steps_data(user_id=id, start_date=start, end_date=end)
+    steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
     for day in steps_data:
         steps_per_day.append(day['steps'])
@@ -1378,8 +1378,8 @@ def get_intensity_minutes_data(user_id: int,
 
     token = get_jwt_token(user_id)
 
-    query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
-                    'end': end_date.strftime("%Y-%m-%dT%X")}
+    query_params = {'start': start_date.strftime("%Y-%m-%d"),
+                    'end': end_date.strftime("%Y-%m-%d")}
 
     headers = {TOKEN_HEADER: token}
 
@@ -1396,3 +1396,48 @@ def get_intensity_minutes_data(user_id: int,
     except ValueError:
         logging.error(f"Error in returned value from sensors: '{res}'")
         return None
+
+
+def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
+                             start: datetime,
+                             end: datetime) -> (list, list):
+    """
+    Calculate step goals for consecutive 9-day periods within a specified date range.
+
+    Args:
+        steps_data (list): List of dictionaries containing 'date' and 'steps' data.
+        start (datetime.datetime): Start date of the desired range.
+        end (datetime.datetime): End date of the desired range.
+
+    Returns:
+        goals: List of step goals calculated for each consecutive 9-day period within the specified range.
+        actual_steps: List of actual taken steps from the last 7 days before the specified end date.
+    """
+    df = pd.DataFrame(steps_data)
+    df.set_index('date', inplace=True)
+
+    # Check whether the first expected date is present
+    if df.index.min().strftime('%y%m%d') != start.strftime('%y%m%d'):
+        df.loc[start.date()] = np.nan
+
+    # Check whether last expected date is present
+    end_date = end - timedelta(days=1)
+    if df.index.max().strftime('%y%m%d') != end_date.strftime('%y%m%d'):
+        df.loc[end_date.date()] = np.nan
+
+    df = df.asfreq('D')
+    steps = list(df.steps)
+    step_goals = []
+    for i in range(7):
+        steps_nine_days = steps[i:i + 9]
+        steps_nine_days = [x for x in steps_nine_days if not pd.isna(x)]  # Remove NaN values
+
+        while len(steps_nine_days) < 9:
+            steps_nine_days.append(np.mean(steps_nine_days))  # Supplement with the average value up to 9 values
+
+        steps_nine_days.sort()
+        step_goals.append(int(round(steps_nine_days[5], -1)))
+
+    actual_steps = list(df.steps[-7:])
+
+    return step_goals, actual_steps

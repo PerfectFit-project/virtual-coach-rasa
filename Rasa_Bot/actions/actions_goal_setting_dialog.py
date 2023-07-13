@@ -622,9 +622,10 @@ class ActionGetGoalSettingBaselineSteps(Action):
     async def run(self, dispatcher, tracker, domain):
         # Get sender ID from slot, this is a string
         user_id = tracker.current_state()['sender_id']
-        # Get pa daily step goal
-        start = datetime.now()
-        end = start - timedelta(days=9)
+
+        # Get avg. steps per day
+        end = datetime.now()
+        start = end - timedelta(days=9)
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
         baseline_steps_total = sum(day['steps'] for day in steps_data)

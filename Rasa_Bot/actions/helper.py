@@ -1400,7 +1400,7 @@ def get_intensity_minutes_data(user_id: int,
 
 def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
                              start: datetime,
-                             end: datetime) -> (list, list):
+                             end: datetime) -> (list, list, int):
     """
     Calculate step goals for consecutive 9-day periods within a specified date range.
 
@@ -1410,8 +1410,9 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         end (datetime.datetime): End date of the desired range.
 
     Returns:
-        goals: List of step goals calculated for each consecutive 9-day period within the specified range.
-        actual_steps: List of actual taken steps from the last 7 days before the specified end date.
+        goals (list): List of step goals calculated for each consecutive 9-day period within the specified range.
+        actual_steps (list): List of actual taken steps from the last 7 days before the specified end date.
+        goals_achieved (int): number of days that the step goals were reached
     """
     df = pd.DataFrame(steps_data)
     df.set_index('date', inplace=True)
@@ -1439,5 +1440,6 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         step_goals.append(int(round(steps_nine_days[5], -1)))
 
     actual_steps = list(df.steps[-7:])
+    goals_achieved = sum(np.array(step_goals) < np.array(actual_steps))
 
-    return step_goals, actual_steps
+    return step_goals, actual_steps, goals_achieved

@@ -240,17 +240,13 @@ class SetStepGoalDays(Action):
         return "action_set_step_goal_days"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO This method should get step goal days and set accordingly
-        # (1) get steps data, (2) calculate goals, (3) compare goal with actual steps
-        # Get steps data last 7+9
         user_id = int(tracker.current_state()['sender_id'])
 
         end = datetime.datetime.now()
         start = end - datetime.timedelta(days=16)
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
-        step_goals, actual_steps = get_step_goals_and_steps(steps_data, start, end)
-
+        _, _, _, step_goal_days = get_step_goals_and_steps(steps_data, start, end)
 
         return [SlotSet('step_goal_days', step_goal_days)]
 
@@ -314,20 +310,24 @@ class ShowPaOverview(Action):
         return "action_show_pa_overview"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO retrieve step goal per day and dates, placeholder for now
+        # Get data from API
+        user_id = int(tracker.current_state()['sender_id'])
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=16)
+        steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
+        # Get steps, goals and dates
+        step_goal, step_array, date_array, _ = get_step_goals_and_steps(steps_data, start, end)
 
-        ## TODO replace these stepholders with the database data
-        date_array = ['Mon 16', 'Tue 17', 'Wed 18', 'Thu 19', 'Fri 20', 'Sat 21', 'Sun 22']
-        step_array = [5000, 6000, 7000, 8000, 9000, 10000, 11000]
-        step_goal = [4000, 7000, 6000, 9000, 8000, 11000, 10000]
+        # Replace nans with zeros and convert to integer for plotting
+        step_array = [int(x) if not np.isnan(x) else 0 for x in step_array]
 
         fig = make_step_overview(date_array, step_array, step_goal)
 
         filepath = '/app/pa_overview.PNG'
 
         try:
-            fig.write_image("pa_overview.PNG")
+            fig.write_image("pa_overview5.PNG")
         except Exception:
             logging.info("File upload unsuccessful.")
 

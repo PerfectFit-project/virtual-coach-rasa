@@ -164,7 +164,8 @@ def get_all_fsm() -> List[StateMachine]:
 
 def get_all_fsm_from_db() -> List[UserStateMachine]:
     """
-       Get a list of state machines as saved in the DB for all the users
+       Get a list of state machines as saved in the DB for all the users. The users
+       who completed the intervention are excluded.
 
        Returns: A list of UserStateMachine objects representing the
        user_state_machine table on the DB
@@ -172,7 +173,9 @@ def get_all_fsm_from_db() -> List[UserStateMachine]:
        """
     session = get_db_session(DATABASE_URL)
 
-    fsm_db = (session.query(UserStateMachine).all())
+    fsm_db = (session.query(UserStateMachine)
+              .filter(UserStateMachine.state != State.COMPLETED)
+              .all())
 
     return fsm_db
 

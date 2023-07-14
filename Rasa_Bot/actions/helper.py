@@ -1259,7 +1259,30 @@ def get_daily_step_goal_from_db(user_id) -> int:
     steps_per_day.sort()
     pa_goal = int(round(steps_per_day[5], -1))
 
+    # Min value 2000, max value 10.000
+    pa_goal = min_max_step_goal(pa_goal)
     return pa_goal
+
+
+def min_max_step_goal(step_goal):
+    """
+        Applies a minimum, maximum, and step goal transformation to the input value(s).
+
+        Parameters:
+            step_goal (int, float, list): The input value(s) to be transformed. It can be a single value or a list of
+            values.
+
+        Returns:
+            int, float, list: If `pa_goal` is a single value, the function returns the transformed value according to
+                              the minimum and maximum bounds.
+                              If `pa_goal` is a list of values, the function returns a list of transformed values
+        """
+    min_val = 2000
+    max_val = 10000
+    if isinstance(step_goal, list):
+        return [min(max(x, min_val), max_val) for x in step_goal]
+    else:
+        return min(max(step_goal, min_val), max_val)
 
 
 def get_weekly_intensity_minutes_goal_from_db(user_id: int) -> int:
@@ -1402,7 +1425,9 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
                              start: datetime,
                              end: datetime) -> (list, list, int):
     """
-    Calculate step goals for consecutive 9-day periods within a specified date range.
+    Calculate step goals for consecutive 9-day periods within a specified date range and the actual steps corresponding
+    to the goals. Also a list with the dates of these steps is returned. Lastly, the option is to return the value
+    of the amount of days that the step goal was achieved.
 
     Args:
         steps_data (list): List of dictionaries containing 'date' and 'steps' data.
@@ -1411,7 +1436,9 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
 
     Returns:
         goals (list): List of step goals calculated for each consecutive 9-day period within the specified range.
-        actual_steps (list): List of actual taken steps from the last 7 days before the specified end date.
+        actual_steps (list): List of actual taken steps from the last 7 days before the specified end date. Missing
+                             values are returned as 0.
+        date_list (list): List of dates corresponding to the values in 'actual_steps'.
         goals_achieved (int): number of days that the step goals were reached
     """
     df = pd.DataFrame(steps_data)
@@ -1422,11 +1449,14 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         df.loc[start.date()] = np.nan
 
     # Check whether last expected date is present
-    end_date = end - timedelta(days=1)
+    end_date = end - timedelta(days=1)  # -1 day, because the end date is not returned from the API
     if df.index.max().strftime('%y%m%d') != end_date.strftime('%y%m%d'):
         df.loc[end_date.date()] = np.nan
 
+    # Resample the data to a day-to-day base. Add nans for empty dates
     df = df.asfreq('D')
+
+    # Calculate the step goals
     steps = list(df.steps)
     step_goals = []
     for i in range(7):
@@ -1437,9 +1467,18 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
             steps_nine_days.append(np.mean(steps_nine_days))  # Supplement with the average value up to 9 values
 
         steps_nine_days.sort()
-        step_goals.append(int(round(steps_nine_days[5], -1)))
+        step_goals.append(int(round(steps_nine_days[5], -1)))  # Sixth element is used by definition of algorithm
 
-    actual_steps = list(df.steps[-7:])
+    # Minimum goal is 2000, max is 10.000 steps/per day.
+    step_goals = min_max_step_goal(step_goals)
+
+    actual_steps = [int(x) if not np.isnan(x) else 0 for x in steps[-7:]]
+
+    # Calculate number of days goal is achieved
     goals_achieved = sum(np.array(step_goals) < np.array(actual_steps))
 
-    return step_goals, actual_steps, goals_achieved
+    # Get list with dates
+    date_list = df.index[-7:]
+    date_list = date_list.strftime('%a %d').tolist()  # Convert the dates to the desired format
+
+    return step_goals, actual_steps, date_list, goals_achieved

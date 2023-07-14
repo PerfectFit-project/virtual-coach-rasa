@@ -1425,7 +1425,7 @@ def get_intensity_minutes_data(user_id: int,
 
 def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
                              start: datetime,
-                             end: datetime) -> (list, list, int):
+                             end: datetime) -> Tuple[List[int], List[int], List[str], int]:
     """
     Calculate step goals for consecutive 9-day periods within a specified date range and the actual
     steps corresponding to the goals. Also a list with the dates of these steps is returned. Lastly,

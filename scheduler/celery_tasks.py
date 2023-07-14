@@ -1,4 +1,5 @@
 import logging
+import time
 
 import requests
 from celery import Celery
@@ -7,11 +8,10 @@ from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from django.conf import settings
 from django.core.cache import cache
-from niceday_client import NicedayClient
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
                                  RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL,
-                                 MAXIMUM_INACTIVE_DAYS)
+                                 MAXIMUM_INACTIVE_DAYS, WORDS_PER_SECOND, MAX_DELAY)
 from typing import Optional
 from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
                           create_new_user, get_component_name, get_user_fsm, get_dialog_state,
@@ -20,11 +20,15 @@ from celery_utils import (check_if_task_executed, check_if_user_active, check_if
                           update_task_uuid_db)
 from virtual_coach_db.helper.definitions import NotificationsTriggers
 
+from niceday_client import NicedayClient
+
 app = Celery('celery_tasks', broker=REDIS_URL)
 app.conf.enable_utc = True
 app.conf.timezone = TIMEZONE
 # 1 month visibility. Temporary fix
 app.conf.broker_transport_options = {'visibility_timeout': 2678400}
+
+client = NicedayClient(niceday_api_uri=NICEDAY_API_ENDPOINT)
 
 # Django configuration for cache memory usage
 CACHES = {
@@ -102,7 +106,6 @@ def check_new_connection_request(self):
     with memcache_lock(lock_id, self.app.oid) as acquired:
         if acquired:
             logging.info('checking new connections')
-            client = NicedayClient(NICEDAY_API_ENDPOINT)
 
             pending_requests = client.get_invitation_requests()
 
@@ -232,17 +235,14 @@ def trigger_intervention_component(self,  # pylint: disable=unused-argument
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
     """
-    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
-    headers = {'Content-Type': 'application/json'}
-    params = {'output_channel': 'niceday_trigger_input_channel'}
-    data = '{"name": "' + trigger + '" }'
-    response = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    response_intent = send_trigger(user_id, trigger)
 
-    if response.status_code == 200:
+    if response_intent == 200:
         # if the request succeeded, update the fsm
         name = get_component_name(trigger)
         send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, name))
     else:
+        logging.info('Exception during trigger_intervention_component')
         raise Exception()
 
 
@@ -318,13 +318,10 @@ def trigger_intent(self,  # pylint: disable=unused-argument
     if current_dialog_state == RUNNING:
         return
 
-    endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
-    headers = {'Content-Type': 'application/json'}
-    params = {'output_channel': 'niceday_trigger_input_channel'}
-    data = '{"name": "' + trigger + '" }'
-    response = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
+    response_intent = send_trigger(user_id, trigger)
 
-    if response.status_code != 200:
+    if response_intent != 200:
+        logging.info('Exception during trigger_intent')
         raise Exception()
 
     if dialog_status is not None:
@@ -347,6 +344,7 @@ def pause_conversation(self,  # pylint: disable=unused-argument
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
 
     if response.status_code != 200:
+        logging.info('Exception during pause_conversation')
         raise Exception()
 
 
@@ -398,6 +396,7 @@ def resume(self,  # pylint: disable=unused-argument
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
 
     if response.status_code != 200:
+        logging.info('Exception during resume')
         raise Exception()
 
     if dialog_status is not None:
@@ -424,11 +423,38 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
     if response_resume.status_code != 200:
         raise Exception()
 
+    response_intent = send_trigger(user_id, trigger)
+    if response_intent != 200:
+        logging.info('Exception during resume_and_trigger')
+        raise Exception()
+
+
+def send_trigger(user_id: int, trigger: str):
+    """
+    Prepare and send the HTTP post request to rasa for triggering an intent.
+    Args:
+        user_id: ID of the user to whom the intent has to be sent
+        trigger: Intent trigger
+
+    Returns:
+
+    """
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
-    params = {'output_channel': 'niceday_trigger_input_channel'}
+    params = {'output_channel': 'latest'}
     data = '{"name": "' + trigger + '" }'
+
     response_intent = requests.post(endpoint, headers=headers, params=params, data=data, timeout=60)
 
-    if response_intent.status_code != 200:
-        raise Exception()
+    res_json = response_intent.json()
+
+    for mes in res_json['messages']:
+        recipient_id = mes['recipient_id']
+        message = mes['text']
+        client.post_message(int(recipient_id), message)
+
+        delay = len(message.split(' ')) / WORDS_PER_SECOND
+        delay = min(delay, MAX_DELAY)
+        time.sleep(delay)
+
+    return response_intent.status_code

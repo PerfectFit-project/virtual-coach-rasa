@@ -147,7 +147,10 @@ class GeneralActivityCheckRating(Action):
             .all()
         )
 
-        lowest_score = top_five_activities[-1].activity_rating
+        if len(top_five_activities) > 0:
+            lowest_score = top_five_activities[-1].activity_rating
+        else:
+            lowest_score = 0
 
         # if the activity is not in the FAK, add it
         if not current_record:
@@ -486,9 +489,10 @@ class GetActivityCoachChoice(Action):
 
         mandatory, _ = get_possible_activities(user_id)
         activity_title = mandatory[0].intervention_activity_title
-
+        mandatory_ids = [activity.intervention_activity_id for activity in mandatory]
         return [SlotSet("chosen_activity_slot", activity_title),
-                SlotSet("general_activity_next_activity_slot", 0)]
+                SlotSet("general_activity_next_activity_slot", 1),
+                SlotSet("rnd_activities_ids",  mandatory_ids)]
 
 
 class CheckWhoDecides(Action):
@@ -667,11 +671,11 @@ class SendPersuasiveMessageActivity(Action):
         return "send_persuasive_message_activity"
 
     async def run(self, dispatcher, tracker, domain):
-
         chosen_option = int(tracker.get_slot('general_activity_next_activity_slot'))
         activities_slot = tracker.get_slot('rnd_activities_ids')
 
         activity_id = activities_slot[chosen_option - 1]
+
         session = get_db_session(db_url=DATABASE_URL)
 
         # Get the activity benefit

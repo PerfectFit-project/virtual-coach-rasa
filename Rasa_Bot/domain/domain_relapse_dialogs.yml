@@ -435,9 +435,8 @@ responses:
             Typ 3 voor shags.\n
             Typ 4 als je iets anders hebt gerookt."
   utter_ask_number_smoke:
-    - text: "Hoeveel heb je daarvan gerookt?"
-    - text: "Kan je me vertellen hoeveel je daarvan hebt gerookt?"
-    - text: "Heb je een idee hoeveel je daarvan hebt gerookt?"
+    - text: "Kun je aangeven hoeveel je de afgelopen week ongeveer hebt gerookt in totaal?"
+    - text: "Kan je schatten hoeveel je de afgelopen week in totaal hebt gerookt?"
   utter_smoke_lapse_5:
     - text: "Bedankt voor je eerlijkheid.🙏"
     - text: "Dank dat je open bent geweest.🙏"
@@ -1040,8 +1039,8 @@ forms:
       - ehbo_me_self_lapse
   type_and_number_smoke_form:
     required_slots:
-      - type_smoke
       - number_smoke
+      - type_smoke
   what_doing_how_feel_smoke_form:
     required_slots:
       - what_doing_smoke

@@ -8,7 +8,7 @@ from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
 from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
                                               UserStateMachine)
-from virtual_coach_db.helper.definitions import Components
+from virtual_coach_db.helper.definitions import Components, Notifications
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 import logging
@@ -164,7 +164,8 @@ def get_all_fsm() -> List[StateMachine]:
 
 def get_all_fsm_from_db() -> List[UserStateMachine]:
     """
-       Get a list of state machines as saved in the DB for all the users
+       Get a list of state machines as saved in the DB for all the users. The users
+       who completed the intervention are excluded.
 
        Returns: A list of UserStateMachine objects representing the
        user_state_machine table on the DB
@@ -172,7 +173,9 @@ def get_all_fsm_from_db() -> List[UserStateMachine]:
        """
     session = get_db_session(DATABASE_URL)
 
-    fsm_db = (session.query(UserStateMachine).all())
+    fsm_db = (session.query(UserStateMachine)
+              .filter(UserStateMachine.state != State.COMPLETED)
+              .all())
 
     return fsm_db
 
@@ -378,6 +381,38 @@ def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:
                                         intervention_component_id=dialog.intervention_component_id)
 
     return db_state_machine
+
+
+def update_scheduled_task_db(user_id: int, task_uuid: str):
+    """
+    Update the last time and the completion status of a task that was triggered
+    after its scheduling
+    Args:
+        user_id: the ID of the user to send the trigger to
+        task_uuid: uuid of the task
+    """
+    session = get_db_session(DATABASE_URL)
+
+    task_entry = (session.query(UserInterventionState)
+                  .filter(UserInterventionState.users_nicedayuid == user_id,
+                          UserInterventionState.task_uuid == task_uuid)
+                  .one_or_none())
+
+    if task_entry is None:
+        return
+
+    # update the last time value to the current time
+    task_entry.last_time = datetime.now().astimezone(TIMEZONE)
+
+    component = task_entry.intervention_component
+
+    # if a notification has been triggered, it must be marked as completed
+    # (no further interactions needed)
+    values = [item.value for item in Notifications]
+    if component.intervention_component_name in values:
+        task_entry.completed = True
+
+    session.commit()
 
 
 def save_user_to_db(user: Users):

@@ -9,11 +9,13 @@ import plotly.graph_objects as go
 import requests
 import secrets
 
+from celery import Celery
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from datetime import datetime, date
 from typing import Any, Dict, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
+                          REDIS_URL,
                           DATABASE_URL,
                           EVENING_SEND_TIME,
                           SENSOR_KEY_PATH,
@@ -21,6 +23,8 @@ from .definitions import (AFTERNOON_SEND_TIME,
                           NUM_TOP_ACTIVITIES,
                           PROFILE_CREATION_CONF_SLOTS,
                           STEPS_URL,
+                          HR_URL,
+                          HR_INTENSITY_THRESHOLD,
                           TIMEZONE,
                           TOKEN_HEADER,
                           FsmStates)
@@ -32,13 +36,21 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
                                               InterventionComponents,
-                                              InterventionPhases,
                                               UserInterventionState,
                                               UserStateMachine,
                                               Users)
 
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
+
+celery = Celery(broker=REDIS_URL)
+
+
+def mark_completion(user_id, dialog):
+
+    celery.send_task('celery_tasks.intervention_component_completed', (user_id, dialog))
+
+    return []
 
 
 def compute_godin_level(tracker) -> int:
@@ -447,62 +459,6 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
     session.commit()  # Update database
 
 
-def store_user_intervention_state(user_id: int, intervention_component: str, phase: str):
-    """
-    Updater the user_intervention_state table, adding a new row with the intervention_component
-
-    Args:
-        user_id: niceday user id
-        intervention_component: the name of the intervention component.
-                                The names are listed in virtual_coach_db.helper.definitions
-                                in the Components class
-        phase: the name of the phase. The names are listed in virtual_coach_db.helper.definitions
-               Phases class
-
-    Returns:
-            nothing
-
-    """
-    session = get_db_session(db_url=DATABASE_URL)
-
-    phases = (
-        session.query(
-            InterventionPhases
-        )
-        .filter(
-            InterventionPhases.phase_name == phase
-        )
-        .first()
-    )
-
-    components = (
-        session.query(
-            InterventionComponents
-        )
-        .filter(
-            InterventionComponents.intervention_component_name == intervention_component
-        )
-        .first()
-    )
-
-    # if the list of phases of components is empty, it is not in the DB
-    if not phase or not components:
-        raise ValueError('component or phase not found')
-
-    session.add(UserInterventionState(
-        users_nicedayuid=user_id,
-        intervention_phase_id=phases.phase_id,
-        intervention_component_id=components.intervention_component_id,
-        completed=False,
-        last_time=datetime.now().astimezone(TIMEZONE),
-        last_part=0,
-        next_planned_date=None,
-        task_uuid=None
-    )
-    )
-    session.commit()  # Update database
-
-
 def get_activities_from_id(activity_id: int) -> InterventionActivity:
     """
     Get the InterventionActivity of an activity.
@@ -564,7 +520,7 @@ def get_current_phase_time(user_id: int, phase: str) -> int:
                     The number of days or weeks in the current state
 
     """
-    if phase not in [FsmStates.TRACKING, FsmStates.GOALS_SETTING, FsmStates.GOALS_SETTING]:
+    if phase not in [FsmStates.EXECUTION_RUN, FsmStates.RELAPSE]:
         time = get_days_from_start(user_id)
     else:
         time = get_execution_week(user_id)
@@ -588,6 +544,39 @@ def get_days_from_start(user_id: int) -> int:
     spent_days = (current_date - start_date).days + 1  # if the date is the same, it is day 1
 
     return spent_days
+
+
+def get_dialog_completion_state(user_id: int, dialog: str) -> Optional[bool]:
+    """
+    Determines if the user has completed the dialog at least onece
+    Args:
+        user_id: the id of the user
+        dialog: name of the dialog
+
+    Returns: True if the dialog has been completed at least once, False otherwise
+
+    """
+
+    session = get_db_session(DATABASE_URL)
+
+    selected = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.completed.is_(True),
+            InterventionComponents.intervention_component_name == dialog
+        )
+        .limit(1)  # get only the first result
+        .one_or_none()
+    )
+
+    if selected is not None:
+        return True
+
+    return False
 
 
 def get_execution_week(user_id: int) -> int:
@@ -756,7 +745,7 @@ def get_possible_activities(user_id: int, activity_category: Optional[str] = Non
     # check if the mandatory activities have been already performed
     for activity in mandatory:
         # if the activity has been completed, do not report it as mandatory
-        if is_activity_done(activity):
+        if not is_activity_done(activity):
             mandatory_ids.append(activity)
 
     mandatory_ids = [get_activities_from_id(mandatory_id) for mandatory_id in mandatory_ids]
@@ -1157,13 +1146,13 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                             y=data['date'],
                             orientation='h',
                             marker=dict(color=data['goal_achieved'].map(
-                                {True: 'green', False: 'red'})),
+                                {True: 'lime', False: 'tomato'})),
                             showlegend=False
                             ),
                      go.Bar(x=data['goals'],
                             y=data['date'],
                             orientation='h',
-                            opacity=0.1,
+                            opacity=0.3,
                             showlegend=False)
                      ],
                     layout=go.Layout(barmode='overlay'))
@@ -1177,7 +1166,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                            xshift=5)
 
     for i, step in enumerate(data['steps']):
-        fig.add_annotation(x=step / 2,
+        fig.add_annotation(x=1500,
                            y=i,
                            text=f'Steps: {step}',
                            showarrow=False,
@@ -1210,7 +1199,7 @@ def get_faik_text(user_id):
         .limit(NUM_TOP_ACTIVITIES).all()
     )
 
-    if top_five_activities is not None:
+    if len(top_five_activities) > 0:
         for activity_idx, activity in enumerate(top_five_activities):
             kit_text += str(activity_idx + 1) + ") "
             kit_text += activity.intervention_activity.intervention_activity_title
@@ -1295,13 +1284,12 @@ def get_steps_data(user_id: int,
         end_date: end of the range of days to query. This day is not included in the interval.
 
     Returns: A list of dictionary containing, for each day, the date and the number of steps.
-
     """
 
     token = get_jwt_token(user_id)
 
-    query_params = {'start': str(start_date),
-                    'end': str(end_date)}
+    query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
+                    'end': end_date.strftime("%Y-%m-%dT%X")}
 
     headers = {TOKEN_HEADER: token}
 
@@ -1334,3 +1322,41 @@ def format_sensors_date(sensors_date: str) -> date:
     formatted_date = datetime.strptime(sensors_date, original_format).date()
 
     return formatted_date
+
+
+def get_intensity_minutes_data(user_id: int,
+                               start_date: date,
+                               end_date: date) -> Optional[int]:
+    """
+    Retrieves the intensity minutes data for a specific user within a given date range.
+
+    Args:
+        user_id (int): The ID of the user.
+        start_date (date): The start date of the data range.
+        end_date (date): The end date of the data range.
+
+    Returns:
+        Optional[int]: The total number of intensity minutes recorded during the specified
+        date range. Returns None if there was an error in retrieving or processing the data.
+    """
+
+    token = get_jwt_token(user_id)
+
+    query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
+                    'end': end_date.strftime("%Y-%m-%dT%X")}
+
+    headers = {TOKEN_HEADER: token}
+
+    res = requests.get(HR_URL, params=query_params, headers=headers, timeout=60)
+
+    try:
+        res_json = res.json()
+        intensity_minutes = 0
+        for hour in res_json:
+            intensity_minutes += sum(val > HR_INTENSITY_THRESHOLD for val in hour['values'])
+
+        return intensity_minutes
+
+    except ValueError:
+        logging.error(f"Error in returned value from sensors: '{res}'")
+        return None

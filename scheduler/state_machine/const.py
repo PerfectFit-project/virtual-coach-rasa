@@ -17,7 +17,7 @@ HIGH_PA_GROUP = 2
 EXECUTION_DURATION_WEEKS = 12
 
 # intervention times (days)
-ACTIVITY_C2_9_DAY_TRIGGER = 7
+ACTIVITY_C2_9_DAY_TRIGGER = 6
 FUTURE_SELF_INTRO = 8
 GOAL_SETTING = 9
 # number of days after the weekly reflection for the PA notification to be sent

@@ -9,6 +9,11 @@ MAXIMUM_INACTIVE_DAYS = 10
 # time interval in seconds for checking for new connection requests
 INVITES_CHECK_INTERVAL = 10*60
 
+# next message is delivered
+WORDS_PER_SECOND = 5
+# maximum delay, in seconds, between a message and the next one
+MAX_DELAY = 10
+
 # PA groups
 LOW_PA_GROUP = 1
 HIGH_PA_GROUP = 2
@@ -29,6 +34,7 @@ EXECUTION_DURATION = EXECUTION_DURATION_WEEKS * 7  # 12 weeks
 #
 
 REDIS_URL = os.getenv('REDIS_URL')
+ENVIRONMENT = os.getenv('ENVIRONMENT')
 DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 TRIGGER_COMPONENT = 'celery_tasks.trigger_intervention_component'

@@ -15,8 +15,9 @@ from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, N
 from typing import Optional
 from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
                           create_new_user, get_component_name, get_user_fsm, get_dialog_state,
-                          get_all_fsm, save_state_machine_to_db, send_fsm_event,
-                          set_dialog_running_status, update_scheduled_task_db)
+                          get_all_fsm, get_scheduled_task_from_db, save_state_machine_to_db,
+                          send_fsm_event, set_dialog_running_status, update_scheduled_task_db,
+                          update_task_uuid_db)
 from virtual_coach_db.helper.definitions import NotificationsTriggers
 
 app = Celery('celery_tasks', broker=REDIS_URL)
@@ -61,6 +62,33 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them
     sender.add_periodic_task(INVITES_CHECK_INTERVAL, check_new_connection_request.s())
+    # check if there are tasks pending and cancelled from the scheduler queue
+    restore_scheduled_tasks.apply_async(eta=datetime.now() + timedelta(minutes=1))
+
+
+@app.task
+def restore_scheduled_tasks():
+    # get all the already scheduled tasks
+    scheduled_task = app.control.inspect().scheduled()
+    tasks_list = [task['request']['id']
+                  for workers in scheduled_task
+                  for task in scheduled_task[workers]]
+
+    # get all the tasks scheduled in the DB
+    db_tasks = get_scheduled_task_from_db()
+
+    # restore the tasks that were scheduled in the DB but are no more in the tasks list
+    for db_task in db_tasks:
+        # if the tasks saved in the DB is not in the list of the scheduled tasks
+        if db_task.task_uuid not in tasks_list:
+            # reschedule the task
+            new_task = trigger_scheduled_intervention_component.apply_async(
+                args=[db_task.users_nicedayuid,
+                      db_task.intervention_component.intervention_component_trigger],
+                eta=db_task.next_planned_date.astimezone(TIMEZONE))
+
+            # update the uuid in the DB
+            update_task_uuid_db(old_uuid=db_task.task_uuid, new_uuid=str(new_task.task_id))
 
 
 @app.task(bind=True)
@@ -102,7 +130,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
 
     for fsm in state_machines:
         dialog_state = get_dialog_state(fsm)
-        logging.info(f"User ${fsm.machine_id} current dialog state ${dialog_state}")
+        logging.info(f"User {fsm.machine_id} current dialog state {dialog_state}")
 
         if dialog_state == NOTIFY:
             trigger_intent.apply_async(args=[fsm.machine_id,
@@ -376,6 +404,7 @@ def resume(self,  # pylint: disable=unused-argument
         # the state machine status as to be marked as not running
         # to allow new dialogs to be administered
         set_dialog_running_status(user_id, dialog_status)
+
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def resume_and_trigger(self,  # pylint: disable=unused-argument

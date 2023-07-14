@@ -6,6 +6,9 @@ intents:
   - medicijn_intent
   - continue_dialog_intent
   - EXTERNAL_no_valid_uncompleted_dialog
+  - EXTERNAL_central_options
+  - EXTERNAL_central_options_no_ehbo
+  - EXTERNAL_no_valid_uncompleted_dialog_no_ehbo
 
 responses:
   # Fallback for low NLU confidence and low next action confidence

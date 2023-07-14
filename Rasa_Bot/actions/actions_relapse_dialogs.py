@@ -9,7 +9,7 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL, activities_categories
 from .helper import (get_latest_bot_utterance, store_dialog_closed_answer_to_db,
                      store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db,
-                     store_user_intervention_state, populate_fig, get_possible_activities)
+                     populate_fig, get_possible_activities)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -17,7 +17,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.helper.definitions import (Components,
-                                                 DialogQuestionsEnum, Phases)
+                                                 DialogQuestionsEnum)
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.dbschema.models import InterventionActivity
 from plotly.subplots import make_subplots
@@ -125,13 +125,6 @@ class ActionSetSlotRelapseDialog(Action):
         return "action_set_slot_relapse_dialog_hrs"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-
-        # update the user_intervention_state table
-
-        store_user_intervention_state(user_id,
-                                      Components.RELAPSE_DIALOG_HRS,
-                                      Phases.LAPSE)
 
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_HRS)]
@@ -142,13 +135,7 @@ class ActionSetSlotRelapseDialogLapse(Action):
         return "action_set_slot_relapse_dialog_lapse"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        # update the user_intervention_state table
-
-        store_user_intervention_state(user_id,
-                                      Components.RELAPSE_DIALOG_LAPSE,
-                                      Phases.LAPSE)
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_LAPSE)]
 
@@ -158,13 +145,8 @@ class ActionSetSlotRelapseDialogPa(Action):
         return "action_set_slot_relapse_dialog_pa"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
-        logging.info('set PA slot')
-        # update the user_intervention_state table
 
-        store_user_intervention_state(user_id,
-                                      Components.RELAPSE_DIALOG_PA,
-                                      Phases.LAPSE)
+        logging.info('set PA slot')
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_PA)]
 
@@ -174,13 +156,7 @@ class ActionSetSlotRelapseDialogRelapse(Action):
         return "action_set_slot_relapse_dialog_relapse"
 
     async def run(self, dispatcher, tracker, domain):
-        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
 
-        # update the user_intervention_state table
-
-        store_user_intervention_state(user_id,
-                                      Components.RELAPSE_DIALOG_RELAPSE,
-                                      Phases.LAPSE)
         return [SlotSet('current_intervention_component',
                         Components.RELAPSE_DIALOG_RELAPSE)]
 

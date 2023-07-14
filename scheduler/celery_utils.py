@@ -9,7 +9,7 @@ from state_machine.state_machine import StateMachine, DialogState, Event
 from typing import List
 from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
                                               UserStateMachine)
-from virtual_coach_db.helper.definitions import Components
+from virtual_coach_db.helper.definitions import Components, Notifications
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 import logging
@@ -165,7 +165,8 @@ def get_all_fsm() -> List[StateMachine]:
 
 def get_all_fsm_from_db() -> List[UserStateMachine]:
     """
-       Get a list of state machines as saved in the DB for all the users
+       Get a list of state machines as saved in the DB for all the users. The users
+       who completed the intervention are excluded.
 
        Returns: A list of UserStateMachine objects representing the
        user_state_machine table on the DB
@@ -173,7 +174,9 @@ def get_all_fsm_from_db() -> List[UserStateMachine]:
        """
     session = get_db_session(DATABASE_URL)
 
-    fsm_db = (session.query(UserStateMachine).all())
+    fsm_db = (session.query(UserStateMachine)
+              .filter(UserStateMachine.state != State.COMPLETED)
+              .all())
 
     return fsm_db
 
@@ -233,7 +236,7 @@ def get_dialog_state(state_machine: StateMachine) -> int:
         if (now - last_time).seconds < MAXIMUM_DIALOG_DURATION:
             dialog_state = RUNNING
         # dialog not completed, user notified to resume the dialog
-        elif (now - last_time).seconds > 2*MAXIMUM_DIALOG_DURATION:
+        elif (now - last_time).seconds > 2 * MAXIMUM_DIALOG_DURATION:
             dialog_state = EXPIRED
         else:
             # dialog running but the maximum time elapsed
@@ -322,6 +325,28 @@ def get_user_fsm(user_id: int) -> StateMachine:
     return user_fsm
 
 
+def get_scheduled_task_from_db() -> List[UserInterventionState]:
+    """
+    Get the list of all the tasks scheduled and not yet executed as they are stored in the DB.
+    Returns: A list of elements of type UserInterventionState. Each element contains the scheduled
+    dialog, the delivery time and the task uuid.
+    """
+
+    now = datetime.now().astimezone(TIMEZONE)
+
+    session = get_db_session(DATABASE_URL)
+
+    tasks = (session.query(UserInterventionState)
+             .filter(
+        UserInterventionState.completed.is_(False),
+        UserInterventionState.task_uuid.isnot(None),
+        UserInterventionState.next_planned_date.isnot(None),
+        UserInterventionState.next_planned_date >= now)
+             .all())
+
+    return tasks
+
+
 def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
     """
     Get the state machine as saved in the DB for a single user
@@ -360,6 +385,38 @@ def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:
                                         intervention_component_id=dialog.intervention_component_id)
 
     return db_state_machine
+
+
+def update_scheduled_task_db(user_id: int, task_uuid: str):
+    """
+    Update the last time and the completion status of a task that was triggered
+    after its scheduling
+    Args:
+        user_id: the ID of the user to send the trigger to
+        task_uuid: uuid of the task
+    """
+    session = get_db_session(DATABASE_URL)
+
+    task_entry = (session.query(UserInterventionState)
+                  .filter(UserInterventionState.users_nicedayuid == user_id,
+                          UserInterventionState.task_uuid == task_uuid)
+                  .one_or_none())
+
+    if task_entry is None:
+        return
+
+    # update the last time value to the current time
+    task_entry.last_time = datetime.now().astimezone(TIMEZONE)
+
+    component = task_entry.intervention_component
+
+    # if a notification has been triggered, it must be marked as completed
+    # (no further interactions needed)
+    values = [item.value for item in Notifications]
+    if component.intervention_component_name in values:
+        task_entry.completed = True
+
+    session.commit()
 
 
 def save_user_to_db(user: Users):
@@ -440,3 +497,26 @@ def set_dialog_running_status(user_id: int, state: bool):
         user_fsm.dialog_state.set_to_idle()
 
     save_state_machine_to_db(user_fsm)
+
+
+def update_task_uuid_db(old_uuid: str, new_uuid: str):
+    """
+    Update the uuid of a scheduled task stored in the DB to a new one
+    Args:
+        old_uuid: uuid already stored in the DB
+        new_uuid: the uuid to be used
+
+    """
+
+    session = get_db_session(DATABASE_URL)
+
+    task = (session.query(UserInterventionState)
+            .filter(
+        UserInterventionState.task_uuid == old_uuid
+    )
+            .one_or_none())
+
+    if task is not None:
+        task.task_uuid = new_uuid
+
+        session.commit()

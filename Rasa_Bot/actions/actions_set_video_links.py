@@ -107,7 +107,7 @@ class SetSlotFSShortVideo(Action):
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('current_intervention_component',
-                        Components.FUTURE_SELF_LONG)]
+                        Components.FUTURE_SELF_SHORT)]
 
 
 class SetSlotExecutionIntroduction(Action):

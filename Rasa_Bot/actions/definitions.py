@@ -17,15 +17,15 @@ NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 SENSOR_KEY_PATH = '/app/sensorprivatekey'
 
 if ENVIRONMENT == 'prod':
-    STEPS_URL = 'https://portal.rrdweb.nl/servlets/r2d2/v6.0.4/project/perfectfit/table' \
-                '/garmin_steps_day '
     # TODO: replace with actual url when this will be made available
-    INTENSITY_URL = ''
+    API_URL = 'https://portal.rrdweb.nl/servlets/r2d2/v6.0.4/project/perfectfit/'
 else:
-    STEPS_URL = 'https://www.rrdhost.nl/servlets/r2d2/v6.0.4/project/perfectfit/table' \
-                '/garmin_steps_day '
     # TODO: replace with actual url when this will be made available
-    INTENSITY_URL = ''
+    API_URL = 'https://www.rrdhost.nl/servlets/senseeact/v6.0.4/project/perfectfit/'
+
+STEPS_URL = API_URL + 'table/garmin_steps_day'
+HR_URL = API_URL + 'table/garmin_heart_history'
+HR_INTENSITY_THRESHOLD = 110
 
 TOKEN_HEADER = 'X-PerfectFit-Auth-Token'
 

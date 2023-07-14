@@ -1,5 +1,6 @@
 celery
 Django==4.2.2
+numpy
 python-dotenv
 git+https://github.com/PerfectFit-project/virtual-coach-db@303-system-lapse-dialog
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.4

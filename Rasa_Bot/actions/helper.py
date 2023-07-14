@@ -1146,13 +1146,13 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                             y=data['date'],
                             orientation='h',
                             marker=dict(color=data['goal_achieved'].map(
-                                {True: 'green', False: 'red'})),
+                                {True: 'lime', False: 'tomato'})),
                             showlegend=False
                             ),
                      go.Bar(x=data['goals'],
                             y=data['date'],
                             orientation='h',
-                            opacity=0.1,
+                            opacity=0.3,
                             showlegend=False)
                      ],
                     layout=go.Layout(barmode='overlay'))
@@ -1166,7 +1166,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                            xshift=5)
 
     for i, step in enumerate(data['steps']):
-        fig.add_annotation(x=step / 2,
+        fig.add_annotation(x=1500,
                            y=i,
                            text=f'Steps: {step}',
                            showarrow=False,

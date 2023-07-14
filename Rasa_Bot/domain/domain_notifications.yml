@@ -47,7 +47,7 @@ responses:
 
 # Step goal notification
   utter_notifications_step_goal_1:
-    - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm op weer!"  # TODO: add the number
+    - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm op weer!"
     - text: "Voor vandaag heb je als stappendoel: {notifications_daily_step_goal}. 🚶🏿 Succes, zet 'm op!"
     - text: "Vandaag is je stappendoel: {notifications_daily_step_goal}. 🚶🏿 Je kunt het!"
   utter_notifications_step_goal_2:

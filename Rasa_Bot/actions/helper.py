@@ -1231,11 +1231,11 @@ def get_daily_step_goal_from_db(user_id) -> int:
     Get daily step goal for a given user using data from the step count database.
 
     For example, for a single participant, daily step count over the last 9 days (ranked from
-    lowest to highest) was 1250, 1332, 3136, 5431, 5552, 5890, 6402, 7301, 10,103. In this case, the 60th percentile
-    represents a goal of 5890 steps. The 6th element is used.
+    lowest to highest) was 1250, 1332, 3136, 5431, 5552, 5890, 6402, 7301, 10,103. In this case,
+    the 60th percentile represents a goal of 5890 steps. The 6th element is used.
 
-    If there is not data for 9 days available, the number of days will be supplemented to 9 by adding the
-    average of the days with data.
+    If there is not data for 9 days available, the number of days will be supplemented to 9 by
+    adding the average of the days with data.
 
     Args:
     user_id (int): The user ID for whom the daily step goal is to be retrieved from the database.
@@ -1254,7 +1254,7 @@ def get_daily_step_goal_from_db(user_id) -> int:
 
     if len(steps_per_day) < 9:
         while len(steps_per_day) < 9:
-            steps_per_day.append(np.mean(steps_per_day))  # Supplement with the average value up to 9 values
+            steps_per_day.append(np.mean(steps_per_day))  # Add with the avg value up to 9 values
 
     steps_per_day.sort()
     pa_goal = int(round(steps_per_day[5], -1))
@@ -1266,23 +1266,23 @@ def get_daily_step_goal_from_db(user_id) -> int:
 
 def min_max_step_goal(step_goal):
     """
-        Applies a minimum, maximum, and step goal transformation to the input value(s).
+    Applies a minimum, maximum, and step goal transformation to the input value(s).
 
-        Parameters:
-            step_goal (int, float, list): The input value(s) to be transformed. It can be a single value or a list of
-            values.
+    Parameters:
+        step_goal (int, float, list): The input value(s) to be transformed. It can be a single
+                                      value or a list of values.
 
-        Returns:
-            int, float, list: If `pa_goal` is a single value, the function returns the transformed value according to
-                              the minimum and maximum bounds.
-                              If `pa_goal` is a list of values, the function returns a list of transformed values
-        """
+    Returns:
+        int, float, list: If `pa_goal` is a single value, the function returns the transformed
+                          value according to the minimum and maximum bounds. If `pa_goal` is a
+                          list of values, the function returns a list of transformed values
+    """
     min_val = 2000
     max_val = 10000
     if isinstance(step_goal, list):
         return [min(max(x, min_val), max_val) for x in step_goal]
-    else:
-        return min(max(step_goal, min_val), max_val)
+
+    return min(max(step_goal, min_val), max_val)
 
 
 def get_weekly_intensity_minutes_goal_from_db(user_id: int) -> int:
@@ -1335,11 +1335,13 @@ def get_steps_data(user_id: int,
     Get the steps data of a user in the specified time interval.
     Args:
         user_id (int): ID of the user whom data needs to be queried.
-        start_date (Optional[date]): start of the range of days to query. This day is  included in the interval.
-        end_date (Optional[date]): end of the range of days to query. This day is not included in the interval.
+        start_date (Optional[date]): start of the range of days to query. This day is  included in
+                                     the interval.
+        end_date (Optional[date]): end of the range of days to query. This day is not included in
+                                   the interval.
 
-    Returns: A list of dictionary containing, for each day, the date and the number of steps. If no start or end date
-    is specified, it will return all available step data.
+    Returns: A list of dictionary containing, for each day, the date and the number of steps. If no
+    start or end date is specified, it will return all available step data.
     """
 
     token = get_jwt_token(user_id)
@@ -1425,9 +1427,9 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
                              start: datetime,
                              end: datetime) -> (list, list, int):
     """
-    Calculate step goals for consecutive 9-day periods within a specified date range and the actual steps corresponding
-    to the goals. Also a list with the dates of these steps is returned. Lastly, the option is to return the value
-    of the amount of days that the step goal was achieved.
+    Calculate step goals for consecutive 9-day periods within a specified date range and the actual
+    steps corresponding to the goals. Also a list with the dates of these steps is returned. Lastly,
+    the option is to return the value of the amount of days that the step goal was achieved.
 
     Args:
         steps_data (list): List of dictionaries containing 'date' and 'steps' data.
@@ -1435,9 +1437,10 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         end (datetime.datetime): End date of the desired range.
 
     Returns:
-        goals (list): List of step goals calculated for each consecutive 9-day period within the specified range.
-        actual_steps (list): List of actual taken steps from the last 7 days before the specified end date. Missing
-                             values are returned as 0.
+        goals (list): List of step goals calculated for each consecutive 9-day period within the
+                      specified range.
+        actual_steps (list): List of actual taken steps from the last 7 days before the specified
+                             end date. Missing values are returned as 0.
         date_list (list): List of dates corresponding to the values in 'actual_steps'.
         goals_achieved (int): number of days that the step goals were reached
     """
@@ -1464,10 +1467,10 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         steps_nine_days = [x for x in steps_nine_days if not pd.isna(x)]  # Remove NaN values
 
         while len(steps_nine_days) < 9:
-            steps_nine_days.append(np.mean(steps_nine_days))  # Supplement with the average value up to 9 values
+            steps_nine_days.append(np.mean(steps_nine_days))  # Add the avg value up to 9 values
 
         steps_nine_days.sort()
-        step_goals.append(int(round(steps_nine_days[5], -1)))  # Sixth element is used by definition of algorithm
+        step_goals.append(int(round(steps_nine_days[5], -1)))  # Definition of the goal
 
     # Minimum goal is 2000, max is 10.000 steps/per day.
     step_goals = min_max_step_goal(step_goals)

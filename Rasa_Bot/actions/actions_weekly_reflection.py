@@ -224,7 +224,8 @@ class SetPaGroup(Action):
         total_steps = sum(day['steps'] for day in steps_data)
         daily_steps = sum((day['steps'] >= sufficient_daily_steps) for day in steps_data)
 
-        if (total_steps >= group_2_threshold_total_steps) and (daily_steps >= group_2_threshold_daily_steps):
+        if (total_steps >= group_2_threshold_total_steps) and\
+                (daily_steps >= group_2_threshold_daily_steps):
             pa_group = 2
 
         else:

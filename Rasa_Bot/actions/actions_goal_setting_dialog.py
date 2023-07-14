@@ -10,12 +10,12 @@ from .definitions import DATABASE_URL, FILE_PATH_IMAGE_PA, TIMEZONE
 from .helper import (get_goal_setting_chosen_sport_from_db,
                      get_intervention_component_id, 
                      get_last_completed_dialog_part_from_db,
-                     get_latest_bot_utterance, 
+                     get_latest_bot_utterance,
+                     get_steps_data,
                      store_dialog_part_to_db,
                      store_goal_setting_chosen_sport_to_db,
                      store_long_term_pa_goal_to_db,
-                     store_quit_date_to_db,
-                     get_steps_data)
+                     store_quit_date_to_db)
 from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import FollowupAction, SlotSet

@@ -217,7 +217,7 @@ class SetPaGroup(Action):
         group_2_threshold_daily_steps = 4
 
         # Get steps data last 7 days
-        end = datetime.now()
+        end = datetime.datetime.now()
         start = end - datetime.timedelta(days=7)
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
@@ -324,7 +324,7 @@ class ShowPaOverview(Action):
         filepath = '/app/pa_overview.PNG'
 
         try:
-            fig.write_image("pa_overview5.PNG")
+            fig.write_image("pa_overview.PNG")
         except Exception:
             logging.info("File upload unsuccessful.")
 

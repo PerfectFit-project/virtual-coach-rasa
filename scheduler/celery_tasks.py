@@ -246,6 +246,7 @@ def trigger_scheduled_intervention_component(self,
     # send the trigger
     if dialog_state != RUNNING:
         user_fsm.dialog_state.set_to_running(dialog=name)
+        #TODO: update last_time field
         trigger_intervention_component.apply_async(args=[user_id, trigger])
         update_scheduled_task_db(user_id, self.request.id)
 
@@ -283,8 +284,7 @@ def trigger_intent(self,  # pylint: disable=unused-argument
         trigger: the intent to be sent
         dialog_status: set the dialog state in the fsm
     """
-
-    # nake sure that a dialog is not running when sending the intent
+    # make sure that a dialog is not running when sending the intent
     user_fsm = get_user_fsm(user_id)
     current_dialog_state = get_dialog_state(user_fsm)
     if current_dialog_state == RUNNING:

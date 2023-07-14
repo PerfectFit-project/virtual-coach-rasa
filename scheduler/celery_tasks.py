@@ -401,7 +401,7 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
 
 def send_trigger(user_id: int, trigger: str):
     """
-    Prepare and sent the HTTP post request to rasa for triggering an intent.
+    Prepare and send the HTTP post request to rasa for triggering an intent.
     Args:
         user_id: ID of the user to whom the intent has to be sent
         trigger: Intent trigger

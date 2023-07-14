@@ -81,7 +81,7 @@ def get_steps_data(user_id: int,
         return mapped_results
 
     except ValueError:
-        logging.error(f"Error in returned value from sensors: '{res}'")
+        logging.error('Error in returned value from sensors')
         return None
 
 
@@ -136,5 +136,5 @@ def get_intensity_minutes_data(user_id: int,
         return intensity_minutes
 
     except ValueError:
-        logging.error(f"Error in returned value from sensors: '{res}'")
+        logging.error('Error in returned value from sensors')
         return None

@@ -67,8 +67,8 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     sender.add_periodic_task(INVITES_CHECK_INTERVAL, check_new_connection_request.s())
 
 
-@app.task(bind=True)
-def check_physical_relapse(self):
+@app.task
+def check_physical_relapse():
     """
     This tasks checks if the user has fallen into a physical activity relapse state and,
     in this case, triggers the correspondent dialog

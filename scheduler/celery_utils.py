@@ -247,13 +247,13 @@ def get_current_steps_goal(user_id: int, day: date) -> Optional[int]:
     """
     Get daily step goal for a given user using data from the step count database.
     For example, for a single participant, daily step count over the last 9 days (ranked from
-    lowest to highest) was 1250, 1332, 3136, 5431, 5552, 5890, 6402, 7301, 10,103. In this case, the 60th percentile
-    represents a goal of 5890 steps. The 6th element is used.
-    If there is not data for 9 days available, the number of days will be supplemented to 9 by adding the
-    average of the days with data.
+    lowest to highest) was 1250, 1332, 3136, 5431, 5552, 5890, 6402, 7301, 10,103.
+    In this case, the 60th percentile represents a goal of 5890 steps. The 6th element is used.
+    If there is not data for 9 days available, the number of days will be supplemented to 9 by
+    adding the average of the days with data.
 
     Args:
-        user_id (int): The user ID for whom the daily step goal is to be retrieved from the database.
+        user_id (int): The user ID for whom the daily step goal is to be retrieved from the db
     Returns:
         int: The daily step goal for the given user, retrieved from the database.
     """
@@ -263,12 +263,13 @@ def get_current_steps_goal(user_id: int, day: date) -> Optional[int]:
     start = end - timedelta(days=9)
     steps_data = connector.get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
-    for day in steps_data:
-        steps_per_day.append(day['steps'])
+    for current_day in steps_data:
+        steps_per_day.append(current_day['steps'])
 
     if len(steps_per_day) < 9:
         while len(steps_per_day) < 9:
-            steps_per_day.append(np.mean(steps_per_day))  # Supplement with the average value up to 9 values
+            # Supplement with the average value up to 9 values
+            steps_per_day.append(np.mean(steps_per_day))
 
     steps_per_day.sort()
     pa_goal = int(round(steps_per_day[5], -1))

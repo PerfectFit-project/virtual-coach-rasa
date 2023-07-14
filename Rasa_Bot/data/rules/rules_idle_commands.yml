@@ -40,7 +40,7 @@ rules:
   - intent: continue_dialog_intent
   - action: action_trigger_uncompleted_dialog
 
-- rule: central mode without all options
+- rule: central mode with all options
   steps:
   - intent: EXTERNAL_central_options
   - action: utter_central_mode_options

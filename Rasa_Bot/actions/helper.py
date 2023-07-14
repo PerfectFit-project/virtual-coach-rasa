@@ -603,12 +603,12 @@ def get_days_from_start(user_id: int) -> int:
 
 def get_dialog_completion_state(user_id: int, dialog: str) -> Optional[bool]:
     """
-    Get the completion state of the last dialog occurrence in the DB
+    Determines if the user has completed the dialog at least onece
     Args:
         user_id: the id of the user
         dialog: name of the dialog
 
-    Returns: True if the dialog has been completed, False otherwise
+    Returns: True if the dialog has been completed at least once, False otherwise
 
     """
 
@@ -631,7 +631,7 @@ def get_dialog_completion_state(user_id: int, dialog: str) -> Optional[bool]:
     if selected is not None:
         return True
 
-    return None
+    return False
 
 
 def get_execution_week(user_id: int) -> int:

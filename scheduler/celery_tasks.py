@@ -278,8 +278,7 @@ def trigger_intent(self,  # pylint: disable=unused-argument
         trigger: the intent to be sent
         dialog_status: set the dialog state in the fsm
     """
-    print(trigger)
-    # nake sure that a dialog is not running when sending the intent
+    # make sure that a dialog is not running when sending the intent
     user_fsm = get_user_fsm(user_id)
     current_dialog_state = get_dialog_state(user_fsm)
     if current_dialog_state == RUNNING:

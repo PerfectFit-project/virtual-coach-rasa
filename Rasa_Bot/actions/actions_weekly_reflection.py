@@ -319,9 +319,6 @@ class ShowPaOverview(Action):
         # Get steps, goals and dates
         step_goal, step_array, date_array, _ = get_step_goals_and_steps(steps_data, start, end)
 
-        # Replace nans with zeros and convert to integer for plotting
-        step_array = [int(x) if not np.isnan(x) else 0 for x in step_array]
-
         fig = make_step_overview(date_array, step_array, step_goal)
 
         filepath = '/app/pa_overview.PNG'

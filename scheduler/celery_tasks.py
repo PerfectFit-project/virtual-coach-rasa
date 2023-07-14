@@ -11,7 +11,7 @@ from django.core.cache import cache
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
                                  RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL,
-                                 MAXIMUM_INACTIVE_DAYS, ENVIRONMENT, WORDS_PER_SECOND, MAX_DELAY)
+                                 MAXIMUM_INACTIVE_DAYS, WORDS_PER_SECOND, MAX_DELAY)
 from typing import Optional
 from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
                           create_new_user, get_component_name, get_user_fsm, get_dialog_state,
@@ -214,7 +214,7 @@ def trigger_intervention_component(self,  # pylint: disable=unused-argument
         name = get_component_name(trigger)
         send_fsm_event(user_id, Event(EventEnum.DIALOG_STARTED, name))
     else:
-        print('Exception, retrying')
+        logging.info('Exception during trigger_intervention_component')
         raise Exception()
 
 
@@ -293,7 +293,7 @@ def trigger_intent(self,  # pylint: disable=unused-argument
     response_intent = send_trigger(user_id, trigger)
 
     if response_intent != 200:
-        print('Exception, retrying')
+        logging.info('Exception during trigger_intent')
         raise Exception()
 
     if dialog_status is not None:
@@ -316,6 +316,7 @@ def pause_conversation(self,  # pylint: disable=unused-argument
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
 
     if response.status_code != 200:
+        logging.info('Exception during pause_conversation')
         raise Exception()
 
 
@@ -367,6 +368,7 @@ def resume(self,  # pylint: disable=unused-argument
     response = requests.post(endpoint, headers=headers, data=data, timeout=60)
 
     if response.status_code != 200:
+        logging.info('Exception during resume')
         raise Exception()
 
     if dialog_status is not None:
@@ -395,7 +397,7 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
 
     response_intent = send_trigger(user_id, trigger)
     if response_intent != 200:
-        print('Exception, retrying')
+        logging.info('Exception during resume_and_trigger')
         raise Exception()
 
 
@@ -422,9 +424,9 @@ def send_trigger(user_id: int, trigger: str):
         recipient_id = mes['recipient_id']
         message = mes['text']
         client.post_message(int(recipient_id), message)
-        if ENVIRONMENT == 'prod':
-            delay = len(message.split(' ')) / WORDS_PER_SECOND
-            delay = min(delay, MAX_DELAY)
-            time.sleep(delay)
+
+        delay = len(message.split(' ')) / WORDS_PER_SECOND
+        delay = min(delay, MAX_DELAY)
+        time.sleep(delay)
 
     return response_intent.status_code

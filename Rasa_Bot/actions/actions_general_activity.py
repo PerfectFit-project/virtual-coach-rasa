@@ -637,8 +637,10 @@ class SavePersuasionToDatabase(Action):
         store_dialog_closed_answer_to_db(user_id, answer_value=message_idx + 2,
                                          question_id=question_id)
         # +1 since the lowest value is 0
-        store_dialog_closed_answer_to_db(user_id, answer_value=effort + 1,
-                                         question_id=DialogQuestionsEnum.PERSUASION_EFFORT.value)
+        if effort is not None:
+            store_dialog_closed_answer_to_db(
+                user_id, answer_value=effort + 1,
+                question_id=DialogQuestionsEnum.PERSUASION_EFFORT.value)
 
         return []
 

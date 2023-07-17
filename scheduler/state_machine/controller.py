@@ -1,13 +1,15 @@
 import logging
 from datetime import date, datetime, timedelta
-from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
+from state_machine.state_machine_utils import (create_new_date, dialog_to_be_completed,
+                                               get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
                                                get_next_planned_date, get_next_scheduled_occurrence,
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
                                                retrieve_intervention_day, revoke_execution,
-                                               run_uncompleted_dialog, schedule_next_execution,
-                                               store_completed_dialog, update_execution_week)
+                                               run_uncompleted_dialog, run_option_menu,
+                                               schedule_next_execution, store_completed_dialog,
+                                               update_execution_week)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
                                  MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
@@ -41,6 +43,7 @@ class OnboardingState(State):
             logging.info('Profile creation completed, starting med talk')
             plan_and_store(user_id=self.user_id,
                            dialog=Components.MEDICATION_TALK,
+                           planned_date=datetime.now() + timedelta(seconds=30),
                            phase_id=1)
 
         elif dialog == Components.MEDICATION_TALK:
@@ -71,8 +74,15 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_uncompleted_dialog(self.user_id)
+        if dialog in(Components.FIRST_AID_KIT, dialog == Components.FIRST_AID_KIT_VIDEO):
+            # dialog not available in this phase
+            if dialog_to_be_completed(self.user_id) is None:
+                complete = False
+            else:
+                complete = True
+            run_option_menu(user_id=self.user_id, ehbo=False, complete_dialog=complete)
+        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_uncompleted_dialog(self.user_id, show_ehbo=False)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -147,8 +157,17 @@ class TrackingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_uncompleted_dialog(self.user_id)
+        if (dialog in (Components.FIRST_AID_KIT, Components.FIRST_AID_KIT_VIDEO)) \
+                and not get_dialog_completion_state(self.user_id, Components.FIRST_AID_KIT_VIDEO):
+            # if the introductory video of the first aid kit has not been executed,
+            # the first aid kit cannot be executed
+            if dialog_to_be_completed(self.user_id) is None:
+                complete = False
+            else:
+                complete = True
+            run_option_menu(self.user_id, ehbo=False, complete_dialog=complete)
+        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_uncompleted_dialog(self.user_id, show_ehbo=False)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -198,6 +217,7 @@ class GoalsSettingState(State):
             logging.info('Goal setting completed, starting first aid kit')
             plan_and_store(user_id=self.user_id,
                            dialog=Components.FIRST_AID_KIT_VIDEO,
+                           planned_date=datetime.now() + timedelta(minutes=1),
                            phase_id=1)
             # after the completion of the goal setting dialog, the execution
             # phase can be planned
@@ -333,6 +353,13 @@ class BufferState(State):
                            dialog=dialog,
                            phase_id=1)
 
+    def on_dialog_completed(self, dialog):
+        logging.info('A dialog has been completed  %s ', dialog)
+
+        store_completed_dialog(user_id=self.user_id,
+                               dialog=dialog,
+                               phase_id=2)
+
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
         if current_date >= quit_date:
@@ -364,6 +391,7 @@ class ExecutionRunState(State):
             logging.info('General activity completed, starting weekly reflection')
             plan_and_store(user_id=self.user_id,
                            dialog=Components.WEEKLY_REFLECTION,
+                           planned_date=datetime.now()+timedelta(minutes=1),
                            phase_id=2)
 
         elif dialog == Components.WEEKLY_REFLECTION:
@@ -599,7 +627,7 @@ class ClosingState(State):
     def __init__(self, user_id):
         super().__init__(user_id)
         self.user_id = user_id
-        self.state = State.CLOSING
+        self.state = State.COMPLETED
 
     def run(self):
         logging.info("Running state %s", self.state)
@@ -634,9 +662,24 @@ class ClosingState(State):
 
         if dialog == Components.CLOSING_DIALOG:
             logging.info('Closing dialog completed. Intervention finished')
+            self.set_new_state(CompletedState(self.user_id))
 
     def on_dialog_rescheduled(self, dialog, new_date):
         reschedule_dialog(user_id=self.user_id,
                           dialog=dialog,
                           planned_date=new_date,
                           phase=2)
+
+
+class CompletedState(State):
+
+    def __init__(self, user_id):
+        super().__init__(user_id)
+        self.user_id = user_id
+        self.state = State.COMPLETED
+
+    def run(self):
+        logging.info("Running state %s", self.state)
+
+    def on_user_trigger(self, dialog):
+        return

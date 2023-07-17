@@ -13,7 +13,7 @@ class State:
     EXECUTION_RUN = "Execution run"
     RELAPSE = "Relapse"
     CLOSING = "Closing"
-    TEST = "Test"
+    COMPLETED = "Completed"
 
     def __init__(self, user_id):
         """

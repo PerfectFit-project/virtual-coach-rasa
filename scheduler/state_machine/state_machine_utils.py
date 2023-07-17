@@ -74,7 +74,7 @@ def create_new_date(start_date: date,
     return new_timedate
 
 
-def get_dialog_completion_state(user_id: int, dialog_name: str) -> bool:
+def get_dialog_completion_state(user_id: int, dialog_name: str) -> Optional[bool]:
     """
     Get the completion state of the last dialog occurrence in the DB
     Args:
@@ -99,10 +99,13 @@ def get_dialog_completion_state(user_id: int, dialog_name: str) -> bool:
         )
         .order_by(UserInterventionState.last_time.desc())  # order by descending date
         .limit(1)  # get only the first result
-        .one()
+        .one_or_none()
     )
 
-    return selected.completed
+    if selected is not None:
+        return selected.completed
+
+    return None
 
 
 def get_last_component_state(user_id: int, intervention_component_id: int) -> UserInterventionState:
@@ -558,12 +561,13 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
     return None
 
 
-def run_uncompleted_dialog(user_id: int):
+def run_uncompleted_dialog(user_id: int, show_ehbo: bool = True):
     """
     Checks if a dialog has to be completed and, in this case runs it from the latest completed part.
 
     Args:
         user_id: ID of the user
+        show_ehbo: show the menu with ehbo command if true
 
     """
 
@@ -584,18 +588,30 @@ def run_uncompleted_dialog(user_id: int):
             (user_id, component.intervention_component.intervention_component_trigger)
         )
     else:
-        run_option_menu(user_id)
+        run_option_menu(user_id, ehbo=show_ehbo, complete_dialog=False)
 
 
-def run_option_menu(user_id: int):
+def run_option_menu(user_id: int, ehbo: bool = True, complete_dialog: bool = False):
     """
     Runs a celery task for showing the options menu without the 'verder' option
 
     Args:
         user_id: ID of the user
+        ehbo: show ehbo command if true
+        complete_dialog: show verder command if true
 
     """
-    celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
+    if ehbo and complete_dialog:
+        celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
+    elif ehbo and not complete_dialog:
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_COMPLETE, False))
+    elif not ehbo and complete_dialog:
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_EHBO, False))
+    elif not ehbo and not complete_dialog:
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_EHBO_NO_COMPLETE, False))
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

@@ -1466,7 +1466,7 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         steps_nine_days = [x for x in steps_nine_days if not pd.isna(x)]  # Remove NaN values
 
         for _ in range(9 - len(steps_nine_days)):
-            steps_per_day.append(np.mean(steps_nine_days)) # Add the avg value up to 9 values
+            steps_nine_days.append(np.mean(steps_nine_days))  # Add the avg value up to 9 values
 
         steps_nine_days.sort()
         step_goals.append(int(round(steps_nine_days[5], -1)))  # Definition of the goal

@@ -27,7 +27,7 @@ class ExpectedTimeNextPart(Action):
     async def run(self, dispatcher, tracker, domain):
         next_dialog = str(tracker.get_slot('current_intervention_component'))
 
-        if len(DialogExpectedDuration[next_dialog]) == 1:
+        if type(DialogExpectedDuration[next_dialog]) == int:
             duration = DialogExpectedDuration[next_dialog]
             message = "Ik verwacht dat het volgende onderdeel " + str(duration) \
                       + " minuten zal duren.⏱️"

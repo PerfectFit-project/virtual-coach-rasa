@@ -1252,9 +1252,8 @@ def get_daily_step_goal_from_db(user_id) -> int:
     for day in steps_data:
         steps_per_day.append(day['steps'])
 
-    if len(steps_per_day) < 9:
-        while len(steps_per_day) < 9:
-            steps_per_day.append(np.mean(steps_per_day))  # Add with the avg value up to 9 values
+    for _ in range(9 - len(steps_per_day)):
+        steps_per_day.append(np.mean(steps_per_day))  # Add with the avg value up to 9 values
 
     steps_per_day.sort()
     pa_goal = int(round(steps_per_day[5], -1))
@@ -1466,8 +1465,8 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         steps_nine_days = steps[i:i + 9]
         steps_nine_days = [x for x in steps_nine_days if not pd.isna(x)]  # Remove NaN values
 
-        while len(steps_nine_days) < 9:
-            steps_nine_days.append(np.mean(steps_nine_days))  # Add the avg value up to 9 values
+        for _ in range(9 - len(steps_nine_days)):
+            steps_per_day.append(np.mean(steps_nine_days)) # Add the avg value up to 9 values
 
         steps_nine_days.sort()
         step_goals.append(int(round(steps_nine_days[5], -1)))  # Definition of the goal

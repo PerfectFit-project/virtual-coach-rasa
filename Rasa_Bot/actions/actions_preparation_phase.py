@@ -97,7 +97,7 @@ class StartNextDialog(Action):
 
         # if the dialog is the profile creation, launch that
         if current_dialog == Components.PROFILE_CREATION:
-            return [FollowupAction('utter_profile_creation_start_1')]
+            return [FollowupAction('utter_profile_creation_start_3')]
 
         # if the dialog is a video one, launch the watch a video dialog
         celery.send_task('celery_tasks.trigger_intervention_component',

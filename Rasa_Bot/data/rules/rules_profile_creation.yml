@@ -14,8 +14,6 @@ rules:
 ## 1 + 2: Welcome and begin participant code
 - rule: Profile creation welcome and begin participant code
   steps:
-  - action: utter_profile_creation_start_1
-  - action: utter_profile_creation_start_2
   - action: utter_profile_creation_start_3
   - action: utter_profile_creation_code_1
   - action: utter_profile_creation_code_2

@@ -5,7 +5,8 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import VideoLinks, Components, ComponentsTriggers
+from virtual_coach_db.helper.definitions import (VideoLinks, Components, ComponentsTriggers,
+                                                 DialogExpectedDuration)
 from . import validator
 from .definitions import PAUSE_AND_TRIGGER, REDIS_URL
 from .helper import get_latest_bot_utterance
@@ -44,11 +45,11 @@ class ActionLaunchReschedulingPrep(Action):
 
 class SetMedicationVideoLink(Action):
     """ set the link to the medication video"""
+
     def name(self):
         return "action_set_medication_video_link"
 
     async def run(self, dispatcher, tracker, domain):
-
         return [SlotSet("video_link",
                         VideoLinks.MEDICATION_VIDEO)]
 
@@ -74,7 +75,14 @@ class DelayedMessage(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DONE_VIDEO
-        time = datetime.datetime.now() + datetime.timedelta(seconds=30)
+
+        dialog = str(tracker.get_slot('current_intervention_component'))
+        try:
+            duration = (DialogExpectedDuration[dialog]) * 60
+        except Exception:
+            duration = 30
+
+        time = datetime.datetime.now() + datetime.timedelta(seconds=duration)
         celery.send_task(PAUSE_AND_TRIGGER,
                          (user_id, new_intent, time))
         return []

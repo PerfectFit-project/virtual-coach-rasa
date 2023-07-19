@@ -8,17 +8,20 @@ from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from django.conf import settings
 from django.core.cache import cache
+from state_machine.state import State
 from state_machine.state_machine import EventEnum, Event
 from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, NICEDAY_API_ENDPOINT,
                                  RUNNING, EXPIRED, NOTIFY, INVITES_CHECK_INTERVAL,
                                  MAXIMUM_INACTIVE_DAYS, WORDS_PER_SECOND, MAX_DELAY)
 from typing import Optional
-from celery_utils import (check_if_task_executed, check_if_user_active, check_if_user_exists,
-                          create_new_user, get_component_name, get_user_fsm, get_dialog_state,
-                          get_all_fsm, get_scheduled_task_from_db, save_state_machine_to_db,
-                          send_fsm_event, set_dialog_running_status, update_scheduled_task_db,
-                          update_task_uuid_db)
-from virtual_coach_db.helper.definitions import NotificationsTriggers
+from celery_utils import (check_if_physical_relapse, check_if_task_executed, check_if_user_active,
+                          check_if_user_exists, create_new_user, get_component_name, get_user_fsm,
+                          get_dialog_state, get_all_fsm, get_scheduled_task_from_db,
+                          save_state_machine_to_db, send_fsm_event, set_dialog_running_status,
+                          update_scheduled_task_db, update_task_uuid_db)
+from virtual_coach_db.helper.definitions import (NotificationsTriggers, ComponentsTriggers,
+                                                 Components)
+
 
 from niceday_client import NicedayClient
 
@@ -62,6 +65,8 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     sender.add_periodic_task(crontab(hour=6, minute=00), notify_new_day.s())
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
+    # check if the user is in physical relapse
+    sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
     # check if a dialog has been completed
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them
@@ -93,6 +98,33 @@ def restore_scheduled_tasks():
 
             # update the uuid in the DB
             update_task_uuid_db(old_uuid=db_task.task_uuid, new_uuid=str(new_task.task_id))
+
+
+@app.task
+def check_physical_relapse():
+    """
+    This tasks checks if the user has fallen into a physical activity relapse state and,
+    in this case, triggers the correspondent dialog
+    """
+
+    range_start = date.today()
+
+    state_machines = get_all_fsm()
+
+    for fsm in state_machines:
+        user_id = fsm.machine_id
+        if fsm.dialog_state == State.EXECUTION_RUN:
+            relapse = check_if_physical_relapse(user_id, range_start)
+
+            if relapse:
+                current_dialog_state = get_dialog_state(fsm)
+                if current_dialog_state == RUNNING:
+                    new_time = datetime.now() + timedelta(seconds=MAXIMUM_DIALOG_DURATION)
+                    reschedule_dialog.apply_async(
+                        args=[user_id, Components.RELAPSE_DIALOG_SYSTEM, new_time])
+
+                trigger_intervention_component.apply_async(
+                    args=[user_id, ComponentsTriggers.RELAPSE_DIALOG_SYSTEM])
 
 
 @app.task(bind=True)

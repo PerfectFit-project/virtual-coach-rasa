@@ -461,7 +461,7 @@ class ExecutionRunState(State):
                            dialog=dialog,
                            phase_id=2)
 
-        if dialog == Components.RELAPSE_DIALOG:
+        if dialog in [Components.RELAPSE_DIALOG, Components.RELAPSE_DIALOG_SYSTEM]:
             self.set_new_state(RelapseState(self.user_id))
 
     def on_new_day(self, current_date: date):
@@ -547,9 +547,8 @@ class RelapseState(State):
                       Components.RELAPSE_DIALOG_HRS,
                       Components.RELAPSE_DIALOG_LAPSE,
                       Components.RELAPSE_DIALOG_RELAPSE,
-                      Components.RELAPSE_DIALOG_PA]:
-
-            logging.info('Relapse dialog completed ')
+                      Components.RELAPSE_DIALOG_PA,
+                      Components.RELAPSE_DIALOG_SYSTEM]:
 
             # When a specific branch of the relapse dialog has been completed,
             # we need to mark the general relapse dialog as completed

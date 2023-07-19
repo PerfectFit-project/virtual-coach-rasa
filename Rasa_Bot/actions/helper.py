@@ -1226,7 +1226,7 @@ def get_faik_text(user_id):
     return kit_text, filled, activity_ids_list
 
 
-def get_daily_step_goal_from_db(user_id) -> int:
+def get_daily_step_goal_from_db(user_id) -> Optional[int]:
     """
     Get daily step goal for a given user using data from the step count database.
 
@@ -1248,6 +1248,9 @@ def get_daily_step_goal_from_db(user_id) -> int:
     end = datetime.now()
     start = end - timedelta(days=9)
     steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+    if len(steps_data) == 0:  # do something if steps_data is empty
+        return None
 
     for day in steps_data:
         steps_per_day.append(day['steps'])
@@ -1364,7 +1367,7 @@ def get_steps_data(user_id: int,
 
     except ValueError:
         logging.error(f"Error in returned value from sensors: '{res}'")
-        return None
+        return []
 
 
 def format_sensors_date(sensors_date: str) -> date:
@@ -1424,7 +1427,10 @@ def get_intensity_minutes_data(user_id: int,
 
 def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
                              start: datetime,
-                             end: datetime) -> Tuple[List[int], List[int], List[str], int]:
+                             end: datetime) -> Tuple[Optional[List[int]],
+                                                     Optional[List[int]],
+                                                     Optional[List[str]],
+                                                     Optional[int]]:
     """
     Calculate step goals for consecutive 9-day periods within a specified date range and the actual
     steps corresponding to the goals. Also a list with the dates of these steps is returned. Lastly,
@@ -1443,6 +1449,10 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
         date_list (list): List of dates corresponding to the values in 'actual_steps'.
         goals_achieved (int): number of days that the step goals were reached
     """
+
+    if len(steps_data) == 0:  # No data is returned from db
+        return None, None, None, None
+
     df = pd.DataFrame(steps_data)
     df.set_index('date', inplace=True)
 

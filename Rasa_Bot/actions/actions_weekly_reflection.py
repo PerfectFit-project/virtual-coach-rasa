@@ -249,6 +249,12 @@ class SetStepGoalDays(Action):
 
         _, _, _, step_goal_days = get_step_goals_and_steps(steps_data, start, end)
 
+        if step_goal_days is None:
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            logging.error('User id: %i, dialog: weekly reflection,'
+                          'action: action_set_step_goals' % user_id)
+            return [SlotSet('step_goal_days', 0)]
+
         return [SlotSet('step_goal_days', step_goal_days)]
 
 
@@ -319,6 +325,12 @@ class ShowPaOverview(Action):
 
         # Get steps, goals and dates
         step_goal, step_array, date_array, _ = get_step_goals_and_steps(steps_data, start, end)
+
+        if date_array is None:
+            logging.error('user id: %i, dialog: weekly reflection,'
+                          'action: action_show_pa_overview' % user_id)
+            default_error_image = 'app/pa_overview_error.PNG'  # TODO: add this image
+            return [SlotSet("upload_file_path", default_error_image)]
 
         fig = make_step_overview(date_array, step_array, step_goal)
 

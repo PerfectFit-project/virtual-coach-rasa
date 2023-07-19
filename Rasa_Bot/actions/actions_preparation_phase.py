@@ -27,7 +27,7 @@ class ExpectedTimeNextPart(Action):
     async def run(self, dispatcher, tracker, domain):
         next_dialog = str(tracker.get_slot('current_intervention_component'))
 
-        if len(DialogExpectedDuration[next_dialog]) == 1:
+        if isinstance(DialogExpectedDuration[next_dialog], int):
             duration = DialogExpectedDuration[next_dialog]
             message = "Ik verwacht dat het volgende onderdeel " + str(duration) \
                       + " minuten zal duren.⏱️"
@@ -97,7 +97,7 @@ class StartNextDialog(Action):
 
         # if the dialog is the profile creation, launch that
         if current_dialog == Components.PROFILE_CREATION:
-            return [FollowupAction('utter_profile_creation_start_1')]
+            return [FollowupAction('utter_profile_creation_start_3')]
 
         # if the dialog is a video one, launch the watch a video dialog
         celery.send_task('celery_tasks.trigger_intervention_component',

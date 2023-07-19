@@ -7,6 +7,8 @@ rules:
       - intent: EXTERNAL_trigger_preparation_introduction_video
       - action: action_set_slot_preparation_introduction_video
       - action: action_set_preparation_introduction_video_link
+      - action: utter_profile_creation_start_1
+      - action: utter_profile_creation_start_2
       - action: action_launch_watch_video_dialog
 
   - rule: Set video medication

@@ -247,4 +247,5 @@ rules:
   - action: utter_closing_closing_7
   - action: utter_closing_closing_8
   - action: mark_dialog_as_completed
+  - action: action_disconnect_user
   - action: action_end_dialog

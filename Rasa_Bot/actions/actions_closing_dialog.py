@@ -1,5 +1,6 @@
 import datetime
 
+from niceday_client import NicedayClient
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -11,7 +12,7 @@ from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
-from .definitions import DATABASE_URL, PAUSE_AND_TRIGGER, REDIS_URL
+from .definitions import DATABASE_URL, NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
 from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text,
                      get_steps_data)
 
@@ -275,6 +276,21 @@ class ActionClosingGetTotalNumberSteps(Action):
         total_steps = sum(day['steps'] for day in steps_data)
 
         return [SlotSet('closing_total_steps_number', total_steps)]
+
+
+class ActionDisconnectUser(Action):
+    """Disconnect user from therapist."""
+
+    def name(self):
+        return "action_disconnect_user"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = tracker.current_state()['sender_id']
+
+        client = NicedayClient(NICEDAY_API_ENDPOINT)
+        client.remove_contact(user_id)
+
+        return []
 
 
 class SetSlotClosingDialog(Action):

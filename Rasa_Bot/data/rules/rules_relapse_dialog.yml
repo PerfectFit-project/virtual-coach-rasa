@@ -1038,3 +1038,16 @@ rules:
   - action: utter_pa_call_help_2
   - action: mark_dialog_as_completed
   - action: action_end_dialog
+
+## System initiated relapse
+- rule: system initiated relapse
+  steps:
+  - intent: EXTERNAL_relapse_dialog_system
+  - action: action_set_slot_relapse_dialog_system
+  - action: utter_system_initiated
+  - action: utter_pa_lapse_1
+  - action: utter_pa_lapse_2
+  - action: utter_pa_lapse_3
+  - action: pa_type_together_why_fail_form
+  - active_loop: pa_type_together_why_fail_form
+  wait_for_user_input: false

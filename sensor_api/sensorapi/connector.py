@@ -26,7 +26,8 @@ else:
 STEPS_URL = API_URL + 'table/garmin_steps_day'
 HR_URL = API_URL + 'table/garmin_heart_history'
 HR_INTENSITY_THRESHOLD = 110
-
+MIN_VALUE_STEP_GOAL = 2000
+MAX_VALUE_STEP_GOAL = 10000
 TOKEN_HEADER = 'X-PerfectFit-Auth-Token'
 
 
@@ -272,9 +273,7 @@ def min_max_step_goal(step_goal):
                           value according to the minimum and maximum bounds. If `pa_goal` is a
                           list of values, the function returns a list of transformed values
     """
-    min_val = 2000
-    max_val = 10000
     if isinstance(step_goal, list):
-        return [min(max(x, min_val), max_val) for x in step_goal]
+        return [min(max(x, MIN_VALUE_STEP_GOAL), MAX_VALUE_STEP_GOAL) for x in step_goal]
 
-    return min(max(step_goal, min_val), max_val)
+    return min(max(step_goal, MIN_VALUE_STEP_GOAL), MAX_VALUE_STEP_GOAL)

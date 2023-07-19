@@ -157,8 +157,8 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
                                                      Optional[int]]:
     """
     Calculate step goals for consecutive 9-day periods within a specified date range and the actual
-    steps corresponding to the goals. Also, a list with the dates of these steps is returned. Lastly,
-    the option is to return the value of the amount of days that the step goal was achieved.
+    steps corresponding to the goals. Also, a list with the dates of these steps is returned.
+    Lastly, the option is to return the value of the amount of days that the step goal was achieved.
 
     Args:
         steps_data (list): List of dictionaries containing 'date' and 'steps' data.

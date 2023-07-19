@@ -66,8 +66,9 @@ def get_steps_data(user_id: int,
 
     token = get_jwt_token(user_id)
 
-    query_params = {'start': start_date.strftime("%Y-%m-%dT%X"),
-                    'end': end_date.strftime("%Y-%m-%dT%X")}
+    query_params = {'start': start_date.strftime("%Y-%m-%d"),
+                    'end': end_date.strftime("%Y-%m-%d")}
+
 
     headers = {TOKEN_HEADER: token}
 

@@ -930,11 +930,9 @@ class ValidatePaTypeTogetherWhyFailForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate pa_type"""
         last_utterance = get_latest_bot_utterance(tracker.events)
-        print(f'Last utterace: {last_utterance}')
         if last_utterance != 'utter_ask_pa_type':
             return {"pa_type": None}
 
-        print(f'pa_type: {value}')
         return {"pa_type": value}
 
     def validate_pa_together(

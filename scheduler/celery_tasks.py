@@ -74,7 +74,7 @@ def check_physical_relapse():
     in this case, triggers the correspondent dialog
     """
 
-    range_start = date.today() - timedelta(days=1)
+    range_start = date.today()
 
     state_machines = get_all_fsm()
 

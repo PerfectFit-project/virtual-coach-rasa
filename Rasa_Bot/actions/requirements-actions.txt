@@ -9,6 +9,6 @@ python-dotenv
 rasa-sdk==3.2.3
 redis
 sqlalchemy
-git+https://github.com/PerfectFit-project/virtual-coach-db@303-system-lapse-dialog
+git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.24
 git+https://github.com/PerfectFit-project/pa-algorithms
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.4

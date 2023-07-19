@@ -525,8 +525,6 @@ class RelapseState(State):
                       Components.RELAPSE_DIALOG_PA,
                       Components.RELAPSE_DIALOG_SYSTEM]:
 
-            logging.info('Relapse dialog completed ')
-
             # When a specific branch of the relapse dialog has been completed,
             # we need to mark the general relapse dialog as completed
             if dialog != Components.RELAPSE_DIALOG:

@@ -76,11 +76,11 @@ def check_if_physical_relapse(user_id: int, start_date: date) -> bool:
     """
     relapse = False
 
-    range_start = start_date
-    range_end = range_start - timedelta(days=5)
+    range_end = start_date
+    range_start = range_end - timedelta(days=5)
 
     # get the list of steps per day
-    steps_taken = connector.get_steps_data(user_id, range_end, range_start)
+    steps_taken = connector.get_steps_data(user_id, range_start, range_end)
     # if no steps have been recorded in the past 5 days
     if steps_taken is None:
         relapse = True

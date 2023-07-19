@@ -1,11 +1,20 @@
 """
 Contains custom actions related to the weekly reflection dialogue
 """
-
 import datetime
+from typing import Any, Dict, Text
+import logging
 from dateutil.relativedelta import relativedelta
+from celery import Celery
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet, FollowupAction
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.forms import FormValidationAction
 from . import validator
-from .definitions import REDIS_URL
+from .definitions import (GROUP_2_THRESHOLD_DAILY_STEPS,
+                          GROUP_2_THRESHOLD_TOTAL_STEPS,
+                          SUFFICIENT_DAILY_STEPS,
+                          REDIS_URL)
 from .helper import (get_intensity_minutes_goal,
                      get_intervention_component_id,
                      get_last_completed_dialog_part_from_db,
@@ -16,14 +25,7 @@ from .helper import (get_intensity_minutes_goal,
                      make_step_overview,
                      set_pa_group_to_db,
                      store_dialog_part_to_db)
-from celery import Celery
-from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, FollowupAction
-from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.forms import FormValidationAction
-from typing import Any, Dict, Text
 from virtual_coach_db.helper.definitions import Components
-import logging
 from sensor_api.sensorapi.connector import get_steps_data, get_step_goals_and_steps
 
 
@@ -211,9 +213,6 @@ class SetPaGroup(Action):
     async def run(self, dispatcher, tracker, domain):
         # Get user id and set constants
         user_id = int(tracker.current_state()['sender_id'])
-        group_2_threshold_total_steps = 56000
-        sufficient_daily_steps = 8000
-        group_2_threshold_daily_steps = 4
 
         # Get steps data last 7 days
         end = datetime.datetime.now()
@@ -221,10 +220,10 @@ class SetPaGroup(Action):
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
         total_steps = sum(day['steps'] for day in steps_data)
-        daily_steps = sum((day['steps'] >= sufficient_daily_steps) for day in steps_data)
+        daily_steps = sum((day['steps'] >= SUFFICIENT_DAILY_STEPS) for day in steps_data)
 
-        if (total_steps >= group_2_threshold_total_steps) and\
-                (daily_steps >= group_2_threshold_daily_steps):
+        if (total_steps >= GROUP_2_THRESHOLD_TOTAL_STEPS) and\
+                (daily_steps >= GROUP_2_THRESHOLD_DAILY_STEPS):
             pa_group = 2
 
         else:

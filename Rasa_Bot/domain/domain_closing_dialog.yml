@@ -334,6 +334,7 @@ actions:
   - action_get_first_aid_kit_activities
   - action_closing_get_total_number_steps
   - action_set_slot_closing_dialog
+  - action_disconnect_user
 
 forms:
   closing_pa_evaluation_form:

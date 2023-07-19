@@ -4,7 +4,7 @@ from . import validator
 from .definitions import DATABASE_URL, REDIS_URL
 from .helper import (get_latest_bot_utterance,
                      get_user_intervention_activity_inputs,
-                     get_faik_text)
+                     get_faik_text, mark_completion)
 
 from celery import Celery
 from datetime import datetime, timedelta
@@ -14,8 +14,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.dbschema.models import InterventionActivity
+from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
-
 
 celery = Celery(broker=REDIS_URL)
 
@@ -48,7 +48,12 @@ class ActionResumeAfterFak(Action):
 
         current_intervention = tracker.get_slot('current_intervention_component')
 
+        # the first aid kit can be triggered from other dialogs, so the
+        # current_intervention_component is not set at the beginning. In case tha slot value is
+        # NONE, it means that the fak has been trigger in isolation, and we have to make sure
+        # that we aknowledge the FSM that s has been completed
         if current_intervention == 'NONE':
+            mark_completion(user_id, Components.FIRST_AID_KIT)
             return[FollowupAction('action_end_dialog')]
 
         new_intent = 'EXTERNAL_' + current_intervention
@@ -89,11 +94,17 @@ class ValidateFirstAidKitChosenActivityForm(FormValidationAction):
         if last_utterance != 'utter_ask_first_aid_kit_chosen_activity_slot':
             return {"first_aid_kit_chosen_activity_slot": None}
 
-        if not validator.validate_number_in_range_response(n_min=1, n_max=5, 
-                                                           response=value):
-            return {"first_aid_kit_chosen_activity_slot": None}
-
         activity_ids_list = tracker.get_slot('first_aid_kit_activities_ids')
+
+        if not validator.validate_number_in_range_response(n_min=1, n_max=len(activity_ids_list),
+                                                           response=value):
+            text_msg = 'Typ '
+            for (num, _) in enumerate(activity_ids_list):
+                # we need + 1 to start from 1 instead of from 0
+                text_msg += ' ' + str(num + 1) + ','
+
+            dispatcher.utter_message(text=text_msg)
+            return {"first_aid_kit_chosen_activity_slot": None}
 
         return {"first_aid_kit_chosen_activity_slot": activity_ids_list[int(value) - 1]}
 
@@ -141,7 +152,10 @@ class ActionFirstAidKitGetUserInput(Action):
 
         user_inputs = get_user_intervention_activity_inputs(user_id, 
                                                             activity_id)
-        last_input = user_inputs[-1].user_input
+        if len(user_inputs) > 0:
+            last_input = user_inputs[-1].user_input
+        else:
+            last_input = None
 
         return [SlotSet("first_aid_kit_user_input_slot", last_input)]
 

@@ -82,8 +82,8 @@ responses:
     - text: "Kies een van de oefeningen. Ik laat je deze oefening dan opnieuw zien. Of ik laat jouw eigen tekst over wat je van deze oefening geleerd hebt zien."
     - text: "Kies een oefening. Ik laat je deze oefening dan opnieuw zien. Of ik laat jouw eigen tekst zien over wat je van deze oefening geleerd hebt."
   utter_ask_first_aid_kit_chosen_activity_slot:
-    - text: "Welke oefening wil je bekijken? Typ '1', '2', '3', '4' of '5'."
-    - text: "Welke oefening wil je zien? Typ '1', '2', '3', '4' of '5'."
+    - text: "Welke oefening wil je bekijken?"
+    - text: "Welke oefening wil je zien?"
     
     
   utter_first_aid_kit_show_full_text_input_1:

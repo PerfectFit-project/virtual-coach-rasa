@@ -11,7 +11,6 @@ from .helper import (get_goal_setting_chosen_sport_from_db,
                      get_intervention_component_id, 
                      get_last_completed_dialog_part_from_db,
                      get_latest_bot_utterance,
-                     get_steps_data,
                      store_dialog_part_to_db,
                      store_goal_setting_chosen_sport_to_db,
                      store_long_term_pa_goal_to_db,
@@ -22,6 +21,7 @@ from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
+from sensor_api.sensorapi.connector import get_steps_data
 
 
 class ActionSaveGoalSettingDialogPart1(Action):

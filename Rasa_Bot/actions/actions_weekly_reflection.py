@@ -11,8 +11,6 @@ from .helper import (get_intensity_minutes_goal,
                      get_last_completed_dialog_part_from_db,
                      get_latest_bot_utterance,
                      get_pa_group,
-                     get_steps_data,
-                     get_step_goals_and_steps,
                      get_user,
                      get_user_intervention_state_hrs,
                      make_step_overview,
@@ -26,6 +24,7 @@ from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.helper.definitions import Components
 import logging
+from sensor_api.sensorapi.connector import get_steps_data, get_step_goals_and_steps
 
 
 celery = Celery(broker=REDIS_URL)

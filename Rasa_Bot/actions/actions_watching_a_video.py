@@ -78,7 +78,7 @@ class DelayedMessage(Action):
 
         dialog = str(tracker.get_slot('current_intervention_component'))
         try:
-            duration = 10
+            duration = (DialogExpectedDuration[dialog]) * 60
         except Exception:
             duration = 30
 

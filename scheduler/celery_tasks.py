@@ -400,16 +400,18 @@ def pause_and_resume(self,  # pylint: disable=unused-argument
 def pause_and_trigger(self,  # pylint: disable=unused-argument
                       user_id: int,
                       trigger: str,
-                      time: datetime):
+                      time: datetime,
+                      acknowledge: bool = False):
     """
     This task sends a pause the dialog and schedules the resume.
     Args:
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
         time: time for scheduling the dialog resume
+        acknowledge: if true, use the trigger_intervention_component task, to acknowledge the FSM
     """
     pause_conversation.apply_async(args=[user_id])
-    resume_and_trigger.apply_async(args=[user_id, trigger], eta=time)
+    resume_and_trigger.apply_async(args=[user_id, trigger, acknowledge], eta=time)
 
 
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
@@ -440,12 +442,14 @@ def resume(self,  # pylint: disable=unused-argument
 @app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True)
 def resume_and_trigger(self,  # pylint: disable=unused-argument
                        user_id: int,
-                       trigger: str):
+                       trigger: str,
+                       acknowledge: bool = False):
     """
     This task sends a resume event to Rasa and triggers a new intent.
     Args:
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent after the dialog is resumed
+        acknowledge: if true, use the trigger_intervention_component task, to acknowledge the FSM
     """
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/tracker/events'
     headers = {'Content-Type': 'application/json'}
@@ -455,10 +459,14 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
     if response_resume.status_code != 200:
         raise Exception()
 
-    response_intent = send_trigger(user_id, trigger)
-    if response_intent != 200:
-        logging.info('Exception during resume_and_trigger')
-        raise Exception()
+    if acknowledge:
+        trigger_intervention_component(user_id, trigger)
+
+    else:
+        response_intent = send_trigger(user_id, trigger)
+        if response_intent != 200:
+            logging.info('Exception during resume_and_trigger')
+            raise Exception()
 
 
 def send_trigger(user_id: int, trigger: str):

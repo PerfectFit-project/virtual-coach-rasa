@@ -460,7 +460,8 @@ def resume_and_trigger(self,  # pylint: disable=unused-argument
         raise Exception()
 
     if acknowledge:
-        trigger_intervention_component(user_id, trigger)
+        trigger_intervention_component.apply_async(
+            args=[user_id, trigger])
 
     else:
         response_intent = send_trigger(user_id, trigger)

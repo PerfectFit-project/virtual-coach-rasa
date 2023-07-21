@@ -295,15 +295,15 @@ class SetIntensityMinutesGoal(Action):
         # get the intensive minutes goal for the previous week
         previous_goal = get_intensity_minutes_goal(user_id)
 
-        # the first time, it's set to 15 minutes
+        # the first time, it's set to 15 minutes  ## Bouke: value from last week instead.
         if previous_goal is None:
-            previous_goal = 15
+            intensity_minutes = 10  # Function to get intensity minutes from last week
 
+        else:
         # the new goal is the previous one, plus 15 minutes
-        intensity_minutes = previous_goal + 15
+            intensity_minutes = previous_goal + 15
 
         # save the new goal to the DB
-
         #TODO: save to db new value
         # set_intensity_minutes_goal(user_id, intensity_minutes)
 

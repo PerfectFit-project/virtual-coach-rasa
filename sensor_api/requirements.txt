@@ -1,3 +1,5 @@
 cryptography
+numpy
+pandas
 pyjwt
 python-dateutil==2.8.1

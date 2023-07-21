@@ -16,7 +16,7 @@ rules:
   - action: utter_closing_congratualate_5
   - action: utter_closing_congratualate_6
   - action: utter_closing_pa_1
-  - action: action_closing_get_total_number_steps  # TODO: fix placeholder function
+  - action: action_closing_get_total_number_steps
   - action: utter_closing_pa_2
   - action: utter_closing_pa_3
   - action: utter_closing_pa_4

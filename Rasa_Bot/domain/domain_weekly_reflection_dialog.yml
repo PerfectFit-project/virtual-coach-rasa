@@ -28,15 +28,7 @@ slots:
       - type: custom
 
   step_goal_days:
-    type: categorical
-    values:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
+    type: float
     mappings:
       - type: custom
 

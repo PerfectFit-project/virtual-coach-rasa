@@ -125,6 +125,11 @@ TRIGGER_INTENT = 'celery_tasks.trigger_intent'
 # pause the conversation and trigger a new component afterwards
 PAUSE_AND_TRIGGER = 'celery_tasks.pause_and_trigger'
 
+# PA Group definitions
+GROUP_2_THRESHOLD_TOTAL_STEPS = 56000
+SUFFICIENT_DAILY_STEPS = 8000
+GROUP_2_THRESHOLD_DAILY_STEPS = 4
+
 
 class FsmStates:
     ONBOARDING = "Onboarding"

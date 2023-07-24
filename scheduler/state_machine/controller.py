@@ -1,4 +1,5 @@
 import logging
+from celery import Celery
 from datetime import date, datetime, timedelta
 from state_machine.state_machine_utils import (create_new_date, dialog_to_be_completed,
                                                get_dialog_completion_state,
@@ -9,13 +10,15 @@ from state_machine.state_machine_utils import (create_new_date, dialog_to_be_com
                                                retrieve_intervention_day, revoke_execution,
                                                run_uncompleted_dialog, run_option_menu,
                                                schedule_next_execution, store_completed_dialog,
-                                               update_execution_week)
+                                               update_execution_week, store_scheduled_dialog)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
-                                 TRACKING_DURATION, TIMEZONE, PREPARATION_GA,
+                                 TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
                                  MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
-                                 EXECUTION_DURATION_WEEKS,TIME_DELTA_PA_NOTIFICATION)
+                                 EXECUTION_DURATION_WEEKS, TIME_DELTA_PA_NOTIFICATION, REDIS_URL)
 from state_machine.state import State
-from virtual_coach_db.helper.definitions import (Components, Notifications)
+from virtual_coach_db.helper.definitions import (Components, ComponentsTriggers, Notifications)
+
+celery = Celery(broker=REDIS_URL)
 
 
 class OnboardingState(State):
@@ -41,10 +44,24 @@ class OnboardingState(State):
 
         elif dialog == Components.PROFILE_CREATION:
             logging.info('Profile creation completed, starting med talk')
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.MEDICATION_TALK,
-                           planned_date=datetime.now() + timedelta(seconds=30),
-                           phase_id=1)
+
+            dialog_id = get_intervention_component(
+                Components.MEDICATION_TALK).intervention_component_id
+
+            trigger_time = datetime.now() + timedelta(seconds=30)
+            # store record in db
+            store_scheduled_dialog(user_id=self.user_id,
+                                   dialog_id=dialog_id,
+                                   phase_id=1,
+                                   planned_date=trigger_time,
+                                   last_time=trigger_time)
+
+            # pause the conversation and then trigger the dialog
+            celery.send_task(PAUSE_AND_TRIGGER,
+                             (self.user_id,
+                              ComponentsTriggers.MEDICATION_TALK,
+                              datetime.now() + timedelta(seconds=30),
+                              True))
 
         elif dialog == Components.MEDICATION_TALK:
             logging.info('Med talk completed, starting track behavior')
@@ -74,7 +91,7 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog in(Components.FIRST_AID_KIT, dialog == Components.FIRST_AID_KIT_VIDEO):
+        if dialog in (Components.FIRST_AID_KIT, dialog == Components.FIRST_AID_KIT_VIDEO):
             # dialog not available in this phase
             if dialog_to_be_completed(self.user_id) is None:
                 complete = False
@@ -461,7 +478,7 @@ class ExecutionRunState(State):
                            dialog=dialog,
                            phase_id=2)
 
-        if dialog == Components.RELAPSE_DIALOG:
+        if dialog in [Components.RELAPSE_DIALOG, Components.RELAPSE_DIALOG_SYSTEM]:
             self.set_new_state(RelapseState(self.user_id))
 
     def on_new_day(self, current_date: date):
@@ -547,9 +564,8 @@ class RelapseState(State):
                       Components.RELAPSE_DIALOG_HRS,
                       Components.RELAPSE_DIALOG_LAPSE,
                       Components.RELAPSE_DIALOG_RELAPSE,
-                      Components.RELAPSE_DIALOG_PA]:
-
-            logging.info('Relapse dialog completed ')
+                      Components.RELAPSE_DIALOG_PA,
+                      Components.RELAPSE_DIALOG_SYSTEM]:
 
             # When a specific branch of the relapse dialog has been completed,
             # we need to mark the general relapse dialog as completed

@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta
+from sensorapi import connector
 from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
                                  NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
@@ -6,13 +7,14 @@ from state_machine.controller import (OnboardingState, TrackingState, GoalsSetti
                                       CompletedState)
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
-from typing import List
+from typing import List, Optional
 from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
                                               UserStateMachine)
 from virtual_coach_db.helper.definitions import Components, Notifications
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 import logging
+import numpy as np
 
 
 def check_if_user_exists(user_id: int) -> bool:
@@ -63,6 +65,42 @@ def check_if_user_active(user_id: int, current_date: date, days_number) -> bool:
         return True
 
     return False
+
+
+def check_if_physical_relapse(user_id: int, start_date: date) -> bool:
+    """
+    Check if a user has a physical relapse ()not reaching the stps goal.
+    Args:
+        user_id: the ID of the user
+        start_date: the day in which to check if a relapse occurred
+    Returns: True if there is a relapse, false otherwise
+    """
+    relapse = False
+
+    range_end = start_date
+    range_start = range_end - timedelta(days=5)
+
+    # get the list of steps per day
+    steps_taken = connector.get_steps_data(user_id, range_start, range_end)
+    # if no steps have been recorded in the past 5 days
+    if steps_taken is None:
+        relapse = True
+    # if no recordings are available for the day, or the value is lower than the threshold
+    elif steps_taken[-1]['date'] != range_start or steps_taken[-1]['steps'] < 8000:
+        # if there are less than 3 days with recording is the same thing as having not reached
+        # the goal 4 times in 5 days
+        if len(steps_taken) < 2:
+            relapse = True
+        else:
+            # get the days where the goal has not been reached
+            not_reached = [entry for entry in steps_taken if
+                           entry['steps'] < get_current_steps_goal(user_id, entry['date'])]
+            # if goal not reached 4 days or 3 days in a row
+            if len(not_reached) >= 4 or (
+                    len(not_reached) == 3 and not_reached[-1] == range_start - timedelta(days=2)):
+                relapse = True
+
+    return relapse
 
 
 def check_if_task_executed(task_uuid: str) -> bool:
@@ -207,6 +245,40 @@ def get_component_name(intervention_component_trigger: str) -> str:
     )
 
     return selected.intervention_component_name
+
+
+def get_current_steps_goal(user_id: int, day: date) -> Optional[int]:
+    """
+    Get daily step goal for a given user using data from the step count database.
+    For example, for a single participant, daily step count over the last 9 days (ranked from
+    lowest to highest) was 1250, 1332, 3136, 5431, 5552, 5890, 6402, 7301, 10,103.
+    In this case, the 60th percentile represents a goal of 5890 steps. The 6th element is used.
+    If there is not data for 9 days available, the number of days will be supplemented to 9 by
+    adding the average of the days with data.
+
+    Args:
+        user_id (int): The user ID for whom the daily step goal is to be retrieved from the db
+    Returns:
+        int: The daily step goal for the given user, retrieved from the database.
+    """
+    steps_per_day = []
+
+    end = day
+    start = end - timedelta(days=9)
+    steps_data = connector.get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+    for current_day in steps_data:
+        steps_per_day.append(current_day['steps'])
+
+    if len(steps_per_day) < 9:
+        while len(steps_per_day) < 9:
+            # Supplement with the average value up to 9 values
+            steps_per_day.append(np.mean(steps_per_day))
+
+    steps_per_day.sort()
+    pa_goal = int(round(steps_per_day[5], -1))
+
+    return pa_goal
 
 
 def get_dialog_state(state_machine: StateMachine) -> int:

@@ -637,6 +637,7 @@ class SavePersuasionToDatabase(Action):
         store_dialog_closed_answer_to_db(user_id, answer_value=message_idx + 2,
                                          question_id=question_id)
         # +1 since the lowest value is 0
+        # Effort is None the first time the general activity dialog is run for a user
         if effort is not None:
             store_dialog_closed_answer_to_db(
                 user_id, answer_value=effort + 1,

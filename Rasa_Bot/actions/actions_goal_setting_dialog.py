@@ -21,7 +21,7 @@ from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
-from sensor_api.sensorapi.connector import get_steps_data
+from sensorapi.connector import get_steps_data
 
 
 class ActionSaveGoalSettingDialogPart1(Action):

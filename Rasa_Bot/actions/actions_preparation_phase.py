@@ -9,7 +9,7 @@ from virtual_coach_db.helper.definitions import (Components,
                                                  DialogExpectedDuration)
 
 from . import validator
-from .definitions import MORNING, AFTERNOON, REDIS_URL, TIMEZONE
+from .definitions import MORNING, AFTERNOON, REDIS_URL, TIMEZONE, TRIGGER_INTENT
 from .helper import get_latest_bot_utterance
 from .actions_rescheduling_dialog import get_reschedule_date
 
@@ -100,9 +100,8 @@ class StartNextDialog(Action):
             return [FollowupAction('utter_profile_creation_start_3')]
 
         # if the dialog is a video one, launch the watch a video dialog
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id,
-                          ComponentsTriggers.WATCH_VIDEO))
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.WATCH_VIDEO))
 
 
 class ScheduleNextPrepPhase(Action):

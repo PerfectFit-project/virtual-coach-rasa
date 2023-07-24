@@ -5,7 +5,7 @@ from .definitions import REDIS_URL
 from .helper import get_weekly_intensity_minutes_goal_from_db
 import datetime
 import logging
-from sensor_api.sensorapi.connector import get_daily_step_goal_from_db
+from sensorapi.connector import get_daily_step_goal_from_db
 
 celery = Celery(broker=REDIS_URL)
 

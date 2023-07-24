@@ -26,7 +26,7 @@ from .helper import (get_intensity_minutes_goal,
                      set_pa_group_to_db,
                      store_dialog_part_to_db)
 from virtual_coach_db.helper.definitions import Components
-from sensor_api.sensorapi.connector import get_steps_data, get_step_goals_and_steps
+from sensorapi.connector import get_steps_data, get_step_goals_and_steps
 
 
 celery = Celery(broker=REDIS_URL)

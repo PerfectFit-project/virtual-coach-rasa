@@ -8,7 +8,7 @@ from typing import Text, Dict, Any
 from virtual_coach_db.helper.definitions import (VideoLinks, Components, ComponentsTriggers,
                                                  DialogExpectedDuration)
 from . import validator
-from .definitions import PAUSE_AND_TRIGGER, REDIS_URL
+from .definitions import PAUSE_AND_TRIGGER, REDIS_URL, TRIGGER_INTENT
 from .helper import get_latest_bot_utterance
 
 celery = Celery(broker=REDIS_URL)
@@ -23,7 +23,7 @@ class ActionLaunchWatchVideoDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.WATCH_VIDEO
-        celery.send_task('celery_tasks.trigger_intervention_component',
+        celery.send_task(TRIGGER_INTENT,
                          (user_id, new_intent))
         return []
 
@@ -38,7 +38,7 @@ class ActionLaunchReschedulingPrep(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.RESCHEDULING_PREPARATION
 
-        celery.send_task('celery_tasks.trigger_intervention_component',
+        celery.send_task(TRIGGER_INTENT,
                          (user_id, new_intent))
         return []
 

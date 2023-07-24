@@ -408,7 +408,9 @@ def pause_and_trigger(self,  # pylint: disable=unused-argument
         user_id: the ID of the user to send the trigger to
         trigger: the intent to be sent
         time: time for scheduling the dialog resume
-        acknowledge: if true, use the trigger_intervention_component task, to acknowledge the FSM
+        acknowledge: if true, use the trigger_intervention_component task, to acknowledge the FSM.
+        When the FSM in acknowledged, the trigger will result in the full process of starting a new
+        dialog, so new entry is added to the DB and the starting time of the dialog is updated.
     """
     pause_conversation.apply_async(args=[user_id])
     resume_and_trigger.apply_async(args=[user_id, trigger, acknowledge], eta=time)

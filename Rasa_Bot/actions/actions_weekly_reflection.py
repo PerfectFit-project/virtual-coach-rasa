@@ -23,10 +23,11 @@ from .helper import (get_intensity_minutes_goal,
                      get_user,
                      get_user_intervention_state_hrs,
                      make_step_overview,
+                     set_intensity_minutes_goal,
                      set_pa_group_to_db,
                      store_dialog_part_to_db)
 from virtual_coach_db.helper.definitions import Components
-from sensorapi.connector import get_steps_data, get_step_goals_and_steps
+from sensorapi.connector import get_steps_data, get_step_goals_and_steps, get_intensity_minutes_data
 
 
 celery = Celery(broker=REDIS_URL)
@@ -45,7 +46,7 @@ class ActionSaveWeeklyReflectionDialogPart1(Action):
                                 part = 1)
 
         return []
-    
+
     
 class ActionSaveWeeklyReflectionDialogPart2(Action):
     """To save first part of weekly-reflection dialog"""
@@ -206,6 +207,22 @@ class WhichPaGroup(Action):
         return [SlotSet('pa_group', pa_group)]
 
 
+class SaveNewGoal(Action):
+    def name(self):
+        return "action_save_new_goal"
+
+    async def run(self, dispatcher, tracker, domain):
+        # Get user id and set constants
+        user_id = int(tracker.current_state()['sender_id'])
+        intensity_minutes_goal = int(tracker.current_state()['intensity_minutes_goal'])
+
+        # save the new goal to the DB
+
+        set_intensity_minutes_goal(user_id, intensity_minutes_goal)
+
+        return []
+
+
 class SetPaGroup(Action):
     def name(self):
         return "action_set_pa_group"
@@ -261,7 +278,7 @@ class StepGoalUtterances(Action):
         return "action_step_goal_utterances"
 
     async def run(self, dispatcher, tracker, domain):
-        step_goal_days = tracker.current_state()['step_goal_days']
+        step_goal_days = tracker.get_slot('step_goal_days')
         if step_goal_days > 5:
             dispatcher.utter_message(response="utter_overview_group1_4")
         elif 3 < step_goal_days < 6:
@@ -279,17 +296,31 @@ class SetIntensityMinutes(Action):
         return "action_set_intensity_minutes"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO This method should get minutes and set the slot accordingly
-        intensity_minutes = 50
+
+        user_id = int(tracker.current_state()['sender_id'])
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=16)
+
+        intensity_minutes = get_intensity_minutes_data(user_id, start, end)
+
+        if intensity_minutes is None:
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            logging.error(f'User id: {user_id}, dialog: weekly reflection,'
+                          'action: action_set_step_goals')
+            return [SlotSet('intensity_minutes', 0)]
+
         return [SlotSet('intensity_minutes', intensity_minutes)]
 
 
-class SetIntensityMinutesGoal(Action):
+class SetIntensityMinutesGoalProvious(Action):
     def name(self):
-        return "action_set_intensity_minutes_goal"
+        return "action_set_intensity_minutes_goal_previous"
 
     async def run(self, dispatcher, tracker, domain):
+        """
+        retrieve the intensity minutes goal of the previous week, and sets the correspondent slot
 
+        """
         user_id = int(tracker.current_state()['sender_id'])
 
         # get the intensive minutes goal for the previous week
@@ -297,17 +328,52 @@ class SetIntensityMinutesGoal(Action):
 
         # the first time, it's set to 15 minutes  ## Bouke: value from last week instead.
         if previous_goal is None:
-            intensity_minutes = 10  # Function to get intensity minutes from last week
+            end = datetime.datetime.now()
+            start = end - datetime.timedelta(days=7)
+
+            previous_goal = get_intensity_minutes_data(user_id, start, end)
+            if previous_goal is None or previous_goal < 10:
+                previous_goal = 10
+
+        return [SlotSet('intensity_minutes_goal_previous', previous_goal)]
+
+
+class SetIntensityMinutesGoal(Action):
+    def name(self):
+        return "action_set_intensity_minutes_goal"
+
+    async def run(self, dispatcher, tracker, domain):
+        # if the slot has been already set in some other branch of the dialog, just return
+        new_goal = int(tracker.get_slot('intensity_minutes_goal'))
+        if new_goal is not None:
+            return[]
+
+        user_id = int(tracker.current_state()['sender_id'])
+
+        # get the intensive minutes goal for the previous week
+        previous_goal = int(tracker.get_slot('intensity_minutes_goal_previous'))
+
+        # If for some reason the slot is empty
+        if previous_goal is None:
+            # get the intensive minutes goal for the previous week
+            previous_goal = get_intensity_minutes_goal(user_id)
+
+            # the first time, it's set to 15 minutes  ## Bouke: value from last week instead.
+            if previous_goal is None:
+                end = datetime.datetime.now()
+                start = end - datetime.timedelta(days=7)
+
+                new_goal = get_intensity_minutes_data(user_id, start, end)
+                if new_goal is None or new_goal < 10:
+                    new_goal = 10
+            else:
+                new_goal = previous_goal + 15
 
         else:
-        # the new goal is the previous one, plus 15 minutes
-            intensity_minutes = previous_goal + 15
+            # the new goal is the previous one, plus 15 minutes
+            new_goal = previous_goal + 15
 
-        # save the new goal to the DB
-        #TODO: save to db new value
-        # set_intensity_minutes_goal(user_id, intensity_minutes)
-
-        return [SlotSet('intensity_minutes_goal', intensity_minutes)]
+        return [SlotSet('intensity_minutes_goal', new_goal)]
 
 
 class ShowPaOverview(Action):

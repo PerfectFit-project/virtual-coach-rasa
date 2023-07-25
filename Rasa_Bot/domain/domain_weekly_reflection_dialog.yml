@@ -39,6 +39,13 @@ slots:
     mappings:
       - type: custom
 
+  intensity_minutes_goal_previous:
+    type: float
+    min_value: 0
+    max_value: 150
+    mappings:
+      - type: custom
+
   intensity_minutes_goal:
     type: float
     min_value: 0
@@ -736,7 +743,7 @@ responses:
   # 6b Overview physical activity group 2
   utter_overview_group2_1:
     - text: "Laten wij nu terugkijken op je beweging van afgelopen week. Je stappendoel 🦶🏼 stond elke dag op 8000
-             en daarnaast was het doel om minimaal {intensity_minutes_goal} minuten intensief te bewegen ☀."
+             en daarnaast was het doel om minimaal {intensity_minutes_goal_previous} minuten intensief te bewegen ☀."
   utter_overview_group2_2:
     - text: "Dit is het overzicht van jouw gezette stappen, persoonlijk stappendoel en intensieve bewegingsminuten
              van afgelopen week: "
@@ -1380,10 +1387,12 @@ actions:
   - action_set_pa_group
   - action_set_intensity_minutes
   - action_set_intensity_minutes_goal
+  - action_set_intensity_minutes_goal_previous
   - action_set_step_goal_days
   - action_step_goal_utterances
   - action_get_week_number
   - action_get_long_term_pa_goal
+  - action_save_new_goal
   - action_set_slot_weekly_reflection
   - action_user_completed_hrs
   - action_show_pa_overview

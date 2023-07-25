@@ -4,6 +4,6 @@ numpy
 python-dotenv
 git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.24
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.5
-git+https://github.com/PerfectFit-project/virtual-coach-rasa@main#subdirectory=sensor_api
+git+https://github.com/PerfectFit-project/virtual-coach-rasa@333-configure-step-count-in-dialogs#subdirectory=sensor_api
 redis
 requests

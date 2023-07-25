@@ -214,7 +214,7 @@ class SaveNewGoal(Action):
     async def run(self, dispatcher, tracker, domain):
         # Get user id and set constants
         user_id = int(tracker.current_state()['sender_id'])
-        intensity_minutes_goal = int(tracker.current_state()['intensity_minutes_goal'])
+        intensity_minutes_goal = int(tracker.get_slot('intensity_minutes_goal'))
 
         # save the new goal to the DB
 
@@ -267,7 +267,7 @@ class SetStepGoalDays(Action):
         if step_goal_days is None:
             dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
             logging.error(f'User id: {user_id}, dialog: weekly reflection,'
-                          'action: action_set_step_goals')
+                          'action: action_set_step_goal_days')
             return [SlotSet('step_goal_days', 0)]
 
         return [SlotSet('step_goal_days', step_goal_days)]
@@ -306,7 +306,7 @@ class SetIntensityMinutes(Action):
         if intensity_minutes is None:
             dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
             logging.error(f'User id: {user_id}, dialog: weekly reflection,'
-                          'action: action_set_step_goals')
+                          'action: action_set_intensity_minutes')
             return [SlotSet('intensity_minutes', 0)]
 
         return [SlotSet('intensity_minutes', intensity_minutes)]
@@ -344,14 +344,14 @@ class SetIntensityMinutesGoal(Action):
 
     async def run(self, dispatcher, tracker, domain):
         # if the slot has been already set in some other branch of the dialog, just return
-        new_goal = int(tracker.get_slot('intensity_minutes_goal'))
+        new_goal = tracker.get_slot('intensity_minutes_goal')
         if new_goal is not None:
             return[]
 
         user_id = int(tracker.current_state()['sender_id'])
 
         # get the intensive minutes goal for the previous week
-        previous_goal = int(tracker.get_slot('intensity_minutes_goal_previous'))
+        previous_goal = tracker.get_slot('intensity_minutes_goal_previous')
 
         # If for some reason the slot is empty
         if previous_goal is None:

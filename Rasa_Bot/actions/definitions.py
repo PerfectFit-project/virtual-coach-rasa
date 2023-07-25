@@ -55,6 +55,7 @@ NUM_TOP_ACTIVITIES = 5
 
 # Images for file sharing
 FILE_PATH_IMAGE_PA = '/app/hoe_intensief_beweeg_jij.jpg'
+FILE_PATH_IMAGE_ERROR = '/app/pa_overview_error.PNG'
 
 ### Persuasion in general activity dialog
 # Optimal policy based on the one computed in the paper by Albers et al. (2023)

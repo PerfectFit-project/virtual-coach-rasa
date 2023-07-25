@@ -11,7 +11,8 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from . import validator
-from .definitions import (GROUP_2_THRESHOLD_DAILY_STEPS,
+from .definitions import (FILE_PATH_IMAGE_ERROR,
+                          GROUP_2_THRESHOLD_DAILY_STEPS,
                           GROUP_2_THRESHOLD_TOTAL_STEPS,
                           SUFFICIENT_DAILY_STEPS,
                           REDIS_URL)
@@ -393,8 +394,8 @@ class ShowPaOverview(Action):
         if date_array is None:
             logging.error(f'user id: {user_id}, dialog: weekly reflection,'
                           'action: action_show_pa_overview')
-            default_error_image = 'app/pa_overview_error.PNG'  # TODO: add this image
-            return [SlotSet("upload_file_path", default_error_image)]
+
+            return [SlotSet("upload_file_path", FILE_PATH_IMAGE_ERROR)]
 
         fig = make_step_overview(date_array, step_array, step_goal)
 

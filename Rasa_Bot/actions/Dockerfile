@@ -10,6 +10,7 @@ WORKDIR /app
 COPY requirements-actions.txt ./
 
 COPY hoe_intensief_beweeg_jij.jpg ./
+COPY pa_overview_error.PNG ./
 # Change to root user to install dependencies
 USER root
 

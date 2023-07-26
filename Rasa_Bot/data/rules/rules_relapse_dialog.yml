@@ -826,7 +826,6 @@ rules:
   - action: store_pa_doing_today
   - action: store_pa_happened_special
   - action: utter_smoke_lapse_12
-  - action: utter_pa_lapse_5
   - action: utter_pa_lapse_6
   - action: utter_pa_lapse_7
   - action: show_barchart_difficult_situations_pa

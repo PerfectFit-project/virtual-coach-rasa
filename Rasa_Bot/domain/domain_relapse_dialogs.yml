@@ -869,7 +869,7 @@ responses:
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_pa_lapse_5:
-    - text: "Wat heb je verder overdag?"
+    - text: "Wat heb je verder gedaan overdag?"
   utter_pa_lapse_6:
     - text: "Door vaker te kijken naar situaties waarin je geen zin hebt om in beweging te komen, kun je leren patronen 
             herkennen.💡 Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."

@@ -1,8 +1,8 @@
 from celery import Celery
 from rasa_sdk import Action
-from .helper import dialog_to_be_completed, get_dialog_completion_state
+from .helper import dialog_to_be_completed,get_current_user_phase, get_dialog_completion_state
 from virtual_coach_db.helper.definitions import Components
-from .definitions import REDIS_URL
+from .definitions import REDIS_URL, FsmStates
 
 celery = Celery(broker=REDIS_URL)
 
@@ -16,7 +16,14 @@ class ActionTriggerRelapseDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
 
-        celery.send_task('celery_tasks.user_trigger_dialog', (user_id, Components.RELAPSE_DIALOG))
+        phase = get_current_user_phase(user_id)
+
+        # check if the dialog can be executed (the use is in the execution phase)
+        if phase != FsmStates.EXECUTION_RUN:
+            dispatcher.utter_message(response="utter_help_not_available")
+        else:
+            celery.send_task('celery_tasks.user_trigger_dialog',
+                             (user_id, Components.RELAPSE_DIALOG))
 
 
 class ActionTriggerFirstAidDialog(Action):
@@ -83,14 +90,32 @@ class ActionSelectMenu(Action):
         # is the ehbo option to be shown (the explanatory video has been shown)
         show_ehbo = get_dialog_completion_state(user_id, Components.FIRST_AID_KIT_VIDEO)
 
-        if complete_dialog and show_ehbo:
-            dispatcher.utter_message(response="utter_central_mode_options")
-        elif not complete_dialog and show_ehbo:
-            dispatcher.utter_message(response="utter_central_mode_options_without_verder")
-        elif complete_dialog and not show_ehbo:
-            dispatcher.utter_message(response="utter_central_mode_options_no_ehbo")
+        # the help command is shown just in the execution
+        phase = get_current_user_phase(user_id)
+
+        if phase != FsmStates.EXECUTION_RUN:
+            show_help = False
         else:
-            dispatcher.utter_message(response="utter_central_mode_options_without_verder_no_ehbo")
+            show_help = True
+
+        # select the utterances
+
+        # show the help command
+        if show_help:
+            dispatcher.utter_message(response="utter_central_mode_options_help")
+        # show the ehbo command
+        if show_ehbo:
+            dispatcher.utter_message(response="utter_central_mode_options_ehbo")
+
+        # show the exercise command
+        dispatcher.utter_message(response="utter_central_mode_options_oefening")
+        # show the medication video command
+        dispatcher.utter_message(response="utter_central_mode_options_medicatie")
+        # show the verder command
+        if complete_dialog:
+            dispatcher.utter_message(response="utter_central_mode_options_verder")
+        # show the last general statement
+        dispatcher.utter_message(response="utter_central_mode_options_outro")
 
 
 class ActionTriggerUncompletedDialog(Action):

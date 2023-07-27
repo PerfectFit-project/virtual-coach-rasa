@@ -91,7 +91,7 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog in (Components.FIRST_AID_KIT, dialog == Components.FIRST_AID_KIT_VIDEO):
+        if dialog in (Components.FIRST_AID_KIT, Components.FIRST_AID_KIT_VIDEO):
             # dialog not available in this phase
             if dialog_to_be_completed(self.user_id) is None:
                 complete = False

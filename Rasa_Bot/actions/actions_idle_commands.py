@@ -1,5 +1,7 @@
 from celery import Celery
 from rasa_sdk import Action
+from rasa_sdk.events import FollowupAction
+
 from .helper import dialog_to_be_completed,get_current_user_phase, get_dialog_completion_state
 from virtual_coach_db.helper.definitions import Components
 from .definitions import REDIS_URL, FsmStates
@@ -20,7 +22,7 @@ class ActionTriggerRelapseDialog(Action):
 
         # check if the dialog can be executed (the use is in the execution phase)
         if phase != FsmStates.EXECUTION_RUN:
-            dispatcher.utter_message(response="utter_help_not_available")
+            return [FollowupAction('utter_help_not_available')]
         else:
             celery.send_task('celery_tasks.user_trigger_dialog',
                              (user_id, Components.RELAPSE_DIALOG))
@@ -35,7 +37,14 @@ class ActionTriggerFirstAidDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
 
-        celery.send_task('celery_tasks.user_trigger_dialog', (user_id, Components.FIRST_AID_KIT))
+        ehbo_enabled = get_dialog_completion_state(user_id, Components.FIRST_AID_KIT_VIDEO)
+        # if the first aid kit is available, trigger it
+        if ehbo_enabled:
+            celery.send_task('celery_tasks.user_trigger_dialog',
+                             (user_id, Components.FIRST_AID_KIT))
+        # if the first aid kit is not yet available, show the menu
+        else:
+            return[FollowupAction('utter_ehbo_not_available')]
 
 
 class ActionTriggerExplainFirstAidVideoDialog(Action):
@@ -47,8 +56,14 @@ class ActionTriggerExplainFirstAidVideoDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
 
-        celery.send_task('celery_tasks.user_trigger_dialog', (user_id,
-                                                              Components.FIRST_AID_KIT_VIDEO))
+        ehbo_enabled = get_dialog_completion_state(user_id, Components.FIRST_AID_KIT_VIDEO)
+        # if the first aid kit is available, trigger it
+        if ehbo_enabled:
+            celery.send_task('celery_tasks.user_trigger_dialog',
+                             (user_id, Components.FIRST_AID_KIT_VIDEO))
+        # if the first aid kit is not yet available, show the menu
+        else:
+            return [FollowupAction('utter_ehbo_not_available')]
 
 
 class ActionTriggerGeneralActivityDialog(Action):
@@ -132,5 +147,4 @@ class ActionTriggerUncompletedDialog(Action):
             celery.send_task('celery_tasks.user_trigger_dialog',
                              (user_id, Components.CONTINUE_UNCOMPLETED_DIALOG))
         else:
-            dispatcher.utter_message(response="utter_no_valid_uncompleted_dialog")
-            dispatcher.utter_message(response="utter_central_mode_options_without_verder")
+            return [FollowupAction('utter_no_valid_uncompleted_dialog')]

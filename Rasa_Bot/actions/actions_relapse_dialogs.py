@@ -1130,11 +1130,23 @@ class ValidateEhboMeSelfLapseForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_ehbo_me_self_lapse':
             return {"ehbo_me_self_lapse": None}
+        
+        first_aid_kit_filled = tracker.get_slot('first_aid_kit_filled')
+        
+        if first_aid_kit_filled:
 
-        if not validator.validate_number_in_range_response(1, 4, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-            return {"ehbo_me_self_lapse": None}
+            if not validator.validate_number_in_range_response(1, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+                return {"ehbo_me_self_lapse": None}
+            
+        else:
+            # option 1 is removed when the first aid kit is empty
+            if not validator.validate_number_in_range_response(2, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_2_3_4")
+                return {"ehbo_me_self_lapse": None}
+            
 
         return {"ehbo_me_self_lapse": value}
     
@@ -1152,11 +1164,23 @@ class ValidateEhboMeSelfLapsePAForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_ehbo_me_self_lapse_pa':
             return {"ehbo_me_self_lapse_pa": None}
+        
+        first_aid_kit_filled = tracker.get_slot('first_aid_kit_filled')
+        
+        if first_aid_kit_filled:
 
-        if not validator.validate_number_in_range_response(1, 4, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-            return {"ehbo_me_self_lapse_pa": None}
+            if not validator.validate_number_in_range_response(1, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+                return {"ehbo_me_self_lapse_pa": None}
+            
+        else:
+            # option 1 is removed when the first aid kit is empty
+            if not validator.validate_number_in_range_response(2, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_2_3_4")
+                return {"ehbo_me_self_lapse_pa": None}
+            
 
         return {"ehbo_me_self_lapse_pa": value}
 

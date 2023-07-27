@@ -31,14 +31,16 @@ slots:
 responses:
 
   ### Re-prompts in forms
+  utter_please_answer_2_3_4:
+    - text: "Antwoord alsjeblieft met '2', '3' of '4'."
   utter_please_answer_1_2:
-    - text: "Antwoord alsjeblieft met '1,' of '2'."
+    - text: "Antwoord alsjeblieft met '1' of '2'."
   utter_please_answer_1_2_3:
-     - text: "Antwoord alsjeblieft met '1,' '2,' of '3.'"
+     - text: "Antwoord alsjeblieft met '1', '2' of '3'."
   utter_please_answer_1_2_3_4:
-     - text: "Antwoord alsjeblieft met '1,' '2,' '3,' of '4.'"
+     - text: "Antwoord alsjeblieft met '1', '2', '3' of '4'."
   utter_please_answer_1_2_3_4_5:
-     - text: "Antwoord alsjeblieft met '1,' '2,' '3,' '4,' of '5.'"
+     - text: "Antwoord alsjeblieft met '1', '2', '3', '4' of '5'."
   utter_please_answer_1_to_5:
      - text: "Kun je een geheel getal tussen 1 en 5 opgeven? ..."
   utter_please_answer_1_to_6:

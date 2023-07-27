@@ -388,10 +388,10 @@ responses:
     - text: "Zou je me kunnen vertellen wat er aan de hand is?"
     - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken. \n 
-             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.️ \n
-             Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum. \n
-             Typ '4' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.️"
+    - text: "Typ '1' als je zin hebt om te roken.1️ \n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.2️ \n
+             Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum.3️ \n
+             Typ '4' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"

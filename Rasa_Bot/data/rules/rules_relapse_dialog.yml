@@ -419,6 +419,12 @@ rules:
   - action: utter_smoke_lapse_16
   - action: utter_smoke_lapse_17
   - action: utter_smoke_lapse_18
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false
@@ -605,6 +611,12 @@ rules:
       - crave_lapse_relapse: 3 # relapse
   - slot_was_set:
     - hrs_activity_slot: 1
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false
@@ -721,6 +733,12 @@ rules:
     - medication_info_slot: 2
   - slot_was_set:
       - weekly_or_relapse: 1
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false # checkpoint: relapse_ehbo_checkpoint
@@ -857,6 +875,12 @@ rules:
   - action: utter_pa_lapse_11
   - action: utter_pa_lapse_12
   - action: utter_pa_lapse_13
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_pa_form
   - active_loop: ehbo_me_self_lapse_pa_form
   wait_for_user_input: false
@@ -1017,6 +1041,12 @@ rules:
     - crave_lapse_relapse: null # crave slot is null in this branch
   - slot_was_set:
     - hrs_activity_slot: 1
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_pa_form
   - active_loop: ehbo_me_self_lapse_pa_form
   wait_for_user_input: false

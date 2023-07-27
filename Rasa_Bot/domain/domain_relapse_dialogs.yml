@@ -577,45 +577,88 @@ responses:
 
 
   utter_ask_ehbo_me_self_lapse:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Je hebt in de EHBO doos oefeningen voor dit soort momenten. \n
             Typ '1' als je een oefening uit je EHBO-doos wilt doen. 🧰 \n
             Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀 \n
             Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
             Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt 
             afsluiten."
-    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen? \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Wil je een van de oefeningen uit je EHBO-doos proberen? \n
             Typ dan '1'. 🧰 \n
             Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
             Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'. \n
             Als je genoeg motivatie en vertrouwen hebt gekregen om te stoppen met roken en het gesprek wilt afsluiten, 
             typ dan '4'."
-    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. \n
             Je kunt er een proberen door '1' te typen. 🧰 \n
             Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
             Wil je zelf een oefening uitkiezen? Typ dan '3'. \n
             Als je genoeg motivatie en vertrouwen hebt gekregen om te stoppen met roken en het gesprek wilt afsluiten, 
             typ dan '4'."
+    # When first aid kit is empty, do not give option to do exercise out of first aid kit
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: false
+      text: "Er zijn oefeningen voor dit soort momenten. \n
+            Typ '2' als ik een oefening voor jou mag kiezen. 🔀 \n
+            Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
+            Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt 
+            afsluiten."
    
   utter_ask_ehbo_me_self_lapse_pa:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Je hebt in de EHBO doos oefeningen voor dit soort momenten. \n
              Typ '1' als je een oefening uit je EHBO-doos wilt doen. 🧰 \n
              Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀 \n
              Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
              Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te gaan bewegen en dit gesprek wilt 
              afsluiten."
-    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen? \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Wil je een van de oefeningen uit je EHBO-doos proberen? \n
              Typ dan '1'. 🧰 \n
              Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
              Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'. \n
              Als je genoeg motivatie en vertrouwen hebt gekregen om te gaan bewegen en het gesprek wilt afsluiten, 
              typ dan '4'."
-    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. \n
              Je kunt er een proberen door '1' te typen. 🧰 \n
              Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
              Wil je zelf een oefening uitkiezen? Typ dan '3'. \n
              Als je genoeg motivatie en vertrouwen hebt gekregen om te gaan bewegen en het gesprek wilt afsluiten, 
              typ dan '4'."
-
+    # When first aid kit is empty, do not print option 1.
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: false
+      text: "Er zijn oefeningen voor dit soort momenten. \n
+             Typ '2' als ik een oefening voor jou mag kiezen. 🔀 \n
+             Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
+             Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te gaan bewegen en dit gesprek wilt 
+             afsluiten."
 
 # 4a
   utter_ask_hrs_new_activity_slot:

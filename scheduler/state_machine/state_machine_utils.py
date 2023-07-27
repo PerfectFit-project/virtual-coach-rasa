@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from celery import Celery
@@ -583,11 +584,14 @@ def run_uncompleted_dialog(user_id: int, show_ehbo: bool = True):
 
         component.last_time = datetime.now().astimezone(TIMEZONE)
         session.commit()
+        logging.info(f'starting the uncompleted dialog {component.intervention_component.intervention_component_trigger} for user {user_id}')
         celery.send_task(
             TRIGGER_COMPONENT,
             (user_id, component.intervention_component.intervention_component_trigger)
         )
     else:
+        logging.info(
+            f'launching option menu for user {user_id}')
         run_option_menu(user_id, ehbo=show_ehbo, complete_dialog=False)
 
 

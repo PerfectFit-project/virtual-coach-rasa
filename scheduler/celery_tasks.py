@@ -344,6 +344,7 @@ def trigger_intent(self,  # pylint: disable=unused-argument
         trigger: the intent to be sent
         dialog_status: set the dialog state in the fsm
     """
+    logging.info(f'Received trigger_intent task with {trigger} trigger for user {user_id}')
     # make sure that a dialog is not running when sending the intent
     user_fsm = get_user_fsm(user_id)
     current_dialog_state = get_dialog_state(user_fsm)
@@ -482,6 +483,9 @@ def send_trigger(user_id: int, trigger: str):
     Returns:
 
     """
+
+    logging.info(f'received send_trigger tasks with {trigger} for {user_id}')
+
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'latest'}

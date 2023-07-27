@@ -115,6 +115,9 @@ class ActionSelectMenu(Action):
 
         # select the utterances
 
+        # show the verder command
+        if complete_dialog:
+            dispatcher.utter_message(response="utter_central_mode_options_verder")
         # show the help command
         if show_help:
             dispatcher.utter_message(response="utter_central_mode_options_help")
@@ -126,9 +129,6 @@ class ActionSelectMenu(Action):
         dispatcher.utter_message(response="utter_central_mode_options_oefening")
         # show the medication video command
         dispatcher.utter_message(response="utter_central_mode_options_medicatie")
-        # show the verder command
-        if complete_dialog:
-            dispatcher.utter_message(response="utter_central_mode_options_verder")
         # show the last general statement
         dispatcher.utter_message(response="utter_central_mode_options_outro")
 

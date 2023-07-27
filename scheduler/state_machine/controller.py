@@ -91,13 +91,11 @@ class OnboardingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        if dialog in (Components.FIRST_AID_KIT, Components.FIRST_AID_KIT_VIDEO):
+        if dialog in (Components.FIRST_AID_KIT,
+                      Components.FIRST_AID_KIT_VIDEO,
+                      Components.RELAPSE_DIALOG):
             # dialog not available in this phase
-            if dialog_to_be_completed(self.user_id) is None:
-                complete = False
-            else:
-                complete = True
-            run_option_menu(user_id=self.user_id, ehbo=False, complete_dialog=complete)
+            run_option_menu(user_id=self.user_id)
         elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id, show_ehbo=False)
         else:
@@ -178,11 +176,10 @@ class TrackingState(State):
                 and not get_dialog_completion_state(self.user_id, Components.FIRST_AID_KIT_VIDEO):
             # if the introductory video of the first aid kit has not been executed,
             # the first aid kit cannot be executed
-            if dialog_to_be_completed(self.user_id) is None:
-                complete = False
-            else:
-                complete = True
-            run_option_menu(self.user_id, ehbo=False, complete_dialog=complete)
+            run_option_menu(self.user_id)
+        elif dialog == Components.RELAPSE_DIALOG:
+            # the relapse dialog is not available in this phase
+            run_option_menu(self.user_id)
         elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id, show_ehbo=False)
         else:
@@ -255,7 +252,10 @@ class GoalsSettingState(State):
 
     def on_user_trigger(self, dialog):
         # in this phase a dialog can be continued
-        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+        if dialog == Components.RELAPSE_DIALOG:
+            run_option_menu(self.user_id)
+        # the relapse dialog is not available in this phase
+        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
@@ -364,6 +364,9 @@ class BufferState(State):
 
     def on_user_trigger(self, dialog: str):
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+            run_uncompleted_dialog(self.user_id)
+        # the relapse dialog is not available in this phase
+        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,

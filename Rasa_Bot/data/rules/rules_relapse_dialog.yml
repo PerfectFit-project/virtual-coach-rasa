@@ -857,8 +857,8 @@ rules:
   - action: utter_pa_lapse_11
   - action: utter_pa_lapse_12
   - action: utter_pa_lapse_13
-  - action: ehbo_me_self_lapse_form
-  - active_loop: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
+  - active_loop: ehbo_me_self_lapse_pa_form
   wait_for_user_input: false
 
 - rule: Relapse phase triggered PA 5, return to weekly reflection
@@ -892,12 +892,12 @@ rules:
 
 - rule: pa open ehbo #
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set:
-    - ehbo_me_self_lapse: 1
+    - ehbo_me_self_lapse_pa: 1
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -913,12 +913,12 @@ rules:
 
 - rule: pa VC suggest and activity #
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set: # VC chooses an activity
-    - ehbo_me_self_lapse: 2
+    - ehbo_me_self_lapse_pa: 2
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -930,12 +930,12 @@ rules:
 
 - rule: pa user chooses an activity
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set: # user chooses an activity
-    - ehbo_me_self_lapse: 3
+    - ehbo_me_self_lapse_pa: 3
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -947,12 +947,12 @@ rules:
 
 - rule: pa open ehbo #
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set:
-    - ehbo_me_self_lapse: 4
+    - ehbo_me_self_lapse_pa: 4
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -1017,8 +1017,8 @@ rules:
     - crave_lapse_relapse: null # crave slot is null in this branch
   - slot_was_set:
     - hrs_activity_slot: 1
-  - action: ehbo_me_self_lapse_form
-  - active_loop: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
+  - active_loop: ehbo_me_self_lapse_pa_form
   wait_for_user_input: false
 
 - rule: pa the user has not enough motivation no activity

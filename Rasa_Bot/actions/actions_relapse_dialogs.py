@@ -1137,6 +1137,28 @@ class ValidateEhboMeSelfLapseForm(FormValidationAction):
             return {"ehbo_me_self_lapse": None}
 
         return {"ehbo_me_self_lapse": value}
+    
+
+class ValidateEhboMeSelfLapsePAForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_ehbo_me_self_lapse_pa_form'
+
+    def validate_ehbo_me_self_lapse_pa(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate ehbo, me or self input"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_ehbo_me_self_lapse_pa':
+            return {"ehbo_me_self_lapse_pa": None}
+
+        if not validator.validate_number_in_range_response(1, 4, value):
+            dispatcher.utter_message(response="utter_did_not_understand")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            return {"ehbo_me_self_lapse_pa": None}
+
+        return {"ehbo_me_self_lapse_pa": value}
 
 
 class ValidateRelapseStopNowLaterForm(FormValidationAction):

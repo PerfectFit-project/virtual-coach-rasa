@@ -425,16 +425,36 @@ responses:
     - text: "Ik ben er om je te ondersteunen."
     - text: "Ik ben er om je te helpen."
   utter_ask_ehbo_me_self:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten.\n
-            Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰\n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Je hebt in de EHBO doos oefeningen voor dit soort momenten.\n
+            Typ '1' als je een oefening uit je EHBO-doos wilt doen. 🧰\n
             Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀\n
             Typ '3' als je zelf een oefening wilt kiezen. 📱"
-    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen?\nTyp dan '1'\n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Wil je een van de oefeningen uit je EHBO-doos proberen?\nTyp dan '1'\n
             🧰 Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'.\n
             🔀 Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'."
-    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰\n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰\n
             Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'.\n
             🔀 Wil je zelf een oefening uitkiezen? Typ dan '3'."
+    # Do not show option 1 when kit is empty
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: false
+      text: "Er zijn oefeningen voor dit soort momenten.\n
+            Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀\n
+            Typ '3' als je zelf een oefening wilt kiezen. 📱"
 
 # smoke lapse
 
@@ -701,7 +721,7 @@ responses:
             Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
             Typ '1' als je stress had. 🥴  \n
             Typ '2' als je moe was. 😴  \n  
-            Typ '3' als je verdrietig was. 😭     \n
+            Typ '3' als je verdrietig was. 😢 \n
             Typ '4' als je boos was. 😠 \n
             Typ '5' als je verveeld was. 🥱 \n
             Typ '6' als je honger had. 🤤 \n

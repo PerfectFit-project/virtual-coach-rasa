@@ -770,11 +770,22 @@ class ValidateEhboMeSelfForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_ehbo_me_self':
             return {"ehbo_me_self": None}
+        
+        first_aid_kit_filled = tracker.get_slot('first_aid_kit_filled')
+        
+        if first_aid_kit_filled:
 
-        if not validator.validate_number_in_range_response(1, 3, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
-            return {"ehbo_me_self": None}
+            if not validator.validate_number_in_range_response(1, 3, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_1_2_3")
+                return {"ehbo_me_self": None}
+            
+        else:
+            # option 1 not available when first aid kit is empty
+            if not validator.validate_number_in_range_response(2, 3, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_2_3")
+                return {"ehbo_me_self": None}
 
         return {"ehbo_me_self": value}
 

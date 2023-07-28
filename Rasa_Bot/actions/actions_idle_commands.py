@@ -23,9 +23,9 @@ class ActionTriggerRelapseDialog(Action):
         # check if the dialog can be executed (the use is in the execution phase)
         if phase != FsmStates.EXECUTION_RUN:
             return [FollowupAction('utter_help_not_available')]
-        else:
-            celery.send_task('celery_tasks.user_trigger_dialog',
-                             (user_id, Components.RELAPSE_DIALOG))
+
+        celery.send_task('celery_tasks.user_trigger_dialog',
+                         (user_id, Components.RELAPSE_DIALOG))
 
 
 class ActionTriggerFirstAidDialog(Action):

@@ -1,8 +1,7 @@
 import logging
 from celery import Celery
 from datetime import date, datetime, timedelta
-from state_machine.state_machine_utils import (create_new_date, dialog_to_be_completed,
-                                               get_dialog_completion_state,
+from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
                                                get_next_planned_date, get_next_scheduled_occurrence,
                                                get_quit_date, get_pa_group, get_start_date,
@@ -97,7 +96,7 @@ class OnboardingState(State):
             # dialog not available in this phase
             run_option_menu(user_id=self.user_id)
         elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_uncompleted_dialog(self.user_id, show_ehbo=False)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -181,7 +180,7 @@ class TrackingState(State):
             # the relapse dialog is not available in this phase
             run_option_menu(self.user_id)
         elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_uncompleted_dialog(self.user_id, show_ehbo=False)
+            run_uncompleted_dialog(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,

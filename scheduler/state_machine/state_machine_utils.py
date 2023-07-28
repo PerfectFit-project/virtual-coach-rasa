@@ -561,13 +561,12 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
     return None
 
 
-def run_uncompleted_dialog(user_id: int, show_ehbo: bool = True):
+def run_uncompleted_dialog(user_id: int):
     """
     Checks if a dialog has to be completed and, in this case runs it from the latest completed part.
 
     Args:
         user_id: ID of the user
-        show_ehbo: show the menu with ehbo command if true
 
     """
 

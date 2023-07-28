@@ -51,6 +51,8 @@ rules:
   - action: utter_smoke_crave_7
   - action: utter_smoke_crave_8
   - action: action_get_first_aid_kit
+  # In the first aid kit, the first_aid_kit_filled slot influences the conversation.
+  # So we need to have both possible values here in the rule.
   - or:
     - slot_was_set:
       - first_aid_kit_filled: true

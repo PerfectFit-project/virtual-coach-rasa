@@ -194,6 +194,9 @@ def check_inactivity():
     state_machines = get_all_fsm()
     for item in state_machines:
         if not check_if_user_active(item.machine_id, current_date, MAXIMUM_INACTIVE_DAYS):
+            current_dialog_state = get_dialog_state(item)
+            if current_dialog_state == RUNNING:
+                return
             trigger_intent.apply_async(args=[item.machine_id,
                                              NotificationsTriggers.INACTIVE_USER_NOTIFICATION])
 
@@ -344,12 +347,8 @@ def trigger_intent(self,  # pylint: disable=unused-argument
         trigger: the intent to be sent
         dialog_status: set the dialog state in the fsm
     """
+
     logging.info(f'Received trigger_intent task with {trigger} trigger for user {user_id}')
-    # make sure that a dialog is not running when sending the intent
-    user_fsm = get_user_fsm(user_id)
-    current_dialog_state = get_dialog_state(user_fsm)
-    if current_dialog_state == RUNNING:
-        return
 
     response_intent = send_trigger(user_id, trigger)
 

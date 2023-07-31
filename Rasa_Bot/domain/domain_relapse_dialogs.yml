@@ -717,8 +717,7 @@ responses:
   utter_hrs_how_did_you_feel_1:
     - text: "Kun je mij vertellen hoe je je voelde toen je zin kreeg om te roken?"
   utter_ask_hrs_feeling_slot:
-    - text: "Je mag meerdere antwoorden geven. 
-            Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
+    - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
             Typ '1' als je stress had. 🥴  \n
             Typ '2' als je moe was. 😴  \n  
             Typ '3' als je verdrietig was. 😢 \n

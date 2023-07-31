@@ -8,6 +8,7 @@ rules:
   - action: utter_click_video_link
   - action: action_display_video_link
   - action: utter_leaving_app_announcement
+  - action: utter_watch_video_waiting
   - action: action_delayed_message_after_video
 
 - rule: after watching video unclear confirmation
@@ -27,8 +28,10 @@ rules:
   - active_loop: null
   - slot_was_set:
     - video_clear_option: 2
+  - action: utter_watch_video_send_link_again_intro
   - action: action_display_video_link
   - action: utter_leaving_app_announcement
+  - action: utter_watch_video_waiting
   - action: action_delayed_message_after_video
 
 - rule: User doesn't want to watch the video again

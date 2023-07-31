@@ -273,9 +273,9 @@ class GoalsSettingState(State):
                            planned_date=planned_date,
                            phase_id=1)
 
-        if (quit_date - start_date).days == MAX_PREPARATION_DURATION:
+        if (delta := (quit_date - start_date).days) >= MAX_PREPARATION_DURATION:
             planned_date = create_new_date(start_date=start_date,
-                                           time_delta=MAX_PREPARATION_DURATION)
+                                           time_delta=delta)
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            planned_date=planned_date,

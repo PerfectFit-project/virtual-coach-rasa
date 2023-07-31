@@ -561,13 +561,12 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
     return None
 
 
-def run_uncompleted_dialog(user_id: int, show_ehbo: bool = True):
+def run_uncompleted_dialog(user_id: int):
     """
     Checks if a dialog has to be completed and, in this case runs it from the latest completed part.
 
     Args:
         user_id: ID of the user
-        show_ehbo: show the menu with ehbo command if true
 
     """
 
@@ -588,30 +587,19 @@ def run_uncompleted_dialog(user_id: int, show_ehbo: bool = True):
             (user_id, component.intervention_component.intervention_component_trigger)
         )
     else:
-        run_option_menu(user_id, ehbo=show_ehbo, complete_dialog=False)
+        run_option_menu(user_id)
 
 
-def run_option_menu(user_id: int, ehbo: bool = True, complete_dialog: bool = False):
+def run_option_menu(user_id: int):
     """
-    Runs a celery task for showing the options menu without the 'verder' option
+    Runs a celery task for showing the options' menu.
 
     Args:
         user_id: ID of the user
-        ehbo: show ehbo command if true
-        complete_dialog: show verder command if true
 
     """
-    if ehbo and complete_dialog:
-        celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
-    elif ehbo and not complete_dialog:
-        celery.send_task(TRIGGER_INTENT,
-                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_COMPLETE, False))
-    elif not ehbo and complete_dialog:
-        celery.send_task(TRIGGER_INTENT,
-                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_EHBO, False))
-    elif not ehbo and not complete_dialog:
-        celery.send_task(TRIGGER_INTENT,
-                         (user_id, ComponentsTriggers.CENTRAL_OPTIONS_NO_EHBO_NO_COMPLETE, False))
+
+    celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
 
 
 def retrieve_intervention_day(user_id: int, current_date: date) -> int:

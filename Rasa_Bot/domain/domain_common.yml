@@ -39,61 +39,30 @@ responses:
   utter_file_sent:
     - text: "Here is your file"
 
-  # We present the user with the options from the central mode
-  utter_central_mode_options:
-    - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽
-            \n\n
-            Typ 'ehbo' als je je EHBO-doos wilt openen om een bewaarde oefening te bekijken of opnieuw te doen. 🧰
-            Wil je opnieuw uitleg over hoe de EHBO-doos werkt? Typ dan 'uitleg'. ℹ️
-            \n\n
-            Typ 'oefening' als je een oefening wilt doen. 📱
-            \n\n
-            Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊
-            \n\n
-            Typ 'verder' om een onafgemaakte dialoog af te ronden. ✔
-            \n\n
-            Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
+  utter_central_mode_options_help:
+    - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽"
+
+  utter_central_mode_options_ehbo:
+    - text: "Typ 'ehbo' als je je EHBO-doos wilt openen om een bewaarde oefening te bekijken of opnieuw te doen. 🧰
+            Wil je opnieuw uitleg over hoe de EHBO-doos werkt? Typ dan 'uitleg'. ℹ"
+
+  utter_central_mode_options_oefening:
+    - text: "Typ 'oefening' als je een oefening wilt doen. 📱"
+
+  utter_central_mode_options_medicatie:
+    - text: "Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊"
+
+  utter_central_mode_options_verder:
+    - text: "Typ 'verder' om een onafgemaakte dialoog af te ronden. ✔"
+
+  utter_central_mode_options_outro:
+    - text: "Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
             Je kunt ook altijd bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞
             De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
 
-  # We present the user with the options from the central mode when the ehbo is not available
-  utter_central_mode_options_no_ehbo:
-    - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽
-            \n\n
-            Typ 'oefening' als je een oefening wilt doen. 📱
-            \n\n
-            Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊
-            \n\n
-            Typ 'verder' om een onafgemaakte dialoog af te ronden. ✔
-            \n\n
-            Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
-            Je kunt ook altijd bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞
-            De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
-  
-  # Print this when there is no uncompleted dialog to finish after informing the user
-  # that there is none (i.e., do not mention the "verder"-option again then)
-  utter_central_mode_options_without_verder:
-    - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽
-            \n\n
-            Typ 'ehbo' als je je EHBO-doos wilt openen om een bewaarde oefening te bekijken of opnieuw te doen. 🧰
-            Wil je opnieuw uitleg over hoe de EHBO-doos werkt? Typ dan 'uitleg'. ℹ️
-            \n\n
-            Typ 'oefening' als je een oefening wilt doen. 📱
-            \n\n
-            Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊
-            \n\n
-            Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
-            Je kunt ook altijd bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞
-            De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
+  utter_help_not_available:
+    - text: "Je bent nu in de voorbereidingsfase. Je kunt ‘help’ gebruiken tijdens de uitvoeringsfase."
 
-  # Print this when there is no uncompleted dialog to finish and the ehbo is not yet active
-  utter_central_mode_options_without_verder_no_ehbo:
-    - text: "Typ 'help' als je zin hebt om te roken, hebt gerookt of het lastig vindt om in beweging te komen. ✋🏽
-            \n\n
-            Typ 'oefening' als je een oefening wilt doen. 📱
-            \n\n
-            Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊
-            \n\n
-            Heb je behoefte om iemand te spreken? Je kunt altijd een afspraak maken met je huisarts. 🩺
-            Je kunt ook altijd bellen met de gratis Stoppen met roken telefoonlijn (0800-1995).📞
-            De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
+
+  utter_ehbo_not_available:
+    - text: "Je bent nu in de voorbereidingsfase. Je kunt 'ehbo' gebruiken tijdens de uitvoeringsfase."

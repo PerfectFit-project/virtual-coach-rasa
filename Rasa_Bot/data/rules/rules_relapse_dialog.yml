@@ -50,6 +50,14 @@ rules:
   - action: utter_smoke_crave_6
   - action: utter_smoke_crave_7
   - action: utter_smoke_crave_8
+  - action: action_get_first_aid_kit
+  # In the first aid kit, the first_aid_kit_filled slot influences the conversation.
+  # So we need to have both possible values here in the rule.
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -83,6 +91,12 @@ rules:
   - slot_was_set:
     - hrs_new_activity_slot: 2
   - active_loop: null
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -257,6 +271,12 @@ rules:
       - crave_lapse_relapse: 1 # hrs
   - slot_was_set:
       - hrs_activity_slot: 1
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_form
   - active_loop: ehbo_me_self_form
   wait_for_user_input: false
@@ -419,6 +439,12 @@ rules:
   - action: utter_smoke_lapse_16
   - action: utter_smoke_lapse_17
   - action: utter_smoke_lapse_18
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false
@@ -605,6 +631,12 @@ rules:
       - crave_lapse_relapse: 3 # relapse
   - slot_was_set:
     - hrs_activity_slot: 1
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false
@@ -721,6 +753,12 @@ rules:
     - medication_info_slot: 2
   - slot_was_set:
       - weekly_or_relapse: 1
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
   - action: ehbo_me_self_lapse_form
   - active_loop: ehbo_me_self_lapse_form
   wait_for_user_input: false # checkpoint: relapse_ehbo_checkpoint
@@ -826,7 +864,6 @@ rules:
   - action: store_pa_doing_today
   - action: store_pa_happened_special
   - action: utter_smoke_lapse_12
-  - action: utter_pa_lapse_5
   - action: utter_pa_lapse_6
   - action: utter_pa_lapse_7
   - action: show_barchart_difficult_situations_pa
@@ -858,8 +895,14 @@ rules:
   - action: utter_pa_lapse_11
   - action: utter_pa_lapse_12
   - action: utter_pa_lapse_13
-  - action: ehbo_me_self_lapse_form
-  - active_loop: ehbo_me_self_lapse_form
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
+  - action: ehbo_me_self_lapse_pa_form
+  - active_loop: ehbo_me_self_lapse_pa_form
   wait_for_user_input: false
 
 - rule: Relapse phase triggered PA 5, return to weekly reflection
@@ -893,12 +936,12 @@ rules:
 
 - rule: pa open ehbo #
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set:
-    - ehbo_me_self_lapse: 1
+    - ehbo_me_self_lapse_pa: 1
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -914,12 +957,12 @@ rules:
 
 - rule: pa VC suggest and activity #
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set: # VC chooses an activity
-    - ehbo_me_self_lapse: 2
+    - ehbo_me_self_lapse_pa: 2
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -931,12 +974,12 @@ rules:
 
 - rule: pa user chooses an activity
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set: # user chooses an activity
-    - ehbo_me_self_lapse: 3
+    - ehbo_me_self_lapse_pa: 3
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -948,12 +991,12 @@ rules:
 
 - rule: pa open ehbo #
   condition:
-    - active_loop: ehbo_me_self_lapse_form
+    - active_loop: ehbo_me_self_lapse_pa_form
   steps:
-  - action: ehbo_me_self_lapse_form
+  - action: ehbo_me_self_lapse_pa_form
   - active_loop: null
   - slot_was_set:
-    - ehbo_me_self_lapse: 4
+    - ehbo_me_self_lapse_pa: 4
   - slot_was_set:
     - smoke_or_pa: 2 # pa branch
   - slot_was_set:
@@ -1018,8 +1061,14 @@ rules:
     - crave_lapse_relapse: null # crave slot is null in this branch
   - slot_was_set:
     - hrs_activity_slot: 1
-  - action: ehbo_me_self_lapse_form
-  - active_loop: ehbo_me_self_lapse_form
+  - action: action_get_first_aid_kit
+  - or:
+    - slot_was_set:
+      - first_aid_kit_filled: true
+    - slot_was_set:
+      - first_aid_kit_filled: false
+  - action: ehbo_me_self_lapse_pa_form
+  - active_loop: ehbo_me_self_lapse_pa_form
   wait_for_user_input: false
 
 - rule: pa the user has not enough motivation no activity

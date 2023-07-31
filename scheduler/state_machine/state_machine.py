@@ -60,6 +60,7 @@ class DialogState:
 
 class EventEnum(Enum):
     DIALOG_COMPLETED = 'dialog_completed'
+    DIALOG_EXPIRED = 'dialog_expired'
     DIALOG_RESCHEDULED_AUTO = 'dialog_rescheduled_auto'
     DIALOG_RESCHEDULED_USER = 'dialog_rescheduled_user'
     DIALOG_STARTED = 'dialog_started'
@@ -90,6 +91,10 @@ class StateMachine:
             logging.info('Dialog completed event received %s ', event.Descriptor)
             self.dialog_state.set_to_idle()
             self.state.on_dialog_completed(event.Descriptor)
+
+        elif event.EventType == EventEnum.DIALOG_EXPIRED:
+            logging.info('Dialog expired event received %s ', event.Descriptor)
+            self.state.on_dialog_expired(event.Descriptor)
 
         elif event.EventType == EventEnum.DIALOG_RESCHEDULED_AUTO:
             logging.info('Dialog resheduled event received %s ', event.Descriptor)

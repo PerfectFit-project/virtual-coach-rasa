@@ -42,6 +42,15 @@ class State:
         """
         return None
 
+    def on_dialog_expired(self, dialog):  # pylint: disable=unused-argument
+        """
+        Determines what happens when a dialog expired
+        Args:
+            dialog: the dialog that expired
+
+        """
+        return None
+
     def on_dialog_rescheduled(self, dialog, new_date):  # pylint: disable=unused-argument
         """
         Determines what happens when a dialog is rescheduled

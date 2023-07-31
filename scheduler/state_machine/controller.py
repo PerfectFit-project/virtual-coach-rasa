@@ -9,7 +9,8 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                retrieve_intervention_day, revoke_execution,
                                                run_uncompleted_dialog, run_option_menu,
                                                schedule_next_execution, store_completed_dialog,
-                                               update_execution_week, store_scheduled_dialog)
+                                               store_scheduled_dialog, update_execution_week,
+                                               update_fsm_dialog_running_status)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
                                  MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
@@ -593,6 +594,26 @@ class RelapseState(State):
                 # if the quit date has not been changed, we go back to execution
                 logging.info('Relapse completed, back to execution')
                 self.set_new_state(ExecutionRunState(self.user_id))
+
+    def on_dialog_expired(self, dialog):
+        logging.info('A dialog has expired  %s ', dialog)
+        # if the relapse dialog expires in a branch different from the Relapse,
+        # it should not be reproposed to the user.
+        if dialog in [Components.RELAPSE_DIALOG,
+                      Components.RELAPSE_DIALOG_HRS,
+                      Components.RELAPSE_DIALOG_LAPSE,
+                      Components.RELAPSE_DIALOG_PA,
+                      Components.RELAPSE_DIALOG_SYSTEM]:
+
+            store_completed_dialog(user_id=self.user_id,
+                                   dialog=dialog,
+                                   phase_id=3)
+
+            # let the fms know that the dialog is considered as not running anymore
+            update_fsm_dialog_running_status(self.user_id, False)
+            # go back to the execution
+            logging.info('Relapse completed, back to execution')
+            self.set_new_state(ExecutionRunState(self.user_id))
 
     def on_user_trigger(self, dialog: str):
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:

@@ -5,8 +5,8 @@ from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
 from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
-from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
-                                              InterventionComponents)
+from virtual_coach_db.dbschema.models import (InterventionComponents, InterventionPhases,
+                                              Users, UserStateMachine, UserInterventionState)
 from virtual_coach_db.helper.definitions import ComponentsTriggers
 from virtual_coach_db.helper.helper_functions import get_db_session
 
@@ -527,6 +527,26 @@ def update_execution_week(user_id: int, week_number: int):
     selected.execution_week = week_number
 
     session.commit()
+
+
+def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
+    """
+    Computes the current wek number of the execution phase
+    Args:
+        user_id: ID of the user
+        dialog_running: value to be set in the dialog_running field of the fsm
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (session.query(Users)
+                .filter(UserStateMachine.users_nicedayuid == user_id)
+                .one())
+
+    selected.dialog_running = dialog_running
+
+    session.commit()
+
 
 
 def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:

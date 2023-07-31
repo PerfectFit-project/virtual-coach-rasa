@@ -165,13 +165,17 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
 
     for fsm in state_machines:
         dialog_state = get_dialog_state(fsm)
+        dialog = fsm.dialog_state.get_current_dialog()
         logging.info(f"User {fsm.machine_id} current dialog state {dialog_state}")
 
         if dialog_state == NOTIFY:
             trigger_intent.apply_async(args=[fsm.machine_id,
                                              NotificationsTriggers.FINISH_DIALOG_NOTIFICATION])
+            send_fsm_event(user_id=fsm.machine_id,
+                           event=Event(EventEnum.DIALOG_EXPIRED, dialog))
+
         if dialog_state == EXPIRED:
-            dialog = fsm.dialog_state.get_current_dialog()
+
             # the dialog is idle now
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)

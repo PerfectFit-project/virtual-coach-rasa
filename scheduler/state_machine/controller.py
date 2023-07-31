@@ -250,12 +250,12 @@ class GoalsSettingState(State):
                           phase=1)
 
     def on_user_trigger(self, dialog):
-        # in this phase a dialog can be continued
-        if dialog == Components.RELAPSE_DIALOG:
-            run_option_menu(self.user_id)
         # the relapse dialog is not available in this phase
-        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
+        if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id)
+        # in this phase a dialog can be continued
+        elif dialog == Components.RELAPSE_DIALOG:
+            run_option_menu(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
@@ -365,8 +365,8 @@ class BufferState(State):
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
             run_uncompleted_dialog(self.user_id)
         # the relapse dialog is not available in this phase
-        elif dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
-            run_uncompleted_dialog(self.user_id)
+        elif dialog == Components.RELAPSE_DIALOG:
+            run_option_menu(self.user_id)
         else:
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,

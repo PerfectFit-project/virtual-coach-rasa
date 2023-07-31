@@ -61,7 +61,8 @@ responses:
             De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
 
   utter_help_not_available:
-    - text: "Je bent nu in de voorbereidingsfase. Je kunt ‘help’ gebruiken tijdens de uitvoeringsfase"
+    - text: "Je bent nu in de voorbereidingsfase. Je kunt ‘help’ gebruiken tijdens de uitvoeringsfase."
+
 
   utter_ehbo_not_available:
-    - text: "Je bent nu in de voorbereidingsfase. Je kunt de ehbo gebruiken tijdens de uitvoeringsfase"
+    - text: "Je bent nu in de voorbereidingsfase. Je kunt 'ehbo' gebruiken tijdens de uitvoeringsfase."

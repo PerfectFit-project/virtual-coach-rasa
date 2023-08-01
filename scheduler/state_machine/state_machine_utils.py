@@ -5,9 +5,10 @@ from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
 from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
-from virtual_coach_db.dbschema.models import (InterventionComponents, InterventionPhases,
-                                              Users, UserStateMachine, UserInterventionState)
-from virtual_coach_db.helper.definitions import ComponentsTriggers
+from virtual_coach_db.dbschema.models import (ClosedAnswers, DialogClosedAnswers, DialogQuestions,
+                                              InterventionComponents, InterventionPhases, Users,
+                                              UserStateMachine, UserInterventionState)
+from virtual_coach_db.helper.definitions import Components, ComponentsTriggers, DialogQuestionsEnum
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -279,6 +280,75 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
     return selected[0]
 
 
+def get_hrs_last_branch(user_id: int) -> Optional[Components]:
+    """
+    Check which is the currently run branch of the hrs dialog. If the answer is not recent
+    (stored before the last execution of the hrs dialog), a None value is returned
+    Args:
+        user_id: id of the user
+
+    Returns: The most recent compoinent of the hrs dialog component, if a recent one is present.
+    None otherwise
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    last_execution = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            InterventionComponents.intervention_component_name == Components.RELAPSE_DIALOG.value
+        )
+        .order_by(
+            UserInterventionState.last_time.desc()
+        )
+        .limit(1)
+        .one_or_none()
+    )
+
+    if last_execution is None:
+        return None
+
+    last_answer = (
+        session.query(
+            DialogClosedAnswers
+        )
+        .join(ClosedAnswers, DialogQuestions)
+        .filter(
+            DialogQuestions.question_id == DialogQuestionsEnum.RELAPSE_SMOKE_HRS_LAPSE_RELAPSE.value
+        )
+        .order_by(DialogClosedAnswers.datetime.desc())
+        .limit(1)
+        .one_or_none()
+    )
+
+    # if there are no answers or the answer came before the last execution of the dialog,
+    # return None
+    if last_answer is None or last_answer.datetime < last_execution.last_time:
+        return None
+
+    # when we populate the DB, the answer id is set by adding the answer value
+    # to 100 times the question ID. Here we do the inverse computation
+    answer_id = last_answer.closed_answers_id
+    question_id = last_answer.closed_answers.dialog_questions.question_id
+
+    answer = answer_id - (question_id * 100)
+
+    if answer == 1:
+        component = Components.RELAPSE_DIALOG_HRS
+    elif answer == 2:
+        component = Components.RELAPSE_DIALOG_LAPSE
+    elif answer == 3:
+        component = Components.RELAPSE_DIALOG_RELAPSE
+    else:
+        component = None
+
+    return component
+
+
 def get_next_planned_date(user_id: int,
                           current_date: datetime) -> datetime:
     """
@@ -548,7 +618,6 @@ def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
     session.commit()
 
 
-
 def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
     """
     Checks if a dialog has to be completed and, in this case returns it. If no dialogs have to be
@@ -739,7 +808,7 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
         store_intervention_component_to_db(state)
 
 
-def store_scheduled_dialog(user_id: int,   # pylint: disable=too-many-arguments
+def store_scheduled_dialog(user_id: int,  # pylint: disable=too-many-arguments
                            dialog_id: int,
                            phase_id: int,
                            planned_date: datetime = datetime.now().astimezone(TIMEZONE),

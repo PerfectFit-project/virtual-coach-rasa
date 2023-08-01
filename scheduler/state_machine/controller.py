@@ -3,7 +3,8 @@ from celery import Celery
 from datetime import date, datetime, timedelta
 from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
-                                               get_next_planned_date, get_next_scheduled_occurrence,
+                                               get_hrs_last_branch, get_next_planned_date,
+                                               get_next_scheduled_occurrence,
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
                                                retrieve_intervention_day, revoke_execution,
@@ -599,21 +600,19 @@ class RelapseState(State):
         logging.info('A dialog has expired  %s ', dialog)
         # if the relapse dialog expires in a branch different from the Relapse,
         # it should not be reproposed to the user.
-        if dialog in [Components.RELAPSE_DIALOG,
-                      Components.RELAPSE_DIALOG_HRS,
-                      Components.RELAPSE_DIALOG_LAPSE,
-                      Components.RELAPSE_DIALOG_PA,
-                      Components.RELAPSE_DIALOG_SYSTEM]:
+        if dialog == Components.RELAPSE_DIALOG:
+            # if the user was in the relapse branch the dialog should not be automatically completed
+            if get_hrs_last_branch(self.user_id) != Components.RELAPSE_DIALOG_RELAPSE:
 
-            store_completed_dialog(user_id=self.user_id,
-                                   dialog=dialog,
-                                   phase_id=3)
+                store_completed_dialog(user_id=self.user_id,
+                                       dialog=dialog,
+                                       phase_id=3)
 
-            # let the fms know that the dialog is considered as not running anymore
-            update_fsm_dialog_running_status(self.user_id, False)
-            # go back to the execution
-            logging.info('Relapse completed, back to execution')
-            self.set_new_state(ExecutionRunState(self.user_id))
+                # let the fms know that the dialog is considered as not running anymore
+                update_fsm_dialog_running_status(self.user_id, False)
+                # go back to the execution
+                logging.info('Relapse completed, back to execution')
+                self.set_new_state(ExecutionRunState(self.user_id))
 
     def on_user_trigger(self, dialog: str):
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:

@@ -71,12 +71,14 @@ class ActionSetSlotSmokeOrPa1(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('smoke_or_pa', 1)]
 
+
 class ActionSetSlotSmokeOrPa2(Action):
     def name(self):
         return "action_set_slot_smoke_or_pa_2"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('smoke_or_pa', 2)]
+
 
 class ActionSetSlotsCraveLapseRelapse1(Action):
     def name(self):
@@ -93,12 +95,14 @@ class ActionSetSlotCraveLapseRelapse2(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('crave_lapse_relapse', 2)]
 
+
 class ActionSetSlotCraveLapseRelapse3(Action):
     def name(self):
         return "action_set_slot_crave_lapse_relapse_3"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('crave_lapse_relapse', 3)]
+
 
 class ActionResetSlotCraveLapseRelapse(Action):
     def name(self):
@@ -401,6 +405,27 @@ class ShowFirstCopingActivityPa(Action):
         random_choice = secrets.choice(activities_list)
 
         dispatcher.utter_message(random_choice.intervention_activity_full_instructions)
+
+
+class StoreCraveLapseRelapse(Action):
+    def name(self):
+        return "store_crave_lapse_relapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        """
+        store in the db which branch of the relapse dialog the user has selected
+        (1 = crave, 2 = lapse, 3 = relapse)
+        """
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = int(tracker.get_slot('crave_lapse_relapse'))
+
+        question_id = DialogQuestionsEnum.RELAPSE_SMOKE_HRS_LAPSE_RELAPSE.value
+
+        store_dialog_closed_answer_to_db(user_id,
+                                         question_id,
+                                         choice)
+        return []
 
 
 class StoreEventSmoke(Action):
@@ -827,6 +852,7 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             return {"number_smoke": None}
 
         return {"number_smoke": value}
+
 
 class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
     def name(self) -> Text:

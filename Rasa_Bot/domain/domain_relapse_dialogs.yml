@@ -1080,6 +1080,7 @@ actions:
   - show_chosen_coping_activity
   - show_first_coping_activity
   - show_first_coping_activity_pa
+  - store_crave_lapse_relapse
   - store_event_smoke
   - store_how_feel_smoke
   - store_hrs_feeling

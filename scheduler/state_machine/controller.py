@@ -25,7 +25,7 @@ celery = Celery(broker=REDIS_URL)
 class OnboardingState(State):
 
     def __init__(self, user_id: int):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.state = State.ONBOARDING
         self.user_id = user_id
         self.new_state = None
@@ -150,7 +150,7 @@ class OnboardingState(State):
 class TrackingState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.TRACKING
 
@@ -217,7 +217,7 @@ class TrackingState(State):
 class GoalsSettingState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.GOALS_SETTING
 
@@ -350,7 +350,7 @@ class GoalsSettingState(State):
 class BufferState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.BUFFER
 
@@ -381,6 +381,13 @@ class BufferState(State):
                                dialog=dialog,
                                phase_id=2)
 
+    def on_dialog_rescheduled(self, dialog, new_date):
+
+        reschedule_dialog(user_id=self.user_id,
+                          dialog=dialog,
+                          planned_date=new_date,
+                          phase=1)
+
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
         if current_date >= quit_date:
@@ -391,7 +398,7 @@ class BufferState(State):
 class ExecutionRunState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.EXECUTION_RUN
 
@@ -550,7 +557,7 @@ class ExecutionRunState(State):
 class RelapseState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.RELAPSE
 
@@ -663,7 +670,7 @@ class RelapseState(State):
 class ClosingState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.COMPLETED
 
@@ -712,7 +719,7 @@ class ClosingState(State):
 class CompletedState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.COMPLETED
 

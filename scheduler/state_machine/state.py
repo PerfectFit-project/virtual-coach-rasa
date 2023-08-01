@@ -1,4 +1,6 @@
 import datetime
+from celery import Celery
+from .const import RESCHEDULE_DIALOG
 
 
 class State:
@@ -15,13 +17,14 @@ class State:
     CLOSING = "Closing"
     COMPLETED = "Completed"
 
-    def __init__(self, user_id):
+    def __init__(self, user_id, celery: Celery):
         """
         Initialize an instance of the state
         """
         self.user_id = user_id
         self.state = None
         self.new_state = None
+        self.celery = celery
 
     def __state__(self):
 
@@ -44,11 +47,19 @@ class State:
 
     def on_dialog_expired(self, dialog):  # pylint: disable=unused-argument
         """
-        Determines what happens when a dialog expired
+        Determines what happens when a dialog expired. if not overwritten,
+        it reschedules the dialog for the day after.
         Args:
             dialog: the dialog that expired
 
         """
+        next_day = datetime.datetime.now() + datetime.timedelta(days=1)
+
+        self.celery.send_task(RESCHEDULE_DIALOG,
+                              (self.user_id,
+                               dialog,
+                               next_day))
+
         return None
 
     def on_dialog_rescheduled(self, dialog, new_date):  # pylint: disable=unused-argument

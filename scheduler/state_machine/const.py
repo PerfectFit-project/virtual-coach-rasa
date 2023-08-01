@@ -39,6 +39,7 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 NICEDAY_API_ENDPOINT = os.getenv('NICEDAY_API_ENDPOINT')
 TRIGGER_COMPONENT = 'celery_tasks.trigger_intervention_component'
 PAUSE_AND_TRIGGER = 'celery_tasks.pause_and_trigger'
+RESCHEDULE_DIALOG = 'celery_tasks.reschedule_dialog'
 SCHEDULE_TRIGGER_COMPONENT = 'celery_tasks.trigger_scheduled_intervention_component'
 TRIGGER_INTENT = 'celery_tasks.trigger_intent'
 TIMEZONE = tz.gettz("Europe/Amsterdam")

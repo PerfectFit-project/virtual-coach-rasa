@@ -171,8 +171,6 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
         if dialog_state == NOTIFY:
             trigger_intent.apply_async(args=[fsm.machine_id,
                                              NotificationsTriggers.FINISH_DIALOG_NOTIFICATION])
-            send_fsm_event(user_id=fsm.machine_id,
-                           event=Event(EventEnum.DIALOG_EXPIRED, dialog))
 
         if dialog_state == EXPIRED:
 
@@ -180,11 +178,8 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
             fsm.dialog_state.set_to_idle()
             save_state_machine_to_db(fsm)
 
-            next_day = datetime.now() + timedelta(days=1)
-
-            reschedule_dialog.apply_async(args=[fsm.machine_id,
-                                                dialog,
-                                                next_day])
+            send_fsm_event(user_id=fsm.machine_id,
+                           event=Event(EventEnum.DIALOG_EXPIRED, dialog))
 
 
 @app.task

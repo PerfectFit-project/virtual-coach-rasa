@@ -609,7 +609,7 @@ def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
     """
     session = get_db_session(DATABASE_URL)
 
-    selected = (session.query(Users)
+    selected = (session.query(UserStateMachine)
                 .filter(UserStateMachine.users_nicedayuid == user_id)
                 .one())
 

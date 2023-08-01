@@ -45,7 +45,7 @@ class State:
         """
         return None
 
-    def on_dialog_expired(self, dialog):  # pylint: disable=unused-argument
+    def on_dialog_expired(self, dialog):
         """
         Determines what happens when a dialog expired. if not overwritten,
         it reschedules the dialog for the day after.
@@ -59,8 +59,6 @@ class State:
                               (self.user_id,
                                dialog,
                                next_day))
-
-        return None
 
     def on_dialog_rescheduled(self, dialog, new_date):  # pylint: disable=unused-argument
         """

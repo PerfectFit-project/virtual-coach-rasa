@@ -29,6 +29,7 @@ HR_INTENSITY_THRESHOLD = 110
 MIN_VALUE_STEP_GOAL = 2000
 MAX_VALUE_STEP_GOAL = 10000
 TOKEN_HEADER = 'X-PerfectFit-Auth-Token'
+PA_LAPSE_MODERATION = 0.95
 
 
 # functions for sensors data querying
@@ -159,6 +160,8 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     Calculate step goals for consecutive 9-day periods within a specified date range and the actual
     steps corresponding to the goals. Also, a list with the dates of these steps is returned.
     Lastly, the option is to return the value of the amount of days that the step goal was achieved.
+    In the number of days that the goal was achieved, it is checked that the realized steps was
+    within 95% of the goal or greater.
 
     Args:
         steps_data (list): List of dictionaries containing 'date' and 'steps' data.
@@ -211,7 +214,7 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     actual_steps = [int(x) if not np.isnan(x) else 0 for x in steps[-7:]]
 
     # Calculate number of days goal is achieved
-    goals_achieved = sum(np.array(step_goals) < np.array(actual_steps))
+    goals_achieved = sum(np.array(step_goals*PA_LAPSE_MODERATION) < np.array(actual_steps))
 
     # Get list with dates
     date_list = df.index[-7:]

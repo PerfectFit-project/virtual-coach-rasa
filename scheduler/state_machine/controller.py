@@ -432,7 +432,7 @@ class ExecutionRunState(State):
 
             # if in week 3 or 8 of the execution, run future self after
             # completing the weekly reflection
-            if week in [3, 8]:
+            elif week in [3, 8]:
                 logging.info('Starting future self')
                 plan_and_store(user_id=self.user_id,
                                dialog=Components.FUTURE_SELF_SHORT,

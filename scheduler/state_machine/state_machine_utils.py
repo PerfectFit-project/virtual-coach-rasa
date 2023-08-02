@@ -466,7 +466,7 @@ def get_execution_week(user_id: int) -> int:
                 .filter(Users.nicedayuid == user_id)
                 .one())
 
-    week_number = selected.execution_week
+    week_number = int(selected.execution_week)
 
     return week_number
 

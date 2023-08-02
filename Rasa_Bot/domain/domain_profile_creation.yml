@@ -327,7 +327,7 @@ responses:
   utter_ask_profile_creation_godin_moderate_slot:
   - text: "In je vrije tijd, hoe vaak per week doe jij aan matige inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nMatige inspranning is inspanning waar je niet heel moe van wordt. Voorbeelden: snel wandelen 🚶🏾‍♂️, baseball ⚾, tennis 🎾, rustig fietsen 🚴🏽, volleyball 🏐, badminton 🏸, skiën 🎿, dansen 🕺🏼💃🏻."
   utter_ask_profile_creation_godin_intensive_slot:
-  - text: "In je vrije tijd, hoe vaak per week doe jij aan intensieve inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nIntensieve inspanning is wanneer je hart snel gaat kloppen. Voorbeelden: hardlopen 🏃, voetbal ⚽, squash 🎾, basketball 🏀, judo 🥋, roolschaatsen, hard zwemmen 🏊 of fietsen 🚴🏽."
+  - text: "In je vrije tijd, hoe vaak per week doe jij aan intensieve inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nIntensieve inspanning is wanneer je hart snel gaat kloppen. Voorbeelden: hardlopen 🏃, voetbal ⚽, squash 🎾, basketball 🏀, judo 🥋, rolschaatsen, hard zwemmen 🏊 of fietsen 🚴🏽."
   utter_profile_creation_godin_2:
   - text: "Bedankt voor je antwoorden."
   

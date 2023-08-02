@@ -805,6 +805,7 @@ def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: 
     Returns:
 
     """
+
     component = get_intervention_component(dialog)
     dialog_id = component.intervention_component_id
     trigger = component.intervention_component_trigger

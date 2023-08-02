@@ -159,6 +159,13 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
     This task verifies if there are uncompleted dialogs and, in case, reschedules them.
     The task is rescheduled every maximum duration of the dialog time
     """
+
+    # this check should not run between 23 and 7
+    current_date = datetime.now(tz=TIMEZONE)
+
+    if current_date.hour == 23 or current_date.hour < 7:
+        return
+
     logging.info("Checking the dialogs status")
 
     state_machines = get_all_fsm()
@@ -243,9 +250,15 @@ def reschedule_dialog(user_id: int, intervention_component_name: str, new_date: 
     """
 
     logging.info('Celery received a dialog rescheduling')
+
+    # check if the scheduled time is in the night (i.e., after midnight and before 6)
+    # In case it is, reschedule for the morning.
+    if 0 <= new_date.hour <= 5:
+        new_date.replace(hour=8)
+
     send_fsm_event(user_id=user_id,
                    event=Event(EventEnum.DIALOG_RESCHEDULED_USER,
-                               (intervention_component_name, new_date)))
+                               (intervention_component_name, new_date.astimezone(TIMEZONE))))
 
 
 @app.task(autoretry_for=(Exception,), retry_backoff=True)
@@ -304,6 +317,16 @@ def trigger_scheduled_intervention_component(self,
 
     # retrieve the name of the component
     name = get_component_name(trigger)
+
+    # check if the current time is in the night (i.e., after midnight and before 6)
+    # In case it is, reschedule for the morning.
+    current_date = datetime.now(tz=TIMEZONE)
+    if 0 <= current_date.hour <= 5:
+        current_date.replace(hour=8)
+        send_fsm_event(user_id,
+                       event=Event(EventEnum.DIALOG_RESCHEDULED_AUTO, (name, current_date)))
+
+        return
 
     # if a dialog is not running or the time has expired (Rasa session reset)
     # send the trigger

@@ -5,6 +5,7 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_execution_week, get_intervention_component,
                                                get_hrs_last_branch, get_next_planned_date,
                                                get_next_scheduled_occurrence,
+                                               get_preferred_date_time,
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
                                                retrieve_intervention_day, revoke_execution,
@@ -622,7 +623,14 @@ class RelapseState(State):
             self.set_new_state(ExecutionRunState(self.user_id))
 
         else:
-            next_day = datetime.now() + timedelta(days=1)
+            # get the preferred time of the user and use it. Just add a day otherwise
+            _, preferred_time = get_preferred_date_time(self.user_id)
+
+            next_day = datetime.now()
+            if preferred_time is not None:
+                next_day.replace(hour=preferred_time.hour, minute=preferred_time.minute)
+
+            next_day += timedelta(days=1)
 
             self.celery.send_task(RESCHEDULE_DIALOG,
                                   (self.user_id,

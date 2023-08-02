@@ -445,10 +445,16 @@ def get_preferred_date_time(user_id: int) -> tuple:
         .one()
     )
 
-    days_str = users.week_days
-    days_list = list(map(int, days_str.split(',')))
+    try:
+        days_str = users.week_days
+        days_list = list(map(int, days_str.split(',')))
+    except Exception:
+        days_list = None
 
-    preferred_time = users.preferred_time.time()
+    if user_time := users.preferred_time is not None:
+        preferred_time = user_time.time()
+    else:
+        preferred_time = None
 
     return days_list, preferred_time
 

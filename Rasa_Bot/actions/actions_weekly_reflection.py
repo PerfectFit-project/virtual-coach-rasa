@@ -14,6 +14,7 @@ from . import validator
 from .definitions import (FILE_PATH_IMAGE_ERROR,
                           GROUP_2_THRESHOLD_DAILY_STEPS,
                           GROUP_2_THRESHOLD_TOTAL_STEPS,
+                          MINIMUM_INTENSITY_MINUTES,
                           SUFFICIENT_DAILY_STEPS,
                           REDIS_URL)
 from .helper import (get_intensity_minutes_goal,
@@ -333,8 +334,8 @@ class SetIntensityMinutesGoalProvious(Action):
             start = end - datetime.timedelta(days=7)
 
             previous_goal = get_intensity_minutes_data(user_id, start, end)
-            if previous_goal is None or previous_goal < 10:
-                previous_goal = 10
+            if previous_goal is None or previous_goal < MINIMUM_INTENSITY_MINUTES:
+                previous_goal = MINIMUM_INTENSITY_MINUTES
 
         return [SlotSet('intensity_minutes_goal_previous', previous_goal)]
 
@@ -365,8 +366,8 @@ class SetIntensityMinutesGoal(Action):
                 start = end - datetime.timedelta(days=7)
 
                 new_goal = get_intensity_minutes_data(user_id, start, end)
-                if new_goal is None or new_goal < 10:
-                    new_goal = 10
+                if new_goal is None or new_goal < MINIMUM_INTENSITY_MINUTES:
+                    new_goal = MINIMUM_INTENSITY_MINUTES
             else:
                 new_goal = previous_goal + 15
 

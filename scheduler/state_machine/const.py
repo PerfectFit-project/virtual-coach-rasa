@@ -50,4 +50,4 @@ EXPIRED = 2
 NOTIFY = 3
 
 # definitions of morning hours
-MORNING_TIME = 7
+MORNING_TIME = 8

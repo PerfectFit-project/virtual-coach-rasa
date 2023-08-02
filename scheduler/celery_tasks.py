@@ -163,7 +163,7 @@ def check_dialogs_status(self):  # pylint: disable=unused-argument
     # this check should not run between 23 and 7
     current_date = datetime.now(tz=TIMEZONE)
 
-    if current_date.hour == 23 or current_date.hour < MORNING_TIME:
+    if 0 < current_date.hour < MORNING_TIME:
         return
 
     logging.info("Checking the dialogs status")

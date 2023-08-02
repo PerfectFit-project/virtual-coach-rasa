@@ -3,6 +3,8 @@ from celery import Celery
 from datetime import date, datetime, timedelta
 from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
+                                               get_all_scheduled_occurrence,
+                                               get_last_component_state,
                                                get_next_planned_date, get_next_scheduled_occurrence,
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
@@ -407,11 +409,14 @@ class ExecutionRunState(State):
                            phase_id=2)
 
         elif dialog == Components.GENERAL_ACTIVITY:
-            logging.info('General activity completed, starting weekly reflection')
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.WEEKLY_REFLECTION,
-                           planned_date=datetime.now()+timedelta(minutes=1),
-                           phase_id=2)
+            # check if the weekly reflection has be triggered
+            if self.is_weekly_reflection_next():
+
+                logging.info('General activity completed, starting weekly reflection')
+                plan_and_store(user_id=self.user_id,
+                               dialog=Components.WEEKLY_REFLECTION,
+                               planned_date=datetime.now()+timedelta(minutes=1),
+                               phase_id=2)
 
         elif dialog == Components.WEEKLY_REFLECTION:
             logging.info('Weekly reflection completed')
@@ -544,6 +549,40 @@ class ExecutionRunState(State):
                            planned_date=planned_date_4,
                            phase_id=2)
 
+    def is_weekly_reflection_next(self) -> bool:
+        """
+        Determines if the weekly reflection dialog has to be run after the completion of the
+        general activity dialog or not.
+
+        Returns: True if the weekly reflection has to run, False otherwise
+
+        """
+        #  just in the first 2 weeks the weekly reflection follows the GA
+        week = get_execution_week(user_id=self.user_id)
+        if week > 2:
+            return False
+
+        # if the execution introduction hasn't been completed, don't run the weekly reflection
+        intro = get_intervention_component(Components.EXECUTION_INTRODUCTION)
+        intro_state = get_last_component_state(self.user_id, intro.intervention_component_id)
+
+        if not intro_state.completed:
+            return False
+
+        # if a GA is still planned by the VC for a future date, and it has not been completed
+        # this is not the case where we need to run the weekly reflection
+        ga_component = get_intervention_component(Components.GENERAL_ACTIVITY)
+        next_planned = get_all_scheduled_occurrence(self.user_id,
+                                                    ga_component.intervention_component_id,
+                                                    datetime.now(tz=TIMEZONE))
+
+        for occurrence in next_planned:
+            # if last_time is None, the component was not triggered by the user
+            if not occurrence.completed and occurrence.last_time is None:
+                return False
+
+        return True
+    
 
 class RelapseState(State):
 

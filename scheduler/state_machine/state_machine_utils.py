@@ -451,7 +451,7 @@ def get_preferred_date_time(user_id: int) -> tuple:
     except Exception:
         days_list = None
 
-    if user_time := users.preferred_time is not None:
+    if (user_time := users.preferred_time) is not None:
         preferred_time = user_time.time()
     else:
         preferred_time = None

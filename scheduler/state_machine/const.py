@@ -48,3 +48,6 @@ NOT_RUNNING = 0
 RUNNING = 1
 EXPIRED = 2
 NOTIFY = 3
+
+# definitions of morning hours
+MORNING_TIME = 7

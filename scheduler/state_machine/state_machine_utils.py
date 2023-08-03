@@ -75,6 +75,45 @@ def create_new_date(start_date: date,
     return new_timedate
 
 
+def get_all_scheduled_occurrence(user_id: int,
+                                 intervention_component_id: int,
+                                 current_date: datetime) -> Optional[UserInterventionState]:
+    """
+    Gets the all the intervention component occurrences planned for the future and not completed
+
+    Args:
+        user_id: the id of the user
+        intervention_component_id: the id of the intervention component as
+            saved in the DB
+        current_date: the date after which look for the planned component
+
+    Returns:
+            All the occurrence planned for the future and saved in the user_intervention_state
+            table in the DB for the given user and intervention component.
+            A list of UserInterventionState object is returned.
+            In case no entry is found, it returns None
+    """
+    session = get_db_session(DATABASE_URL)
+
+    try:
+        selected = (
+            session.query(
+                UserInterventionState
+            )
+            .filter(
+                UserInterventionState.users_nicedayuid == user_id,
+                UserInterventionState.intervention_component_id == intervention_component_id,
+                UserInterventionState.next_planned_date > current_date
+            )
+            .order_by(UserInterventionState.next_planned_date.asc())  # order by ascending date
+            .all()
+        )
+    except NoResultFound:
+        selected = None
+
+    return selected
+
+
 def get_dialog_completion_state(user_id: int, dialog_name: str) -> Optional[bool]:
     """
     Get the completion state of the last dialog occurrence in the DB
@@ -183,7 +222,7 @@ def get_last_scheduled_occurrence(user_id: int,
 
 def get_next_scheduled_occurrence(user_id: int,
                                   intervention_component_id: int,
-                                  current_date: datetime):
+                                  current_date: datetime) -> Optional[UserInterventionState]:
     """
     Gets the next planned intervention component occurrence
 
@@ -542,7 +581,7 @@ def get_execution_week(user_id: int) -> int:
                 .filter(Users.nicedayuid == user_id)
                 .one())
 
-    week_number = selected.execution_week
+    week_number = int(selected.execution_week)
 
     return week_number
 

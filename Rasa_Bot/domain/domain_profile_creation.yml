@@ -274,9 +274,7 @@ forms:
     
 responses:
   utter_profile_creation_start_1:
-  - text: "Hallo 👋🏼"
-  utter_profile_creation_start_2:
-  - text: "Welkom bij het Perfect Fit programma!"
+  - text: "Hallo 👋🏼 Welkom bij het Perfect Fit programma!"
   utter_profile_creation_start_3:
   - text: "Voordat je aan de slag gaat moet je een profiel aanmaken. Hiervoor ga ik je een aantal vragen stellen. ❔\n\nMisschien vraag je je af hoe het zit met jouw privacy. 🔒 Je privacy is heel belangrijk. Daarom worden al je gegevens veilig opgeslagen. De app houdt zich natuurlijk aan de wet."
   utter_profile_creation_code_1:

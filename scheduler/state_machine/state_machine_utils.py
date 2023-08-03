@@ -5,9 +5,10 @@ from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
 from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
-from virtual_coach_db.dbschema.models import (Users, UserInterventionState, InterventionPhases,
-                                              InterventionComponents)
-from virtual_coach_db.helper.definitions import ComponentsTriggers
+from virtual_coach_db.dbschema.models import (ClosedAnswers, DialogClosedAnswers, DialogQuestions,
+                                              InterventionComponents, InterventionPhases, Users,
+                                              UserStateMachine, UserInterventionState)
+from virtual_coach_db.helper.definitions import Components, ComponentsTriggers, DialogQuestionsEnum
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -318,6 +319,75 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
     return selected[0]
 
 
+def get_hrs_last_branch(user_id: int) -> Optional[Components]:
+    """
+    Check which is the currently run branch of the hrs dialog. If the answer is not recent
+    (stored before the last execution of the hrs dialog), a None value is returned
+    Args:
+        user_id: id of the user
+
+    Returns: The most recent compoinent of the hrs dialog component, if a recent one is present.
+    None otherwise
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    last_execution = (
+        session.query(
+            UserInterventionState
+        )
+        .join(InterventionComponents)
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            InterventionComponents.intervention_component_name == Components.RELAPSE_DIALOG.value
+        )
+        .order_by(
+            UserInterventionState.last_time.desc()
+        )
+        .limit(1)
+        .one_or_none()
+    )
+
+    if last_execution is None:
+        return None
+
+    last_answer = (
+        session.query(
+            DialogClosedAnswers
+        )
+        .join(ClosedAnswers, DialogQuestions)
+        .filter(
+            DialogQuestions.question_id == DialogQuestionsEnum.RELAPSE_SMOKE_HRS_LAPSE_RELAPSE.value
+        )
+        .order_by(DialogClosedAnswers.datetime.desc())
+        .limit(1)
+        .one_or_none()
+    )
+
+    # if there are no answers or the answer came before the last execution of the dialog,
+    # return None
+    if last_answer is None or last_answer.datetime < last_execution.last_time:
+        return None
+
+    # when we populate the DB, the answer id is set by adding the answer value
+    # to 100 times the question ID. Here we do the inverse computation
+    answer_id = last_answer.closed_answers_id
+    question_id = last_answer.closed_answers.dialog_questions.question_id
+
+    answer = answer_id - (question_id * 100)
+
+    if answer == 1:
+        component = Components.RELAPSE_DIALOG_HRS
+    elif answer == 2:
+        component = Components.RELAPSE_DIALOG_LAPSE
+    elif answer == 3:
+        component = Components.RELAPSE_DIALOG_RELAPSE
+    else:
+        component = None
+
+    return component
+
+
 def get_next_planned_date(user_id: int,
                           current_date: datetime) -> datetime:
     """
@@ -414,10 +484,16 @@ def get_preferred_date_time(user_id: int) -> tuple:
         .one()
     )
 
-    days_str = users.week_days
-    days_list = list(map(int, days_str.split(',')))
+    try:
+        days_str = users.week_days
+        days_list = list(map(int, days_str.split(',')))
+    except Exception:
+        days_list = None
 
-    preferred_time = users.preferred_time.time()
+    if (user_time := users.preferred_time) is not None:
+        preferred_time = user_time.time()
+    else:
+        preferred_time = None
 
     return days_list, preferred_time
 
@@ -564,6 +640,25 @@ def update_execution_week(user_id: int, week_number: int):
                 .one())
 
     selected.execution_week = week_number
+
+    session.commit()
+
+
+def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
+    """
+    Computes the current wek number of the execution phase
+    Args:
+        user_id: ID of the user
+        dialog_running: value to be set in the dialog_running field of the fsm
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (session.query(UserStateMachine)
+                .filter(UserStateMachine.users_nicedayuid == user_id)
+                .one())
+
+    selected.dialog_running = dialog_running
 
     session.commit()
 
@@ -758,7 +853,7 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
         store_intervention_component_to_db(state)
 
 
-def store_scheduled_dialog(user_id: int,   # pylint: disable=too-many-arguments
+def store_scheduled_dialog(user_id: int,  # pylint: disable=too-many-arguments
                            dialog_id: int,
                            phase_id: int,
                            planned_date: datetime = datetime.now().astimezone(TIMEZONE),
@@ -844,6 +939,7 @@ def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: 
     Returns:
 
     """
+
     component = get_intervention_component(dialog)
     dialog_id = component.intervention_component_id
     trigger = component.intervention_component_trigger

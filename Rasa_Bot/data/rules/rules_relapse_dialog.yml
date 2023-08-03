@@ -41,6 +41,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - crave_lapse_relapse: 1
+  - action: store_crave_lapse_relapse
   - action: action_set_slot_relapse_dialog_hrs
   - action: utter_smoke_crave_1
   - action: utter_smoke_crave_2
@@ -360,6 +361,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - crave_lapse_relapse: 2
+  - action: store_crave_lapse_relapse
   - action: action_set_slot_relapse_dialog_lapse
   - action: utter_smoke_lapse_1
   - action: type_and_number_smoke_form
@@ -651,6 +653,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - crave_lapse_relapse: 3
+  - action: store_crave_lapse_relapse
   - action: action_set_slot_relapse_dialog_relapse
   - action: utter_smoke_lapse_1
   - action: type_and_number_smoke_form

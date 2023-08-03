@@ -6,16 +6,20 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_all_scheduled_occurrence,
                                                get_last_component_state,
                                                get_next_planned_date, get_next_scheduled_occurrence,
+                                               get_hrs_last_branch,
+                                               get_preferred_date_time,
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
                                                retrieve_intervention_day, revoke_execution,
                                                run_uncompleted_dialog, run_option_menu,
                                                schedule_next_execution, store_completed_dialog,
-                                               update_execution_week, store_scheduled_dialog)
+                                               store_scheduled_dialog, update_execution_week,
+                                               update_fsm_dialog_running_status)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
                                  MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
-                                 EXECUTION_DURATION_WEEKS, TIME_DELTA_PA_NOTIFICATION, REDIS_URL)
+                                 EXECUTION_DURATION_WEEKS, TIME_DELTA_PA_NOTIFICATION, REDIS_URL,
+                                 RESCHEDULE_DIALOG)
 from state_machine.state import State
 from virtual_coach_db.helper.definitions import (Components, ComponentsTriggers, Notifications)
 
@@ -25,7 +29,7 @@ celery = Celery(broker=REDIS_URL)
 class OnboardingState(State):
 
     def __init__(self, user_id: int):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.state = State.ONBOARDING
         self.user_id = user_id
         self.new_state = None
@@ -150,7 +154,7 @@ class OnboardingState(State):
 class TrackingState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.TRACKING
 
@@ -217,7 +221,7 @@ class TrackingState(State):
 class GoalsSettingState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.GOALS_SETTING
 
@@ -350,7 +354,7 @@ class GoalsSettingState(State):
 class BufferState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.BUFFER
 
@@ -381,6 +385,13 @@ class BufferState(State):
                                dialog=dialog,
                                phase_id=2)
 
+    def on_dialog_rescheduled(self, dialog, new_date):
+
+        reschedule_dialog(user_id=self.user_id,
+                          dialog=dialog,
+                          planned_date=new_date,
+                          phase=1)
+
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
         if current_date >= quit_date:
@@ -391,7 +402,7 @@ class BufferState(State):
 class ExecutionRunState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.EXECUTION_RUN
 
@@ -587,7 +598,7 @@ class ExecutionRunState(State):
 class RelapseState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.RELAPSE
 
@@ -632,6 +643,38 @@ class RelapseState(State):
                 # if the quit date has not been changed, we go back to execution
                 logging.info('Relapse completed, back to execution')
                 self.set_new_state(ExecutionRunState(self.user_id))
+
+    def on_dialog_expired(self, dialog):
+        logging.info('A dialog has expired  %s ', dialog)
+        # if the relapse dialog expires in a branch different from the Relapse,
+        # it should not be reproposed to the user.
+        if (dialog == Components.RELAPSE_DIALOG
+                and get_hrs_last_branch(self.user_id) != Components.RELAPSE_DIALOG_RELAPSE):
+
+            store_completed_dialog(user_id=self.user_id,
+                                   dialog=dialog,
+                                   phase_id=3)
+
+            # let the fms know that the dialog is considered as not running anymore
+            update_fsm_dialog_running_status(self.user_id, False)
+            # go back to the execution
+            logging.info('Relapse completed, back to execution')
+            self.set_new_state(ExecutionRunState(self.user_id))
+
+        else:
+            # get the preferred time of the user and use it. Just add a day otherwise
+            _, preferred_time = get_preferred_date_time(self.user_id)
+
+            next_day = datetime.now()
+            if preferred_time is not None:
+                next_day.replace(hour=preferred_time.hour, minute=preferred_time.minute)
+
+            next_day += timedelta(days=1)
+
+            self.celery.send_task(RESCHEDULE_DIALOG,
+                                  (self.user_id,
+                                   dialog,
+                                   next_day))
 
     def on_user_trigger(self, dialog: str):
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
@@ -682,7 +725,7 @@ class RelapseState(State):
 class ClosingState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.COMPLETED
 
@@ -731,7 +774,7 @@ class ClosingState(State):
 class CompletedState(State):
 
     def __init__(self, user_id):
-        super().__init__(user_id)
+        super().__init__(user_id, celery)
         self.user_id = user_id
         self.state = State.COMPLETED
 

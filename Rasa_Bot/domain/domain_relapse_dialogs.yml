@@ -1063,6 +1063,7 @@ responses:
 actions:
   - action_check_reasons
   - action_launch_goal_setting
+  - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa

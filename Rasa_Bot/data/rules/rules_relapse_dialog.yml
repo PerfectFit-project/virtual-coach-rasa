@@ -8,6 +8,7 @@ rules:
 - rule: Trigger relapse dialog
   steps:
   - intent: EXTERNAL_relapse_dialog
+  - action: action_set_slot_relapse_dialog
   - action: utter_relapse_intro_codeword
   - action: utter_relapse_intro_offer_help_pt1
   - action: utter_relapse_intro_offer_help_pt2

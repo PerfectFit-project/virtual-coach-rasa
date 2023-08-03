@@ -1,20 +1,19 @@
 import logging
 
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL
+from .definitions import DATABASE_URL, REDIS_URL, TRIGGER_INTENT
 from .helper import (get_latest_bot_utterance,
                      get_user_intervention_activity_inputs,
                      get_faik_text, mark_completion)
 
 from celery import Celery
-from datetime import datetime, timedelta
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Any, Dict, Text
 from virtual_coach_db.dbschema.models import InterventionActivity
-from virtual_coach_db.helper.definitions import Components
+from virtual_coach_db.helper.definitions import Components, ComponentsTriggers
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -30,8 +29,8 @@ class ActionStartFak(Action):
 
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         logging.info("Launching first aid kit celery intent")
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, 'CENTRAL_get_first_aid_kit'))
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, ComponentsTriggers.FIRST_AID_KIT))
 
         return []
 
@@ -56,11 +55,12 @@ class ActionResumeAfterFak(Action):
             mark_completion(user_id, Components.FIRST_AID_KIT)
             return[FollowupAction('action_end_dialog')]
 
-        new_intent = 'EXTERNAL_' + current_intervention
-        logging.info(new_intent)
-        celery.send_task('celery_tasks.trigger_intervention_component',
-                         (user_id, new_intent),
-                         eta=datetime.now() + timedelta(seconds=10))
+        # get the current dialog and trigger it
+        current_dialog = Components(current_intervention)
+        new_intent = ComponentsTriggers[current_dialog.name].value
+
+        celery.send_task(TRIGGER_INTENT,
+                         (user_id, new_intent))
 
         return []
 

@@ -26,6 +26,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - smoke_or_pa: 3
+  - action: utter_relapse_outro
   - action: mark_dialog_as_completed
   - action: action_end_dialog
 

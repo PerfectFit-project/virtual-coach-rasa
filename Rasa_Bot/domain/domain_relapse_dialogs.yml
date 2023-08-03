@@ -385,6 +385,8 @@ responses:
     - text: "Typ '1' als het gaat om roken. 🚬.\n
              Typ '2' als het gaat om fysieke activiteit. 🚶 \n
              Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
+  utter_relapse_outro:
+    - text: "Dit gesprek is nu klaar. Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je!"
 
  # Smoke
   utter_specify_smoke:

@@ -301,7 +301,8 @@ class SetIntensityMinutes(Action):
 
         user_id = int(tracker.current_state()['sender_id'])
         end = datetime.datetime.now()
-        start = end - datetime.timedelta(days=16)
+        start = end - datetime.timedelta(days=7)
+
 
         intensity_minutes = get_intensity_minutes_data(user_id, start, end)
 

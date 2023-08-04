@@ -311,13 +311,13 @@ responses:
   utter_goal_setting_choose_date_10:
     - text: "Denk nu eens na over welke stappen jij kunt zetten om jezelf te helpen met stoppen met roken. Neem hier 
             wat tijd voor. Pak pen en papier en schrijf 3 dingen op die jij komende dagen kunt doen om jezelf te 
-            helpen.✍️ Typ 'klaar' als je hier klaar mee bent."
+            helpen.✍"
     - text: "Laten we nu even nadenken over welke stappen je kunt zetten om jezelf te helpen stoppen met roken. Neem 
             hiervoor de tijd en pak pen en papier. Noteer drie dingen die je de komende dagen kunt doen om jezelf te 
-            helpen. ✍️Typ 'klaar' wanneer je hiermee klaar bent."
+            helpen. ✍"
     - text: "Wat zijn de stappen die jij kunt zetten om jezelf te helpen bij het stoppen met roken? Neem even de tijd 
             om hierover na te denken en pak pen en papier. Schrijf drie dingen op die je de komende dagen kunt doen om 
-            jezelf te ondersteunen. ✍️ Typ 'klaar' als je klaar bent."
+            jezelf te ondersteunen. ✍"
   utter_goal_setting_choose_date_11:
     - text: "Je kunt dit papier ook op een plek hangen waar je het vaak ziet, om jezelf hieraan te herinneren."
     - text: "Overweeg om dit papier op een plek te hangen waar je het vaak tegenkomt, als een constante herinnering 

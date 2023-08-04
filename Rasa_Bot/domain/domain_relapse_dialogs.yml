@@ -14,6 +14,7 @@ slots:
     values:
       - 1
       - 2
+      - 3
     influence_conversation: true
     mappings:
       - type: from_text
@@ -375,12 +376,17 @@ responses:
     - text: "Betreft het roken of fysieke activiteit?"
     - text: "Gaat het over roken of lichaamsbeweging?"
   utter_ask_smoke_or_pa_form_smoke_or_pa:
-    - text: "Typ '1' als je het gaat om roken. 🚬.
-            \nTyp '2' als het gaat om lichamelijke beweging. 🚶"
-    - text: "Als het om roken gaat, typ dan 1. 🚬.
-            \nAls het over lichaamsbeweging gaat, typ dan 2. 🚶"
-    - text: "Typ '1' als het gaat om roken. 🚬.
-            \nTyp '2' als het gaat om fysieke activiteit. 🚶"
+    - text: "Typ '1' als je het gaat om roken. 🚬. \n
+             Typ '2' als het gaat om lichamelijke beweging. 🚶️ \n
+             Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
+    - text: "Als het om roken gaat, typ dan 1. 🚬. \n
+             Als het over lichaamsbeweging gaat, typ dan 2. 🚶 \n
+             Als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt, typ dan 3."
+    - text: "Typ '1' als het gaat om roken. 🚬.\n
+             Typ '2' als het gaat om fysieke activiteit. 🚶 \n
+             Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
+  utter_relapse_outro:
+    - text: "Dit gesprek is nu klaar. Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je!"
 
  # Smoke
   utter_specify_smoke:
@@ -388,10 +394,9 @@ responses:
     - text: "Zou je me kunnen vertellen wat er aan de hand is?"
     - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken.1️ \n 
-             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.2️ \n
-             Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum.3️ \n
-             Typ '4' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
+    - text: "Typ '1' als je zin hebt om te roken.️ \n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.️ \n
+             Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum."
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
@@ -1060,6 +1065,7 @@ responses:
 actions:
   - action_check_reasons
   - action_launch_goal_setting
+  - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa

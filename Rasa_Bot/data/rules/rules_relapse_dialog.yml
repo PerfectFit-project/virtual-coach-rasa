@@ -8,6 +8,7 @@ rules:
 - rule: Trigger relapse dialog
   steps:
   - intent: EXTERNAL_relapse_dialog
+  - action: action_set_slot_relapse_dialog
   - action: utter_relapse_intro_codeword
   - action: utter_relapse_intro_offer_help_pt1
   - action: utter_relapse_intro_offer_help_pt2
@@ -15,6 +16,19 @@ rules:
   - action: smoke_or_pa_form
   - active_loop: smoke_or_pa_form
   wait_for_user_input: false
+
+## rigger relapse dialog  - exit
+- rule: Relapse phase triggered smoke
+  condition:
+  - active_loop: smoke_or_pa_form
+  steps:
+  - action: smoke_or_pa_form
+  - active_loop: null
+  - slot_was_set:
+    - smoke_or_pa: 3
+  - action: utter_relapse_outro
+  - action: mark_dialog_as_completed
+  - action: action_end_dialog
 
 ## 1a: Trigger relapse dialog  - smoking
 - rule: Relapse phase triggered smoke
@@ -800,17 +814,6 @@ rules:
   - action: hrs_enough_motivation_form
   - active_loop: hrs_enough_motivation_form
   wait_for_user_input: false
-
-## 2d: Parent for Smoking - quit
-- rule: smoking parent relapse # checkpoint: smoke_relapse
-  condition:
-    - active_loop: crave_lapse_relapse_form
-  steps:
-  - action: crave_lapse_relapse_form
-  - active_loop: null
-  - slot_was_set:
-    - crave_lapse_relapse: 4
-  - action: action_end_dialog
 
 ## 1b: Trigger relapse dialog - PA
 - rule: Relapse phase triggered PA

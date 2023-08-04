@@ -127,6 +127,15 @@ class ActionSetSlotWeeklyOrRelapse(Action):
 
 class ActionSetSlotRelapseDialog(Action):
     def name(self):
+        return "action_set_slot_relapse_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        Components.RELAPSE_DIALOG)]
+
+
+class ActionSetSlotRelapseDialogHrs(Action):
+    def name(self):
         return "action_set_slot_relapse_dialog_hrs"
 
     async def run(self, dispatcher, tracker, domain):
@@ -752,9 +761,9 @@ class ValidateSmokeOrPaForm(FormValidationAction):
         if last_utterance != 'utter_ask_smoke_or_pa_form_smoke_or_pa':
             return {"smoke_or_pa": None}
 
-        if not validator.validate_number_in_range_response(1, 2, value):
+        if not validator.validate_number_in_range_response(1, 3, value):
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"smoke_or_pa": None}
 
         return {"smoke_or_pa": value}
@@ -774,9 +783,9 @@ class ValidateCraveLapseRelapseForm(FormValidationAction):
         if last_utterance != 'utter_ask_crave_lapse_relapse':
             return {"crave_lapse_relapse": None}
 
-        if not validator.validate_number_in_range_response(1, 4, value):
+        if not validator.validate_number_in_range_response(1, 3, value):
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"crave_lapse_relapse": None}
 
         return {"crave_lapse_relapse": value}

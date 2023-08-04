@@ -5,8 +5,7 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import (VideoLinks, Components, ComponentsTriggers,
-                                                 DialogExpectedDuration)
+from virtual_coach_db.helper.definitions import (VideoLinks, Components, ComponentsTriggers)
 from . import validator
 from .definitions import PAUSE_AND_TRIGGER, REDIS_URL, TRIGGER_INTENT
 from .helper import get_latest_bot_utterance

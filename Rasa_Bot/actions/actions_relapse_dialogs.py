@@ -127,6 +127,15 @@ class ActionSetSlotWeeklyOrRelapse(Action):
 
 class ActionSetSlotRelapseDialog(Action):
     def name(self):
+        return "action_set_slot_relapse_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        Components.RELAPSE_DIALOG)]
+
+
+class ActionSetSlotRelapseDialogHrs(Action):
+    def name(self):
         return "action_set_slot_relapse_dialog_hrs"
 
     async def run(self, dispatcher, tracker, domain):

@@ -42,12 +42,3 @@ class SetSlotDailyReflection(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet("current_intervention_component",
                         Components.DAILY_REFLECTION)]
-
-
-class SetSlotRelapseDialog(Action):
-    def name(self):
-        return "action_set_slot_relapse_dialog"
-
-    async def run(self, dispatcher, tracker, domain):
-        return [SlotSet("current_intervention_component",
-                        Components.RELAPSE_DIALOG)]

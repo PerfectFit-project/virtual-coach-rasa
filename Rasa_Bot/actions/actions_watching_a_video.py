@@ -77,10 +77,9 @@ class DelayedMessage(Action):
         new_intent = ComponentsTriggers.DONE_VIDEO
 
         dialog = str(tracker.get_slot('current_intervention_component'))
-        try:
-            duration = (DialogExpectedDuration[dialog]) * 60
-        except Exception:
-            duration = 30
+
+        # 1 minute waiting time after the video link is sent
+        duration = 60
 
         time = datetime.datetime.now() + datetime.timedelta(seconds=duration)
         celery.send_task(PAUSE_AND_TRIGGER,

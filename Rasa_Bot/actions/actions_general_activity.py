@@ -211,12 +211,12 @@ class GetGeneralActivitiesOptions(Action):
 
         available_activities_ids = [activity.intervention_activity_id for activity in available]
 
-        options = ["Typ " + str(i + 1) + " als je " +
+        options = ["Typ " + str(i + 1) + " als je '" +
                    available[i].intervention_activity_title +
-                   " wilt doen.\n"
+                   "' wilt doen.\n"
                    for i in range(len(available))]
 
-        sentence = ''.join(options)
+        sentence = str().join(options)
 
         sentence += "Typ " + \
                     str(len(available)) + \
@@ -403,12 +403,12 @@ class ValidateGeneralActivityNextActivityForm(FormValidationAction):
 
         available_activities_ids = [activity.intervention_activity_id for activity in available]
 
-        options = ["Typ " + str(i + 1) + " als je " +
+        options = ["Typ " + str(i + 1) + " als je '" +
                    available[i].intervention_activity_title +
-                   " wilt doen.\n"
+                   "' wilt doen.\n"
                    for i in range(len(available))]
 
-        sentence = ''.join(options)
+        sentence = str().join(options)
 
         sentence += "Typ " + \
                     str(len(available) + 1) + \

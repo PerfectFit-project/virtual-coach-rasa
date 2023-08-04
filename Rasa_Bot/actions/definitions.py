@@ -43,6 +43,9 @@ MORNING_SEND_TIME = 8
 AFTERNOON_SEND_TIME = 16
 EVENING_SEND_TIME = 21
 
+# Length of the pause in seconds before resuming the conversation after a video
+PAUSE_TIME = 60
+
 # Daypart names in Dutch
 DAYPART_NAMES_DUTCH = ["ochtend", "middag", "avond"]
 

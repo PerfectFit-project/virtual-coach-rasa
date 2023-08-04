@@ -76,8 +76,6 @@ class DelayedMessage(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DONE_VIDEO
 
-        dialog = str(tracker.get_slot('current_intervention_component'))
-
         # 1 minute waiting time after the video link is sent
         duration = 60
 

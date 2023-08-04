@@ -71,12 +71,14 @@ class ActionSetSlotSmokeOrPa1(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('smoke_or_pa', 1)]
 
+
 class ActionSetSlotSmokeOrPa2(Action):
     def name(self):
         return "action_set_slot_smoke_or_pa_2"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('smoke_or_pa', 2)]
+
 
 class ActionSetSlotsCraveLapseRelapse1(Action):
     def name(self):
@@ -93,12 +95,14 @@ class ActionSetSlotCraveLapseRelapse2(Action):
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('crave_lapse_relapse', 2)]
 
+
 class ActionSetSlotCraveLapseRelapse3(Action):
     def name(self):
         return "action_set_slot_crave_lapse_relapse_3"
 
     async def run(self, dispatcher, tracker, domain):
         return [SlotSet('crave_lapse_relapse', 3)]
+
 
 class ActionResetSlotCraveLapseRelapse(Action):
     def name(self):
@@ -122,6 +126,15 @@ class ActionSetSlotWeeklyOrRelapse(Action):
 
 
 class ActionSetSlotRelapseDialog(Action):
+    def name(self):
+        return "action_set_slot_relapse_dialog"
+
+    async def run(self, dispatcher, tracker, domain):
+        return [SlotSet("current_intervention_component",
+                        Components.RELAPSE_DIALOG)]
+
+
+class ActionSetSlotRelapseDialogHrs(Action):
     def name(self):
         return "action_set_slot_relapse_dialog_hrs"
 
@@ -401,6 +414,27 @@ class ShowFirstCopingActivityPa(Action):
         random_choice = secrets.choice(activities_list)
 
         dispatcher.utter_message(random_choice.intervention_activity_full_instructions)
+
+
+class StoreCraveLapseRelapse(Action):
+    def name(self):
+        return "store_crave_lapse_relapse"
+
+    async def run(self, dispatcher, tracker, domain):
+        """
+        store in the db which branch of the relapse dialog the user has selected
+        (1 = crave, 2 = lapse, 3 = relapse)
+        """
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        # get the user choice
+        choice = int(tracker.get_slot('crave_lapse_relapse'))
+
+        question_id = DialogQuestionsEnum.RELAPSE_SMOKE_HRS_LAPSE_RELAPSE.value
+
+        store_dialog_closed_answer_to_db(user_id,
+                                         question_id,
+                                         choice)
+        return []
 
 
 class StoreEventSmoke(Action):
@@ -727,9 +761,9 @@ class ValidateSmokeOrPaForm(FormValidationAction):
         if last_utterance != 'utter_ask_smoke_or_pa_form_smoke_or_pa':
             return {"smoke_or_pa": None}
 
-        if not validator.validate_number_in_range_response(1, 2, value):
+        if not validator.validate_number_in_range_response(1, 3, value):
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"smoke_or_pa": None}
 
         return {"smoke_or_pa": value}
@@ -749,9 +783,9 @@ class ValidateCraveLapseRelapseForm(FormValidationAction):
         if last_utterance != 'utter_ask_crave_lapse_relapse':
             return {"crave_lapse_relapse": None}
 
-        if not validator.validate_number_in_range_response(1, 4, value):
+        if not validator.validate_number_in_range_response(1, 3, value):
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+            dispatcher.utter_message(response="utter_please_answer_1_2_3")
             return {"crave_lapse_relapse": None}
 
         return {"crave_lapse_relapse": value}
@@ -770,11 +804,22 @@ class ValidateEhboMeSelfForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_ehbo_me_self':
             return {"ehbo_me_self": None}
+        
+        first_aid_kit_filled = tracker.get_slot('first_aid_kit_filled')
+        
+        if first_aid_kit_filled:
 
-        if not validator.validate_number_in_range_response(1, 3, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3")
-            return {"ehbo_me_self": None}
+            if not validator.validate_number_in_range_response(1, 3, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_1_2_3")
+                return {"ehbo_me_self": None}
+            
+        else:
+            # option 1 not available when first aid kit is empty
+            if not validator.validate_number_in_range_response(2, 3, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_2_3")
+                return {"ehbo_me_self": None}
 
         return {"ehbo_me_self": value}
 
@@ -816,6 +861,7 @@ class ValidateTypeAndNumberSmokeForm(FormValidationAction):
             return {"number_smoke": None}
 
         return {"number_smoke": value}
+
 
 class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
     def name(self) -> Text:
@@ -1130,13 +1176,59 @@ class ValidateEhboMeSelfLapseForm(FormValidationAction):
         last_utterance = get_latest_bot_utterance(tracker.events)
         if last_utterance != 'utter_ask_ehbo_me_self_lapse':
             return {"ehbo_me_self_lapse": None}
+        
+        first_aid_kit_filled = tracker.get_slot('first_aid_kit_filled')
+        
+        if first_aid_kit_filled:
 
-        if not validator.validate_number_in_range_response(1, 4, value):
-            dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
-            return {"ehbo_me_self_lapse": None}
+            if not validator.validate_number_in_range_response(1, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+                return {"ehbo_me_self_lapse": None}
+            
+        else:
+            # option 1 is removed when the first aid kit is empty
+            if not validator.validate_number_in_range_response(2, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_2_3_4")
+                return {"ehbo_me_self_lapse": None}
+            
 
         return {"ehbo_me_self_lapse": value}
+    
+
+class ValidateEhboMeSelfLapsePAForm(FormValidationAction):
+    def name(self) -> Text:
+        return 'validate_ehbo_me_self_lapse_pa_form'
+
+    def validate_ehbo_me_self_lapse_pa(
+            self, value: Text, dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
+        # pylint: disable=unused-argument
+        """Validate ehbo, me or self input"""
+
+        last_utterance = get_latest_bot_utterance(tracker.events)
+        if last_utterance != 'utter_ask_ehbo_me_self_lapse_pa':
+            return {"ehbo_me_self_lapse_pa": None}
+        
+        first_aid_kit_filled = tracker.get_slot('first_aid_kit_filled')
+        
+        if first_aid_kit_filled:
+
+            if not validator.validate_number_in_range_response(1, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_1_2_3_4")
+                return {"ehbo_me_self_lapse_pa": None}
+            
+        else:
+            # option 1 is removed when the first aid kit is empty
+            if not validator.validate_number_in_range_response(2, 4, value):
+                dispatcher.utter_message(response="utter_did_not_understand")
+                dispatcher.utter_message(response="utter_please_answer_2_3_4")
+                return {"ehbo_me_self_lapse_pa": None}
+            
+
+        return {"ehbo_me_self_lapse_pa": value}
 
 
 class ValidateRelapseStopNowLaterForm(FormValidationAction):

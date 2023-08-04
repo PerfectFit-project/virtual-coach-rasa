@@ -15,7 +15,7 @@ responses:
   # For low next action confidence, "utter_default" is automatically called.
   # For low NLU confidence, we have defined a rule.
   utter_default:
-    - text: "Sorry, ik begrijp (nog) niet wat je bedoelt, kun je me het op een andere manier duidelijk maken?"
+    - text: "Goed om van je te horen! Er zijn verschillende dingen die je kunt doen:"
 
   # There is no valid uncompleted dialog
   utter_no_valid_uncompleted_dialog:

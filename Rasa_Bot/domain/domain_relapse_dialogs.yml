@@ -14,6 +14,7 @@ slots:
     values:
       - 1
       - 2
+      - 3
     influence_conversation: true
     mappings:
       - type: from_text
@@ -78,6 +79,19 @@ slots:
       - type: from_text
         conditions:
           - active_loop: ehbo_me_self_lapse_form
+          
+  ehbo_me_self_lapse_pa:
+    type: categorical
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: ehbo_me_self_lapse_pa_form
 
   type_smoke:
     type: float
@@ -362,12 +376,17 @@ responses:
     - text: "Betreft het roken of fysieke activiteit?"
     - text: "Gaat het over roken of lichaamsbeweging?"
   utter_ask_smoke_or_pa_form_smoke_or_pa:
-    - text: "Typ '1' als je het gaat om roken. 🚬.
-            \nTyp '2' als het gaat om lichamelijke beweging. 🚶"
-    - text: "Als het om roken gaat, typ dan 1. 🚬.
-            \nAls het over lichaamsbeweging gaat, typ dan 2. 🚶"
-    - text: "Typ '1' als het gaat om roken. 🚬.
-            \nTyp '2' als het gaat om fysieke activiteit. 🚶"
+    - text: "Typ '1' als je het gaat om roken. 🚬. \n
+             Typ '2' als het gaat om lichamelijke beweging. 🚶️ \n
+             Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
+    - text: "Als het om roken gaat, typ dan 1. 🚬. \n
+             Als het over lichaamsbeweging gaat, typ dan 2. 🚶 \n
+             Als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt, typ dan 3."
+    - text: "Typ '1' als het gaat om roken. 🚬.\n
+             Typ '2' als het gaat om fysieke activiteit. 🚶 \n
+             Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
+  utter_relapse_outro:
+    - text: "Dit gesprek is nu klaar. Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je!"
 
  # Smoke
   utter_specify_smoke:
@@ -375,10 +394,9 @@ responses:
     - text: "Zou je me kunnen vertellen wat er aan de hand is?"
     - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken.1️ \n 
-             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.2️ \n
-             Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum.3️ \n
-             Typ '4' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt.4️"
+    - text: "Typ '1' als je zin hebt om te roken.️ \n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.️ \n
+             Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum."
   utter_smoke_crave_1:
     - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
@@ -412,16 +430,36 @@ responses:
     - text: "Ik ben er om je te ondersteunen."
     - text: "Ik ben er om je te helpen."
   utter_ask_ehbo_me_self:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten.\n
-            Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰\n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Je hebt in de EHBO doos oefeningen voor dit soort momenten.\n
+            Typ '1' als je een oefening uit je EHBO-doos wilt doen. 🧰\n
             Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀\n
             Typ '3' als je zelf een oefening wilt kiezen. 📱"
-    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen?\nTyp dan '1'\n
-            🧰 Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'.\n
-            🔀 Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'."
-    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. Je kunt er een proberen door '1' te typen 🧰\n
-            Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'.\n
-            🔀 Wil je zelf een oefening uitkiezen? Typ dan '3'."
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Wil je een van de oefeningen uit je EHBO-doos proberen?\nTyp dan '1'. 🧰\n
+            Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀\n
+            Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'. 📱"
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten.\nJe kunt er een proberen door '1' te typen. 🧰\n
+            Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀\n
+            Wil je zelf een oefening uitkiezen? Typ dan '3'. 📱"
+    # Do not show option 1 when kit is empty
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: false
+      text: "Er zijn oefeningen voor dit soort momenten.\n
+            Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀\n
+            Typ '3' als je zelf een oefening wilt kiezen. 📱"
 
 # smoke lapse
 
@@ -494,7 +532,7 @@ responses:
             Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
             Typ '1' als je stress had. 🥴 \n
             Typ '2' als je moe was. 😴 \n
-            Typ '3' als je verdrietig was. 😭 \n
+            Typ '3' als je verdrietig was. 😢 \n
             Typ '4' als je boos was. 😠 \n
             Typ '5' als je verveeld was. 🥱 \n
             Typ '6' als je honger had. 🤤 \n
@@ -564,25 +602,88 @@ responses:
 
 
   utter_ask_ehbo_me_self_lapse:
-    - text: "Je hebt in de EHBO doos oefeningen voor op dit soort momenten. \n
-            Typ '1' als je een oefening uit je EHBO-doos wilt doen.🧰 \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Je hebt in de EHBO doos oefeningen voor dit soort momenten. \n
+            Typ '1' als je een oefening uit je EHBO-doos wilt doen. 🧰 \n
             Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀 \n
             Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
             Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt 
             afsluiten."
-    - text: "Wil je een van de oefeningen uit je EHBO-doos proberen? \n
-            Typ dan '1' 🧰 \n
-            Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'.🔀 \n
-            Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'. \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Wil je een van de oefeningen uit je EHBO-doos proberen? \n
+            Typ dan '1'. 🧰 \n
+            Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
+            Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'. 📱\n
             Als je genoeg motivatie en vertrouwen hebt gekregen om te stoppen met roken en het gesprek wilt afsluiten, 
             typ dan '4'."
-    - text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. \n
-            Je kunt er een proberen door '1' te typen 🧰 \n
-            Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'.🔀 \n
-            Wil je zelf een oefening uitkiezen? Typ dan '3'. \n
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. \n
+            Je kunt er een proberen door '1' te typen. 🧰 \n
+            Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
+            Wil je zelf een oefening uitkiezen? Typ dan '3'. 📱\n
             Als je genoeg motivatie en vertrouwen hebt gekregen om te stoppen met roken en het gesprek wilt afsluiten, 
             typ dan '4'."
-
+    # When first aid kit is empty, do not give option to do exercise out of first aid kit
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: false
+      text: "Er zijn oefeningen voor dit soort momenten. \n
+            Typ '2' als ik een oefening voor jou mag kiezen. 🔀 \n
+            Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
+            Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te stoppen met roken en dit gesprek wilt 
+            afsluiten."
+   
+  utter_ask_ehbo_me_self_lapse_pa:
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Je hebt in de EHBO doos oefeningen voor dit soort momenten. \n
+             Typ '1' als je een oefening uit je EHBO-doos wilt doen. 🧰 \n
+             Typ '2' als ik zomaar een oefening voor jou mag kiezen. 🔀 \n
+             Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
+             Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te gaan bewegen en dit gesprek wilt 
+             afsluiten."
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "Wil je een van de oefeningen uit je EHBO-doos proberen? \n
+             Typ dan '1'. 🧰 \n
+             Wil je dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
+             Als je zelf wilt bepalen welke oefening je wilt doen, typ dan '3'. 📱\n
+             Als je genoeg motivatie en vertrouwen hebt gekregen om te gaan bewegen en het gesprek wilt afsluiten, 
+             typ dan '4'."
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: true
+      text: "In jouw EHBO-doos zitten oefeningen voor dit soort momenten. \n
+             Je kunt er een proberen door '1' te typen. 🧰 \n
+             Heb je liever dat ik zomaar een oefening voor je kies? Typ dan '2'. 🔀 \n
+             Wil je zelf een oefening uitkiezen? Typ dan '3'. 📱\n
+             Als je genoeg motivatie en vertrouwen hebt gekregen om te gaan bewegen en het gesprek wilt afsluiten, 
+             typ dan '4'."
+    # When first aid kit is empty, do not print option 1.
+    - condition:
+        - type: slot
+          name: first_aid_kit_filled
+          value: false
+      text: "Er zijn oefeningen voor dit soort momenten. \n
+             Typ '2' als ik een oefening voor jou mag kiezen. 🔀 \n
+             Typ '3' als je zelf een oefening wilt kiezen. 📱 \n
+             Typ '4' als je genoeg motivatie en vertrouwen hebt om weer te gaan bewegen en dit gesprek wilt 
+             afsluiten."
 
 # 4a
   utter_ask_hrs_new_activity_slot:
@@ -621,11 +722,10 @@ responses:
   utter_hrs_how_did_you_feel_1:
     - text: "Kun je mij vertellen hoe je je voelde toen je zin kreeg om te roken?"
   utter_ask_hrs_feeling_slot:
-    - text: "Je mag meerdere antwoorden geven. 
-            Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
+    - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer.\n
             Typ '1' als je stress had. 🥴  \n
             Typ '2' als je moe was. 😴  \n  
-            Typ '3' als je verdrietig was. 😭     \n
+            Typ '3' als je verdrietig was. 😢 \n
             Typ '4' als je boos was. 😠 \n
             Typ '5' als je verveeld was. 🥱 \n
             Typ '6' als je honger had. 🤤 \n
@@ -869,7 +969,7 @@ responses:
   utter_pa_lapse_4:
     - text: "Dankjewel dat je ondanks dit de tijd neemt om met mij te praten!"
   utter_pa_lapse_5:
-    - text: "Wat heb je verder overdag?"
+    - text: "Wat heb je verder gedaan overdag?"
   utter_pa_lapse_6:
     - text: "Door vaker te kijken naar situaties waarin je geen zin hebt om in beweging te komen, kun je leren patronen 
             herkennen.💡 Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
@@ -965,6 +1065,7 @@ responses:
 actions:
   - action_check_reasons
   - action_launch_goal_setting
+  - action_set_slot_relapse_dialog
   - action_set_slot_relapse_dialog_hrs
   - action_set_slot_relapse_dialog_lapse
   - action_set_slot_relapse_dialog_pa
@@ -985,6 +1086,7 @@ actions:
   - show_chosen_coping_activity
   - show_first_coping_activity
   - show_first_coping_activity_pa
+  - store_crave_lapse_relapse
   - store_event_smoke
   - store_how_feel_smoke
   - store_hrs_feeling
@@ -1005,6 +1107,7 @@ actions:
   - validate_crave_lapse_relapse_form
   - validate_ehbo_me_self_form
   - validate_ehbo_me_self_lapse_form
+  - validate_ehbo_me_self_lapse_pa_form
   - validate_hrs_activity_form
   - validate_hrs_choose_coping_activity_form
   - validate_hrs_enough_motivation_form
@@ -1039,6 +1142,9 @@ forms:
   ehbo_me_self_lapse_form:
     required_slots:
       - ehbo_me_self_lapse
+  ehbo_me_self_lapse_pa_form:
+    required_slots:
+      - ehbo_me_self_lapse_pa
   type_and_number_smoke_form:
     required_slots:
       - number_smoke

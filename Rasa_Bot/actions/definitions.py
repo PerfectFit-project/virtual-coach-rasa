@@ -39,9 +39,9 @@ AFTERNOON = (12, 18)
 EVENING = (18, 24)
 
 # Times to start components during times
-MORNING_SEND_TIME = 7
-AFTERNOON_SEND_TIME = 15
-EVENING_SEND_TIME  = 20
+MORNING_SEND_TIME = 8
+AFTERNOON_SEND_TIME = 16
+EVENING_SEND_TIME = 21
 
 # Daypart names in Dutch
 DAYPART_NAMES_DUTCH = ["ochtend", "middag", "avond"]

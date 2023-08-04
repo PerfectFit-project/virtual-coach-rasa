@@ -10,9 +10,9 @@ from rasa_sdk.events import FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 
-from .definitions import REDIS_URL
-from .definitions import TIMEZONE
-from .definitions import MORNING, AFTERNOON, EVENING
+from .definitions import (MORNING, AFTERNOON, EVENING,
+                          MORNING_SEND_TIME, AFTERNOON_SEND_TIME, EVENING_SEND_TIME,
+                          REDIS_URL, TIMEZONE)
 from .helper import get_latest_bot_utterance
 from . import validator
 
@@ -80,9 +80,9 @@ def get_reschedule_date(timestamp: float, choice: int) -> datetime.datetime:
 
     dt_object = datetime.datetime.fromtimestamp(timestamp, TIMEZONE)
 
-    morning_time = dt_object.replace(hour=8, minute=0, second=0)
-    afternoon_time = dt_object.replace(hour=16, minute=0, second=0)
-    evening_time = dt_object.replace(hour=21, minute=0, second=0)
+    morning_time = dt_object.replace(hour=MORNING_SEND_TIME, minute=0, second=0)
+    afternoon_time = dt_object.replace(hour=AFTERNOON_SEND_TIME, minute=0, second=0)
+    evening_time = dt_object.replace(hour=EVENING_SEND_TIME, minute=0, second=0)
 
     if choice == 1:
         reschedule_time = dt_object + datetime.timedelta(hours=1)

@@ -8,6 +8,30 @@ rules:
   - action: action_select_menu
   - action: action_end_dialog
 
+- rule: trigger the menu options externally
+  steps:
+  - intent: EXTERNAL_central_options
+  - action: action_select_menu
+  - action: action_end_dialog
+
+- rule: trigger the menu options if ehbo is not available
+  steps:
+  - action: utter_ehbo_not_available
+  - action: action_select_menu
+  - action: action_end_dialog
+
+- rule: trigger the menu options if verder not available
+  steps:
+  - action: utter_no_valid_uncompleted_dialog
+  - action: action_select_menu
+  - action: action_end_dialog
+
+- rule: trigger the menu options if hrs not available
+  steps:
+  - action: utter_help_not_available
+  - action: action_select_menu
+  - action: action_end_dialog
+
 - rule: help command
   steps:
   - intent: help_intent
@@ -39,29 +63,3 @@ rules:
   steps:
   - intent: continue_dialog_intent
   - action: action_trigger_uncompleted_dialog
-
-- rule: central mode with all options
-  steps:
-  - intent: EXTERNAL_central_options
-  - action: utter_central_mode_options
-  - action: action_end_dialog
-
-- rule: central mode without ehbo
-  steps:
-  - intent: EXTERNAL_central_options_no_ehbo
-  - action: utter_central_mode_options_no_ehbo
-  - action: action_end_dialog
-  
-- rule: no valid uncompleted dialog with ehbo
-  steps:
-  - intent: EXTERNAL_no_valid_uncompleted_dialog
-  - action: utter_no_valid_uncompleted_dialog
-  - action: utter_central_mode_options_without_verder
-  - action: action_end_dialog
-
-- rule: no valid uncompleted dialog without ehbo
-  steps:
-  - intent: EXTERNAL_no_valid_uncompleted_dialog_no_ehbo
-  - action: utter_no_valid_uncompleted_dialog
-  - action: utter_central_mode_options_without_verder_no_ehbo
-  - action: action_end_dialog

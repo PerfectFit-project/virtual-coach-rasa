@@ -13,10 +13,11 @@ rules:
 ## Step goal notification
 - rule: send step goal notification
   steps:
-  - intent: EXTERNAL_pa_step_goal_notification  # TODO: set trigger
+  - intent: EXTERNAL_pa_step_goal_notification
   - action: action_notifications_get_daily_step_goal
   - action: utter_notifications_step_goal_1
   - action: utter_notifications_step_goal_2
+  - action: action_notifications_check_watch_wear
   - action: pause_one_minute
 
 ## finish dialog notification
@@ -43,13 +44,13 @@ rules:
     - action: pause_one_minute
 
 ## Step goal and intensive pa notification
-- rule: step goal and intensive pa notification  # TODO: set trigger
+- rule: step goal and intensive pa notification
   steps:
     - intent: EXTERNAL_pa_intensity_notification
     - action: action_notifications_weekly_intensity_minutes_from_db
     - action: utter_notifications_step_goal_intensive_pa_1
     - action: utter_notifications_step_goal_intensive_pa_2
-    - action: utter_notifications_step_goal_intensive_pa_3
+    - action: action_notifications_check_watch_wear
     - action: pause_one_minute
 
 ## new quit date notification

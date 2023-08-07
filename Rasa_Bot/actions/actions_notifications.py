@@ -43,16 +43,15 @@ class ActionNoticiationsCheckWatchWear(Action):
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=today)
 
         # Check how many days steps < INACTIVE_THRESHOLD_STEPS
-        steps = []
-        for day in steps_data:
-            steps.append(day['steps'])
-        days_insufficient = sum(np.array(steps) < INACTIVE_THRESHOLD_STEPS)
+        steps = [day['steps'] for day in steps_data]
+        num_days = len(steps_data)
+        if num_days == 0:
+            dispatcher.utter_message(response="utter_notifications_contact_researcher_no_data")
+            return []
 
+        days_insufficient = sum(np.array(steps) < INACTIVE_THRESHOLD_STEPS)
         # Check for last 3 days: if data is missing, or if present <1000
-        if days_insufficient == 3 or \
-                ((len(steps_data) == 2) and (days_insufficient == 2)) or \
-                ((len(steps_data) == 1) and (days_insufficient == 1)) or \
-                (len(steps_data) == 0):
+        if num_days == days_insufficient:
             dispatcher.utter_message(response="utter_notifications_contact_researcher_no_data")
             return []
 

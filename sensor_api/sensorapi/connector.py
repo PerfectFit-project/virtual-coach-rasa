@@ -223,7 +223,7 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     return step_goals, actual_steps, date_list, goals_achieved
 
 
-def get_daily_step_goal_from_db(user_id) -> Optional[int]:
+def get_daily_step_goal(user_id) -> Optional[int]:
     """
     Get daily step goal for a given user using data from the step count database.
 

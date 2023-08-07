@@ -113,7 +113,7 @@ responses:
 
 
 actions:
-  - action_notifications_get_daily_step_goal_from_db
+  - action_notifications_get_daily_step_goal
   - action_notifications_weekly_intensity_minutes_from_db
   - action_go_to_central_mode_options
   - pause_one_minute

@@ -14,7 +14,7 @@ rules:
 - rule: send step goal notification
   steps:
   - intent: EXTERNAL_pa_step_goal_notification  # TODO: set trigger
-  - action: action_notifications_get_daily_step_goal_from_db
+  - action: action_notifications_get_daily_step_goal
   - action: utter_notifications_step_goal_1
   - action: utter_notifications_step_goal_2
   - action: pause_one_minute

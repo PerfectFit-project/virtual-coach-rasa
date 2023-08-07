@@ -2,8 +2,10 @@ from celery import Celery
 from rasa_sdk import Action
 from rasa_sdk.events import SlotSet
 from .definitions import REDIS_URL
-from .helper import get_daily_step_goal_from_db, get_weekly_intensity_minutes_goal_from_db
+from .helper import get_weekly_intensity_minutes_goal_from_db
 import datetime
+import logging
+from sensorapi.connector import get_daily_step_goal_from_db
 
 celery = Celery(broker=REDIS_URL)
 
@@ -12,8 +14,15 @@ class ActionGetDailyStepGoalFromDb(Action):
         return "action_notifications_get_daily_step_goal_from_db"
 
     async def run(self, dispatcher, tracker, domain):
+        # Get sender ID from slot, this is a string
+        user_id = tracker.current_state()['sender_id']
         # Get pa daily step goal
-        pa_goal = get_daily_step_goal_from_db()
+        pa_goal = get_daily_step_goal_from_db(user_id)
+        if pa_goal is None:
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            logging.error(f"User id: {user_id}, dialog: notification or goal setting,"
+                          "action: action_notifications_get_daily_step_goal_from_db")
+            return [SlotSet("notifications_daily_step_goal", 2000)]
 
         return [SlotSet("notifications_daily_step_goal", pa_goal)]
 

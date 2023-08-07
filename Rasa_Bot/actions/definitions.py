@@ -58,6 +58,7 @@ NUM_TOP_ACTIVITIES = 5
 
 # Images for file sharing
 FILE_PATH_IMAGE_PA = '/app/hoe_intensief_beweeg_jij.jpg'
+FILE_PATH_IMAGE_ERROR = '/app/pa_overview_error.PNG'
 
 ### Persuasion in general activity dialog
 # Optimal policy based on the one computed in the paper by Albers et al. (2023)
@@ -127,6 +128,14 @@ activities_categories = {1: 'self-related',
 TRIGGER_INTENT = 'celery_tasks.trigger_intent'
 # pause the conversation and trigger a new component afterwards
 PAUSE_AND_TRIGGER = 'celery_tasks.pause_and_trigger'
+
+# PA Group definitions
+GROUP_2_THRESHOLD_TOTAL_STEPS = 56000
+SUFFICIENT_DAILY_STEPS = 8000
+GROUP_2_THRESHOLD_DAILY_STEPS = 4
+
+# minimum amount of intensity minutes
+MINIMUM_INTENSITY_MINUTES = 10
 
 
 class FsmStates:

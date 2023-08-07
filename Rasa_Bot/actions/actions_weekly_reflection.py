@@ -1,29 +1,35 @@
 """
 Contains custom actions related to the weekly reflection dialogue
 """
-
 import datetime
+from typing import Any, Dict, Text
+import logging
 from dateutil.relativedelta import relativedelta
-from . import validator
-from .definitions import REDIS_URL
-from .helper import (get_intensity_minutes_goal,
-                     get_intervention_component_id, 
-                     get_last_completed_dialog_part_from_db,
-                     get_latest_bot_utterance, 
-                     get_pa_group,
-                     get_user, 
-                     get_user_intervention_state_hrs,
-                     make_step_overview,
-                     set_pa_group,
-                     store_dialog_part_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from typing import Any, Dict, Text
+from . import validator
+from .definitions import (FILE_PATH_IMAGE_ERROR,
+                          GROUP_2_THRESHOLD_DAILY_STEPS,
+                          GROUP_2_THRESHOLD_TOTAL_STEPS,
+                          MINIMUM_INTENSITY_MINUTES,
+                          SUFFICIENT_DAILY_STEPS,
+                          REDIS_URL)
+from .helper import (get_intensity_minutes_goal,
+                     get_intervention_component_id,
+                     get_last_completed_dialog_part_from_db,
+                     get_latest_bot_utterance,
+                     get_pa_group,
+                     get_user,
+                     get_user_intervention_state_hrs,
+                     make_step_overview,
+                     set_intensity_minutes_goal,
+                     set_pa_group_to_db,
+                     store_dialog_part_to_db)
 from virtual_coach_db.helper.definitions import Components
-import logging
+from sensorapi.connector import get_steps_data, get_step_goals_and_steps, get_intensity_minutes_data
 
 
 celery = Celery(broker=REDIS_URL)
@@ -42,7 +48,7 @@ class ActionSaveWeeklyReflectionDialogPart1(Action):
                                 part = 1)
 
         return []
-    
+
     
 class ActionSaveWeeklyReflectionDialogPart2(Action):
     """To save first part of weekly-reflection dialog"""
@@ -198,9 +204,25 @@ class WhichPaGroup(Action):
         pa_group = get_pa_group(user_id)
 
         if pa_group is None:
-            pa_group = 2
+            pa_group = 1
 
         return [SlotSet('pa_group', pa_group)]
+
+
+class SaveNewGoal(Action):
+    def name(self):
+        return "action_save_new_goal"
+
+    async def run(self, dispatcher, tracker, domain):
+        # Get user id and set constants
+        user_id = int(tracker.current_state()['sender_id'])
+        intensity_minutes_goal = int(tracker.get_slot('intensity_minutes_goal'))
+
+        # save the new goal to the DB
+
+        set_intensity_minutes_goal(user_id, intensity_minutes_goal)
+
+        return []
 
 
 class SetPaGroup(Action):
@@ -208,11 +230,25 @@ class SetPaGroup(Action):
         return "action_set_pa_group"
 
     async def run(self, dispatcher, tracker, domain):
+        # Get user id and set constants
         user_id = int(tracker.current_state()['sender_id'])
-        ## TODO retrieve the steps number to decide which is the group
-        pa_group = 2
 
-        set_pa_group(user_id, pa_group)
+        # Get steps data last 7 days
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=7)
+        steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+        total_steps = sum(day['steps'] for day in steps_data)
+        daily_steps = sum((day['steps'] >= SUFFICIENT_DAILY_STEPS) for day in steps_data)
+
+        if (total_steps >= GROUP_2_THRESHOLD_TOTAL_STEPS) and\
+                (daily_steps >= GROUP_2_THRESHOLD_DAILY_STEPS):
+            pa_group = 2
+
+        else:
+            pa_group = 1
+
+        set_pa_group_to_db(user_id, pa_group)
 
         return [SlotSet('pa_group', pa_group)]
 
@@ -222,8 +258,20 @@ class SetStepGoalDays(Action):
         return "action_set_step_goal_days"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO This method should get step goal days and set accordingly
-        step_goal_days = 4
+        user_id = int(tracker.current_state()['sender_id'])
+
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=16)
+        steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+        _, _, _, step_goal_days = get_step_goals_and_steps(steps_data, start, end)
+
+        if step_goal_days is None:
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            logging.error(f'User id: {user_id}, dialog: weekly reflection,'
+                          'action: action_set_step_goal_days')
+            return [SlotSet('step_goal_days', 0)]
+
         return [SlotSet('step_goal_days', step_goal_days)]
 
 
@@ -232,8 +280,7 @@ class StepGoalUtterances(Action):
         return "action_step_goal_utterances"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO retrieve amount of days that step goal was met, then set the slot
-        step_goal_days = 7
+        step_goal_days = tracker.get_slot('step_goal_days')
         if step_goal_days > 5:
             dispatcher.utter_message(response="utter_overview_group1_4")
         elif 3 < step_goal_days < 6:
@@ -251,9 +298,47 @@ class SetIntensityMinutes(Action):
         return "action_set_intensity_minutes"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO This method should get minutes and set the slot accordingly
-        intensity_minutes = 50
+
+        user_id = int(tracker.current_state()['sender_id'])
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=7)
+
+
+        intensity_minutes = get_intensity_minutes_data(user_id, start, end)
+
+        if intensity_minutes is None:
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            logging.error(f'User id: {user_id}, dialog: weekly reflection,'
+                          'action: action_set_intensity_minutes')
+            return [SlotSet('intensity_minutes', 0)]
+
         return [SlotSet('intensity_minutes', intensity_minutes)]
+
+
+class SetIntensityMinutesGoalProvious(Action):
+    def name(self):
+        return "action_set_intensity_minutes_goal_previous"
+
+    async def run(self, dispatcher, tracker, domain):
+        """
+        retrieve the intensity minutes goal of the previous week, and sets the correspondent slot
+
+        """
+        user_id = int(tracker.current_state()['sender_id'])
+
+        # get the intensive minutes goal for the previous week
+        previous_goal = get_intensity_minutes_goal(user_id)
+
+        # the first time, it's set to 15 minutes  ## Bouke: value from last week instead.
+        if previous_goal is None:
+            end = datetime.datetime.now()
+            start = end - datetime.timedelta(days=7)
+
+            previous_goal = get_intensity_minutes_data(user_id, start, end)
+            if previous_goal is None or previous_goal < MINIMUM_INTENSITY_MINUTES:
+                previous_goal = MINIMUM_INTENSITY_MINUTES
+
+        return [SlotSet('intensity_minutes_goal_previous', previous_goal)]
 
 
 class SetIntensityMinutesGoal(Action):
@@ -261,25 +346,37 @@ class SetIntensityMinutesGoal(Action):
         return "action_set_intensity_minutes_goal"
 
     async def run(self, dispatcher, tracker, domain):
+        # if the slot has been already set in some other branch of the dialog, just return
+        new_goal = tracker.get_slot('intensity_minutes_goal')
+        if new_goal is not None:
+            return[]
 
         user_id = int(tracker.current_state()['sender_id'])
 
         # get the intensive minutes goal for the previous week
-        previous_goal = get_intensity_minutes_goal(user_id)
+        previous_goal = tracker.get_slot('intensity_minutes_goal_previous')
 
-        # the first time, it's set to 15 minutes
+        # If for some reason the slot is empty
         if previous_goal is None:
-            previous_goal = 15
+            # get the intensive minutes goal for the previous week
+            previous_goal = get_intensity_minutes_goal(user_id)
 
-        # the new goal is the previous one, plus 15 minutes
-        intensity_minutes = previous_goal + 15
+            # the first time, it's set to 15 minutes  ## Bouke: value from last week instead.
+            if previous_goal is None:
+                end = datetime.datetime.now()
+                start = end - datetime.timedelta(days=7)
 
-        # save the new goal to the DB
+                new_goal = get_intensity_minutes_data(user_id, start, end)
+                if new_goal is None or new_goal < MINIMUM_INTENSITY_MINUTES:
+                    new_goal = MINIMUM_INTENSITY_MINUTES
+            else:
+                new_goal = previous_goal + 15
 
-        #TODO: save to db new value
-        # set_intensity_minutes_goal(user_id, intensity_minutes)
+        else:
+            # the new goal is the previous one, plus 15 minutes
+            new_goal = previous_goal + 15
 
-        return [SlotSet('intensity_minutes_goal', intensity_minutes)]
+        return [SlotSet('intensity_minutes_goal', new_goal)]
 
 
 class ShowPaOverview(Action):
@@ -287,13 +384,20 @@ class ShowPaOverview(Action):
         return "action_show_pa_overview"
 
     async def run(self, dispatcher, tracker, domain):
-        ## TODO retrieve step goal per day and dates, placeholder for now
+        # Get data from API
+        user_id = int(tracker.current_state()['sender_id'])
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=16)
+        steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
+        # Get steps, goals and dates
+        step_goal, step_array, date_array, _ = get_step_goals_and_steps(steps_data, start, end)
 
-        ## TODO replace these stepholders with the database data
-        date_array = ['Mon 16', 'Tue 17', 'Wed 18', 'Thu 19', 'Fri 20', 'Sat 21', 'Sun 22']
-        step_array = [5000, 6000, 7000, 8000, 9000, 10000, 11000]
-        step_goal = [4000, 7000, 6000, 9000, 8000, 11000, 10000]
+        if date_array is None:
+            logging.error(f'user id: {user_id}, dialog: weekly reflection,'
+                          'action: action_show_pa_overview')
+
+            return [SlotSet("upload_file_path", FILE_PATH_IMAGE_ERROR)]
 
         fig = make_step_overview(date_array, step_array, step_goal)
 

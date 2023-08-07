@@ -771,15 +771,33 @@ responses:
     - text: "Wat goed om te horen!"
     - text: "Het is fijn om dat te horen!"
     - text: "Dat is fantastisch om te weten!"
+  utter_good_to_hear_2_pa_a:
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! 😊 Succes! Je kan het!💪 Dit gesprek is nu klaar."
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! 😊 Ga ervoor! Ik geloof in jou en weet zeker dat je het kunt! 💪 Dit was het voor nu."
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! 😊 Ik wens je alle succes toe! Ik weet zeker dat je het kunt! 💪 We zijn nu klaar met het gesprek."
+    - text: "Onthoud dat je me altijd om hulp kunt vragen. Ik sta voor je klaar! 😊 Ik wens je alle succes toe! Ik weet zeker dat je het kunt! 💪 We zijn nu klaar met het gesprek."
+    - text: "Onthoud dat je me altijd om hulp kunt vragen. Ik sta voor je klaar! 😊 Ga ervoor! Ik geloof in jou en weet zeker dat je het kunt! 💪 Dit was het voor nu."
+    - text: "Onthoud dat je me altijd om hulp kunt vragen. Ik sta voor je klaar! 😊 Succes! Je kan het!💪 Dit gesprek is nu klaar."
+    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ga ervoor! Ik geloof in jou en weet zeker dat je het kunt! 💪 Dit was het voor nu."
+    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Succes! Je kan het!💪 Dit gesprek is nu klaar."
+    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ik wens je alle succes toe! Ik weet zeker dat je het kunt! 💪 We zijn nu klaar met het gesprek."
+  utter_good_to_hear_2_pa_b:
+    - text: "Dit gesprek is nu klaar. Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het!😊"
+    - text: "We zijn nu klaar met het gesprek. Onthoud dat ik er altijd voor je ben als je hulp nodig hebt. Je kunt het, veel succes! 😊"
+    - text: "Dit was het voor nu. Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ik ben er om je te steunen en ik geloof in je! Veel succes! 😊"
+  utter_good_to_hear_2_end:
+    - text: "Dit gesprek is nu klaar. Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het!😊"
+    - text: "We zijn nu klaar met het gesprek. Vergeet niet dat ik er altijd voor je ben als je hulp nodig hebt. Je kan het, succes!"
+    - text: "Dit was het voor nu. Onthoud dat ik er altijd voor je ben. Ik geloof in jou, je kan het!"
   utter_good_to_hear_2:
-    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het!😊"
-    - text: "Onthoud dat ik er altijd voor je ben als je hulp nodig hebt. Je kunt het, veel succes! 😊"
-    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ik ben er om je te steunen en ik geloof in je! Veel succes! 😊"
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je!😊"
+    - text: "Aarzel niet om hulp te vragen als je het nodig hebt, want ik ben er om je te ondersteunen!😊"
+    - text: "Onthoud dat je me altijd kunt vragen om hulp. Ik sta klaar om je te helpen!😊"
   utter_good_to_hear_3:
     - text: "Heb je nog een vraag? Of wil je een extra steuntje in de rug? Je kunt dan altijd de gratis Stoplijn bellen:
-            0800-1995.📞 De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Succes, je kan het!"
+            0800-1995.📞 De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Succes, je kan het! Dit gesprek is nu klaar."
     - text: "Als je nog vragen hebt of extra steun nodig hebt, bel dan gerust de gratis Stoplijn op 0800-1995.📞 Ze zijn
-            beschikbaar van maandag tot en met vrijdag tussen 9 en 17 uur. Zet hem op, je kunt het!"
+            beschikbaar van maandag tot en met vrijdag tussen 9 en 17 uur. Zet hem op, je kunt het! We zijn nu klaar met het gesprek."
   utter_bad_to_hear_1:
     - text: "Dat vind ik vervelend om te horen."
     - text: "Dat spijt me om te horen."
@@ -1051,7 +1069,7 @@ responses:
             of zij is vaak goed op de hoogte van de mogelijkheden in jouw omgeving. Dat was alles voor nu. We spreken 
             elkaar weer de volgende keer!"
     - text: "Als je behoefte hebt aan meer hulp om in beweging te komen, overweeg dan een afspraak te maken met je
-            huisarts. Hij of zij kan je informeren over de opties die beschikbaar zijn in jouw buurt.  Dit was alles 
+            huisarts. Hij of zij kan je informeren over de opties die beschikbaar zijn in jouw buurt. Dit was alles 
             voor vandaag. Tot de volgende keer!"
   utter_pa_sick:
     - text: "Wat vervelend voor je, ik hoop dat je snel weer beter bent. Laten wij over binnenkort 

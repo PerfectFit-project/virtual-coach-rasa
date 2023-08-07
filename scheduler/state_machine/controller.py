@@ -124,9 +124,10 @@ class OnboardingState(State):
         fs_time = create_new_date(start_date=start_date,
                                   time_delta=FUTURE_SELF_INTRO)
 
-        # if the expected scheduling time is already passed, launch the component now
+        # if the expected scheduling time is already passed, don't show
+        # (the long version has just been shown)
         if fs_time.date() <= date.today():
-            fs_time = None
+            return
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.FUTURE_SELF_SHORT,

@@ -5,10 +5,9 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
 from typing import Text, Dict, Any
-from virtual_coach_db.helper.definitions import (VideoLinks, Components, ComponentsTriggers,
-                                                 DialogExpectedDuration)
+from virtual_coach_db.helper.definitions import (VideoLinks, Components, ComponentsTriggers)
 from . import validator
-from .definitions import PAUSE_AND_TRIGGER, REDIS_URL, TRIGGER_INTENT
+from .definitions import PAUSE_AND_TRIGGER, REDIS_URL, TRIGGER_INTENT, PAUSE_TIME
 from .helper import get_latest_bot_utterance
 
 celery = Celery(broker=REDIS_URL)
@@ -76,13 +75,8 @@ class DelayedMessage(Action):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
         new_intent = ComponentsTriggers.DONE_VIDEO
 
-        dialog = str(tracker.get_slot('current_intervention_component'))
-        try:
-            duration = (DialogExpectedDuration[dialog]) * 60
-        except Exception:
-            duration = 30
-
-        time = datetime.datetime.now() + datetime.timedelta(seconds=duration)
+        # PAUSE_TIME waiting time after the video link is sent
+        time = datetime.datetime.now() + datetime.timedelta(seconds=PAUSE_TIME)
         celery.send_task(PAUSE_AND_TRIGGER,
                          (user_id, new_intent, time))
         return []

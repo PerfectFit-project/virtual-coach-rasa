@@ -200,6 +200,8 @@ class TrackingState(State):
 
     def on_new_day(self, current_date: date):
         logging.info('current date: %s', current_date)
+        self.check_if_end_date(current_date)
+
         # at day 7 activity C2.9 has to be proposed
 
         start_date = get_start_date(self.user_id)
@@ -213,6 +215,7 @@ class TrackingState(State):
         intervention_day = retrieve_intervention_day(self.user_id, date_to_check)
         # the Goal Setting state starts on day 10 of the intervention
         if intervention_day >= TRACKING_DURATION:
+            self.set_new_state(GoalsSettingState(self.user_id))
             return True
 
         return False

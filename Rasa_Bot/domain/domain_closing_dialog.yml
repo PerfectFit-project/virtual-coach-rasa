@@ -303,7 +303,7 @@ responses:
     - text: "Ik vond het leuk om samen met jou het Perfect Fit programma te doen.🤝 Ik hoop dat jij er ook veel aan hebt
              gehad."
   utter_closing_closing_8:
-    - text: "Dan wens ik je nu alle goeds!😊"
+    - text: "Dan wens ik je nu alle goeds!😊 Dit is mijn laatste berichtje."
 
   utter_ask_closing_reflection_smoke_done:
     - text: "Typ 'klaar' als je klaar bent om verder te gaan."

@@ -87,8 +87,9 @@ responses:
      - text: "Prima, ik raad je aan om deze oefening zo snel mogelijk te doen. Dit helpt je bij het bereiken van je doelen!"
      - text: "Prima, ik stel voor om deze oefening zo snel mogelijk te doen. Dit ondersteunt je bij het behalen van je doelen!"
   utter_rescheduling_option_chosen:
-     - text: "Oké, ik spreek je dan weer! 🙋"
-     - text: "Goed, tot later! 🙋"
+     - text: "Oké, dan is het gesprek voor nu klaar. Ik spreek je dan later weer! 🙋"
+     - text: "Prima, dan zijn we nu klaar. Tot later!🙋"
+     - text: "Mooi, dit was het dan voor nu. Dan spreek ik je later!🙋"
   utter_user_chose_now:
      - text: "Mooi, we gaan aan de slag! 😊"
   utter_ask_chosen_daypart:

@@ -124,7 +124,8 @@ class OnboardingState(State):
         fs_time = create_new_date(start_date=start_date,
                                   time_delta=FUTURE_SELF_INTRO)
 
-        # if the expected scheduling time is already passed, don't show the short version of the future self dialog
+        # if the expected scheduling time is already passed,
+        # don't show the short version of the future self dialog
 
         # (the long version has just been shown)
         if fs_time.date() <= date.today():

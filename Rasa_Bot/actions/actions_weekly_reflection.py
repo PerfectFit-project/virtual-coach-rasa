@@ -267,7 +267,8 @@ class SetStepGoalDays(Action):
         _, _, _, step_goal_days = get_step_goals_and_steps(steps_data, start, end)
 
         if step_goal_days is None:
-            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker:"
+                                              "perfectfit@lumc.nl")
             logging.error(f'User id: {user_id}, dialog: weekly reflection,'
                           'action: action_set_step_goal_days')
             return [SlotSet('step_goal_days', 0)]
@@ -307,7 +308,8 @@ class SetIntensityMinutes(Action):
         intensity_minutes = get_intensity_minutes_data(user_id, start, end)
 
         if intensity_minutes is None:
-            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker:"
+                                              "perfectfit@lumc.nl")
             logging.error(f'User id: {user_id}, dialog: weekly reflection,'
                           'action: action_set_intensity_minutes')
             return [SlotSet('intensity_minutes', 0)]

@@ -19,7 +19,8 @@ class ActionGetDailyStepGoalFromDb(Action):
         # Get pa daily step goal
         pa_goal = get_daily_step_goal_from_db(user_id)
         if pa_goal is None:
-            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker")
+            dispatcher.utter_message(response="Er is iets mis met de data. Contact de onderzoeker:"
+                                              "perfectfit@lumc.nl")
             logging.error(f"User id: {user_id}, dialog: notification or goal setting,"
                           "action: action_notifications_get_daily_step_goal_from_db")
             return [SlotSet("notifications_daily_step_goal", 2000)]

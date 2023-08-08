@@ -97,10 +97,6 @@ responses:
     - text: "Wil je weten hoeveel stappen je al gezet hebt? En hoeveel minuten je intensief bewogen hebt? Kijk dan op
             je horloge. ⌚ In de handleiding van het Perfect Fit programma, die je aan het begin hebt ontvangen, vind je
             instructies over hoe je dit kunt doen. 📋"
-  utter_notifications_step_goal_intensive_pa_3:
-    - text: "Blijf doorzetten! 💪🏼"
-    - text: "Blijf zo doorgaan! 💪🏼"
-    - text: "Ga zo door! 💪🏼"
 
 # New quit date notification
   utter_notifications_new_quit_date_notification_1:
@@ -109,12 +105,31 @@ responses:
   utter_notifications_new_quit_date_notification_2:
     - text: "Succes! 💪🏼"
 
+  utter_notifications_reminder_wear_watch_1:
+    - text: "Vergeet vandaag niet om het horloge om te doen en controleer of bluetooth op de
+             telefoon aan staat."
+    - text: "Controleer of bluetooth op de telefoon aan staan en vergeet natuurlijk niet het
+             horloge te dragen vandaag."
+    - text: "Zorg ervoor dat je het horloge draagt en controleer of bluetooth op de telefoon aan
+             staat."
+  utter_notifications_reminder_wear_watch_2:
+    - text: "Mocht je even niet meer weten hoe je dit doet? Kijk dan in de handleiding die je van
+             onderzoekers gekregen hebt of neem contact op met de onderzoekers voor hulp."
+    - text: "In de handleiding die je hebt gekregen van de onderzoekers staat hoe je dit kunt doen.
+             Je mag ook de onderzoekers een bericht sturen voor hulp."
+    - text: "Als je even niet meer weet hoe dit moet kun je in de handleiding kijken die je van de
+             onderzoekers hebt gekregen. Je mag ook contact opnemen met de onderzoekers voor hulp."
+  utter_notifications_contact_researcher_no_data:
+    - text: "Het lijkt er op dat de data van de smartwatch helaas niet goed binnenkomt. Neem contact
+             op met de onderzoeker."
+
 #forms:
 
 
 actions:
-  - action_notifications_get_daily_step_goal_from_db
+  - action_notifications_get_daily_step_goal
   - action_notifications_weekly_intensity_minutes_from_db
   - action_go_to_central_mode_options
   - pause_one_minute
+  - action_notifications_check_watch_wear
 

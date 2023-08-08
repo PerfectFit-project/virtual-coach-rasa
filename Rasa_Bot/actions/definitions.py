@@ -137,6 +137,9 @@ GROUP_2_THRESHOLD_DAILY_STEPS = 4
 # minimum amount of intensity minutes
 MINIMUM_INTENSITY_MINUTES = 10
 
+# Minimum amount of steps per day before receive a 'wear watch reminder'
+INACTIVE_THRESHOLD_STEPS = 1000
+
 
 class FsmStates:
     ONBOARDING = "Onboarding"

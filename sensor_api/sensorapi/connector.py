@@ -214,7 +214,7 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     actual_steps = [int(x) if not np.isnan(x) else 0 for x in steps[-7:]]
 
     # Calculate number of days goal is achieved
-    goals_achieved = sum(np.array(step_goals*PA_LAPSE_MODERATION) < np.array(actual_steps))
+    goals_achieved = sum(np.array(step_goals)*PA_LAPSE_MODERATION < np.array(actual_steps))
 
     # Get list with dates
     date_list = df.index[-7:]
@@ -223,7 +223,7 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     return step_goals, actual_steps, date_list, goals_achieved
 
 
-def get_daily_step_goal_from_db(user_id) -> Optional[int]:
+def get_daily_step_goal(user_id) -> Optional[int]:
     """
     Get daily step goal for a given user using data from the step count database.
 

@@ -318,7 +318,7 @@ rules:
   - action: utter_step_goal_pa_1  # part 4 starts here
   - action: utter_step_goal_pa_2
   - action: utter_step_goal_pa_3
-  - action: action_notifications_get_daily_step_goal_from_db
+  - action: action_notifications_get_daily_step_goal
   - action: utter_step_goal_pa_4
   - action: utter_step_goal_pa_5
   - action: utter_step_goal_pa_6

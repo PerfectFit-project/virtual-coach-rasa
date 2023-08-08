@@ -2,8 +2,8 @@ celery
 Django==4.2.2
 numpy
 python-dotenv
-git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.25
+git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.26
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.5
-git+https://github.com/PerfectFit-project/virtual-coach-rasa@333-configure-step-count-in-dialogs#subdirectory=sensor_api
+git+https://github.com/PerfectFit-project/virtual-coach-rasa@sensor-testing#subdirectory=sensor_api
 redis
 requests

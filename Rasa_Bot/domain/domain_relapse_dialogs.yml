@@ -747,8 +747,8 @@ responses:
             Typ '6' als je met andere rokers was. "
   utter_ask_hrs_what_happened_slot:
     - text: "Gebeurde er iets bijzonders?"
-    - text: "Was er een specifieke reden waarom je op dat moment rookte?"
-    - text: "Was er een aanleiding voor het roken, of was het spontaan?"
+    - text: "Was er een specifieke reden waarom je op dat moment trek had om te roken?"
+    - text: "Was er een aanleiding voor het roken, of was het spontaan?" # TODO: change
   utter_hrs_look_back_1:
     - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
     - text: "Door aandacht te besteden aan de momenten waarop je zin hebt om te roken, kun je patronen ontdekken en jezelf voorbereiden op deze situaties in de toekomst."

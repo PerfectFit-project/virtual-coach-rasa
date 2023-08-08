@@ -903,6 +903,10 @@ rules:
   - action: utter_increase_intensity_8
   - action: utter_increase_intensity_9
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: action_save_weekly_reflection_dialog_part5
   - action: utter_predict_difficult_moments_3  # here starts part 6
@@ -949,6 +953,10 @@ rules:
   - action: utter_increase_intensity_22
   - action: utter_increase_intensity_23
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: action_save_weekly_reflection_dialog_part5
   - action: utter_predict_difficult_moments_3  # here starts part 6

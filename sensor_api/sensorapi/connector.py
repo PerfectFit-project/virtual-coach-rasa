@@ -18,7 +18,7 @@ SENSOR_KEY_PATH = '/app/sensorprivatekey'
 
 if ENVIRONMENT == 'prod':
     # TODO: replace with actual url when this will be made available
-    API_URL = 'https://portal.rrdweb.nl/servlets/r2d2/v6.0.4/project/perfectfit/'
+    API_URL = 'https://www.rrdhost.nl/servlets/senseeact/v6.0.4/project/perfectfit/'
 else:
     # TODO: replace with actual url when this will be made available
     API_URL = 'https://www.rrdhost.nl/servlets/senseeact/v6.0.4/project/perfectfit/'

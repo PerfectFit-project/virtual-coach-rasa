@@ -124,9 +124,12 @@ class OnboardingState(State):
         fs_time = create_new_date(start_date=start_date,
                                   time_delta=FUTURE_SELF_INTRO)
 
-        # if the expected scheduling time is already passed, launch the component now
+        # if the expected scheduling time is already passed,
+        # don't show the short version of the future self dialog
+
+        # (the long version has just been shown)
         if fs_time.date() <= date.today():
-            fs_time = None
+            return
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.FUTURE_SELF_SHORT,
@@ -200,6 +203,8 @@ class TrackingState(State):
 
     def on_new_day(self, current_date: date):
         logging.info('current date: %s', current_date)
+        self.check_if_end_date(current_date)
+
         # at day 7 activity C2.9 has to be proposed
 
         start_date = get_start_date(self.user_id)
@@ -213,6 +218,7 @@ class TrackingState(State):
         intervention_day = retrieve_intervention_day(self.user_id, date_to_check)
         # the Goal Setting state starts on day 10 of the intervention
         if intervention_day >= TRACKING_DURATION:
+            self.set_new_state(GoalsSettingState(self.user_id))
             return True
 
         return False

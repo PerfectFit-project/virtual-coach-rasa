@@ -1009,6 +1009,7 @@ rules:
   - action: utter_closing_weekly_reflection_4
   - action: utter_closing_weekly_reflection_5
   - action: utter_closing_weekly_reflection_6
+  - action: utter_closing_weekly_reflection_7
   - action: action_save_weekly_reflection_dialog_part6
   - action: mark_dialog_as_completed
   - action: action_end_dialog
@@ -1027,6 +1028,7 @@ rules:
   - action: utter_closing_weekly_reflection_4
   - action: utter_closing_weekly_reflection_5
   - action: utter_closing_weekly_reflection_6
+  - action: utter_closing_weekly_reflection_7
   - action: action_save_weekly_reflection_dialog_part6
   - action: mark_dialog_as_completed
   - action: action_end_dialog

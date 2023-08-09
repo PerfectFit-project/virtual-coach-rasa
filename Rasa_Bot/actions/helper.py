@@ -1151,7 +1151,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
     for i, goal in enumerate(data['goals']):
         fig.add_annotation(x=goal,
                            y=i,
-                           text=f'Goal: {goal}',
+                           text=f'Doel: {goal}',
                            showarrow=False,
                            font=dict(size=12, color='black'),
                            xshift=5)
@@ -1159,12 +1159,12 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
     for i, step in enumerate(data['steps']):
         fig.add_annotation(x=1500,
                            y=i,
-                           text=f'Steps: {step}',
+                           text=f'Stappen: {step}',
                            showarrow=False,
                            font=dict(size=12, color='black'),
                            xshift=5)
 
-    fig.update_layout(title='Step overview',
+    fig.update_layout(title='Stappen overzicht',
                       height=500,
                       margin=dict(l=150),
                       xaxis=dict(tickformat='d'))

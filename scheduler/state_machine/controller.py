@@ -420,10 +420,7 @@ class ExecutionRunState(State):
                                phase_id=2)
 
         if dialog == Components.EXECUTION_INTRODUCTION:
-            logging.info('Execution intro completed, starting general activity')
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.GENERAL_ACTIVITY,
-                           phase_id=2)
+            logging.info(f'Execution intro completed for user {self.user_id}')
 
         elif dialog == Components.GENERAL_ACTIVITY:
             # check if the weekly reflection has be triggered
@@ -460,6 +457,12 @@ class ExecutionRunState(State):
                                dialog=Components.FUTURE_SELF_SHORT,
                                phase_id=2)
 
+                # plan the execution for the next week
+                schedule_next_execution(user_id=self.user_id,
+                                        dialog=Components.WEEKLY_REFLECTION,
+                                        current_date=datetime.now(),
+                                        phase_id=2)
+
                 # after the weekly reflection is completed, the notifications
                 # for the next week are planned
                 self.schedule_pa_notifications()
@@ -478,13 +481,6 @@ class ExecutionRunState(State):
                 # after the weekly reflection is completed, the notifications
                 # for the next week are planned
                 self.schedule_pa_notifications()
-
-        # after the completion of the future self, schedule the next weekly reflection
-        elif dialog == Components.FUTURE_SELF_SHORT:
-            schedule_next_execution(user_id=self.user_id,
-                                    dialog=Components.WEEKLY_REFLECTION,
-                                    current_date=datetime.now(),
-                                    phase_id=2)
 
     def on_dialog_rescheduled(self, dialog, new_date):
 
@@ -524,6 +520,12 @@ class ExecutionRunState(State):
     def run(self):
         logging.info("Running state %s", self.state)
         update_execution_week(self.user_id, 1)
+
+        # plan the execution for the next week
+        schedule_next_execution(user_id=self.user_id,
+                                dialog=Components.GENERAL_ACTIVITY,
+                                current_date=datetime.now(),
+                                phase_id=2)
 
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets

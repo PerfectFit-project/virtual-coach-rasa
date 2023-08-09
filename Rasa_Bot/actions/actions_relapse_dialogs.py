@@ -901,7 +901,7 @@ class ValidateWhatDoingHowFeelSmokeForm(FormValidationAction):
 
         if not valid:
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_1_to_9")
+            dispatcher.utter_message(response="utter_please_answer_1_to_9_multiple_numbers")
             return {"how_feel_smoke": None}
 
         return {"how_feel_smoke": value}
@@ -1077,7 +1077,7 @@ class ValidateHrsFeelingForm(FormValidationAction):
 
         is_valid = validator.validate_list(value, 1, 9)
         if not is_valid:
-            dispatcher.utter_message(response="utter_please_answer_1_to_9")
+            dispatcher.utter_message(response="utter_please_answer_1_to_9_multiple_numbers")
             return {"hrs_feeling_slot": None}
 
         return {"hrs_feeling_slot": value}

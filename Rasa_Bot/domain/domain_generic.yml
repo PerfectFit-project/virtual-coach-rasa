@@ -53,6 +53,8 @@ responses:
      - text: "Kun je een geheel getal tussen 1 en 8 opgeven?"
   utter_please_answer_1_to_9:
      - text: "Kun je een geheel getal tussen 1 en 9 opgeven?"
+  utter_please_answer_1_to_9_multiple_numbers:
+     - text: "Kun je dit beantwoorden door één of meer nummers tussen 1 en 9 op te geven, gescheiden door spaties?"
   utter_please_answer_0_to_10:
      - text: "Kun je een geheel getal tussen 0 en 10 opgeven?"
   utter_please_answer_neg_to_pos_3:

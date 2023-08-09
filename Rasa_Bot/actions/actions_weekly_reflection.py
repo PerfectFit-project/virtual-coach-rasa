@@ -198,7 +198,7 @@ class WhichPaGroup(Action):
         pa_group = get_pa_group(user_id)
 
         if pa_group is None:
-            pa_group = 2
+            pa_group = 1
 
         return [SlotSet('pa_group', pa_group)]
 

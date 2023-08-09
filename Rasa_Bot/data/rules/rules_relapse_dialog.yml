@@ -688,7 +688,7 @@ rules:
   - action: utter_smoke_relapse_1
   - action: utter_smoke_relapse_2
   - action: utter_smoke_relapse_3
-  - action: utter_smoke_relapse_4  # TODO: Check with kristell that this question indicates it is about today!
+  - action: utter_smoke_relapse_4
   - action: what_doing_how_feel_smoke_form  # Note: reuse the form from the lapse dialog
   - active_loop: what_doing_how_feel_smoke_form
   wait_for_user_input: false  # from here we have the same forms of the lapse.

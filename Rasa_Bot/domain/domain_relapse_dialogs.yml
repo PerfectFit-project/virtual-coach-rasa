@@ -403,7 +403,7 @@ responses:
              Typ '2' als je vandaag één of meer sigaretten hebt gerookt.️\n
              Kies '3' als je in de afgelopen dagen meer dan eens hebt gerookt nadat je gestopt was."
   utter_smoke_crave_1:
-    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
+    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid. 🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
     - text: "Goed dat je dit aangeeft! Ik waardeer je eerlijkheid. 🙏"
   utter_smoke_crave_2:
@@ -415,7 +415,7 @@ responses:
     - text: "Soms kun je overspoeld 🌊 worden door hevige trek en weet je even niet hoe je hiermee moet omgaan."
     - text: "Het kan gebeuren dat je overweldigd 🌊 wordt door sterke trek en tijdelijk niet weet hoe je hierop moet reageren."
   utter_smoke_crave_4:
-    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt?⌛"
+    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt? ⌛"
     - text: "Wist je dat hevige trek vaak als een golf komt en meestal slechts 3 minuten aanhoudt? ⌛"
     - text: "Wist je dat sterke trek vaak in golven komt en meestal maar zo'n 3 minuten duurt? ⌛"
   utter_smoke_crave_5:
@@ -485,6 +485,8 @@ responses:
     - text: "Bedankt voor je eerlijkheid.🙏"
     - text: "Dank dat je open bent geweest.🙏"
     - text: "Ik waardeer het dat je zo eerlijk bent.🙏"
+    - text: "Ik waardeer je openheid. Dankjewel.🙏"
+    - text: "Het is goed dat je zo oprecht bent. Bedankt.🙏"
   utter_smoke_lapse_6:
     - text: "Je hebt gerookt, maar dat betekent gelukkig niet dat het stoppen met roken mislukt is. Stoppen met 
             roken is een proces van vallen en opstaan. Het vallen is niet erg als je maar weer opstaat. Uiteindelijk 

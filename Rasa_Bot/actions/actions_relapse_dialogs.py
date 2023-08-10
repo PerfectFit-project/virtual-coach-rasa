@@ -109,7 +109,7 @@ class ActionResetSlotCraveLapseRelapse(Action):
         return "action_reset_slot_crave_lapse_relapse"
 
     async def run(self, dispatcher, tracker, domain):
-        return {"crave_lapse_relapse": None}
+        return [SlotSet('crave_lapse_relapse', None)]
 
 
 class ActionSetSlotWeeklyOrRelapse(Action):

@@ -53,8 +53,5 @@ nlu:
 - intent: continue_dialog_intent
   examples: |
     - "verder"
-    - "verderr"
-    - "veder"
-    - "vedder"
     - "verder gaan"
     - "ik wil verder gaan"

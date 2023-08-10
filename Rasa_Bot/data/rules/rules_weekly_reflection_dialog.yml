@@ -710,7 +710,7 @@ rules:
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
 
-- rule: Show steps next week group1, 2
+- rule: Show steps next week (both groups) 2
   condition:
     - active_loop: met_expectations_form
   steps:

@@ -474,7 +474,7 @@ responses:
     - text: "Oké, je kunt dan één van de volgende oefeningen kiezen:"
     - text: "Goed! Kies nu welke oefening je wilt doen:"
   utter_ask_general_activity_next_activity_slot:
-    - text: "'{general_activity_activities_options_slot}'"
+    - text: "{general_activity_activities_options_slot}"
 
 
   utter_general_activity_next_user:

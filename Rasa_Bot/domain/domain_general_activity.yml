@@ -274,8 +274,8 @@ responses:
     - text: "En hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
-    - text: "Dank je wel voor je feedback"
-    - text: "Bedankt voor je reactie"
+    - text: "Dank je wel voor je feedback."
+    - text: "Bedankt voor je reactie."
   utter_general_activity_look_back:
     - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
     - text: "Op moeilijke momenten kun je hier naar terugkijken."

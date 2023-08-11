@@ -273,7 +273,7 @@ class SetStepGoalDays(Action):
                           'action: action_set_step_goal_days')
             return [SlotSet('step_goal_days', 0)]
 
-        return [SlotSet('step_goal_days', step_goal_days)]
+        return [SlotSet('step_goal_days', int(step_goal_days))]
 
 
 class StepGoalUtterances(Action):

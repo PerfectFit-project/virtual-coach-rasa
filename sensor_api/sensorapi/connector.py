@@ -1,5 +1,4 @@
 import jwt
-import locale
 import logging
 import os
 import requests
@@ -184,8 +183,6 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     df = pd.DataFrame(steps_data)
     df.set_index('date', inplace=True)
 
-    locale.setlocale(locale.LC_TIME, 'nl_NL')  # To get the days in Dutch
-
     # Check whether the first expected date is present
     if df.index.min().strftime('%y%m%d') != start.strftime('%y%m%d'):
         df.loc[start.date()] = np.nan
@@ -220,10 +217,11 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     goals_achieved = sum(np.array(step_goals)*PA_LAPSE_MODERATION < np.array(actual_steps))
 
     # Get list with dates
-    date_list = df.index[-7:]
-    date_list = date_list.strftime('%a %d').str.capitalize()
-    date_list = date_list.tolist()
-    return step_goals, actual_steps, date_list, goals_achieved
+    dutch_day_abbreviations = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo']
+    last_7_dates = df.index[-7:]
+    dutch_date_list = [f"{dutch_day_abbreviations[date.weekday()]} {date.strftime('%d')}" for date
+                       in last_7_dates]
+    return step_goals, actual_steps, dutch_date_list, goals_achieved
 
 
 def get_daily_step_goal(user_id) -> Optional[int]:

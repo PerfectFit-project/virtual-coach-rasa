@@ -710,7 +710,7 @@ rules:
   - active_loop: difficult_moments_next_week_form
   wait_for_user_input: false
 
-- rule: Show steps next week group1, 2
+- rule: Show steps next week (both groups) 2
   condition:
     - active_loop: met_expectations_form
   steps:
@@ -722,9 +722,6 @@ rules:
   - action: utter_difficult_moments_pa_10
   - action: utter_difficult_moments_pa_11
   - action: utter_difficult_moments_pa_12
-  - action: action_set_pa_group
-  - slot_was_set:
-    - pa_group: 1
   - action: action_set_slot_smoke_or_pa_2
   - action: action_reset_slot_crave_lapse_relapse
   - action: pa_type_together_why_fail_form
@@ -813,32 +810,6 @@ rules:
   - active_loop: if_doable_form
   wait_for_user_input: false
 
-- rule: Show increase intensity dialog group2, 2
-  steps:
-  - action: met_expectations_form
-  - active_loop: null
-  - action: utter_difficult_moments_pa_7
-  - action: utter_difficult_moments_pa_8
-  - action: utter_difficult_moments_pa_9
-  - action: utter_difficult_moments_pa_10
-  - action: utter_difficult_moments_pa_11
-  - action: utter_difficult_moments_pa_12
-  - action: action_set_pa_group
-  - slot_was_set:
-    - pa_group: 2
-  - action: action_get_long_term_pa_goal
-  - action: utter_increase_intensity_1
-  - action: action_save_weekly_reflection_dialog_part4
-  - action: utter_increase_intensity_2  # here starts part 5
-  - action: utter_increase_intensity_3
-  - action: utter_increase_intensity_4
-  - action: utter_increase_intensity_5
-  - action: action_set_intensity_minutes_goal
-  - action: utter_increase_intensity_6
-  - action: if_doable_form
-  - active_loop: if_doable_form
-  wait_for_user_input: false
-
 - rule: Show increase intensity dialog group2, 3
   condition:
     - active_loop: difficult_moments_form
@@ -903,6 +874,10 @@ rules:
   - action: utter_increase_intensity_8
   - action: utter_increase_intensity_9
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: action_save_weekly_reflection_dialog_part5
   - action: utter_predict_difficult_moments_3  # here starts part 6
@@ -950,6 +925,10 @@ rules:
   - action: utter_increase_intensity_22
   - action: utter_increase_intensity_23
   - action: utter_predict_difficult_moments_1
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
   - action: utter_predict_difficult_moments_2
   - action: action_save_weekly_reflection_dialog_part5
   - action: utter_predict_difficult_moments_3  # here starts part 6

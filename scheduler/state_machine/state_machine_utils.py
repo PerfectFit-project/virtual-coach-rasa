@@ -980,9 +980,7 @@ def schedule_next_execution(user_id: int, dialog: str, phase_id: int, current_da
     planned_date = get_next_planned_date(user_id=user_id,
                                          current_date=current_date)
 
-    new_date = planned_date.replace(hour=10, minute=00)
-
     plan_and_store(user_id=user_id,
                    dialog=dialog,
-                   planned_date=new_date,
+                   planned_date=planned_date,
                    phase_id=phase_id)

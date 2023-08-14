@@ -124,9 +124,12 @@ class OnboardingState(State):
         fs_time = create_new_date(start_date=start_date,
                                   time_delta=FUTURE_SELF_INTRO)
 
-        # if the expected scheduling time is already passed, launch the component now
+        # if the expected scheduling time is already passed,
+        # don't show the short version of the future self dialog
+
+        # (the long version has just been shown)
         if fs_time.date() <= date.today():
-            fs_time = None
+            return
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.FUTURE_SELF_SHORT,
@@ -200,6 +203,8 @@ class TrackingState(State):
 
     def on_new_day(self, current_date: date):
         logging.info('current date: %s', current_date)
+        self.check_if_end_date(current_date)
+
         # at day 7 activity C2.9 has to be proposed
 
         start_date = get_start_date(self.user_id)
@@ -213,6 +218,7 @@ class TrackingState(State):
         intervention_day = retrieve_intervention_day(self.user_id, date_to_check)
         # the Goal Setting state starts on day 10 of the intervention
         if intervention_day >= TRACKING_DURATION:
+            self.set_new_state(GoalsSettingState(self.user_id))
             return True
 
         return False
@@ -414,10 +420,7 @@ class ExecutionRunState(State):
                                phase_id=2)
 
         if dialog == Components.EXECUTION_INTRODUCTION:
-            logging.info('Execution intro completed, starting general activity')
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.GENERAL_ACTIVITY,
-                           phase_id=2)
+            logging.info(f'Execution intro completed for user {self.user_id}')
 
         elif dialog == Components.GENERAL_ACTIVITY:
             # check if the weekly reflection has be triggered
@@ -454,6 +457,12 @@ class ExecutionRunState(State):
                                dialog=Components.FUTURE_SELF_SHORT,
                                phase_id=2)
 
+                # plan the execution for the next week
+                schedule_next_execution(user_id=self.user_id,
+                                        dialog=Components.WEEKLY_REFLECTION,
+                                        current_date=datetime.now(),
+                                        phase_id=2)
+
                 # after the weekly reflection is completed, the notifications
                 # for the next week are planned
                 self.schedule_pa_notifications()
@@ -472,13 +481,6 @@ class ExecutionRunState(State):
                 # after the weekly reflection is completed, the notifications
                 # for the next week are planned
                 self.schedule_pa_notifications()
-
-        # after the completion of the future self, schedule the next weekly reflection
-        elif dialog == Components.FUTURE_SELF_SHORT:
-            schedule_next_execution(user_id=self.user_id,
-                                    dialog=Components.WEEKLY_REFLECTION,
-                                    current_date=datetime.now(),
-                                    phase_id=2)
 
     def on_dialog_rescheduled(self, dialog, new_date):
 
@@ -518,6 +520,12 @@ class ExecutionRunState(State):
     def run(self):
         logging.info("Running state %s", self.state)
         update_execution_week(self.user_id, 1)
+
+        # plan the execution for the next week
+        schedule_next_execution(user_id=self.user_id,
+                                dialog=Components.GENERAL_ACTIVITY,
+                                current_date=datetime.now(),
+                                phase_id=2)
 
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets

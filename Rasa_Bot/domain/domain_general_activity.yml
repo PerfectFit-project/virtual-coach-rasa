@@ -269,27 +269,158 @@ responses:
   utter_ask_persuasion_effort_slot:
     - text: "Laten we eerst terugkijken op je vorige oefening. Hoeveel moeite heb je gestoken in de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal geen moeite'. 10 is 'heel erg veel'. Typ nu een cijfer van 0 - 10."
   utter_persuasion_effort_thanks:
-    - text: "Oke, bedankt om dat te delen!"
+    - text: "Oke, bedankt voor het delen!"
   utter_ask_activity_useful_rating: #6
     - text: "En hoe nuttig vond je de oefening '{last_activity_slot}'? Dit kun je aangeven op een schaal van 0-10. 0 is 'helemaal niet nuttig'. 10 is 'heel erg nuttig'. Typ nu een cijfer van 0 - 10."
   utter_general_activity_thanks:
     - text: "Bedankt voor je feedback."
-    - text: "Dank je wel voor je feedback"
-    - text: "Bedankt voor je reactie"
+    - text: "Dank je wel voor je feedback."
+    - text: "Bedankt voor je reactie."
   utter_general_activity_look_back:
     - text: "Hier kun je naar terugkijken wanneer je het moeilijk hebt."
     - text: "Op moeilijke momenten kun je hier naar terugkijken."
     - text: "Wanneer je het moeilijk hebt kun je hier naar terugkijken."
     - text: "Hier kun je naar terugkijken op moeilijke momenten."
   utter_general_activity_thanks_top_5_1:
-    - text: "Bedankt voor je feedback. Je vindt deze oefening nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
-    - text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
-    - text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
-#  utter_what_you_learned_from_activity:
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "6"
+      text: "Bedankt voor je feedback. Je vindt deze oefening nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "7"
+      text: "Bedankt voor je feedback. Je vindt deze oefening nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "8"
+      text: "Bedankt voor je feedback. Je vindt deze oefening nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "9"
+      text: "Bedankt voor je feedback. Je vindt deze oefening nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "10"
+      text: "Bedankt voor je feedback. Je vindt deze oefening nuttig. Daarom wordt deze toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "6"
+      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "7"
+      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "8"
+      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "9"
+      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "10"
+      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "6"
+      text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "7"
+      text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "8"
+      text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "9"
+      text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "10"
+      text: "Bedankt voor je reactie. Fijn dat deze oefening nuttig voor je is. Deze oefening wordt daarom toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "0"
+      text: "Bedankt voor je reactie. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "1"
+      text: "Bedankt voor je reactie. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "2"
+      text: "Bedankt voor je reactie. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "3"
+      text: "Bedankt voor je reactie. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "4"
+      text: "Bedankt voor je reactie. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "5"
+      text: "Bedankt voor je reactie. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "0"
+      text: "Dank je wel voor je feedback. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "1"
+      text: "Dank je wel voor je feedback. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "2"
+      text: "Dank je wel voor je feedback. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "3"
+      text: "Dank je wel voor je feedback. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "4"
+      text: "Dank je wel voor je feedback. De oefening wordt toegevoegd aan je EHBO-doos."
+    - condition:
+        - type: slot
+          name: activity_useful_rating
+          value: "5"
+      text: "Dank je wel voor je feedback. De oefening wordt toegevoegd aan je EHBO-doos."
   utter_general_activity_thanks_top_5_2:
-    - text: "Deze oefening heb je al eerder als nuttig beoordeeld. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
-    - text: "Je hebt deze oefening eerder al nuttig gevonden. Toen liet je weten dat je dit geleerd hebt van de oefening: {activity_user_input}"
-    - text: "Je hebt deze oefening al eerder als zinvol beoordeeld. Je hebt mij toen laten weten dat je het volgende had geleerd van de oefening: {activity_user_input}"
+    - text: "Deze oefening heb je al eerder gedaan. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
+    - text: "Je hebt deze oefening eerder al gedaan. Toen liet je weten dat je dit geleerd hebt van de oefening: {activity_user_input}"
+    - text: "Je hebt deze oefening al eerder gedaan. Je hebt mij toen laten weten dat je het volgende had geleerd van de oefening: {activity_user_input}"
   utter_ask_save_or_edit_slot:
     - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen?\n
             Typ 1 voor 'Bewaren'\n
@@ -343,7 +474,7 @@ responses:
     - text: "Oké, je kunt dan één van de volgende oefeningen kiezen:"
     - text: "Goed! Kies nu welke oefening je wilt doen:"
   utter_ask_general_activity_next_activity_slot:
-    - text: "'{general_activity_activities_options_slot}'"
+    - text: "{general_activity_activities_options_slot}"
 
 
   utter_general_activity_next_user:

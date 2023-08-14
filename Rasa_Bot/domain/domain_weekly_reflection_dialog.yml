@@ -826,13 +826,6 @@ responses:
              Typ '3' als het oké ging 😐.\n
              Typ '4' als het niet zo goed ging 🙁.\n
              Typ '5' als het slecht ging 😞. "
-    - text: "Wat voor soort lichamelijke beweging heb je afgelopen week gedaan? Denk hierbij aan sporten, wandelen,
-             huishoudelijke taken en alles wat daartussenin zit.\n
-             Typ '1' als het heel goed ging 😄.\n
-             Typ '2' als het goed ging 🙂.\n
-             Typ '3' als het oké ging 😐.\n
-             Typ '4' als het niet zo goed ging 🙁.\n
-             Typ '5' als het slecht ging 😞. "
     - text: "Hoe was jouw lichamelijke beweging van afgelopen week?
              Bedenk hierbij dat beweging niet alleen gaat om wandelen of hardlopen,
              maar ook om andere activiteiten zoals sporten en klusjes in huis.\n
@@ -1371,6 +1364,8 @@ responses:
     - text: "Jij kunt dit, ik sta achter je. Zet hem op! 💪🏼"
     - text: "Ik ben ervan overtuigd dat je je doelen gaat halen komende week. Keep up the good work! 💪🏼"
     - text: "Laat je niet ontmoedigen, blijf ervoor gaan. Ik steun je 100%. 💪🏼"
+  utter_closing_weekly_reflection_7:
+    - text: "Dit gesprek is nu klaar, maar ik spreek je graag weer! Je kunt me op elk moment om hulp vragen door middel van de woorden."
   utter_answer_klaar:
     - text: "Typ ‘klaar’ als je de vragen hebt beantwoordt."
     - text: "Laat me weten dat je de vragen hebt beantwoord door 'klaar' te typen."

@@ -120,10 +120,10 @@ responses:
     - text: "Prima. Ik hoop dat de oefeningen in je EHBO-doos je helpen. Houd vol!"
     - text: "Goed. Ik hoop dat de oefeningen in je EHBO-doos je steunen. Blijf doorgaan!"
   utter_first_aid_kit_end_2:
-    - text: "Wanneer je je EHBO-doos later weer eens wilt bekijken, typ dan weer 'EHBO'. We spreken elkaar snel! 👋"
-    - text: "Typ 'EHBO' als je je EHBO-doos later weer wilt bekijken. Tot snel! 👋"
-    - text: "Voor als je later nog eens naar je EHBO-doos wilt kijken, typ 'EHBO'. Tot later! 👋"
-    - text: "Als je weer wilt kijken naar je EHBO-doos, typ dan later 'EHBO'. Tot snel! 👋"
+    - text: "Wanneer je je EHBO-doos later weer eens wilt bekijken, typ dan weer 'EHBO'. We zijn nu klaar. We spreken elkaar snel! 👋"
+    - text: "Typ 'EHBO' als je je EHBO-doos later weer eens wilt bekijken. Nu zijn we klaar. Tot snel! 👋"
+    - text: "Als je later nog eens naar je EHBO-doos wilt kijken, typ dan 'EHBO'. Dit gesprek is nu klaar. Tot later! 👋"
+    - text: "Als je later nog eens wilt kijken naar je EHBO-doos, typ dan 'EHBO'. Dit was het voor nu. We spreken elkaar snel! 👋"
 
   utter_first_aid_kit_repeat_1:
     - text: "Oke, ik zal je laten zien welke oefeningen of tips je nog meer kunt bekijken."

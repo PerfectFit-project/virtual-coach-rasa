@@ -79,4 +79,4 @@ responses:
   utter_ask_chosen_daypart:
     - text: "{daypart_options_string}"
   utter_see_you:
-    - text: "Prima, ik spreek je dan weer! 🙋"
+    - text: "Prima, dan zijn we nu klaar. Ik spreek je dan later weer! 🙋"

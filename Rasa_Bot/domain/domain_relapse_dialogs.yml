@@ -361,12 +361,8 @@ slots:
 
 responses:
 # General
-  utter_relapse_intro_codeword:
-    - text: "Je hebt zojuist je codewoord gebruikt om hulp te vragen."
   utter_relapse_intro_offer_help_pt1:
-    - text: "Goed dat je hulp vraagt. Ik ga je helpen."
-    - text: "Het is goed dat je hulp vraagt!"
-    - text: "Het is prima dat je om hulp vraagt!"
+    - text: "Graag praat ik met je."
   utter_relapse_intro_offer_help_pt2:
     - text: "Ik ga je helpen."
     - text: "Ik zal je ondersteunen."
@@ -376,13 +372,13 @@ responses:
     - text: "Betreft het roken of fysieke activiteit?"
     - text: "Gaat het over roken of lichaamsbeweging?"
   utter_ask_smoke_or_pa_form_smoke_or_pa:
-    - text: "Typ '1' als je het gaat om roken. 🚬. \n
+    - text: "Typ '1' als je het gaat om roken. 🚬 \n
              Typ '2' als het gaat om lichamelijke beweging. 🚶️ \n
              Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
-    - text: "Als het om roken gaat, typ dan 1. 🚬. \n
-             Als het over lichaamsbeweging gaat, typ dan 2. 🚶 \n
-             Als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt, typ dan 3."
-    - text: "Typ '1' als het gaat om roken. 🚬.\n
+    - text: "Als het om roken gaat, typ dan '1'. 🚬 \n
+             Als het over lichaamsbeweging gaat, typ dan '2'. 🚶 \n
+             Als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt, typ dan '3'."
+    - text: "Typ '1' als het gaat om roken. 🚬\n
              Typ '2' als het gaat om fysieke activiteit. 🚶 \n
              Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
   utter_relapse_outro:
@@ -394,11 +390,20 @@ responses:
     - text: "Zou je me kunnen vertellen wat er aan de hand is?"
     - text: "Wat is er precies aan de hand?"
   utter_ask_crave_lapse_relapse:
-    - text: "Typ '1' als je zin hebt om te roken.️ \n 
-             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.️ \n
+    - text: "Typ '1' als je zin hebt om te roken.️\n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.️\n
              Typ '3' als je meer dan één dag hebt gerookt sinds je stopdatum."
+    - text: "Laat me weten of je de behoefte hebt om te roken door '1' te typen.\n 
+             Als je vandaag een of meerdere sigaretten hebt gerookt, typ dan '2'.\n
+             Als je sinds je stopdatum meer dan één dag hebt gerookt, typ dan '3'."
+    - text: "Als je de drang voelt om te roken, typ dan '1'.\n 
+             Als je vandaag een of meerdere sigaretten hebt gerookt, typ dan '2'.\n
+             Als je sinds je stopdatum meer dan één dag hebt gerookt, typ dan '3'."
+    - text: "Typ '1' als je zin hebt om te roken.️\n 
+             Typ '2' als je vandaag één of meer sigaretten hebt gerookt.️\n
+             Kies '3' als je in de afgelopen dagen meer dan eens hebt gerookt nadat je gestopt was."
   utter_smoke_crave_1:
-    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid.🙏"
+    - text: "Goed dat je dit aangeeft! Bedankt voor je eerlijkheid. 🙏"
     - text: "Het is goed dat je dit meldt! Dank je wel voor je openheid. 🙏"
     - text: "Goed dat je dit aangeeft! Ik waardeer je eerlijkheid. 🙏"
   utter_smoke_crave_2:
@@ -410,7 +415,7 @@ responses:
     - text: "Soms kun je overspoeld 🌊 worden door hevige trek en weet je even niet hoe je hiermee moet omgaan."
     - text: "Het kan gebeuren dat je overweldigd 🌊 wordt door sterke trek en tijdelijk niet weet hoe je hierop moet reageren."
   utter_smoke_crave_4:
-    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt?⌛"
+    - text: "Maar wist je dat heftige trek als een golf is en vaak maar zo'n 3 minuten duurt? ⌛"
     - text: "Wist je dat hevige trek vaak als een golf komt en meestal slechts 3 minuten aanhoudt? ⌛"
     - text: "Wist je dat sterke trek vaak in golven komt en meestal maar zo'n 3 minuten duurt? ⌛"
   utter_smoke_crave_5:
@@ -480,6 +485,8 @@ responses:
     - text: "Bedankt voor je eerlijkheid.🙏"
     - text: "Dank dat je open bent geweest.🙏"
     - text: "Ik waardeer het dat je zo eerlijk bent.🙏"
+    - text: "Ik waardeer je openheid. Dankjewel.🙏"
+    - text: "Het is goed dat je zo oprecht bent. Bedankt.🙏"
   utter_smoke_lapse_6:
     - text: "Je hebt gerookt, maar dat betekent gelukkig niet dat het stoppen met roken mislukt is. Stoppen met 
             roken is een proces van vallen en opstaan. Het vallen is niet erg als je maar weer opstaat. Uiteindelijk 
@@ -519,9 +526,9 @@ responses:
     - text: "Ik wil je dus wat vragen stellen."
   utter_ask_what_doing_smoke:
     - text: "Wat was je aan het doen toen je rookte? Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
-            Typ '1' als je aan het werk was. 💼 \n
+            Typ '1' als je aan het werk was. \n
             Typ '2' als je thuis bezig was met klusjes of huishouden. 🧹🛠️ \n
-            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken).☀️ \n
+            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken). ☀️ \n
             Typ '4' als je aan het eten of drinken was. 🍽️ \n
             Typ '5' als je net alcohol of koffie hebt gedronken. 🍷🍺☕ \n
             Typ '6' als je net wakker was. ⏰ \n
@@ -558,7 +565,7 @@ responses:
     - text: "Was er een specifieke reden waarom je op dat moment rookte?"
     - text: "Was er een aanleiding voor het roken, of was het spontaan?"
   utter_smoke_lapse_12:
-    - text: "Dankjewel voor het delen.🙏"
+    - text: "Dankjewel voor het delen. 🙏"
     - text: "Bedankt voor het open zijn over wat er gebeurde. 🙏"
     - text: "Ik waardeer het dat je dit met me deelt. Dank je wel. 🙏"
   utter_smoke_lapse_13:
@@ -588,7 +595,7 @@ responses:
     - text: "Jij hebt op dit moment de mogelijkheid om opnieuw te stoppen met roken."
   utter_smoke_lapse_17:
     - text: "Ik raad je aan om meteen weer te stoppen. Wat kan helpen is om meteen de rest van de sigaretten, 
-            e-sigaret navullingen, tabak etc. weg te gooien.🗑️ "
+            e-sigaret navullingen, tabak etc. weg te gooien.🗑️"
     - text: "Ik moedig je aan om gelijk weer te stoppen. Om het stoppen met roken makkelijker te maken, raad ik je aan 
             om al je sigaretten, e-sigaret navullingen, tabak en andere rookgerelateerde spullen weg te gooien.🗑️
             "
@@ -712,9 +719,9 @@ responses:
     - text: "Wat was je aan het doen toen je zin kreeg?"
   utter_ask_hrs_situation_slot:
     - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer.\n
-            Typ '1' als je aan het werk was. 💼 \n
+            Typ '1' als je aan het werk was. \n
             Typ '2' als je thuis bezig was met klusjes of huishouden. 🧹🛠️ \n
-            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken).☀ \n 
+            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken). ☀ \n 
             Typ '4' als je aan het eten of drinken was. 🍽️ \n
             Typ '5' als je net alcohol of koffie hebt gedronken. 🍷🍺☕ \n
             Typ '6' als je net wakker was. ⏰ \n
@@ -747,8 +754,8 @@ responses:
             Typ '6' als je met andere rokers was. "
   utter_ask_hrs_what_happened_slot:
     - text: "Gebeurde er iets bijzonders?"
-    - text: "Was er een specifieke reden waarom je op dat moment rookte?"
-    - text: "Was er een aanleiding voor het roken, of was het spontaan?"
+    - text: "Was er een specifieke reden waarom je op dat moment trek had om te roken?"
+    - text: "Hoe kwam het dat je trek had om te roken, of kwam het spontaan?"
   utter_hrs_look_back_1:
     - text: "Door vaker te kijken naar situaties waarin je zin krijgt om te roken, kun je leren patronen te herkennen. Op deze manier kun jij jezelf voorbereiden voor een volgende keer dat je in die situatie zit."
     - text: "Door aandacht te besteden aan de momenten waarop je zin hebt om te roken, kun je patronen ontdekken en jezelf voorbereiden op deze situaties in de toekomst."
@@ -771,15 +778,33 @@ responses:
     - text: "Wat goed om te horen!"
     - text: "Het is fijn om dat te horen!"
     - text: "Dat is fantastisch om te weten!"
+  utter_good_to_hear_2_pa_a:
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! 😊 Succes! Je kan het!💪 Dit gesprek is nu klaar."
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! 😊 Ga ervoor! Ik geloof in jou en weet zeker dat je het kunt! 💪 Dit was het voor nu."
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! 😊 Ik wens je alle succes toe! Ik weet zeker dat je het kunt! 💪 We zijn nu klaar met het gesprek."
+    - text: "Onthoud dat je me altijd om hulp kunt vragen. Ik sta voor je klaar! 😊 Ik wens je alle succes toe! Ik weet zeker dat je het kunt! 💪 We zijn nu klaar met het gesprek."
+    - text: "Onthoud dat je me altijd om hulp kunt vragen. Ik sta voor je klaar! 😊 Ga ervoor! Ik geloof in jou en weet zeker dat je het kunt! 💪 Dit was het voor nu."
+    - text: "Onthoud dat je me altijd om hulp kunt vragen. Ik sta voor je klaar! 😊 Succes! Je kan het!💪 Dit gesprek is nu klaar."
+    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ga ervoor! Ik geloof in jou en weet zeker dat je het kunt! 💪 Dit was het voor nu."
+    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Succes! Je kan het!💪 Dit gesprek is nu klaar."
+    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ik wens je alle succes toe! Ik weet zeker dat je het kunt! 💪 We zijn nu klaar met het gesprek."
+  utter_good_to_hear_2_pa_b:
+    - text: "Dit gesprek is nu klaar. Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het!😊"
+    - text: "We zijn nu klaar met het gesprek. Onthoud dat ik er altijd voor je ben als je hulp nodig hebt. Je kunt het, veel succes! 😊"
+    - text: "Dit was het voor nu. Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ik ben er om je te steunen en ik geloof in je! Veel succes! 😊"
+  utter_good_to_hear_2_end:
+    - text: "Dit gesprek is nu klaar. Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het!😊"
+    - text: "We zijn nu klaar met het gesprek. Vergeet niet dat ik er altijd voor je ben als je hulp nodig hebt. Je kan het, succes!"
+    - text: "Dit was het voor nu. Onthoud dat ik er altijd voor je ben. Ik geloof in jou, je kan het!"
   utter_good_to_hear_2:
-    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je! Succes, je kan het!😊"
-    - text: "Onthoud dat ik er altijd voor je ben als je hulp nodig hebt. Je kunt het, veel succes! 😊"
-    - text: "Voel je vrij om me om hulp te vragen wanneer je het nodig hebt. Ik ben er om je te steunen en ik geloof in je! Veel succes! 😊"
+    - text: "Weet dat je mij altijd om hulp mag vragen. Ik ben er voor je!😊"
+    - text: "Aarzel niet om hulp te vragen als je het nodig hebt, want ik ben er om je te ondersteunen!😊"
+    - text: "Onthoud dat je me altijd kunt vragen om hulp. Ik sta klaar om je te helpen!😊"
   utter_good_to_hear_3:
     - text: "Heb je nog een vraag? Of wil je een extra steuntje in de rug? Je kunt dan altijd de gratis Stoplijn bellen:
-            0800-1995.📞 De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Succes, je kan het!"
+            0800-1995.📞 De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur. Succes, je kan het! Dit gesprek is nu klaar."
     - text: "Als je nog vragen hebt of extra steun nodig hebt, bel dan gerust de gratis Stoplijn op 0800-1995.📞 Ze zijn
-            beschikbaar van maandag tot en met vrijdag tussen 9 en 17 uur. Zet hem op, je kunt het!"
+            beschikbaar van maandag tot en met vrijdag tussen 9 en 17 uur. Zet hem op, je kunt het! We zijn nu klaar met het gesprek."
   utter_bad_to_hear_1:
     - text: "Dat vind ik vervelend om te horen."
     - text: "Dat spijt me om te horen."
@@ -819,7 +844,7 @@ responses:
             Typ '5' voor meer zelfvertrouwen en motivatie. \n"
     - text: "Je kunt kiezen uit meerdere oefeningen. Wat voor oefening wil je doen? 
             Om een oefening te doen die over jezelf gaat, typ dan '1'. \n
-            Kies optie 2 als je geïnteresseerd bent in weetjes. \n
+            Kies optie '2' als je geïnteresseerd bent in weetjes. \n
             Kies optie '3' om oefeningen te krijgen met nuttige tips. \n
             Wil je jezelf belonen? Typ '4' om daar een oefening voor te kriigen. \n
             Kies '5' als je behoefte hebt aan extra motivatie en zelfvertrouwen. \n"
@@ -956,9 +981,9 @@ responses:
             Typ '7' als er iets anders is/was."
   utter_ask_pa_doing_today_slot:
     - text: "Je mag meerdere antwoorden geven. Typ een spatie tussen elk cijfer. \n
-            Typ '1' als je aan het werk was. 💼 \n
+            Typ '1' als je aan het werk was. \n
             Typ '2' als je thuis bezig was met klusjes of huishouden. 🧹🛠️ \n
-            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken).☀️ \n
+            Typ '3' als je iets voor jezelf deed (hobby, met iemand afspreken). ☀️ \n
             Typ '4' als je aan het eten of drinken was. 🍽️ \n
             Typ '5' als je net alcohol of koffie hebt gedronken. 🍷🍺☕ \n
             Typ '6' als je net wakker was. ⏰  \n
@@ -988,7 +1013,7 @@ responses:
     - text: "Op dit moment ligt de keuze bij jou om door te gaan en alsnog in beweging te komen."
   utter_pa_lapse_9:
     - text: "Als je dat gedaan hebt, ben je een stapje dichterbij het halen van je beweegdoel. En waarschijnlijk ben je 
-            blij met jezelf.😄"
+            blij met jezelf. 😄"
     - text: "Door dat te doen, kom je weer een stap dichter bij het behalen van je beweegdoel. En waarschijnlijk zul je 
             trots zijn op jezelf. 😄"
     - text: "Hierdoor zul je weer een stap dichter bij het behalen van je beweegdoel komen, en waarschijnlijk zul je 
@@ -1051,7 +1076,7 @@ responses:
             of zij is vaak goed op de hoogte van de mogelijkheden in jouw omgeving. Dat was alles voor nu. We spreken 
             elkaar weer de volgende keer!"
     - text: "Als je behoefte hebt aan meer hulp om in beweging te komen, overweeg dan een afspraak te maken met je
-            huisarts. Hij of zij kan je informeren over de opties die beschikbaar zijn in jouw buurt.  Dit was alles 
+            huisarts. Hij of zij kan je informeren over de opties die beschikbaar zijn in jouw buurt. Dit was alles 
             voor vandaag. Tot de volgende keer!"
   utter_pa_sick:
     - text: "Wat vervelend voor je, ik hoop dat je snel weer beter bent. Laten wij over binnenkort 

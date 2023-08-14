@@ -627,6 +627,8 @@ responses:
             opstaan. Ik zal zorgen dat je de nodige hulp krijgt."
   utter_closing_3:
     - text: "Ik heb vertrouwen in je. Zet 'm op! 💪"
+  utter_goal_setting_closing_4:
+    - text: "Dit was het voor nu. Ik sta voor je klaar, dus je kunt me op elk moment roepen door middel van de woorden."
 
 actions:
   - action_get_first_last_date

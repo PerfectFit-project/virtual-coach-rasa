@@ -9,7 +9,6 @@ rules:
   steps:
   - intent: EXTERNAL_relapse_dialog
   - action: action_set_slot_relapse_dialog
-  - action: utter_relapse_intro_codeword
   - action: utter_relapse_intro_offer_help_pt1
   - action: utter_relapse_intro_offer_help_pt2
   - action: utter_relapse_smoke_or_pa
@@ -17,7 +16,7 @@ rules:
   - active_loop: smoke_or_pa_form
   wait_for_user_input: false
 
-## rigger relapse dialog  - exit
+## trigger relapse dialog  - exit
 - rule: Relapse phase triggered smoke
   condition:
   - active_loop: smoke_or_pa_form
@@ -251,7 +250,7 @@ rules:
   - slot_was_set:
       - hrs_enough_motivation_slot: 1
   - action: utter_good_to_hear_1
-  - action: utter_good_to_hear_2
+  - action: utter_good_to_hear_2_end
   - action: mark_dialog_as_completed
   - action: action_end_dialog
 
@@ -689,7 +688,7 @@ rules:
   - action: utter_smoke_relapse_1
   - action: utter_smoke_relapse_2
   - action: utter_smoke_relapse_3
-  - action: utter_smoke_relapse_4  # TODO: Check with kristell that this question indicates it is about today!
+  - action: utter_smoke_relapse_4
   - action: what_doing_how_feel_smoke_form  # Note: reuse the form from the lapse dialog
   - active_loop: what_doing_how_feel_smoke_form
   wait_for_user_input: false  # from here we have the same forms of the lapse.
@@ -1008,7 +1007,7 @@ rules:
   - slot_was_set:
     - crave_lapse_relapse: null
   - action: utter_good_to_hear_pa_1
-  - action: utter_good_to_hear_2
+  - action: utter_good_to_hear_2_pa_a
   - action: mark_dialog_as_completed
   - action: action_end_dialog
 
@@ -1037,7 +1036,7 @@ rules:
   - slot_was_set:
     - pa_enough_motivation_slot: 1
   - action: utter_good_to_hear_pa_1
-  - action: utter_good_to_hear_2
+  - action: utter_good_to_hear_2_pa_b
   - action: mark_dialog_as_completed
   - action: action_end_dialog
 

@@ -93,6 +93,7 @@ rules:
   - action: utter_closing_1
   - action: utter_closing_2
   - action: utter_closing_3
+  - action: utter_goal_setting_closing_4
   - action: mark_dialog_as_completed
   - action: action_end_dialog
 
@@ -331,6 +332,7 @@ rules:
   - action: utter_closing_1
   - action: utter_closing_2
   - action: utter_closing_3
+  - action: utter_goal_setting_closing_4
   - action: action_save_goal_setting_dialog_part4
   - action: mark_dialog_as_completed
   - action: action_end_dialog

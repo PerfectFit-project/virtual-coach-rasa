@@ -165,21 +165,18 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
     """
     session = get_db_session(DATABASE_URL)
 
-    try:
-        selected = (
-            session.query(
-                UserInterventionState
-            )
-            .filter(
-                UserInterventionState.users_nicedayuid == user_id,
-                UserInterventionState.intervention_component_id == intervention_component_id
-            )
-            .order_by(UserInterventionState.id.desc())  # order by descending id
-            .limit(1)  # get only the first result
-            .one()
+    selected = (
+        session.query(
+            UserInterventionState
         )
-    except NoResultFound:
-        selected = None
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_id == intervention_component_id
+        )
+        .order_by(UserInterventionState.id.desc())  # order by descending id
+        .limit(1)  # get only the first result
+        .one_or_none()
+    )
 
     return selected
 

@@ -69,12 +69,15 @@ class OnboardingState(State):
                               True))
 
         elif dialog == Components.MEDICATION_TALK:
-            logging.info('Med talk completed, starting track behavior')
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.TRACK_BEHAVIOR,
-                           phase_id=1)
-            # notifications for tracking have to be activated
-            self.schedule_tracking_notifications()
+            # check if the tack behavior dialog has to be started (i.e. the coach triggered
+            # the currently completed medication talk) or not.
+            if self.is_track_behaviour_next():
+                logging.info('Med talk completed, starting track behavior')
+                plan_and_store(user_id=self.user_id,
+                               dialog=Components.TRACK_BEHAVIOR,
+                               phase_id=1)
+                # notifications for tracking have to be activated
+                self.schedule_tracking_notifications()
 
         elif dialog == Components.TRACK_BEHAVIOR:
             logging.info('Tack behavior completed, starting future self')
@@ -114,6 +117,33 @@ class OnboardingState(State):
         plan_and_store(user_id=self.user_id,
                        dialog=Components.PREPARATION_INTRODUCTION,
                        phase_id=1)
+
+    def is_track_behaviour_next(self) -> bool:
+        """
+        Determines if the track behavior dialog has to be run after the completion of the
+        medication talk dialog or not.
+
+        Returns: True if the track behavior dialog has to run, False otherwise
+
+        """
+        # if the profile creation hasn't been completed, don't run the track behavior
+        intro = get_intervention_component(Components.PROFILE_CREATION)
+        intro_state = get_last_component_state(self.user_id, intro.intervention_component_id)
+
+        if not intro_state.completed:
+            return False
+
+        # if a tack behavior has been already planned by the VC,
+        # this is not the case where we need to run it again.
+        track_state = get_intervention_component(Components.TRACK_BEHAVIOR)
+        component_state = get_last_component_state(self.user_id,
+                                                   track_state.intervention_component_id)
+
+        # if the component is already in the DB,
+        if component_state is not None:
+            return False
+
+        return True
 
     def schedule_next_dialogs(self):
         # get the data on which the user has started the intervention

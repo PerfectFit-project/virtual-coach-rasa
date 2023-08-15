@@ -6,6 +6,7 @@ plotly
 kaleido
 python-dateutil==2.8.1
 python-dotenv
+pytype==2020.10.8
 rasa-sdk==3.2.3
 redis
 sqlalchemy==1.4.32

@@ -42,9 +42,6 @@ jobs:
         pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml -m 'not integration'
     - name: Correct coverage paths
       run: sed -i "s+$PWD/++g" coverage.xml
-    - name: Check dependencies
-      run: |
-        pip freeze
     - name: Type Checking
       run: |
         export PYTHONPATH=$PYTHONPATH:$PWD

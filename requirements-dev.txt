@@ -3,4 +3,4 @@ pylint==2.15.4
 pytest
 pytest-cov
 pytest-asyncio
-pytype
+pytype<=2023.7.28

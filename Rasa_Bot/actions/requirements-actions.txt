@@ -1,5 +1,5 @@
 celery
-cryptography
+cryptography==36.0.1
 jwt
 pandas
 plotly

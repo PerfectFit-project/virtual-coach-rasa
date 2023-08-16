@@ -69,7 +69,8 @@ class OnboardingState(State):
                               True))
 
         elif dialog == Components.MEDICATION_TALK:
-            # check if the tack behavior dialog has to be started (i.e. the coach triggered
+            # check if the track behavior dialog has to be started (i.e. the coach triggered
+
             # the currently completed medication talk) or not.
             if self.is_track_behaviour_next():
                 logging.info('Med talk completed, starting track behavior')

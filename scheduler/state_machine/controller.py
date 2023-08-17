@@ -69,12 +69,16 @@ class OnboardingState(State):
                               True))
 
         elif dialog == Components.MEDICATION_TALK:
-            logging.info('Med talk completed, starting track behavior')
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.TRACK_BEHAVIOR,
-                           phase_id=1)
-            # notifications for tracking have to be activated
-            self.schedule_tracking_notifications()
+            # check if the track behavior dialog has to be started (i.e. the coach triggered
+
+            # the currently completed medication talk) or not.
+            if self.is_track_behaviour_next():
+                logging.info('Med talk completed, starting track behavior')
+                plan_and_store(user_id=self.user_id,
+                               dialog=Components.TRACK_BEHAVIOR,
+                               phase_id=1)
+                # notifications for tracking have to be activated
+                self.schedule_tracking_notifications()
 
         elif dialog == Components.TRACK_BEHAVIOR:
             logging.info('Tack behavior completed, starting future self')
@@ -114,6 +118,33 @@ class OnboardingState(State):
         plan_and_store(user_id=self.user_id,
                        dialog=Components.PREPARATION_INTRODUCTION,
                        phase_id=1)
+
+    def is_track_behaviour_next(self) -> bool:
+        """
+        Determines if the track behavior dialog has to be run after the completion of the
+        medication talk dialog or not.
+
+        Returns: True if the track behavior dialog has to run, False otherwise
+
+        """
+        # if the profile creation hasn't been completed, don't run the track behavior
+        intro = get_intervention_component(Components.PROFILE_CREATION)
+        intro_state = get_last_component_state(self.user_id, intro.intervention_component_id)
+
+        if not intro_state.completed:
+            return False
+
+        # if a tack behavior has been already planned by the VC,
+        # this is not the case where we need to run it again.
+        track_state = get_intervention_component(Components.TRACK_BEHAVIOR)
+        component_state = get_last_component_state(self.user_id,
+                                                   track_state.intervention_component_id)
+
+        # if the component is already in the DB,
+        if component_state is not None:
+            return False
+
+        return True
 
     def schedule_next_dialogs(self):
         # get the data on which the user has started the intervention
@@ -425,12 +456,27 @@ class ExecutionRunState(State):
         elif dialog == Components.GENERAL_ACTIVITY:
             # check if the weekly reflection has be triggered
             if self.is_weekly_reflection_next():
+                # pause the conversation for 1 minute, while the latest messages
+                # of the general activity are sent, and then trigger the weekly reflection
 
-                logging.info('General activity completed, starting weekly reflection')
-                plan_and_store(user_id=self.user_id,
-                               dialog=Components.WEEKLY_REFLECTION,
-                               planned_date=datetime.now()+timedelta(minutes=1),
-                               phase_id=2)
+                trigger_time = datetime.now() + timedelta(minutes=1)
+
+                dialog_id = get_intervention_component(
+                    Components.WEEKLY_REFLECTION).intervention_component_id
+
+                # store record in db
+                store_scheduled_dialog(user_id=self.user_id,
+                                       dialog_id=dialog_id,
+                                       phase_id=2,
+                                       planned_date=trigger_time,
+                                       last_time=trigger_time)
+
+                # pause the conversation and then trigger the dialog
+                celery.send_task(PAUSE_AND_TRIGGER,
+                                 (self.user_id,
+                                  ComponentsTriggers.WEEKLY_REFLECTION,
+                                  datetime.now() + timedelta(minutes=1),
+                                  True))
 
         elif dialog == Components.WEEKLY_REFLECTION:
             logging.info('Weekly reflection completed')
@@ -440,6 +486,7 @@ class ExecutionRunState(State):
             # on the first week, the execution of the general activity dialog 
             # has to be planned for week 2
             if week == 1:
+
                 schedule_next_execution(user_id=self.user_id,
                                         dialog=Components.GENERAL_ACTIVITY,
                                         current_date=datetime.now(),
@@ -453,9 +500,28 @@ class ExecutionRunState(State):
             # completing the weekly reflection
             elif week in [3, 8]:
                 logging.info('Starting future self')
-                plan_and_store(user_id=self.user_id,
-                               dialog=Components.FUTURE_SELF_SHORT,
-                               phase_id=2)
+
+                # pause the conversation for 1 minute, while the latest messages
+                # of the weekly reflection are sent, and then trigger the future self video
+
+                trigger_time = datetime.now() + timedelta(minutes=1)
+
+                dialog_id = get_intervention_component(
+                    Components.FUTURE_SELF_SHORT).intervention_component_id
+
+                # store record in db
+                store_scheduled_dialog(user_id=self.user_id,
+                                       dialog_id=dialog_id,
+                                       phase_id=2,
+                                       planned_date=trigger_time,
+                                       last_time=trigger_time)
+
+                # pause the conversation and then trigger the dialog
+                celery.send_task(PAUSE_AND_TRIGGER,
+                                 (self.user_id,
+                                  ComponentsTriggers.FUTURE_SELF_SHORT,
+                                  datetime.now() + timedelta(minutes=1),
+                                  True))
 
                 # plan the execution for the next week
                 schedule_next_execution(user_id=self.user_id,

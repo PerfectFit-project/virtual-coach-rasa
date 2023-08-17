@@ -488,7 +488,7 @@ class GetActivityCoachChoice(Action):
         mandatory, _ = get_possible_activities(user_id)
         activity_description = mandatory[0].intervention_activity_description
         mandatory_ids = [activity.intervention_activity_id for activity in mandatory]
-        return [SlotSet("chosen_activity_slot", activity_description),
+        return [SlotSet("general_activity_chosen_activity_description_slot", activity_description),
                 SlotSet("general_activity_next_activity_slot", 1),
                 SlotSet("rnd_activities_ids",  mandatory_ids)]
 

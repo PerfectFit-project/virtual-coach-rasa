@@ -108,12 +108,6 @@ slots:
     influence_conversation: false
     mappings:
       - type: custom
-  # name of chosen activity
-  chosen_activity_slot:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: custom
 
   # activity category
   general_activity_activity_type_slot:
@@ -489,11 +483,11 @@ responses:
     - text: "Oké, je hebt gekozen voor deze oefening: '{general_activity_chosen_activity_description_slot}' Slimme keuze!"
     - text: "Oké, je hebt gekozen voor deze oefening: '{general_activity_chosen_activity_description_slot}' Goede beslissing!"
   utter_general_activity_next_coach:
-    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Veel succes!"
-    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Ik wens je veel succes!"
-    - text: "Dan is het nu tijd om een nieuwe oefening te starten. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Veel succes!"
-    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Veel succes!"
-    - text: "Dan is het nu tijd om aan een nieuwe oefening te beginnen. Ik stel voor om de oefening te doen: '{chosen_activity_slot}' Ik wens je veel succes!"
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om deze oefening te doen: '{general_activity_chosen_activity_description_slot}' Veel succes!"
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om deze oefening te doen: '{general_activity_chosen_activity_description_slot}' Ik wens je veel succes!"
+    - text: "Dan is het nu tijd om een nieuwe oefening te starten. Ik stel voor om deze oefening te doen: '{general_activity_chosen_activity_description_slot}' Veel succes!"
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om deze oefening te doen: '{general_activity_chosen_activity_description_slot}' Veel succes!"
+    - text: "Dan is het nu tijd om aan een nieuwe oefening te beginnen. Ik stel voor om de oefening te doen: '{general_activity_chosen_activity_description_slot}' Ik wens je veel succes!"
   utter_persuasion_questions_intro:
     - text: "Ik wil je nu graag een paar vragen stellen over de oefening die je gaat doen."
     - text: "Dan zou ik je nu graag wat vragen stellen over de oefening die je gaat doen."

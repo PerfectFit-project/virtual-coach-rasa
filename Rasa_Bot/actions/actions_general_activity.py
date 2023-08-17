@@ -144,7 +144,7 @@ class GeneralActivityCheckRating(Action):
                 FirstAidKit.users_nicedayuid == user_id,
                 FirstAidKit.intervention_activity_id == activity_id
             )
-            .all()
+            .one_or_none()
         )
 
         if len(top_five_activities) > 0:
@@ -157,17 +157,15 @@ class GeneralActivityCheckRating(Action):
             save_activity_to_fak(user_id, activity_id, rating_value)
 
             session.commit()
+        else:
+            # update the row containing the activity with the new rating
+            session.execute(
+                update(FirstAidKit)
+                .where(FirstAidKit.first_aid_kit_id == current_record.first_aid_kit_id)
+                .values(activity_rating=rating_value)
+            )
 
-            return [SlotSet("general_activity_low_high_rating", 'high')]
-
-        # update the row containing the activity with the new rating
-        session.execute(
-            update(FirstAidKit)
-            .where(FirstAidKit.first_aid_kit_id == current_record[0].first_aid_kit_id)
-            .values(activity_rating=rating_value)
-        )
-
-        session.commit()
+            session.commit()
 
         if rating_value > lowest_score:
             return [SlotSet("general_activity_low_high_rating", 'high')]

@@ -62,7 +62,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     and for the dialogs status check are started
     """
     # notify the FSM that a new day started
-    sender.add_periodic_task(crontab(hour=6, minute=00), notify_new_day.s())
+    sender.add_periodic_task(crontab(hour=MORNING_TIME, minute=00), notify_new_day.s())
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if the user is in physical relapse

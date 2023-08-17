@@ -51,7 +51,7 @@ def get_jwt_token(user_id: int) -> str:
     encoded = jwt.encode({"sub": user_id, "iat": int(round(datetime.now().timestamp()))},
                          private_key, algorithm="RS256")
 
-    return encoded
+    return str(encoded)
 
 
 # functions for sensors data querying

@@ -144,7 +144,7 @@ class GeneralActivityCheckRating(Action):
                 FirstAidKit.users_nicedayuid == user_id,
                 FirstAidKit.intervention_activity_id == activity_id
             )
-            .all()
+            .one_or_none()
         )
 
         if len(top_five_activities) > 0:
@@ -157,17 +157,15 @@ class GeneralActivityCheckRating(Action):
             save_activity_to_fak(user_id, activity_id, rating_value)
 
             session.commit()
+        else:
+            # update the row containing the activity with the new rating
+            session.execute(
+                update(FirstAidKit)
+                .where(FirstAidKit.first_aid_kit_id == current_record.first_aid_kit_id)
+                .values(activity_rating=rating_value)
+            )
 
-            return [SlotSet("general_activity_low_high_rating", 'high')]
-
-        # update the row containing the activity with the new rating
-        session.execute(
-            update(FirstAidKit)
-            .where(FirstAidKit.first_aid_kit_id == current_record[0].first_aid_kit_id)
-            .values(activity_rating=rating_value)
-        )
-
-        session.commit()
+            session.commit()
 
         if rating_value > lowest_score:
             return [SlotSet("general_activity_low_high_rating", 'high')]
@@ -488,9 +486,9 @@ class GetActivityCoachChoice(Action):
         user_id = tracker.current_state()['sender_id']
 
         mandatory, _ = get_possible_activities(user_id)
-        activity_title = mandatory[0].intervention_activity_title
+        activity_description = mandatory[0].intervention_activity_description
         mandatory_ids = [activity.intervention_activity_id for activity in mandatory]
-        return [SlotSet("chosen_activity_slot", activity_title),
+        return [SlotSet("general_activity_chosen_activity_description_slot", activity_description),
                 SlotSet("general_activity_next_activity_slot", 1),
                 SlotSet("rnd_activities_ids",  mandatory_ids)]
 
@@ -558,6 +556,35 @@ class LoadActivity(Action):
         # prompt the message
         dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
         return []
+    
+    
+class LoadActivityDescription(Action):
+    """load the activity description"""
+
+    def name(self):
+        return "load_activity_description"
+
+    async def run(self, dispatcher, tracker, domain):
+
+        chosen_option = int(tracker.get_slot('general_activity_next_activity_slot')) - 1
+        activities_slot = tracker.get_slot('rnd_activities_ids')
+
+        activity_id = activities_slot[chosen_option]
+        session = get_db_session(db_url=DATABASE_URL)
+
+        # get the description
+        descriptions = (
+            session.query(
+                InterventionActivity
+            )
+            .filter(
+                InterventionActivity.intervention_activity_id == activity_id
+            ).all()
+        )
+
+        # prompt the message
+        return [SlotSet("general_activity_chosen_activity_description_slot",
+                        descriptions[0].intervention_activity_description)]
 
 
 class SetSlotGeneralActivity(Action):

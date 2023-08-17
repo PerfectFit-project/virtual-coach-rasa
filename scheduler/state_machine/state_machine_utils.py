@@ -165,21 +165,18 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
     """
     session = get_db_session(DATABASE_URL)
 
-    try:
-        selected = (
-            session.query(
-                UserInterventionState
-            )
-            .filter(
-                UserInterventionState.users_nicedayuid == user_id,
-                UserInterventionState.intervention_component_id == intervention_component_id
-            )
-            .order_by(UserInterventionState.id.desc())  # order by descending id
-            .limit(1)  # get only the first result
-            .one()
+    selected = (
+        session.query(
+            UserInterventionState
         )
-    except NoResultFound:
-        selected = None
+        .filter(
+            UserInterventionState.users_nicedayuid == user_id,
+            UserInterventionState.intervention_component_id == intervention_component_id
+        )
+        .order_by(UserInterventionState.id.desc())  # order by descending id
+        .limit(1)  # get only the first result
+        .one_or_none()
+    )
 
     return selected
 
@@ -980,9 +977,7 @@ def schedule_next_execution(user_id: int, dialog: str, phase_id: int, current_da
     planned_date = get_next_planned_date(user_id=user_id,
                                          current_date=current_date)
 
-    new_date = planned_date.replace(hour=10, minute=00)
-
     plan_and_store(user_id=user_id,
                    dialog=dialog,
-                   planned_date=new_date,
+                   planned_date=planned_date,
                    phase_id=phase_id)

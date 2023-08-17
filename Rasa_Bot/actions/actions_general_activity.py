@@ -572,7 +572,7 @@ class LoadActivityDescription(Action):
         activity_id = activities_slot[chosen_option]
         session = get_db_session(db_url=DATABASE_URL)
 
-        # get the instructions
+        # get the description
         descriptions = (
             session.query(
                 InterventionActivity

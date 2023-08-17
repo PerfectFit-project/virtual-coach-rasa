@@ -57,7 +57,7 @@ jobs:
       run: |
         cd Rasa_Bot
         rasa --version
-        rasa test core --stories tests/test_conversations.yml --fail-on-prediction-errors
+        rasa test --stories tests/test_conversations.yml --fail-on-prediction-errors
     # In the future, we could also save the trained model in github
     # See here for an example: https://github.com/RasaHQ/financial-demo/blob/db/.github/workflows/build_and_deploy.yml
    

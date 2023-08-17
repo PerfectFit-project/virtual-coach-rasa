@@ -59,3 +59,12 @@ stories:
   - action: utter_default
   - action: action_select_menu
   - action: action_end_dialog
+
+- story: Test fallback in sentence with keyword
+  steps:
+  - user: |
+      Ik vind deze oefening heel stom
+    intent: nlu_fallback
+  - action: utter_default
+  - action: action_select_menu
+  - action: action_end_dialog

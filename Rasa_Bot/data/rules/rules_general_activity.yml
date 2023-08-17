@@ -154,6 +154,7 @@ rules:
   - action: general_activity_next_activity_form
   - active_loop: general_activity_next_activity_form
   - active_loop: null
+  - action: load_activity_description
   - action: utter_general_activity_next_user
   - action: utter_persuasion_questions_intro
   - action: utter_persuasion_questions_intro_2

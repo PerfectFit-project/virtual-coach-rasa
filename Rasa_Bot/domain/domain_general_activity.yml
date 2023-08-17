@@ -151,6 +151,13 @@ slots:
     mappings:
       - type: custom
       
+  # Description for the new chosen activity
+  general_activity_chosen_activity_description_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+      
   persuasion_prompts_slot:
     type: float
     influence_conversation: false
@@ -311,27 +318,27 @@ responses:
         - type: slot
           name: activity_useful_rating
           value: "6"
-      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+      text: "Dank je wel voor je feedback. Ik ben blij dat je deze oefening nuttig vindt. Daarom voeg ik hem toe aan je EHBO-doos."
     - condition:
         - type: slot
           name: activity_useful_rating
           value: "7"
-      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+      text: "Dank je wel voor je feedback. Ik ben blij dat je deze oefening nuttig vindt. Daarom voeg ik hem toe aan je EHBO-doos."
     - condition:
         - type: slot
           name: activity_useful_rating
           value: "8"
-      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+      text: "Dank je wel voor je feedback. Ik ben blij dat je deze oefening nuttig vindt. Daarom voeg ik hem toe aan je EHBO-doos."
     - condition:
         - type: slot
           name: activity_useful_rating
           value: "9"
-      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+      text: "Dank je wel voor je feedback. Ik ben blij dat je deze oefening nuttig vindt. Daarom voeg ik hem toe aan je EHBO-doos."
     - condition:
         - type: slot
           name: activity_useful_rating
           value: "10"
-      text: "Dank je wel voor je feedback. We zijn blij dat je deze oefening nuttig vindt. Daarom voegen wij hem toe aan je EHBO-doos."
+      text: "Dank je wel voor je feedback. Ik ben blij dat je deze oefening nuttig vindt. Daarom voeg ik hem toe aan je EHBO-doos."
     - condition:
         - type: slot
           name: activity_useful_rating
@@ -418,9 +425,9 @@ responses:
           value: "5"
       text: "Dank je wel voor je feedback. De oefening wordt toegevoegd aan je EHBO-doos."
   utter_general_activity_thanks_top_5_2:
-    - text: "Deze oefening heb je al eerder gedaan. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: {activity_user_input}"
-    - text: "Je hebt deze oefening eerder al gedaan. Toen liet je weten dat je dit geleerd hebt van de oefening: {activity_user_input}"
-    - text: "Je hebt deze oefening al eerder gedaan. Je hebt mij toen laten weten dat je het volgende had geleerd van de oefening: {activity_user_input}"
+    - text: "Deze oefening heb je al eerder gedaan. Je liet mij toen weten dat je het volgende geleerd hebt van de oefening: '{activity_user_input}'"
+    - text: "Je hebt deze oefening eerder al gedaan. Toen liet je weten dat je dit geleerd hebt van de oefening: '{activity_user_input}'"
+    - text: "Je hebt deze oefening al eerder gedaan. Je hebt mij toen laten weten dat je het volgende had geleerd van de oefening: '{activity_user_input}'"
   utter_ask_save_or_edit_slot:
     - text: "Wil je deze tekst weer bewaren in de EHBO-doos of wil je de tekst aanpassen?\n
             Typ 1 voor 'Bewaren'\n
@@ -478,15 +485,15 @@ responses:
 
 
   utter_general_activity_next_user:
-    - text: "Oké, goede keuze!"
-    - text: "Oké, slimme keuze!"
-    - text: "Oké, goede beslissing!"
+    - text: "Oké, je hebt gekozen voor deze oefening: '{general_activity_chosen_activity_description_slot}' Goede keuze!"
+    - text: "Oké, je hebt gekozen voor deze oefening: '{general_activity_chosen_activity_description_slot}' Slimme keuze!"
+    - text: "Oké, je hebt gekozen voor deze oefening: '{general_activity_chosen_activity_description_slot}' Goede beslissing!"
   utter_general_activity_next_coach:
-    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen."
-    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Ik wens je veel succes!"
-    - text: "Dan is het nu tijd om een nieuwe oefening te starten. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Veel succes!"
-    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Veel succes!"
-    - text: "Dan is het nu tijd om aan een nieuwe oefening te beginnen. Ik stel voor om de oefening '{chosen_activity_slot}' te doen. Ik wens je veel succes!"
+    - text: "Dan is het nu tijd voor een nieuwe oefening. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Veel succes!"
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Ik wens je veel succes!"
+    - text: "Dan is het nu tijd om een nieuwe oefening te starten. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Veel succes!"
+    - text: "Dan is het nu tijd om verder te gaan met een nieuwe oefening. Ik stel voor om deze oefening te doen: '{chosen_activity_slot}' Veel succes!"
+    - text: "Dan is het nu tijd om aan een nieuwe oefening te beginnen. Ik stel voor om de oefening te doen: '{chosen_activity_slot}' Ik wens je veel succes!"
   utter_persuasion_questions_intro:
     - text: "Ik wil je nu graag een paar vragen stellen over de oefening die je gaat doen."
     - text: "Dan zou ik je nu graag wat vragen stellen over de oefening die je gaat doen."
@@ -556,6 +563,7 @@ actions:
   - check_who_decides # determines if the user can decide or if the coach decides
   - action_set_slot_general_activity # set the slot to the current running dialog
   - load_activity # load the activity instructions
+  - load_activity_description  # load the activity description
   - launch_ga_rescheduling # followup to start the rescheduling dialog
   - validate_persuasion_want_form  # validate value is between 1 and 5
   - validate_persuasion_need_form   # validate value is between 1 and 5

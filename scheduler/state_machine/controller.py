@@ -784,7 +784,7 @@ class RelapseState(State):
             current_date=datetime.now()
         )
 
-        quit_datetime = create_new_date(quit_date).astimezone(TIMEZONE)
+        quit_datetime = create_new_date(quit_date)
 
         if next_occurrence is not None and next_occurrence.next_planned_date < quit_datetime:
             # revoke the planned task

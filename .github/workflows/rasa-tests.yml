@@ -33,8 +33,8 @@ jobs:
         cd Rasa_Bot
         rasa telemetry disable
         rasa data validate --max-history 10 --domain domain/
-  training-testing:
-    name: Train and Test model
+  testing:
+    name: Test model
     runs-on: ubuntu-latest
     needs: 
     - data-validation

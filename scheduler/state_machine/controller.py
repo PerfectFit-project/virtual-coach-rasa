@@ -433,7 +433,8 @@ class BufferState(State):
         quit_date = get_quit_date(self.user_id)
 
         if current_date >= quit_date:
-            logging.info('Buffer sate ended, starting execution state')
+            logging.info('Buffer state ended, starting execution state')
+
 
             # on the quit date, notify the user that today is the quit date
             if current_date == quit_date:

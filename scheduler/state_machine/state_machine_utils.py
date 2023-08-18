@@ -70,7 +70,8 @@ def create_new_date(start_date: date,
 
     """
     new_date = start_date + timedelta(days=time_delta)
-    new_timedate = datetime(new_date.year, new_date.month, new_date.day, hour, minute)
+    new_timedate = datetime(new_date.year, new_date.month, new_date.day, hour, minute,
+                            tzinfo=TIMEZONE)
 
     return new_timedate
 

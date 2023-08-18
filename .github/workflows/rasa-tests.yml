@@ -33,8 +33,8 @@ jobs:
         cd Rasa_Bot
         rasa telemetry disable
         rasa data validate --max-history 10 --domain domain/
-  training-testing:
-    name: Train and Test model
+  testing:
+    name: Test model
     runs-on: ubuntu-latest
     needs: 
     - data-validation
@@ -49,10 +49,6 @@ jobs:
         python -m pip install --upgrade pip==20.2
         pip install -r Rasa_Bot/requirements.txt
         rasa --version
-    - name: Train model
-      run: |
-        cd Rasa_Bot
-        rasa train --domain domain/
     - name: Test End 2 End Stories
       run: |
         cd Rasa_Bot

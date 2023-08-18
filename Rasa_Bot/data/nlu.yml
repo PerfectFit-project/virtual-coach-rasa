@@ -5,56 +5,31 @@ nlu:
 - intent: help_intent
   examples: |
     - "help"
-    - "hepl"
-    - "elp"
-    - "ehlp"
-    - "hel"
+    - "ik wil help"
 
 - intent: ehbo_intent
   examples: |
     - "ehbo"
-    - "ebho"
-    - "eobh"
-    - "eehbo"
-    - "ehhbo"
-    - "ehbbo"
-    - "ehboo"
     - "ik wil ehbo"
 
 - intent: uitleg_intent
   examples: |
     - "uilteg"
-    - "uileg"
-    - "uitleg"
-    - "iutleg"
-    - "uitlge"
     - "ik wil een uitleg"
 
 - intent: oefening_intent
   examples: |
-    - "oefning"
-    - "oefenin"
     - "oefening"
-    - "eofening"
     - "ik wil de oefening doen"
-    - "oefenign"
 
 - intent: medicijn_intent
   examples: |
-    - "medicatie"
-    - "medicati"
-    - "medicijnen"
     - "medicijn"
-    - "medicein"
-    - "nedicijn"
-    - "medicjin"
-    - "medijcin"
+    - "medicatie"
+    - "medicijnen"
 
 - intent: continue_dialog_intent
   examples: |
     - "verder"
-    - "verderr"
-    - "veder"
-    - "vedder"
     - "verder gaan"
     - "ik wil verder gaan"

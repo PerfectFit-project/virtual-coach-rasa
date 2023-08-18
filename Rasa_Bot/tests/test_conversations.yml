@@ -1,26 +1,70 @@
 version: "3.0"
 stories:
-- story: Get weekly planning, user initiated
-  steps: 
-  - user: | 
-      Mag ik de planning?
-    intent: request_plan_week
-  - action: action_get_age_from_database
-  - action: action_get_plan_week
-  - action: utter_plan_week
-  - action: utter_ask_plan_calendar
+- story: Test help
+  steps:
   - user: |
-      Nee
-    intent: deny
-  - action: utter_okay
+      help
+    intent: help_intent
+  - action: action_trigger_relapse_dialog
+
+- story: Test ehbo
+  steps:
+  - user: |
+      ehbo
+    intent: ehbo_intent
+  - action: action_trigger_first_aid_dialog
+
+- story: Test uitleg
+  steps:
+  - user: |
+      uitleg
+    intent: uitleg_intent
+  - action: action_trigger_explanation_first_aid_video_dialog
+
+- story: Test oefening
+  steps:
+  - user: |
+      oefening
+    intent: oefening_intent
+  - action: action_trigger_general_activity_dialog
+
+- story: Test medicatie
+  steps:
+  - user: |
+      medicatie
+    intent: medicijn_intent
+  - action: action_set_slot_medication_talk_video
+  - action: action_set_medication_video_link
+  - action: action_launch_watch_video_dialog
+
+- story: Test verder
+  steps:
+  - user: |
+      verder
+    intent: continue_dialog_intent
+  - action: action_trigger_uncompleted_dialog
+
+- story: Test verder typo
+  steps:
+  - user: |
+      verderr
+    intent: continue_dialog_intent
+  - action: action_trigger_uncompleted_dialog
+
+- story: Test fallback
+  steps:
+  - user: |
+      Dankjewel
+    intent: nlu_fallback
+  - action: utter_default
+  - action: action_select_menu
   - action: action_end_dialog
 
-- story: Ask foreseen HRS, user does not foresee HRS
+- story: Test fallback in sentence with keyword
   steps:
-  - intent: EXTERNAL_trigger_ask_foreseen_hrs
-  - action: utter_ask_foreseen_hrs
   - user: |
-      Nee
-    intent: deny
-  - action: utter_be_careful_for_hrs
+      Ik vind deze oefening heel stom
+    intent: nlu_fallback
+  - action: utter_default
+  - action: action_select_menu
   - action: action_end_dialog

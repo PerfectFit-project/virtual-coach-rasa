@@ -431,8 +431,17 @@ class BufferState(State):
 
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
+
         if current_date >= quit_date:
-            logging.info('Buffer sate ended, starting execution state')
+            logging.info('Buffer state ended, starting execution state')
+
+
+            # on the quit date, notify the user that today is the quit date
+            if current_date == quit_date:
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.QUIT_DATE_NOTIFICATION,
+                               phase_id=2)
+
             self.set_new_state(ExecutionRunState(self.user_id))
 
 
@@ -585,13 +594,20 @@ class ExecutionRunState(State):
 
     def run(self):
         logging.info("Running state %s", self.state)
-        update_execution_week(self.user_id, 1)
 
-        # plan the execution for the next week
-        schedule_next_execution(user_id=self.user_id,
-                                dialog=Components.GENERAL_ACTIVITY,
-                                current_date=datetime.now(),
-                                phase_id=2)
+        # if the execution week is not 0, it means that we are returning to
+        # this state after a relapse, and the week should not be reset.
+        # also, the planning of the general activity has to be done only on the first time the
+        # execution state is reached
+        if get_execution_week(self.user_id) == 0:
+            update_execution_week(self.user_id, 1)
+
+            # plan the execution for the next week.
+
+            schedule_next_execution(user_id=self.user_id,
+                                    dialog=Components.GENERAL_ACTIVITY,
+                                    current_date=datetime.now(),
+                                    phase_id=2)
 
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets
@@ -768,12 +784,6 @@ class RelapseState(State):
                        planned_date=quit_datetime - timedelta(days=1),
                        phase_id=3)
 
-        # plan the notification for the quit date
-        plan_and_store(user_id=self.user_id,
-                       dialog=Notifications.QUIT_DATE_NOTIFICATION,
-                       planned_date=quit_datetime,
-                       phase_id=3)
-
     def reschedule_weekly_reflection(self, quit_date: date):
 
         component = get_intervention_component(Components.WEEKLY_REFLECTION)
@@ -784,7 +794,7 @@ class RelapseState(State):
             current_date=datetime.now()
         )
 
-        quit_datetime = create_new_date(quit_date).astimezone(TIMEZONE)
+        quit_datetime = create_new_date(quit_date)
 
         if next_occurrence is not None and next_occurrence.next_planned_date < quit_datetime:
             # revoke the planned task

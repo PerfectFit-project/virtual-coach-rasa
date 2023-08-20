@@ -321,7 +321,7 @@ responses:
   utter_profile_creation_godin_1:
   - text: "Denk aan een gemiddelde week."
   utter_ask_profile_creation_godin_light_slot:
-  - text: "In je vrije tijd, hoe vaak per week doe jij aan lichte inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nLichte inspanning is mininale inspanning. Voorbeelden: yoga 🧘, boogschieten 🏹, vissen 🎣, bowlen 🎳, golfen 🏌🏼, rustig wandelen 🚶🏾‍♂️."
+  - text: "In je vrije tijd, hoe vaak per week doe jij aan lichte inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nLichte inspanning is minimale inspanning. Voorbeelden: yoga 🧘, boogschieten 🏹, vissen 🎣, bowlen 🎳, golfen 🏌🏼, rustig wandelen 🚶🏾‍♂️."
   utter_ask_profile_creation_godin_moderate_slot:
   - text: "In je vrije tijd, hoe vaak per week doe jij aan matige inspanning voor minimaal 15 minuten achter elkaar? Typ het aantal.\nMatige inspranning is inspanning waar je niet heel moe van wordt. Voorbeelden: snel wandelen 🚶🏾‍♂️, baseball ⚾, tennis 🎾, rustig fietsen 🚴🏽, volleyball 🏐, badminton 🏸, skiën 🎿, dansen 🕺🏼💃🏻."
   utter_ask_profile_creation_godin_intensive_slot:

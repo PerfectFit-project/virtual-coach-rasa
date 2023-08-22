@@ -923,6 +923,7 @@ rules:
   - active_loop: null
   - action: utter_increase_intensity_22
   - action: utter_increase_intensity_23
+  - action: utter_increase_intensity_23_b
   - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
   - action: action_upload_file

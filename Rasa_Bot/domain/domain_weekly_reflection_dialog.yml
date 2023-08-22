@@ -1178,6 +1178,8 @@ responses:
     - text: "Een goede voorbereiding is al de helft van het werk! ✔️"
     - text: "Een goede voorbereiding brengt je dichterbij je doelen! ✔️"
     - text: "Een goede voorbereiding is erg belangrijk voor succes! ✔️"
+  utter_increase_intensity_23_b:
+    - text: "We gaan nu kijken naar bewegen in het algemeen, dus niet alleen intensieve beweging."
 
   # 7c Will there be difficult moments this week?
   utter_predict_difficult_moments_1:

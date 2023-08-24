@@ -45,6 +45,25 @@ from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 celery = Celery(broker=REDIS_URL)
 
+def figure_has_data(question_ids, user_id):
+    """
+    Check if the data for a figure has any values.
+
+    Returns
+    -------
+    boolean indicating whether there is data for the figure.
+
+    """
+    
+    for i, question_ids_subset in enumerate(question_ids):
+        for question_ids_list in question_ids_subset:
+            for question_id in question_ids_list:
+                answers = get_closed_answers(user_id, question_id)
+                if len(answers) > 0:
+                    return True
+                
+    return False
+
 
 def mark_completion(user_id, dialog):
 
@@ -1103,6 +1122,7 @@ def populate_fig(fig, question_ids, user_id: int, legends) -> Any:
                     A plot, showing the accumulated results for each
                     question specified by the parameters.
     """
+    
     for i, question_ids_subset in enumerate(question_ids):
         closed_answer_options = get_all_closed_answers(question_ids_subset[0][0])
 

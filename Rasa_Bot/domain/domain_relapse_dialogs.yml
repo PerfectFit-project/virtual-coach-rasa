@@ -31,6 +31,19 @@ slots:
       - type: from_text
         conditions:
           - active_loop: relapse_stop_now_later_form
+          
+  # whether the figure with previous difficult smoking situations has data already
+  figure_previous_difficult_smoking_situations_has_data:
+    type: bool
+    influence_conversation: false
+    mappings:
+      - type: custom
+ 
+  figure_previous_difficult_pa_situations_has_data:
+    type: bool
+    influence_conversation: false
+    mappings:
+      - type: custom
 
   medication_info_slot:
     type: categorical

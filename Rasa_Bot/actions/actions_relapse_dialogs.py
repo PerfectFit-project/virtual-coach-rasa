@@ -7,9 +7,14 @@ import secrets
 
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL, activities_categories
-from .helper import (get_latest_bot_utterance, store_dialog_closed_answer_to_db,
-                     store_dialog_open_answer_to_db, store_dialog_closed_answer_list_to_db,
-                     populate_fig, get_possible_activities)
+from .helper import (figure_has_data,
+                     get_closed_answers,
+                     get_latest_bot_utterance, 
+                     get_possible_activities,
+                     populate_fig,
+                     store_dialog_closed_answer_list_to_db,
+                     store_dialog_closed_answer_to_db,
+                     store_dialog_open_answer_to_db)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -334,7 +339,10 @@ class ShowBarchartDifficultSituations(Action):
                         [[DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value],
                          [DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
                          DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]]]
-
+        
+        # check if there is already data for the figure
+        has_data = figure_has_data(question_ids, user_id)
+            
         fig = populate_fig(fig, question_ids, user_id, legends)
 
         fig.update_layout(height=1200, width=800, title_text="Op deze grafieken zie je hoe vaak je"
@@ -347,7 +355,8 @@ class ShowBarchartDifficultSituations(Action):
         except Exception:
             logging.info("File upload unsuccessful.")
 
-        return [SlotSet("upload_file_path", filepath)]
+        return [SlotSet("upload_file_path", filepath),
+                SlotSet("figure_previous_difficult_smoking_situations_has_data", has_data)]
 
 
 class ShowBarchartDifficultSituationsPa(Action):
@@ -369,6 +378,9 @@ class ShowBarchartDifficultSituationsPa(Action):
         question_ids = [[[DialogQuestionsEnum.RELAPSE_PA_DOING_TODAY.value]],
                         [[DialogQuestionsEnum.RELAPSE_PA_WHY_FAIL.value]],
                         [[DialogQuestionsEnum.RELAPSE_PA_TOGETHER.value]]]
+        
+        # check if there is already data for the figure
+        has_data = figure_has_data(question_ids, user_id)
 
         fig = populate_fig(fig, question_ids, user_id, legends)
 
@@ -384,7 +396,8 @@ class ShowBarchartDifficultSituationsPa(Action):
         except Exception:
             logging.info("File upload unsuccessful.")
 
-        return [SlotSet("upload_file_path", filepath)]
+        return [SlotSet("upload_file_path", filepath),
+                SlotSet("figure_previous_difficult_pa_situations_has_data", has_data)]
 
 
 class ShowFirstCopingActivity(Action):

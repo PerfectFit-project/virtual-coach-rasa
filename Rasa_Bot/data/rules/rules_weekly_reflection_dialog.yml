@@ -278,8 +278,8 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
-  - action: utter_look_forward_4
   - action: show_barchart_difficult_situations
+  - action: utter_look_forward_4
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -303,8 +303,8 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
-  - action: utter_look_forward_4
   - action: show_barchart_difficult_situations
+  - action: utter_look_forward_4
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -698,8 +698,8 @@ rules:
   - action: utter_steps_next_week_2
   - action: action_get_long_term_pa_goal
   - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -745,8 +745,8 @@ rules:
   - action: utter_steps_next_week_2
   - action: action_get_long_term_pa_goal
   - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -773,8 +773,8 @@ rules:
   - action: utter_steps_next_week_2
   - action: action_get_long_term_pa_goal
   - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -873,8 +873,8 @@ rules:
   - action: utter_increase_intensity_7
   - action: utter_increase_intensity_8
   - action: utter_increase_intensity_9
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -924,8 +924,8 @@ rules:
   - action: utter_increase_intensity_22
   - action: utter_increase_intensity_23
   - action: utter_increase_intensity_23_b
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file

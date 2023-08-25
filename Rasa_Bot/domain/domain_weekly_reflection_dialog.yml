@@ -508,41 +508,12 @@ responses:
     - text: "Het is slim om vooruit te denken naar de volgende week, zodat je je kunt
              voorbereiden op wat komen gaat."
   utter_look_forward_4:
-    - condition:
-        - type: slot
-          name: figure_previous_difficult_smoking_situations_has_data
-          value: true
-      text: "Eerder hebben wij gezien dat jij het in deze situaties moeilijk vond om niet te roken."
-    - condition:
-        - type: slot
-          name: figure_previous_difficult_smoking_situations_has_data
-          value: true
-      text: "In het verleden hebben we gemerkt dat je het lastig vond om niet te roken in deze situaties."
-    - condition:
-          - type: slot
-            name: figure_previous_difficult_smoking_situations_has_data
-            value: true
-      text: "We hebben eerder gemerkt dat het moeilijk voor je was om niet te roken in deze omstandigheden."
-    - condition:
-          - type: slot
-            name: figure_previous_difficult_smoking_situations_has_data
-            value: true
-      text: "Eerder hebben we gemerkt dat je het moeilijk vond om niet te roken in deze situaties."
-    - condition:
-          - type: slot
-            name: figure_previous_difficult_smoking_situations_has_data
-            value: true
-      text: "Het is ons opgevallen dat je het in het verleden moeilijk vond om niet te roken in deze omstandigheden."
-    - condition:
-          - type: slot
-            name: figure_previous_difficult_smoking_situations_has_data
-            value: true
-      text: "We hebben eerder gezien dat je het lastig had om niet te roken in deze situaties."
-    - condition:
-          - type: slot
-            name: figure_previous_difficult_smoking_situations_has_data
-            value: false
-      text: "In de toekomst gaan we hier kijken naar situaties waarin je het in het verleden moeilijk vond om niet te roken. De grafiek is leeg als je nog geen situaties hebt opgegeven waarin het moeilijk was om niet te roken."
+    - text: "Eerder hebben wij gezien dat jij het in deze situaties moeilijk vond om niet te roken."
+    - text: "In het verleden hebben we gemerkt dat je het lastig vond om niet te roken in deze situaties."
+    - text: "We hebben eerder gemerkt dat het moeilijk voor je was om niet te roken in deze omstandigheden."
+    - text: "Eerder hebben we gemerkt dat je het moeilijk vond om niet te roken in deze situaties."
+    - text: "Het is ons opgevallen dat je het in het verleden moeilijk vond om niet te roken in deze omstandigheden."
+    - text: "We hebben eerder gezien dat je het lastig had om niet te roken in deze situaties."
   utter_look_forward_5:
     - text: "Denk nu eens na over wat je komende week gaat doen. Misschien ga je werken 💼, thuis klussen
              🛠️ of het huishouden doen 🧹. Misschien heb je een verjaardag 🎉, afspraak bij de kapper 💇‍♂️ 

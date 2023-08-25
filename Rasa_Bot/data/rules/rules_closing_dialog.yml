@@ -153,8 +153,8 @@ rules:
   wait_for_user_input: false
 
 
-# 4 relapse prevention plan - general
-- rule: relapse prevention plan general
+# 4 relapse prevention plan - general and smoking figure content exists
+- rule: relapse prevention plan general smoking figure exists
   condition:
   - active_loop: closing_reflection_smoke_done_form
   steps:
@@ -167,8 +167,10 @@ rules:
   - action: closing_relapse_prevention_plan_one_done_form
   - active_loop: closing_relapse_prevention_plan_one_done_form
   - active_loop: null
-  - action: utter_closing_prevention_plan_5
   - action: show_barchart_difficult_situations
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: true
+  - action: utter_closing_prevention_plan_5
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -192,6 +194,45 @@ rules:
   - action: closing_relapse_prevention_plan_two_done_form
   - active_loop: closing_relapse_prevention_plan_two_done_form
   wait_for_user_input: false
+  
+
+# 4 relapse prevention plan - general and smoking figure content does not exist
+- rule: relapse prevention plan general smoking figure does not exist
+  condition:
+  - active_loop: closing_reflection_smoke_done_form
+  steps:
+  - action: closing_reflection_smoke_done_form
+  - active_loop: null
+  - action: utter_closing_prevention_plan_1
+  - action: utter_closing_prevention_plan_2
+  - action: utter_closing_prevention_plan_3
+  - action: utter_closing_prevention_plan_4
+  - action: closing_relapse_prevention_plan_one_done_form
+  - active_loop: closing_relapse_prevention_plan_one_done_form
+  - active_loop: null
+  - action: show_barchart_difficult_situations
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: false
+  - action: utter_closing_prevention_plan_7
+  - action: show_barchart_difficult_situations_pa
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_closing_prevention_plan_8a
+  - action: utter_closing_prevention_plan_8b
+  - action: utter_closing_prevention_plan_9a
+  - action: action_get_first_aid_kit_activities
+  - action: utter_closing_prevention_plan_9b
+  - action: utter_closing_prevention_plan_10
+  - action: utter_closing_prevention_plan_11
+  - action: utter_closing_prevention_plan_12
+  - action: utter_closing_prevention_plan_13
+  - action: utter_closing_prevention_plan_14
+  - action: utter_closing_prevention_plan_15
+  - action: closing_relapse_prevention_plan_two_done_form
+  - active_loop: closing_relapse_prevention_plan_two_done_form
+  wait_for_user_input: false
+
 
 # 4 relapse prevention plan - succes quiter
 - rule: relapse prevention plan succes quiter

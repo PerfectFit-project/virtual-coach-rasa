@@ -8,7 +8,6 @@ import secrets
 from . import validator
 from .definitions import DATABASE_URL, REDIS_URL, activities_categories
 from .helper import (figure_has_data,
-                     get_closed_answers,
                      get_latest_bot_utterance, 
                      get_possible_activities,
                      populate_fig,

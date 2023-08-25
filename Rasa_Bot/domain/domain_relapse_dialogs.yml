@@ -35,7 +35,7 @@ slots:
   # whether the figure with previous difficult smoking situations has data already
   figure_previous_difficult_smoking_situations_has_data:
     type: bool
-    influence_conversation: false
+    influence_conversation: true
     mappings:
       - type: custom
  

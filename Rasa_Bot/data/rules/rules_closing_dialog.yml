@@ -167,10 +167,11 @@ rules:
   - action: closing_relapse_prevention_plan_one_done_form
   - active_loop: closing_relapse_prevention_plan_one_done_form
   - active_loop: null
-  - action: show_barchart_difficult_situations
+  - action: action_check_barchart_difficult_situations_has_data
   - slot_was_set:
     - figure_previous_difficult_smoking_situations_has_data: true
   - action: utter_closing_prevention_plan_5
+  - action: show_barchart_difficult_situations
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -210,7 +211,7 @@ rules:
   - action: closing_relapse_prevention_plan_one_done_form
   - active_loop: closing_relapse_prevention_plan_one_done_form
   - active_loop: null
-  - action: show_barchart_difficult_situations
+  - action: action_check_barchart_difficult_situations_has_data
   - slot_was_set:
     - figure_previous_difficult_smoking_situations_has_data: false
   - action: utter_closing_prevention_plan_7

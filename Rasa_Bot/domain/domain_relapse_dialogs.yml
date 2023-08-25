@@ -1117,6 +1117,7 @@ actions:
   - action_set_slot_crave_lapse_relapse_3
   - action_reset_slot_crave_lapse_relapse
   - action_trigger_relapse
+  - action_check_barchart_difficult_situations_has_data
   - populate_coping_activities_list
   - populate_coping_activities_list_pa
   - show_barchart_difficult_situations

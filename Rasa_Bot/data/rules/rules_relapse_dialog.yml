@@ -180,13 +180,6 @@ rules:
   - action: utter_hrs_look_back_1
   - action: utter_hrs_look_back_2
   - action: show_barchart_difficult_situations
-  # slot should always be true here because user earlier answered relevant questions
-  # but just in case we put false as an option too
-  - or:
-    - slot_was_set:
-      - figure_previous_difficult_smoking_situations_has_data: true
-    - slot_was_set:
-      - figure_previous_difficult_smoking_situations_has_data: false
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -232,15 +225,8 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
-  - action: show_barchart_difficult_situations
-  # slot should always be true here, but just in case we also give false as an
-  # option.
-  - or:
-    - slot_was_set:
-      - figure_previous_difficult_smoking_situations_has_data: true
-    - slot_was_set:
-      - figure_previous_difficult_smoking_situations_has_data: false
   - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -442,13 +428,6 @@ rules:
   - action: utter_smoke_lapse_13
   - action: utter_smoke_lapse_14
   - action: show_barchart_difficult_situations
-  # slot should always be true here, but just in case we also give false as an
-  # option
-  - or:
-    - slot_was_set:
-      - figure_previous_difficult_smoking_situations_has_data: true
-    - slot_was_set:
-      - figure_previous_difficult_smoking_situations_has_data: false
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -486,7 +465,7 @@ rules:
   wait_for_user_input: false
 
 
-- rule: smoke lapse 4, return to weekly reflection, figure has data
+- rule: smoke lapse 4, return to weekly reflection
   condition:
     - active_loop: reflect_bar_chart_form
   steps:
@@ -504,40 +483,10 @@ rules:
   - action: utter_look_forward_2
   - action: utter_look_forward_3
   - action: show_barchart_difficult_situations
-  - slot_was_set:
-    - figure_previous_difficult_smoking_situations_has_data: true
   - action: utter_look_forward_4
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
-  - action: utter_look_forward_5
-  - action: utter_look_forward_6
-  - action: possible_smoking_situations_form
-  - active_loop: possible_smoking_situations_form
-  wait_for_user_input: false
-#  checkpoint: ehbo_me_self_lapse_checkpoint
-
-
-- rule: smoke lapse 4, return to weekly reflection, figure has no data
-  condition:
-    - active_loop: reflect_bar_chart_form
-  steps:
-  - action: reflect_bar_chart_form
-  - active_loop: null
-  - slot_was_set: # smoke branch
-    - smoke_or_pa: 1
-  - slot_was_set: # to distinguish the hrs branch from the lapse and relapse
-    - crave_lapse_relapse: 2
-  - action: store_reflect_barchart
-  - action: utter_smoke_lapse_19
-  - slot_was_set:
-    - weekly_or_relapse: 2
-  - action: utter_look_forward_1
-  - action: utter_look_forward_2
-  - action: utter_look_forward_3
-  - action: show_barchart_difficult_situations
-  - slot_was_set:
-    - figure_previous_difficult_smoking_situations_has_data: false
   - action: utter_look_forward_5
   - action: utter_look_forward_6
   - action: possible_smoking_situations_form

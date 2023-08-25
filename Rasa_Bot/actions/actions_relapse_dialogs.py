@@ -354,8 +354,30 @@ class ShowBarchartDifficultSituations(Action):
         except Exception:
             logging.info("File upload unsuccessful.")
 
-        return [SlotSet("upload_file_path", filepath),
-                SlotSet("figure_previous_difficult_smoking_situations_has_data", has_data)]
+        return [SlotSet("upload_file_path", filepath)]
+    
+
+class ActionCheckBarchartDifficultSituationsHasData(Action):
+    def name(self):
+        return "action_check_barchart_difficult_situations_has_data"
+
+    async def run(self, dispatcher, tracker, domain):
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        
+        question_ids = [[[DialogQuestionsEnum.RELAPSE_CRAVING_WHAT_DOING.value],
+                        [DialogQuestionsEnum.RELAPSE_LAPSE_WHAT_DOING.value,
+                        DialogQuestionsEnum.RELAPSE_RELAPSE_WHAT_DOING.value]],
+                        [[DialogQuestionsEnum.RELAPSE_CRAVING_HOW_FEEL.value],
+                         [DialogQuestionsEnum.RELAPSE_LAPSE_HOW_FEEL.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_HOW_FEEL.value]],
+                        [[DialogQuestionsEnum.RELAPSE_CRAVING_WITH_WHOM.value],
+                         [DialogQuestionsEnum.RELAPSE_LAPSE_WITH_WHOM.value,
+                         DialogQuestionsEnum.RELAPSE_RELAPSE_WITH_WHOM.value]]]
+        
+        # check if there is already data for the figure
+        has_data = figure_has_data(question_ids, user_id)
+        
+        return [SlotSet("figure_previous_difficult_smoking_situations_has_data", has_data)]
 
 
 class ShowBarchartDifficultSituationsPa(Action):

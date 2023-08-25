@@ -278,9 +278,10 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
-  - action: show_barchart_difficult_situations
+  - action: action_check_barchart_difficult_situations_has_data
   - slot_was_set:
     - figure_previous_difficult_smoking_situations_has_data: true
+  - action: show_barchart_difficult_situations
   - action: utter_look_forward_4
   - action: action_upload_file
   - action: action_send_metadata
@@ -305,7 +306,7 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
-  - action: show_barchart_difficult_situations
+  - action: action_check_barchart_difficult_situations_has_data
   - slot_was_set:
     - figure_previous_difficult_smoking_situations_has_data: false
   - action: utter_look_forward_5
@@ -329,9 +330,10 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
-  - action: show_barchart_difficult_situations
+  - action: action_check_barchart_difficult_situations_has_data
   - slot_was_set:
     - figure_previous_difficult_smoking_situations_has_data: true
+  - action: show_barchart_difficult_situations
   - action: utter_look_forward_4
   - action: action_upload_file
   - action: action_send_metadata
@@ -357,7 +359,7 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
-  - action: show_barchart_difficult_situations
+  - action: action_check_barchart_difficult_situations_has_data
   - slot_was_set:
     - figure_previous_difficult_smoking_situations_has_data: false
   - action: utter_look_forward_5

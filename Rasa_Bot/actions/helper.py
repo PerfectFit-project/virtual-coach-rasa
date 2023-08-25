@@ -55,7 +55,7 @@ def figure_has_data(question_ids, user_id):
 
     """
     
-    for i, question_ids_subset in enumerate(question_ids):
+    for question_ids_subset in question_ids:
         for question_ids_list in question_ids_subset:
             for question_id in question_ids_list:
                 answers = get_closed_answers(user_id, question_id)

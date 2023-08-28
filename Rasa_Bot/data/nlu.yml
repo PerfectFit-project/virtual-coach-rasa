@@ -15,7 +15,6 @@ nlu:
 - intent: uitleg_intent
   examples: |
     - "uilteg"
-    - "ik wil een uitleg"
 
 - intent: oefening_intent
   examples: |

@@ -5,12 +5,10 @@ nlu:
 - intent: help_intent
   examples: |
     - "help"
-    - "ik wil help"
 
 - intent: ehbo_intent
   examples: |
     - "ehbo"
-    - "ik wil ehbo"
 
 - intent: uitleg_intent
   examples: |
@@ -19,7 +17,6 @@ nlu:
 - intent: oefening_intent
   examples: |
     - "oefening"
-    - "ik wil de oefening doen"
 
 - intent: medicijn_intent
   examples: |

@@ -1147,7 +1147,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
                             y=data['date'],
                             orientation='h',
                             marker=dict(color=data['goal_achieved'].map(
-                                {2: 'lime', 1: 'orange', 0: 'tomato'})),
+                                {2: 'lime', 1: 'yellow', 0: 'tomato'})),
                             showlegend=False
                             ),
                      go.Bar(x=data['goals'],

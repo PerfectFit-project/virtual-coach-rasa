@@ -1140,13 +1140,14 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
          'steps': step_array,
          'goals': step_goal})
 
-    data['goal_achieved'] = data['steps'] >= data['goals']
+    data['goal_achieved'] = (data['steps'] >= 0.95*data['goals'])*1 +\
+                            (data['steps'] >= data['goals'])*1
 
     fig = go.Figure([go.Bar(x=data['steps'],
                             y=data['date'],
                             orientation='h',
                             marker=dict(color=data['goal_achieved'].map(
-                                {True: 'lime', False: 'tomato'})),
+                                {2: 'lime', 1: 'yellow', 0: 'tomato'})),
                             showlegend=False
                             ),
                      go.Bar(x=data['goals'],

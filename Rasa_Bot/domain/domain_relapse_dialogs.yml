@@ -385,7 +385,7 @@ responses:
     - text: "Betreft het roken of fysieke activiteit?"
     - text: "Gaat het over roken of lichaamsbeweging?"
   utter_ask_smoke_or_pa_form_smoke_or_pa:
-    - text: "Typ '1' als je het gaat om roken. 🚬 \n
+    - text: "Typ '1' als het gaat om roken. 🚬 \n
              Typ '2' als het gaat om lichamelijke beweging. 🚶️ \n
              Typ '3' als je per ongeluk 'help' hebt getypt en nu geen hulp nodig hebt."
     - text: "Als het om roken gaat, typ dan '1'. 🚬 \n

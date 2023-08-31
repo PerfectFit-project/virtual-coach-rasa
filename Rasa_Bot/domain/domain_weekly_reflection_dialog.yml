@@ -495,7 +495,7 @@ responses:
     - text: "Elke week is anders. De komende week kan heel anders verlopen of voelen
              dan afgelopen week, zelfs als je min of meer dezelfde dingen onderneemt. 🔀"
   utter_look_forward_3:
-    - text: "Het is daarom goed om ook vooruit te kijken naar komende wee➡️. Op deze
+    - text: "Het is daarom goed om ook vooruit te kijken naar komende week ➡️. Op deze
              manier ben je alvast voorbereid op wat er gaat komen."
     - text: "Daarom is het verstandig om vooruit te kijken naar de komende week,
              zodat je alvast voorbereid bent op wat er gaat gebeuren."
@@ -1178,15 +1178,46 @@ responses:
     - text: "Een goede voorbereiding is al de helft van het werk! ✔️"
     - text: "Een goede voorbereiding brengt je dichterbij je doelen! ✔️"
     - text: "Een goede voorbereiding is erg belangrijk voor succes! ✔️"
+  utter_increase_intensity_23_b:
+    - text: "We gaan nu kijken naar bewegen in het algemeen, dus niet alleen intensieve beweging."
 
   # 7c Will there be difficult moments this week?
   utter_predict_difficult_moments_1:
-    - text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen."
-    - text: "Zoals eerder gezien, zijn dit de situaties waar jij moeite mee hebt 📍. In deze situaties vond jij het moeilijk om actief te worden"
-    - text: "Zoals we eerder hebben besproken, zijn dit jouw uitdagende situaties 📍. Je vond het in deze situaties moeilijk om actief te zijn"
-    - text: "We hebben eerder gezien dat dit jouw lastige situaties zijn 📍. In deze situaties was het voor jou moeilijk om in beweging te komen."
-    - text: "We hebben al eerder gezien dat dit jouw uitdagende momenten zijn 📍. Je vond het in deze situaties moeilijk om in beweging te komen."
-    - text: "Zoals we eerder hebben gezien, zijn dit de situaties die jij lastig vindt 📍. In deze situaties vond je het moeilijk om actief te worden."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Zoals eerder gezien, zijn dit de situaties waar jij moeite mee hebt 📍. In deze situaties vond jij het moeilijk om actief te worden"
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Zoals we eerder hebben besproken, zijn dit jouw uitdagende situaties 📍. Je vond het in deze situaties moeilijk om actief te zijn"
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "We hebben eerder gezien dat dit jouw lastige situaties zijn 📍. In deze situaties was het voor jou moeilijk om in beweging te komen."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "We hebben al eerder gezien dat dit jouw uitdagende momenten zijn 📍. Je vond het in deze situaties moeilijk om in beweging te komen."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Zoals we eerder hebben gezien, zijn dit de situaties die jij lastig vindt 📍. In deze situaties vond je het moeilijk om actief te worden."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: false
+      text: "In de toekomst gaan we hier kijken naar jouw lastige situaties. De grafiek is leeg als je nog geen situaties hebt opgegeven waarin het moeilijk was om in beweging te komen."
   utter_predict_difficult_moments_2:
     - text: "Denk zoals eerder na over wat je komende week gaat doen. Niet alleen qua beweging, maar alles wat je komende week gaat doen.
              Pak je agenda er weer bij als dat helpt 🗓️. Of pak het blaadje waar je eerder je activiteiten voor komende week op schreef 🖊️. "

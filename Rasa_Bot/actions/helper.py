@@ -45,6 +45,26 @@ from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 celery = Celery(broker=REDIS_URL)
 
+def figure_has_data(question_ids, user_id):
+    """
+    Check if the data for a figure has any values.
+    
+    Args:
+        question_ids: the questions to retrieve the responses to for the figure
+        user_id: ID of the user
+
+    Returns:
+        boolean indicating whether there is data for the figure.
+    """
+    for question_ids_subset in question_ids:
+        for question_ids_list in question_ids_subset:
+            for question_id in question_ids_list:
+                answers = get_closed_answers(user_id, question_id)
+                if len(answers) > 0:
+                    return True
+                
+    return False
+
 
 def mark_completion(user_id, dialog):
 

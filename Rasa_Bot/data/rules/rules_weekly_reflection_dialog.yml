@@ -619,6 +619,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - how_went_pa: 3
+  - action: utter_pre_free_reflect_4
   - action: free_reflect_4_form
   - active_loop: free_reflect_4_form
   wait_for_user_input: false

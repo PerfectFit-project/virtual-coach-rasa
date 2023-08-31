@@ -591,6 +591,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - how_went_pa: 1
+  - action: utter_pre_free_reflect_3
   - action: free_reflect_3_form
   - active_loop: free_reflect_3_form
   wait_for_user_input: false
@@ -604,6 +605,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - how_went_pa: 2
+  - action: utter_pre_free_reflect_3
   - action: free_reflect_3_form
   - active_loop: free_reflect_3_form
   wait_for_user_input: false

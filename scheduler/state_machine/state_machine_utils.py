@@ -734,25 +734,34 @@ def run_option_menu(user_id: int):
     celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
 
 
-def retrieve_intervention_day(user_id: int, current_date: date) -> int:
+def retrieve_tracking_day(user_id: int, current_date: date) -> int:
     """
-    Computes the number of days from the start day of the intervention
-    (first day of preparation phase)
+    Computes the number of days from the start day of the tracking
+    (completion of the track smoking behavior dialog)
 
     Args:
         user_id: ID of the user
         current_date: the current date
 
     Returns:
-        The number of days since  the intervention start day
+        The number of days since the tracking start day
 
     """
-    start_date = get_start_date(user_id=user_id)
+    track_dialog_id = get_intervention_component(Components.PROFILE_CREATION)
+    track_dialog = get_last_component_state(user_id, track_dialog_id)
 
-    # add +1 because the count starts at day 1
-    intervention_day = (current_date - start_date).days + 1
+    # if the dialog has not been admnistered or not completed, return 0
+    if track_dialog is None:
+        tracking_day = 0
+    elif not track_dialog.completed:
+        tracking_day = 0
+    else:
+        start_date = track_dialog.last_time
 
-    return intervention_day
+        # add +1 because the count starts at day 1
+        tracking_day = (current_date - start_date).days + 1
+
+    return tracking_day
 
 
 def store_rescheduled_dialog(user_id: int,

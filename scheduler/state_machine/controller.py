@@ -10,7 +10,7 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_preferred_date_time,
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, reschedule_dialog,
-                                               retrieve_intervention_day, revoke_execution,
+                                               retrieve_tracking_day, revoke_execution,
                                                run_uncompleted_dialog, run_option_menu,
                                                schedule_next_execution, store_completed_dialog,
                                                store_scheduled_dialog, update_execution_week,
@@ -234,10 +234,8 @@ class TrackingState(State):
 
     def on_new_day(self, current_date: date):
         logging.info('current date: %s', current_date)
-        self.check_if_end_date(current_date)
 
         # at day 7 activity C2.9 has to be proposed
-
         start_date = get_start_date(self.user_id)
         ga_completed = get_dialog_completion_state(self.user_id, Components.GENERAL_ACTIVITY)
         if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER and not ga_completed:
@@ -245,10 +243,12 @@ class TrackingState(State):
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)
 
+        self.check_if_end_date(current_date)
+
     def check_if_end_date(self, date_to_check: date) -> bool:
-        intervention_day = retrieve_intervention_day(self.user_id, date_to_check)
+        tracking_day = retrieve_tracking_day(self.user_id, date_to_check)
         # the Goal Setting state starts on day 10 of the intervention
-        if intervention_day >= TRACKING_DURATION:
+        if tracking_day >= TRACKING_DURATION:
             self.set_new_state(GoalsSettingState(self.user_id))
             return True
 

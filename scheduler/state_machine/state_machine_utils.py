@@ -752,9 +752,9 @@ def retrieve_tracking_day(user_id: int, current_date: date) -> int:
 
     # if the dialog has not been admnistered or not completed, return 0
     if track_dialog is None:
-        intervention_day = 0
+        tracking_day = 0
     elif not track_dialog.completed:
-        intervention_day = 0
+        tracking_day = 0
     else:
         start_date = track_dialog.last_time
 

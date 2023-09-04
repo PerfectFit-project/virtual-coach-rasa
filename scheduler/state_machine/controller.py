@@ -19,9 +19,10 @@ from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, G
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
                                  MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
                                  EXECUTION_DURATION_WEEKS, TIME_DELTA_PA_NOTIFICATION, REDIS_URL,
-                                 RESCHEDULE_DIALOG)
+                                 RESCHEDULE_DIALOG, TRIGGER_INTENT)
 from state_machine.state import State
-from virtual_coach_db.helper.definitions import (Components, ComponentsTriggers, Notifications)
+from virtual_coach_db.helper.definitions import (Components, ComponentsTriggers,
+                                                 Notifications, NotificationsTriggers)
 
 celery = Celery(broker=REDIS_URL)
 
@@ -435,12 +436,10 @@ class BufferState(State):
         if current_date >= quit_date:
             logging.info('Buffer state ended, starting execution state')
 
-
             # on the quit date, notify the user that today is the quit date
             if current_date == quit_date:
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.QUIT_DATE_NOTIFICATION,
-                               phase_id=2)
+                celery.send_task(TRIGGER_INTENT,
+                                 (self.user_id, NotificationsTriggers.QUIT_DATE_NOTIFICATION))
 
             self.set_new_state(ExecutionRunState(self.user_id))
 
@@ -683,7 +682,7 @@ class ExecutionRunState(State):
                 return False
 
         return True
-    
+
 
 class RelapseState(State):
 

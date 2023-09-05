@@ -177,8 +177,11 @@ class OnboardingState(State):
         first_date = date.today() + timedelta(days=1)
         last_date = get_start_date(self.user_id) + timedelta(days=9)
 
-        plan_every_day_range(self.user_id,
-                             Notifications.TRACK_NOTIFICATION, 1, first_date, last_date)
+        plan_every_day_range(user_id=self.user_id,
+                             dialog=Notifications.TRACK_NOTIFICATION,
+                             phase_id=1,
+                             first_date=first_date,
+                             last_date=last_date)
 
 
 class TrackingState(State):
@@ -354,11 +357,11 @@ class GoalsSettingState(State):
                                phase_id=2)
         # every day (default group 1)
         else:
-            plan_every_day_range(self.user_id,
-                                 Notifications.PA_STEP_GOAL_NOTIFICATION,
-                                 2,
-                                 first_date,
-                                 last_date)
+            plan_every_day_range(user_id=self.user_id,
+                                 dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                                 phase_id=2,
+                                 first_date=first_date,
+                                 last_date=last_date)
 
     def run(self):
 
@@ -633,11 +636,11 @@ class ExecutionRunState(State):
             # until the next GA dialog
             last_date = get_next_planned_date(self.user_id, datetime.now())
 
-            plan_every_day_range(self.user_id,
-                                 Notifications.PA_STEP_GOAL_NOTIFICATION,
-                                 2,
-                                 first_date,
-                                 last_date.date())
+            plan_every_day_range(user_id=self.user_id,
+                                 dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                                 phase_id=2,
+                                 first_date=first_date,
+                                 last_date=last_date.date())
 
     def is_weekly_reflection_next(self) -> bool:
         """

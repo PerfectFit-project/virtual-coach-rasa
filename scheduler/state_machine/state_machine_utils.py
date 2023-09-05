@@ -736,25 +736,34 @@ def run_option_menu(user_id: int):
     celery.send_task(TRIGGER_INTENT, (user_id, ComponentsTriggers.CENTRAL_OPTIONS, False))
 
 
-def retrieve_intervention_day(user_id: int, current_date: date) -> int:
+def retrieve_tracking_day(user_id: int, current_date: date) -> int:
     """
-    Computes the number of days from the start day of the intervention
-    (first day of preparation phase)
+    Computes the number of days from the start day of the tracking
+    (completion of the track smoking behavior dialog)
 
     Args:
         user_id: ID of the user
         current_date: the current date
 
     Returns:
-        The number of days since  the intervention start day
+        The number of days since the tracking start day
 
     """
-    start_date = get_start_date(user_id=user_id)
+    track_dialog_id = get_intervention_component(Components.PROFILE_CREATION)
+    track_dialog = get_last_component_state(user_id, track_dialog_id)
 
-    # add +1 because the count starts at day 1
-    intervention_day = (current_date - start_date).days + 1
+    # if the dialog has not been admnistered or not completed, return 0
+    if track_dialog is None:
+        tracking_day = 0
+    elif not track_dialog.completed:
+        tracking_day = 0
+    else:
+        start_date = track_dialog.last_time
 
-    return intervention_day
+        # add +1 because the count starts at day 1
+        tracking_day = (current_date - start_date).days + 1
+
+    return tracking_day
 
 
 def store_rescheduled_dialog(user_id: int,
@@ -926,6 +935,31 @@ def plan_and_store(user_id: int,
                                planned_date=planned_date,
                                task_uuid=str(task.task_id),
                                last_time=last_time)
+
+
+def plan_every_day_range(user_id: int,
+                         dialog: str,
+                         phase_id: int,
+                         first_date: date,
+                         last_date: date):
+    """
+    Program a dialog every day from the first date to the last date.
+    Args:
+        user_id:user id
+        dialog: dialog to be triggered
+        phase_id: db id of the phase
+        first_date: first date where the dialog is planned
+        last_date: last date where the dialog is planned
+    """
+
+    for day in range((last_date - first_date).days + 1):
+        planned_date = create_new_date(start_date=first_date,
+                                       time_delta=day)
+
+        plan_and_store(user_id=user_id,
+                       dialog=dialog,
+                       planned_date=planned_date,
+                       phase_id=phase_id)
 
 
 def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: int):

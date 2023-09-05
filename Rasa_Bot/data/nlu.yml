@@ -14,13 +14,14 @@ nlu:
 
 - intent: uitleg_intent
   examples: |
-    - "uilteg"
+    - "uitleg"
     - "ik wil een uitleg"
 
 - intent: oefening_intent
   examples: |
     - "oefening"
     - "ik wil de oefening doen"
+    
 
 - intent: medicijn_intent
   examples: |

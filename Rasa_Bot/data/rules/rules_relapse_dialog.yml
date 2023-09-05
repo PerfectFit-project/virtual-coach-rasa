@@ -494,6 +494,7 @@ rules:
   wait_for_user_input: false
 #  checkpoint: ehbo_me_self_lapse_checkpoint
 
+
 - rule: smoke lapse open ehbo #  checkpoint: ehbo_me_self_lapse_checkpoint
   condition:
     - active_loop: ehbo_me_self_lapse_form
@@ -928,8 +929,8 @@ rules:
   - action: utter_steps_next_week_1
   - action: utter_steps_next_week_2
   - action: utter_steps_next_week_3
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file

@@ -265,8 +265,8 @@ rules:
 
 ## 4b Were there difficult moments?
 
-## User answered 1
-- rule: No difficult moments
+## User answered 1 & figure has data
+- rule: No difficult moments, figure has data
   condition:
     - active_loop: specific_moments_form
   steps:
@@ -278,6 +278,9 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
+  - action: action_check_barchart_difficult_situations_has_data
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: true
   - action: utter_look_forward_4
   - action: show_barchart_difficult_situations
   - action: action_upload_file
@@ -288,9 +291,33 @@ rules:
   - action: possible_smoking_situations_form
   - active_loop: possible_smoking_situations_form
   wait_for_user_input: false
+  
+  
+## User answered 1 & figure has no data
+- rule: No difficult moments, figure has no data
+  condition:
+    - active_loop: specific_moments_form
+  steps:
+  - action: specific_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - specific_moments: 1
+  - action: utter_difficult_moments_1
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: action_check_barchart_difficult_situations_has_data
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: false
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
 
-## User answered 3
-- rule: Not sure if difficult moments
+
+## User answered 3 & figure has data
+- rule: Not sure if difficult moments, figure has data
   condition:
     - active_loop: specific_moments_form
   steps:
@@ -303,6 +330,9 @@ rules:
   - action: utter_look_forward_1
   - action: utter_look_forward_2
   - action: utter_look_forward_3
+  - action: action_check_barchart_difficult_situations_has_data
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: true
   - action: utter_look_forward_4
   - action: show_barchart_difficult_situations
   - action: action_upload_file
@@ -313,6 +343,31 @@ rules:
   - action: possible_smoking_situations_form
   - active_loop: possible_smoking_situations_form
   wait_for_user_input: false
+  
+  
+## User answered 3 & figure has no data
+- rule: Not sure if difficult moments, figure has no data
+  condition:
+    - active_loop: specific_moments_form
+  steps:
+  - action: specific_moments_form
+  - active_loop: null
+  - slot_was_set:
+    - specific_moments: 3
+  - action: utter_difficult_moments_2
+  - action: utter_difficult_moments_3
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: action_check_barchart_difficult_situations_has_data
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: false
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
+
 
 ## User answered 2
 - rule: There were difficult moments
@@ -536,6 +591,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - how_went_pa: 1
+  - action: utter_pre_free_reflect_3
   - action: free_reflect_3_form
   - active_loop: free_reflect_3_form
   wait_for_user_input: false
@@ -549,6 +605,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - how_went_pa: 2
+  - action: utter_pre_free_reflect_3
   - action: free_reflect_3_form
   - active_loop: free_reflect_3_form
   wait_for_user_input: false
@@ -562,6 +619,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - how_went_pa: 3
+  - action: utter_pre_free_reflect_4
   - action: free_reflect_4_form
   - active_loop: free_reflect_4_form
   wait_for_user_input: false
@@ -698,8 +756,8 @@ rules:
   - action: utter_steps_next_week_2
   - action: action_get_long_term_pa_goal
   - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -745,8 +803,8 @@ rules:
   - action: utter_steps_next_week_2
   - action: action_get_long_term_pa_goal
   - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -773,8 +831,8 @@ rules:
   - action: utter_steps_next_week_2
   - action: action_get_long_term_pa_goal
   - action: utter_steps_next_week_3  # need long_term_pa_goal-slot here in utterance
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -873,8 +931,8 @@ rules:
   - action: utter_increase_intensity_7
   - action: utter_increase_intensity_8
   - action: utter_increase_intensity_9
-  - action: utter_predict_difficult_moments_1
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file
@@ -924,8 +982,9 @@ rules:
   - active_loop: null
   - action: utter_increase_intensity_22
   - action: utter_increase_intensity_23
-  - action: utter_predict_difficult_moments_1
+  - action: utter_increase_intensity_23_b
   - action: show_barchart_difficult_situations_pa
+  - action: utter_predict_difficult_moments_1
   - action: action_upload_file
   - action: action_send_metadata
   - action: action_delete_file

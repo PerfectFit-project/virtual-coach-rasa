@@ -12,16 +12,16 @@ from cryptography.hazmat.primitives import serialization
 
 # dev or prod environment
 ENVIRONMENT = os.getenv('ENVIRONMENT')
+SENSOR_API_PROD = os.getenv('SENSOR_API_PROD')
+SENSOR_API_DEV = os.getenv('SENSOR_API_DEV')
 
 # information for reading sensors data
 SENSOR_KEY_PATH = '/app/sensorprivatekey'
 
 if ENVIRONMENT == 'prod':
-    # TODO: replace with actual url when this will be made available
-    API_URL = 'https://www.rrdhost.nl/servlets/senseeact/v6.0.4/project/perfectfit/'
+    API_URL = SENSOR_API_PROD
 else:
-    # TODO: replace with actual url when this will be made available
-    API_URL = 'https://www.rrdhost.nl/servlets/senseeact/v6.0.4/project/perfectfit/'
+    API_URL = SENSOR_API_DEV
 
 STEPS_URL = API_URL + 'table/garmin_steps_day'
 HR_URL = API_URL + 'table/garmin_heart_history'

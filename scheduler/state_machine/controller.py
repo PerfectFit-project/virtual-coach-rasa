@@ -18,7 +18,7 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                update_fsm_dialog_running_status)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
-                                 MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
+                                 MAX_PREPARATION_DURATION, HIGH_PA_GROUP,
                                  EXECUTION_DURATION_WEEKS, TIME_DELTA_PA_NOTIFICATION, REDIS_URL,
                                  RESCHEDULE_DIALOG, TRIGGER_INTENT)
 from state_machine.state import State

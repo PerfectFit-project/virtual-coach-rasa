@@ -837,19 +837,30 @@ responses:
   utter_answer_1_5_weekly_reflection_pa:
     - text: "Typ 1,2,3,4 of 5 afhakelijk van hoe het afgelopen week is gegaan met je stappen"
 
+  utter_pre_free_reflect_3:
+    - text: "Mooi! 😊"
+    - text: "Goed gedaan! 😊"
+    - text: "Geweldig! 😊"
+    - text: "Fantastisch! 😊"
+    - text: "Geweldig gedaan! 😊"
   utter_ask_free_reflect_3:
-    - text: "Mooi! 😊 Wat maakt dat het zo goed ging met bewegen?"
-    - text: "Goed gedaan! 😊 Wat denk jij dat heeft geholpen bij het actief zijn afgelopen week?"
-    - text: "Geweldig! 😊 Kun je bedenken waarom het zo goed ging met jouw beweging deze week?"
-    - text: "Fantastisch! 😊 Wat denk je dat jou heeft geholpen om zo actief te zijn afgelopen week?"
-    - text: "Geweldig gedaan! 😊 Wat denk je dat ervoor heeft gezorgd dat je zo goed bent geweest in bewegen deze week?"
+    - text: "Wat maakt dat het zo goed ging met bewegen?"
+    - text: "Wat denk jij dat heeft geholpen bij het actief zijn afgelopen week?"
+    - text: "Kun je bedenken waarom het zo goed ging met jouw beweging deze week?"
+    - text: "Wat denk je dat jou heeft geholpen om zo actief te zijn afgelopen week?"
+    - text: "Wat denk je dat ervoor heeft gezorgd dat je zo goed bent geweest in bewegen deze week?"
+  utter_pre_free_reflect_4:
+    - text: "Oké 😐."
+    - text: "Begrijpelijk 😐."
+    - text: "Geen probleem 😐."
+    - text: "Dat is begrijpelijk 😐."
   utter_ask_free_reflect_4:
-    - text: "Oké 😐. Wat maakt dat het oké ging met bewegen?"
-    - text: "Begrijpelijk 😐. Wat denk je dat ervoor heeft gezorgd dat het 'oké' ging met bewegen deze week?"
-    - text: "Oké😐. Kun je bedenken waarom het oké ging met jouw beweging deze week?"
-    - text: "Oké 😐. Kun je bedenken waarom het niet zo actief was als je had gewild?"
-    - text: "Geen probleem 😐. Wat denk je dat jou heeft belemmerd om meer te bewegen afgelopen week?"
-    - text: "Dat is begrijpelijk 😐. Wat denk je dat de reden was dat je niet zo actief bent geweest als je had gewild?"
+    - text: "Wat maakt dat het oké ging met bewegen?"
+    - text: "Wat denk je dat ervoor heeft gezorgd dat het 'oké' ging met bewegen deze week?"
+    - text: "Kun je bedenken waarom het oké ging met jouw beweging deze week?"
+    - text: "Kun je bedenken waarom het niet zo actief was als je had gewild?"
+    - text: "Wat denk je dat jou heeft belemmerd om meer te bewegen afgelopen week?"
+    - text: "Wat denk je dat de reden was dat je niet zo actief bent geweest als je had gewild?"
   utter_how_went_1:
     - text: "Dankjewel voor het delen. Mooi dat je dit weet te vertellen."
     - text: "Bedankt voor het delen. Fijn dat je open bent over je ervaringen."

@@ -637,7 +637,7 @@ class ExecutionRunState(State):
                                  Notifications.PA_STEP_GOAL_NOTIFICATION,
                                  2,
                                  first_date,
-                                 last_date)
+                                 last_date.date())
 
     def is_weekly_reflection_next(self) -> bool:
         """

@@ -615,22 +615,7 @@ class ExecutionRunState(State):
 
         pa_group = get_pa_group(self.user_id)
 
-        if pa_group == LOW_PA_GROUP:
-
-            first_date = date.today() + timedelta(days=1)
-            # until the next GA dialog
-            last_date = first_date + timedelta(days=6)
-
-            for day in range((last_date - first_date).days):
-                planned_date = create_new_date(start_date=first_date,
-                                               time_delta=day)
-
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
-                               planned_date=planned_date,
-                               phase_id=2)
-
-        elif pa_group == HIGH_PA_GROUP:
+        if pa_group == HIGH_PA_GROUP:
 
             planned_date_1 = create_new_date(start_date=date.today(),
                                              time_delta=1)
@@ -647,6 +632,21 @@ class ExecutionRunState(State):
                            dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
                            planned_date=planned_date_4,
                            phase_id=2)
+
+        else:
+
+            first_date = date.today() + timedelta(days=1)
+            # until the next GA dialog
+            last_date = first_date + timedelta(days=6)
+
+            for day in range((last_date - first_date).days):
+                planned_date = create_new_date(start_date=first_date,
+                                               time_delta=day)
+
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                               planned_date=planned_date,
+                               phase_id=2)
 
     def is_weekly_reflection_next(self) -> bool:
         """

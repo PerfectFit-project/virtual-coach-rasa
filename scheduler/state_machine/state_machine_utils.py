@@ -938,8 +938,8 @@ def plan_and_store(user_id: int,
 def plan_every_day_range(user_id: int,
                          dialog: str,
                          phase_id: int,
-                         first_date: datetime,
-                         last_date: datetime):
+                         first_date: date,
+                         last_date: date):
     """
     Program a dialog every day from the first date to the last date.
     Args:

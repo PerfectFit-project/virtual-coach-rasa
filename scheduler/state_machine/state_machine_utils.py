@@ -935,6 +935,31 @@ def plan_and_store(user_id: int,
                                last_time=last_time)
 
 
+def plan_every_day_range(user_id: int,
+                         dialog: str,
+                         phase_id: int,
+                         first_date: datetime,
+                         last_date: datetime):
+    """
+    Program a dialog every day from the first date to the last date.
+    Args:
+        user_id:user id
+        dialog: dialog to be triggered
+        phase_id: db id of the phase
+        first_date: first date where the dialog is planned
+        last_date: last date where the dialog is planned
+    """
+
+    for day in range((last_date - first_date).days + 1):
+        planned_date = create_new_date(start_date=first_date,
+                                       time_delta=day)
+
+        plan_and_store(user_id=user_id,
+                       dialog=dialog,
+                       planned_date=planned_date,
+                       phase_id=phase_id)
+
+
 def reschedule_dialog(user_id: int, dialog: str, planned_date: datetime, phase: int):
     """
     Program a new celery task for the planned_date and store the info in the db

@@ -9,7 +9,8 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_hrs_last_branch,
                                                get_preferred_date_time,
                                                get_quit_date, get_pa_group, get_start_date,
-                                               is_new_week, plan_and_store, reschedule_dialog,
+                                               is_new_week, plan_and_store, plan_every_day_range,
+                                               reschedule_dialog,
                                                retrieve_tracking_day, revoke_execution,
                                                run_uncompleted_dialog, run_option_menu,
                                                schedule_next_execution, store_completed_dialog,
@@ -176,14 +177,8 @@ class OnboardingState(State):
         first_date = date.today() + timedelta(days=1)
         last_date = get_start_date(self.user_id) + timedelta(days=9)
 
-        for day in range((last_date - first_date).days):
-            planned_date = create_new_date(start_date=first_date,
-                                           time_delta=day)
-
-            plan_and_store(user_id=self.user_id,
-                           dialog=Notifications.TRACK_NOTIFICATION,
-                           planned_date=planned_date,
-                           phase_id=1)
+        plan_every_day_range(self.user_id,
+                             Notifications.TRACK_NOTIFICATION, 1, first_date, last_date)
 
 
 class TrackingState(State):
@@ -359,14 +354,11 @@ class GoalsSettingState(State):
                                phase_id=2)
         # every day (default group 1)
         else:
-            for day in range((last_date - first_date).days + 1):
-                planned_date = create_new_date(start_date=first_date,
-                                               time_delta=day)
-
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
-                               planned_date=planned_date,
-                               phase_id=2)
+            plan_every_day_range(self.user_id,
+                                 Notifications.PA_STEP_GOAL_NOTIFICATION,
+                                 2,
+                                 first_date,
+                                 last_date)
 
     def run(self):
 
@@ -607,6 +599,8 @@ class ExecutionRunState(State):
                                     current_date=datetime.now(),
                                     phase_id=2)
 
+            self.schedule_pa_notifications()
+
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets
         # a notification with the steps goal every day. Group 2 gets a notification with steps
@@ -637,16 +631,13 @@ class ExecutionRunState(State):
 
             first_date = date.today() + timedelta(days=1)
             # until the next GA dialog
-            last_date = first_date + timedelta(days=6)
+            last_date = get_next_planned_date(self.user_id, datetime.now())
 
-            for day in range((last_date - first_date).days):
-                planned_date = create_new_date(start_date=first_date,
-                                               time_delta=day)
-
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
-                               planned_date=planned_date,
-                               phase_id=2)
+            plan_every_day_range(self.user_id,
+                                 Notifications.PA_STEP_GOAL_NOTIFICATION,
+                                 2,
+                                 first_date,
+                                 last_date)
 
     def is_weekly_reflection_next(self) -> bool:
         """

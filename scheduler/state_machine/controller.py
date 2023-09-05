@@ -346,19 +346,8 @@ class GoalsSettingState(State):
         first_date = date.today() + timedelta(days=1)
         # until the execution starts
         last_date = get_quit_date(self.user_id)
-        # every day
-        if pa_group == LOW_PA_GROUP:
 
-            for day in range((last_date - first_date).days + 1):
-                planned_date = create_new_date(start_date=first_date,
-                                               time_delta=day)
-
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
-                               planned_date=planned_date,
-                               phase_id=2)
-
-        else:
+        if pa_group == HIGH_PA_GROUP:
             # every 3 days
             for day in range((last_date - first_date).days)[0::3]:
                 planned_date = create_new_date(start_date=first_date,
@@ -366,6 +355,16 @@ class GoalsSettingState(State):
 
                 plan_and_store(user_id=self.user_id,
                                dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
+                               planned_date=planned_date,
+                               phase_id=2)
+        # every day (default group 1)
+        else:
+            for day in range((last_date - first_date).days + 1):
+                planned_date = create_new_date(start_date=first_date,
+                                               time_delta=day)
+
+                plan_and_store(user_id=self.user_id,
+                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
                                planned_date=planned_date,
                                phase_id=2)
 

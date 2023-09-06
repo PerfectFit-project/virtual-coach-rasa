@@ -1074,13 +1074,13 @@ responses:
   utter_ask_if_doable:
     - text: "Zie jij dit zitten?\n
              Typ '1' voor ja.\n
-             Typ '2' voor nee. "
+             Typ '2' voor nee, ik behoud mijn intensiteitsdoel van vorige week. "
     - text: "Lijkt dit iets voor jou?\n
              Typ '1' voor ja.\n
-             Typ '2' voor nee. "
+             Typ '2' voor nee, ik behoud mijn intensiteitsdoel van vorige week. "
     - text: "Zou je dit willen proberen?\n
              Typ '1' voor ja.\n
-             Typ '2' voor nee. "
+             Typ '2' voor nee, ik behoud mijn intensiteitsdoel van vorige week. "
 
   utter_increase_intensity_7:
     - text: "Helemaal goed 👍🏼."

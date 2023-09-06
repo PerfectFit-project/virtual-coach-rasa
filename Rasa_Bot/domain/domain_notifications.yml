@@ -16,6 +16,12 @@ slots:
     mappings:
       - type: custom
 
+  notifications_steps_yesterday:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
   notifications_pa_intensity_goal:
     type: float
     influence_conversation: false
@@ -46,10 +52,14 @@ responses:
              gewoon op je horloge!"
 
 # Step goal notification
-  utter_notifications_step_goal_1:
+  utter_notifications_step_goal_1a:
     - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm op weer!"
     - text: "Voor vandaag heb je als stappendoel: {notifications_daily_step_goal}. 🚶🏿 Succes, zet 'm op!"
     - text: "Vandaag is je stappendoel: {notifications_daily_step_goal}. 🚶🏿 Je kunt het!"
+  utter_notifications_step_goal_1b:
+    - text: "Je horloge heeft gisteren {notifications_steps_yesterday} stappen opgenomen."
+    - text: "Gisteren heb je volgens het horloge {notifications_steps_yesterday} stappen gezet."
+    - text: "Gisteren zijn er {notifications_steps_yesterday} stappen gezet volgens het horloge."
   utter_notifications_step_goal_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt, kijk dan op je horloge. ⌚"
     - text: "Als je wilt weten hoeveel stappen je al gezet hebt, kun je op je horloge kijken. ⌚"
@@ -129,6 +139,7 @@ responses:
 actions:
   - action_notifications_get_daily_step_goal
   - action_notifications_weekly_intensity_minutes_from_db
+  - action_notifications_get_number_steps_yesterday
   - action_go_to_central_mode_options
   - pause_one_minute
   - action_notifications_check_watch_wear

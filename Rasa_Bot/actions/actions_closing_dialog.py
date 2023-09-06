@@ -13,7 +13,8 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
 from .definitions import DATABASE_URL, NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
-from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
+from .helper import (get_latest_bot_utterance, get_smoked_cigarettes_range,
+                     store_pf_evaluation_to_db, get_faik_text)
 
 
 celery = Celery(broker=REDIS_URL)
@@ -54,8 +55,6 @@ class ActionGetSmokingStatus(Action):
         end_time = datetime.datetime.now()
         start_time = end_time - datetime.timedelta(days=28) # 4 weeks
 
-        smoking_status = 1
-
         # get cigarettes registered in niceday trackers
         tracked_cigarettes = client.get_smoking_tracker(user_id, start_time, end_time)
 
@@ -64,7 +63,12 @@ class ActionGetSmokingStatus(Action):
             return [SlotSet('closing_smoking_status', 2)]
 
         # check in the DB the cigarettes reported in the lapse and relapse dialog
-        smoking_status = 1  # TODO: get this from database
+        reported_cigarettes = get_smoked_cigarettes_range(user_id, start_time, end_time)
+        if reported_cigarettes > 0:
+            smoking_status = 2
+        else:
+            smoking_status = 1
+
         return [SlotSet('closing_smoking_status', smoking_status)]
 
 

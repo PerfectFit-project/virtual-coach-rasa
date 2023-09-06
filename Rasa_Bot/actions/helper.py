@@ -32,6 +32,7 @@ from .definitions import (AFTERNOON_SEND_TIME,
 from virtual_coach_db.dbschema.models import (ClosedAnswers,
                                               DialogClosedAnswers,
                                               DialogOpenAnswers,
+                                              DialogQuestions,
                                               FirstAidKit,
                                               InterventionActivity,
                                               InterventionActivitiesPerformed,
@@ -40,10 +41,11 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers,
                                               UserStateMachine,
                                               Users)
 
-from virtual_coach_db.helper.definitions import Components
+from virtual_coach_db.helper.definitions import Components, DialogQuestionsEnum
 from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 celery = Celery(broker=REDIS_URL)
+
 
 def figure_has_data(question_ids, user_id):
     """
@@ -62,12 +64,11 @@ def figure_has_data(question_ids, user_id):
                 answers = get_closed_answers(user_id, question_id)
                 if len(answers) > 0:
                     return True
-                
+
     return False
 
 
 def mark_completion(user_id, dialog):
-
     celery.send_task('celery_tasks.intervention_component_completed', (user_id, dialog))
 
     return []
@@ -1160,8 +1161,8 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
          'steps': step_array,
          'goals': step_goal})
 
-    data['goal_achieved'] = (data['steps'] >= 0.95*data['goals'])*1 +\
-                            (data['steps'] >= data['goals'])*1
+    data['goal_achieved'] = (data['steps'] >= 0.95 * data['goals']) * 1 + \
+                            (data['steps'] >= data['goals']) * 1
 
     fig = go.Figure([go.Bar(x=data['steps'],
                             y=data['date'],
@@ -1326,6 +1327,43 @@ def get_steps_data(user_id: int,
     except ValueError:
         logging.error(f"Error in returned value from sensors: '{res}'")
         return None
+
+
+# functions for sensors data querying
+def get_smoked_cigarettes_range(user_id: int,
+                                start_date: datetime,
+                                end_date: datetime) -> int:
+    """
+    Get the cigarettes smoked by a user in the given time range.
+    The cigarettes are the ones added through the (re)lapse dialog.
+    Args:
+        user_id: ID of the user whom data needs to be queried.
+        start_date: start of the range of days to query. This day is included in the interval.
+        end_date: end of the range of days to query. This day is not included in the interval.
+
+    Returns: the number of smoked cigarettes reported by the user.
+    """
+    session = get_db_session(db_url=DATABASE_URL)
+
+    cigarettes = 0
+
+    cigarettes_entries = (session.query(DialogOpenAnswers)
+                  .join(DialogQuestions)
+                  .filter(DialogOpenAnswers.users_nicedayuid == user_id,
+                          ((
+                                   DialogQuestions.question_id == DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value) | (
+                                   DialogQuestions.question_id == DialogQuestionsEnum.RELAPSE_RELAPSE_NUMBER_CIGARETTES.value)),
+                          DialogOpenAnswers.datetime >= start_date,
+                          DialogOpenAnswers.datetime <= end_date
+                          )
+
+                  .all())
+
+    if cigarettes_entries:
+        for entry in cigarettes_entries:
+            cigarettes += int(entry.answer_value)
+
+    return cigarettes
 
 
 def format_sensors_date(sensors_date: str) -> date:

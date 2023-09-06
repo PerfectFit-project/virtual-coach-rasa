@@ -30,6 +30,26 @@ class ActionGetDailyStepGoal(Action):
         return [SlotSet("notifications_daily_step_goal", pa_goal)]
 
 
+class ActionNotificationsGetNumberStepsYesterday(Action):
+    def name(self):
+        return "action_notifications_get_number_steps_yesterday"
+
+    async def run(self, dispatcher, tracker, domain):
+        # Get sender ID from slot, this is a string
+        user_id = tracker.current_state()['sender_id']
+
+        # Get right days
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=1)
+
+        steps_data = get_steps_data(user_id, start, end)
+        if not steps_data:
+            return [SlotSet("notifications_steps_yesterday", 0)]
+
+        steps_yesterday = steps_data[0]['steps']
+        return [SlotSet("notifications_steps_yesterday", steps_yesterday)]
+
+
 class ActionNoticiationsCheckWatchWear(Action):
     def name(self):
         return "action_notifications_check_watch_wear"

@@ -58,8 +58,8 @@ responses:
     - text: "Vandaag is je stappendoel: {notifications_daily_step_goal}. 🚶🏿 Je kunt het!"
   utter_notifications_step_goal_1b:
     - text: "Je horloge heeft gisteren {notifications_steps_yesterday} stappen opgenomen."
-    - text: "Gisteren heb je volgens het horloge {notifications_steps_yesterday} stappen gezet"
-    - text: "Gisteren zijn er {notifications_steps_yesterday} stappen gezet volgens het horloge"
+    - text: "Gisteren heb je volgens het horloge {notifications_steps_yesterday} stappen gezet."
+    - text: "Gisteren zijn er {notifications_steps_yesterday} stappen gezet volgens het horloge."
   utter_notifications_step_goal_2:
     - text: "Wil je weten hoeveel stappen je al gezet hebt, kijk dan op je horloge. ⌚"
     - text: "Als je wilt weten hoeveel stappen je al gezet hebt, kun je op je horloge kijken. ⌚"

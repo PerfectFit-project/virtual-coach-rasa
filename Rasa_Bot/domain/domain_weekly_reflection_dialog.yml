@@ -495,7 +495,7 @@ responses:
     - text: "Elke week is anders. De komende week kan heel anders verlopen of voelen
              dan afgelopen week, zelfs als je min of meer dezelfde dingen onderneemt. 🔀"
   utter_look_forward_3:
-    - text: "Het is daarom goed om ook vooruit te kijken naar komende wee➡️. Op deze
+    - text: "Het is daarom goed om ook vooruit te kijken naar komende week ➡️. Op deze
              manier ben je alvast voorbereid op wat er gaat komen."
     - text: "Daarom is het verstandig om vooruit te kijken naar de komende week,
              zodat je alvast voorbereid bent op wat er gaat gebeuren."
@@ -837,19 +837,30 @@ responses:
   utter_answer_1_5_weekly_reflection_pa:
     - text: "Typ 1,2,3,4 of 5 afhakelijk van hoe het afgelopen week is gegaan met je stappen"
 
+  utter_pre_free_reflect_3:
+    - text: "Mooi! 😊"
+    - text: "Goed gedaan! 😊"
+    - text: "Geweldig! 😊"
+    - text: "Fantastisch! 😊"
+    - text: "Geweldig gedaan! 😊"
   utter_ask_free_reflect_3:
-    - text: "Mooi! 😊 Wat maakt dat het zo goed ging met bewegen?"
-    - text: "Goed gedaan! 😊 Wat denk jij dat heeft geholpen bij het actief zijn afgelopen week?"
-    - text: "Geweldig! 😊 Kun je bedenken waarom het zo goed ging met jouw beweging deze week?"
-    - text: "Fantastisch! 😊 Wat denk je dat jou heeft geholpen om zo actief te zijn afgelopen week?"
-    - text: "Geweldig gedaan! 😊 Wat denk je dat ervoor heeft gezorgd dat je zo goed bent geweest in bewegen deze week?"
+    - text: "Wat maakt dat het zo goed ging met bewegen?"
+    - text: "Wat denk jij dat heeft geholpen bij het actief zijn afgelopen week?"
+    - text: "Kun je bedenken waarom het zo goed ging met jouw beweging deze week?"
+    - text: "Wat denk je dat jou heeft geholpen om zo actief te zijn afgelopen week?"
+    - text: "Wat denk je dat ervoor heeft gezorgd dat je zo goed bent geweest in bewegen deze week?"
+  utter_pre_free_reflect_4:
+    - text: "Oké 😐."
+    - text: "Begrijpelijk 😐."
+    - text: "Geen probleem 😐."
+    - text: "Dat is begrijpelijk 😐."
   utter_ask_free_reflect_4:
-    - text: "Oké 😐. Wat maakt dat het oké ging met bewegen?"
-    - text: "Begrijpelijk 😐. Wat denk je dat ervoor heeft gezorgd dat het 'oké' ging met bewegen deze week?"
-    - text: "Oké😐. Kun je bedenken waarom het oké ging met jouw beweging deze week?"
-    - text: "Oké 😐. Kun je bedenken waarom het niet zo actief was als je had gewild?"
-    - text: "Geen probleem 😐. Wat denk je dat jou heeft belemmerd om meer te bewegen afgelopen week?"
-    - text: "Dat is begrijpelijk 😐. Wat denk je dat de reden was dat je niet zo actief bent geweest als je had gewild?"
+    - text: "Wat maakt dat het oké ging met bewegen?"
+    - text: "Wat denk je dat ervoor heeft gezorgd dat het 'oké' ging met bewegen deze week?"
+    - text: "Kun je bedenken waarom het oké ging met jouw beweging deze week?"
+    - text: "Kun je bedenken waarom het niet zo actief was als je had gewild?"
+    - text: "Wat denk je dat jou heeft belemmerd om meer te bewegen afgelopen week?"
+    - text: "Wat denk je dat de reden was dat je niet zo actief bent geweest als je had gewild?"
   utter_how_went_1:
     - text: "Dankjewel voor het delen. Mooi dat je dit weet te vertellen."
     - text: "Bedankt voor het delen. Fijn dat je open bent over je ervaringen."
@@ -995,7 +1006,7 @@ responses:
     - text: "Het is begrijpelijk dat het niet altijd lukt om in beweging te komen, maar vergeet niet dat er ook momenten waren waarop het wél lukte. Richt je op die momenten en gebruik ze als motivatie om door te gaan! 💪"
   utter_difficult_moments_pa_10:
     - text: "Het kan je in de toekomst helpen om te begrijpen waarom je in bepaalde situaties geen zin hebt om in beweging te komen."
-    - text: "Door te begrijpen waarom je geen zin had om te bewegen, kun je manieren bedenken om hier beter mee om te gaan."
+    - text: "Door te begrijpen waarom het niet lukte om te bewegen, kun je manieren bedenken om hier beter mee om te gaan."
     - text: "Door bewust te zijn van de momenten waarop het moeilijk is om in beweging te komen, kun je hier beter mee omgaan."
   utter_difficult_moments_pa_11:
     - text: "Daarom wil ik je wat vragen stellen over situaties 📍 waarin het moeilijk was om in beweging te komen."
@@ -1178,15 +1189,46 @@ responses:
     - text: "Een goede voorbereiding is al de helft van het werk! ✔️"
     - text: "Een goede voorbereiding brengt je dichterbij je doelen! ✔️"
     - text: "Een goede voorbereiding is erg belangrijk voor succes! ✔️"
+  utter_increase_intensity_23_b:
+    - text: "We gaan nu kijken naar bewegen in het algemeen, dus niet alleen intensieve beweging."
 
   # 7c Will there be difficult moments this week?
   utter_predict_difficult_moments_1:
-    - text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen."
-    - text: "Zoals eerder gezien, zijn dit de situaties waar jij moeite mee hebt 📍. In deze situaties vond jij het moeilijk om actief te worden"
-    - text: "Zoals we eerder hebben besproken, zijn dit jouw uitdagende situaties 📍. Je vond het in deze situaties moeilijk om actief te zijn"
-    - text: "We hebben eerder gezien dat dit jouw lastige situaties zijn 📍. In deze situaties was het voor jou moeilijk om in beweging te komen."
-    - text: "We hebben al eerder gezien dat dit jouw uitdagende momenten zijn 📍. Je vond het in deze situaties moeilijk om in beweging te komen."
-    - text: "Zoals we eerder hebben gezien, zijn dit de situaties die jij lastig vindt 📍. In deze situaties vond je het moeilijk om actief te worden."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Eerder hebben wij gezien dat dit jouw moeilijke situaties zijn 📍. In deze situaties vond jij het eerder moeilijk om in beweging te komen."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Zoals eerder gezien, zijn dit de situaties waar jij moeite mee hebt 📍. In deze situaties vond jij het moeilijk om actief te worden"
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Zoals we eerder hebben besproken, zijn dit jouw uitdagende situaties 📍. Je vond het in deze situaties moeilijk om actief te zijn"
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "We hebben eerder gezien dat dit jouw lastige situaties zijn 📍. In deze situaties was het voor jou moeilijk om in beweging te komen."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "We hebben al eerder gezien dat dit jouw uitdagende momenten zijn 📍. Je vond het in deze situaties moeilijk om in beweging te komen."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: true
+      text: "Zoals we eerder hebben gezien, zijn dit de situaties die jij lastig vindt 📍. In deze situaties vond je het moeilijk om actief te worden."
+    - condition:
+          - type: slot
+            name: figure_previous_difficult_pa_situations_has_data
+            value: false
+      text: "In de toekomst gaan we hier kijken naar jouw lastige situaties. De grafiek is leeg als je nog geen situaties hebt opgegeven waarin het moeilijk was om in beweging te komen."
   utter_predict_difficult_moments_2:
     - text: "Denk zoals eerder na over wat je komende week gaat doen. Niet alleen qua beweging, maar alles wat je komende week gaat doen.
              Pak je agenda er weer bij als dat helpt 🗓️. Of pak het blaadje waar je eerder je activiteiten voor komende week op schreef 🖊️. "

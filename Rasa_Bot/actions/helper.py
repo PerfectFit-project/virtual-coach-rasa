@@ -45,6 +45,26 @@ from virtual_coach_db.helper.helper_functions import get_db_session, get_timing
 
 celery = Celery(broker=REDIS_URL)
 
+def figure_has_data(question_ids, user_id):
+    """
+    Check if the data for a figure has any values.
+    
+    Args:
+        question_ids: the questions to retrieve the responses to for the figure
+        user_id: ID of the user
+
+    Returns:
+        boolean indicating whether there is data for the figure.
+    """
+    for question_ids_subset in question_ids:
+        for question_ids_list in question_ids_subset:
+            for question_id in question_ids_list:
+                answers = get_closed_answers(user_id, question_id)
+                if len(answers) > 0:
+                    return True
+                
+    return False
+
 
 def mark_completion(user_id, dialog):
 
@@ -1140,13 +1160,14 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
          'steps': step_array,
          'goals': step_goal})
 
-    data['goal_achieved'] = data['steps'] >= data['goals']
+    data['goal_achieved'] = (data['steps'] >= 0.95*data['goals'])*1 +\
+                            (data['steps'] >= data['goals'])*1
 
     fig = go.Figure([go.Bar(x=data['steps'],
                             y=data['date'],
                             orientation='h',
                             marker=dict(color=data['goal_achieved'].map(
-                                {True: 'lime', False: 'tomato'})),
+                                {2: 'lime', 1: 'yellow', 0: 'tomato'})),
                             showlegend=False
                             ),
                      go.Bar(x=data['goals'],

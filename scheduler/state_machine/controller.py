@@ -9,19 +9,21 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                get_hrs_last_branch,
                                                get_preferred_date_time,
                                                get_quit_date, get_pa_group, get_start_date,
-                                               is_new_week, plan_and_store, reschedule_dialog,
-                                               retrieve_intervention_day, revoke_execution,
+                                               is_new_week, plan_and_store, plan_every_day_range,
+                                               reschedule_dialog,
+                                               retrieve_tracking_day, revoke_execution,
                                                run_uncompleted_dialog, run_option_menu,
                                                schedule_next_execution, store_completed_dialog,
                                                store_scheduled_dialog, update_execution_week,
                                                update_fsm_dialog_running_status)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
-                                 MAX_PREPARATION_DURATION, LOW_PA_GROUP, HIGH_PA_GROUP,
+                                 MAX_PREPARATION_DURATION, HIGH_PA_GROUP,
                                  EXECUTION_DURATION_WEEKS, TIME_DELTA_PA_NOTIFICATION, REDIS_URL,
-                                 RESCHEDULE_DIALOG)
+                                 RESCHEDULE_DIALOG, TRIGGER_INTENT)
 from state_machine.state import State
-from virtual_coach_db.helper.definitions import (Components, ComponentsTriggers, Notifications)
+from virtual_coach_db.helper.definitions import (Components, ComponentsTriggers,
+                                                 Notifications, NotificationsTriggers)
 
 celery = Celery(broker=REDIS_URL)
 
@@ -175,14 +177,11 @@ class OnboardingState(State):
         first_date = date.today() + timedelta(days=1)
         last_date = get_start_date(self.user_id) + timedelta(days=TRACKING_DURATION-1)
 
-        for day in range((last_date - first_date).days):
-            planned_date = create_new_date(start_date=first_date,
-                                           time_delta=day)
-
-            plan_and_store(user_id=self.user_id,
-                           dialog=Notifications.TRACK_NOTIFICATION,
-                           planned_date=planned_date,
-                           phase_id=1)
+        plan_every_day_range(user_id=self.user_id,
+                             dialog=Notifications.TRACK_NOTIFICATION,
+                             phase_id=1,
+                             first_date=first_date,
+                             last_date=last_date)
 
 
 class TrackingState(State):
@@ -234,10 +233,8 @@ class TrackingState(State):
 
     def on_new_day(self, current_date: date):
         logging.info('current date: %s', current_date)
-        self.check_if_end_date(current_date)
 
         # at day 7 activity C2.9 has to be proposed
-
         start_date = get_start_date(self.user_id)
         ga_completed = get_dialog_completion_state(self.user_id, Components.GENERAL_ACTIVITY)
         if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER and not ga_completed:
@@ -245,10 +242,12 @@ class TrackingState(State):
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)
 
+        self.check_if_end_date(current_date)
+
     def check_if_end_date(self, date_to_check: date) -> bool:
-        intervention_day = retrieve_intervention_day(self.user_id, date_to_check)
+        tracking_day = retrieve_tracking_day(self.user_id, date_to_check)
         # the Goal Setting state starts on day 10 of the intervention
-        if intervention_day >= TRACKING_DURATION:
+        if tracking_day >= TRACKING_DURATION:
             self.set_new_state(GoalsSettingState(self.user_id))
             return True
 
@@ -345,19 +344,8 @@ class GoalsSettingState(State):
         first_date = date.today() + timedelta(days=1)
         # until the execution starts
         last_date = get_quit_date(self.user_id)
-        # every day
-        if pa_group == LOW_PA_GROUP:
 
-            for day in range((last_date - first_date).days + 1):
-                planned_date = create_new_date(start_date=first_date,
-                                               time_delta=day)
-
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
-                               planned_date=planned_date,
-                               phase_id=2)
-
-        else:
+        if pa_group == HIGH_PA_GROUP:
             # every 3 days
             for day in range((last_date - first_date).days)[0::3]:
                 planned_date = create_new_date(start_date=first_date,
@@ -367,6 +355,13 @@ class GoalsSettingState(State):
                                dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
                                planned_date=planned_date,
                                phase_id=2)
+        # every day (default group 1)
+        else:
+            plan_every_day_range(user_id=self.user_id,
+                                 dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                                 phase_id=2,
+                                 first_date=first_date,
+                                 last_date=last_date)
 
     def run(self):
 
@@ -435,12 +430,10 @@ class BufferState(State):
         if current_date >= quit_date:
             logging.info('Buffer state ended, starting execution state')
 
-
             # on the quit date, notify the user that today is the quit date
             if current_date == quit_date:
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.QUIT_DATE_NOTIFICATION,
-                               phase_id=2)
+                celery.send_task(TRIGGER_INTENT,
+                                 (self.user_id, NotificationsTriggers.QUIT_DATE_NOTIFICATION))
 
             self.set_new_state(ExecutionRunState(self.user_id))
 
@@ -609,6 +602,8 @@ class ExecutionRunState(State):
                                     current_date=datetime.now(),
                                     phase_id=2)
 
+            self.schedule_pa_notifications()
+
     def schedule_pa_notifications(self):
         # the notifications are delivered according to the group of the user. Group 1 gets
         # a notification with the steps goal every day. Group 2 gets a notification with steps
@@ -617,22 +612,7 @@ class ExecutionRunState(State):
 
         pa_group = get_pa_group(self.user_id)
 
-        if pa_group == LOW_PA_GROUP:
-
-            first_date = date.today() + timedelta(days=1)
-            # until the next GA dialog
-            last_date = first_date + timedelta(days=6)
-
-            for day in range((last_date - first_date).days):
-                planned_date = create_new_date(start_date=first_date,
-                                               time_delta=day)
-
-                plan_and_store(user_id=self.user_id,
-                               dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
-                               planned_date=planned_date,
-                               phase_id=2)
-
-        elif pa_group == HIGH_PA_GROUP:
+        if pa_group == HIGH_PA_GROUP:
 
             planned_date_1 = create_new_date(start_date=date.today(),
                                              time_delta=1)
@@ -649,6 +629,18 @@ class ExecutionRunState(State):
                            dialog=Notifications.PA_INTENSITY_MINUTES_NOTIFICATION,
                            planned_date=planned_date_4,
                            phase_id=2)
+
+        else:
+
+            first_date = date.today() + timedelta(days=1)
+            # until the next GA dialog
+            last_date = get_next_planned_date(self.user_id, datetime.now())
+
+            plan_every_day_range(user_id=self.user_id,
+                                 dialog=Notifications.PA_STEP_GOAL_NOTIFICATION,
+                                 phase_id=2,
+                                 first_date=first_date,
+                                 last_date=last_date.date())
 
     def is_weekly_reflection_next(self) -> bool:
         """
@@ -683,7 +675,7 @@ class ExecutionRunState(State):
                 return False
 
         return True
-    
+
 
 class RelapseState(State):
 

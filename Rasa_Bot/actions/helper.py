@@ -1347,17 +1347,20 @@ def get_smoked_cigarettes_range(user_id: int,
 
     cigarettes = 0
 
-    cigarettes_entries = (session.query(DialogOpenAnswers)
-                  .join(DialogQuestions)
-                  .filter(DialogOpenAnswers.users_nicedayuid == user_id,
-                          ((
-                                   DialogQuestions.question_id == DialogQuestionsEnum.RELAPSE_LAPSE_NUMBER_CIGARETTES.value) | (
-                                   DialogQuestions.question_id == DialogQuestionsEnum.RELAPSE_RELAPSE_NUMBER_CIGARETTES.value)),
-                          DialogOpenAnswers.datetime >= start_date,
-                          DialogOpenAnswers.datetime <= end_date
-                          )
+    cigarettes_entries = (
+        session.query(DialogOpenAnswers)
+        .join(DialogQuestions)
+        .filter(DialogOpenAnswers.users_nicedayuid == user_id,
+                ((
+                    DialogQuestions.question_id == DialogQuestionsEnum
+                    .RELAPSE_LAPSE_NUMBER_CIGARETTES.value) | (
+                    DialogQuestions.question_id == DialogQuestionsEnum
+                    .RELAPSE_RELAPSE_NUMBER_CIGARETTES.value)),
+                DialogOpenAnswers.datetime >= start_date,
+                DialogOpenAnswers.datetime <= end_date
+                )
 
-                  .all())
+        .all())
 
     if cigarettes_entries:
         for entry in cigarettes_entries:

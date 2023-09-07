@@ -56,6 +56,7 @@ The timeout is currently set to 60 minutes (see the "session_expiration_time"-pa
      Also defines the time period after which a new conversation starts in case of inactivity.
 - models: contains trained models
 - config.yml: sets the training configuration for rasa core (e.g. which policies to use, what the fallback should be when the agent is not sure what the next action should be, ...), the threshold for low NLU confidence (the threshold for the FallbackClassifier), etc.
+- sensor_api: module for retrieving and analysing the data collected through external sensors. To successfully access the data an ssh key is needed and the URLs to connect to the sensors API needs to be set in the .env file as shown in the [example file](https://github.com/PerfectFit-project/virtual-coach-main/blob/main/.env-example))
 
 ## Tips for developers
 

@@ -192,7 +192,8 @@ rules:
   - action: utter_goal_setting_pa_expl_8
   - action: utter_goal_setting_pa_expl_9
   - action: utter_goal_setting_pa_expl_10
-  - action: utter_goal_setting_pa_expl_11  # TODO: extract number of steps from DB
+  - action: action_get_goal_setting_baseline_steps
+  - action: utter_goal_setting_pa_expl_11
   - action: utter_goal_setting_pa_set_1
   - action: utter_goal_setting_pa_set_2
   - action: utter_goal_setting_pa_set_3
@@ -318,6 +319,7 @@ rules:
   - action: utter_step_goal_pa_1  # part 4 starts here
   - action: utter_step_goal_pa_2
   - action: utter_step_goal_pa_3
+  - action: action_notifications_get_daily_step_goal
   - action: utter_step_goal_pa_4
   - action: utter_step_goal_pa_5
   - action: utter_step_goal_pa_6

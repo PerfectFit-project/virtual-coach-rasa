@@ -1339,7 +1339,7 @@ def get_smoked_cigarettes_range(user_id: int,
     Args:
         user_id: ID of the user whom data needs to be queried.
         start_date: start of the range of days to query. This day is included in the interval.
-        end_date: end of the range of days to query. This day is not included in the interval.
+        end_date: end of the range of days to query. This day is included in the interval.
 
     Returns: the number of smoked cigarettes reported by the user.
     """

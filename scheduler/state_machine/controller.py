@@ -803,7 +803,7 @@ class ClosingState(State):
     def __init__(self, user_id):
         super().__init__(user_id, celery)
         self.user_id = user_id
-        self.state = State.COMPLETED
+        self.state = State.CLOSING
 
     def run(self):
         logging.info("Running state %s", self.state)

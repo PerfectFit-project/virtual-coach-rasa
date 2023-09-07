@@ -13,11 +13,13 @@ from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
 from .definitions import DATABASE_URL, NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
-from .helper import (get_latest_bot_utterance, store_pf_evaluation_to_db, get_faik_text)
+from .helper import (get_latest_bot_utterance, get_smoked_cigarettes_range,
+                     store_pf_evaluation_to_db, get_faik_text)
 from sensorapi.connector import get_steps_data
 
 
 celery = Celery(broker=REDIS_URL)
+client = NicedayClient(NICEDAY_API_ENDPOINT)
 
 
 class ValidateClosingPaEvaluationForm(FormValidationAction):
@@ -48,7 +50,26 @@ class ActionGetSmokingStatus(Action):
 
     async def run(self, dispatcher, tracker, domain):
         # get smoking status with 1: not (re)lapsed and 2: did (re)lapse last 4 weeks
-        smoking_status = 1  # TODO: get this from database
+
+        user_id = int(tracker.current_state()['sender_id'])
+
+        end_time = datetime.datetime.now()
+        start_time = end_time - datetime.timedelta(days=28) # 4 weeks
+
+        # get cigarettes registered in niceday trackers
+        tracked_cigarettes = client.get_smoking_tracker(user_id, start_time, end_time)
+
+        # if the result of the tracker is not empty, some cigarettes have been registered
+        if tracked_cigarettes:
+            return [SlotSet('closing_smoking_status', 2)]
+
+        # check in the DB the cigarettes reported in the lapse and relapse dialog
+        reported_cigarettes = get_smoked_cigarettes_range(user_id, start_time, end_time)
+        if reported_cigarettes > 0:
+            smoking_status = 2
+        else:
+            smoking_status = 1
+
         return [SlotSet('closing_smoking_status', smoking_status)]
 
 
@@ -286,8 +307,6 @@ class ActionDisconnectUser(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-
-        client = NicedayClient(NICEDAY_API_ENDPOINT)
         client.remove_contact(user_id)
 
         return []

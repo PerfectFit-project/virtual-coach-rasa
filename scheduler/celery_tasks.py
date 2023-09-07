@@ -66,7 +66,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if the user is in physical relapse
-    sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
+    # sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
     # check if a dialog has been completed
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them
@@ -107,7 +107,7 @@ def check_physical_relapse():
     in this case, triggers the correspondent dialog
     """
 
-    range_start = date.today()
+    range_start = datetime.now()
 
     state_machines = get_all_fsm()
 
@@ -369,6 +369,9 @@ def trigger_intent(self,  # pylint: disable=unused-argument
         trigger: the intent to be sent
         dialog_status: set the dialog state in the fsm
     """
+
+    logging.info(f'Received trigger_intent task with {trigger} trigger for user {user_id}')
+
     response_intent = send_trigger(user_id, trigger)
 
     if response_intent != 200:
@@ -501,6 +504,9 @@ def send_trigger(user_id: int, trigger: str):
     Returns:
 
     """
+
+    logging.info(f'received send_trigger tasks with {trigger} for {user_id}')
+
     endpoint = f'http://rasa_server:5005/conversations/{user_id}/trigger_intent'
     headers = {'Content-Type': 'application/json'}
     params = {'output_channel': 'latest'}

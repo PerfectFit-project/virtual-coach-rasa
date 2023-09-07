@@ -11,6 +11,7 @@ nlu:
   examples: |
     - "ehbo"
     - "ik wil ehbo"
+    - "mijn ehbo"
 
 - intent: uitleg_intent
   examples: |

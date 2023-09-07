@@ -52,7 +52,7 @@ rules:
   - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 2
-  - action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal_previous
   - action: utter_overview_group2_1  
   - action: utter_overview_group2_2
   - action: action_show_pa_overview
@@ -540,7 +540,7 @@ rules:
   - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 2
-  - action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal_previous
   - action: utter_overview_group2_1  
   - action: utter_overview_group2_2
   - action: action_show_pa_overview
@@ -566,7 +566,7 @@ rules:
   - action: action_which_pa_group  # here starts part 3
   - slot_was_set:
       - pa_group: 2
-  - action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal_previous
   - action: utter_overview_group2_1  
   - action: utter_overview_group2_2
   - action: action_show_pa_overview
@@ -952,6 +952,7 @@ rules:
   - active_loop: null
   - slot_was_set:
     - if_doable: 1
+  - action: action_save_new_goal
   - action: utter_increase_intensity_10
   - action: utter_increase_intensity_11
   - action: action_set_file_path_pa_image
@@ -960,7 +961,7 @@ rules:
   - action: utter_increase_intensity_12
   - action: utter_increase_intensity_13
   - action: utter_increase_intensity_14
-#  - action: action_set_intensity_minutes_goal
+  - action: action_set_intensity_minutes_goal
   - action: utter_increase_intensity_15
   - action: utter_increase_intensity_16
   - action: utter_increase_intensity_17

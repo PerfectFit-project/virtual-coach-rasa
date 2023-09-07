@@ -714,6 +714,7 @@ def run_uncompleted_dialog(user_id: int):
 
         component.last_time = datetime.now().astimezone(TIMEZONE)
         session.commit()
+
         celery.send_task(
             TRIGGER_COMPONENT,
             (user_id, component.intervention_component.intervention_component_trigger)

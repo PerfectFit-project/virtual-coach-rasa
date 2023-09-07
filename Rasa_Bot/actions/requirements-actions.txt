@@ -1,6 +1,5 @@
 celery
 cryptography
-jwt
 pandas
 plotly
 kaleido
@@ -12,3 +11,4 @@ sqlalchemy
 git+https://github.com/PerfectFit-project/virtual-coach-db@v0.1.26
 git+https://github.com/PerfectFit-project/pa-algorithms
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.5
+git+https://github.com/PerfectFit-project/virtual-coach-rasa@sensors-testing#subdirectory=sensor_api

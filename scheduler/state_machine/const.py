@@ -19,7 +19,7 @@ LOW_PA_GROUP = 1
 HIGH_PA_GROUP = 2
 
 # duration in weeks
-EXECUTION_DURATION_WEEKS = os.getenv('EXECUTION_DURATION_WEEKS')
+EXECUTION_DURATION_WEEKS = int(os.getenv('EXECUTION_DURATION_WEEKS'))
 
 # intervention times (days)
 ACTIVITY_C2_9_DAY_TRIGGER = int(os.getenv('ACTIVITY_C2_9_DAY_TRIGGER'))

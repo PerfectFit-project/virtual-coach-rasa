@@ -111,10 +111,7 @@ class ActionSelectMenu(Action):
         show_ehbo = get_dialog_completion_state(user_id, Components.FIRST_AID_KIT_VIDEO)
 
         # is the doel option to be shown (the goal setting dialog has been shown)
-        if get_goal_setting_chosen_sport_from_db(user_id) is not None:
-            show_doel = True
-        else:
-            show_doel = False
+        show_doel = get_goal_setting_chosen_sport_from_db(user_id) is not None
 
         # the help command is shown just in the execution
         phase = get_current_user_phase(user_id)
@@ -172,7 +169,7 @@ class ActionIdleCommandsTodaySteps(Action):
         user_id = int(tracker.current_state()['sender_id'])
 
         start = datetime.datetime.now()
-        end = end_time + datetime.timedelta(days=1)
+        end = start + datetime.timedelta(days=1)
 
         # get number of steps from today
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)

@@ -4,11 +4,19 @@ intents:
   - uitleg_intent
   - oefening_intent
   - medicijn_intent
+  - doel_intent
   - continue_dialog_intent
   - EXTERNAL_no_valid_uncompleted_dialog
   - EXTERNAL_central_options
   - EXTERNAL_central_options_no_ehbo
   - EXTERNAL_no_valid_uncompleted_dialog_no_ehbo
+
+slots:
+  - idle_commands_today_steps:
+      type: float
+      influence_conversation: false
+      mappings:
+        - type: custom
 
 responses:
   # Fallback for low NLU confidence and low next action confidence
@@ -23,6 +31,12 @@ responses:
     - text: "Excuses, er is geen onvolledige conversatie om af te ronden."
     - text: "Het spijt me, er is geen onafgemaakte dialoog om te voltooien."
 
+  utter_idle_commands_today_steps:
+    - text: "Tot nu toe heb je {idle_commands_today_steps} stappen gezet vandaag. 🚶🏃"
+
+  utter_idle_commands_today_goal:
+    - text: "Het stappendoel voor vandaag is {pa_goal} stappen. 🎯"
+
 actions:
   - action_select_menu
   - action_trigger_relapse_dialog
@@ -31,3 +45,4 @@ actions:
   - action_trigger_general_activity_dialog
   - action_trigger_video_medicine_dialog
   - action_trigger_uncompleted_dialog
+  - action_idle_commands_today_steps

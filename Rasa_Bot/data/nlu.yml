@@ -30,6 +30,11 @@ nlu:
     - "medicatie"
     - "medicijnen"
 
+- intent: doel_intent
+  examples: |
+    - "doel"
+    - "stappendoel"
+
 - intent: continue_dialog_intent
   examples: |
     - "verder"

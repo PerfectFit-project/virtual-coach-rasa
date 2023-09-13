@@ -52,6 +52,10 @@ responses:
   utter_central_mode_options_medicatie:
     - text: "Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊"
 
+  utter_central_mode_options_doel:
+    - text: "Typ 'doel' om te kijken hoeveel stappen je vandaag al gezet hebt en wat het stappendoel
+             van vandaag is. 🚶🏃"
+
   utter_central_mode_options_verder:
     - text: "Typ 'verder' om een onafgemaakte dialoog af te ronden. ✔"
 

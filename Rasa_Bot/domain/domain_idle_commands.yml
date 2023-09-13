@@ -12,11 +12,11 @@ intents:
   - EXTERNAL_no_valid_uncompleted_dialog_no_ehbo
 
 slots:
-  - idle_commands_today_steps:
-      type: float
-      influence_conversation: false
-      mappings:
-        - type: custom
+  idle_commands_today_steps:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
 
 responses:
   # Fallback for low NLU confidence and low next action confidence

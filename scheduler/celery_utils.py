@@ -333,6 +333,36 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
     return selected
 
 
+def get_intervention_component_by_id(intervention_component_id: int) -> InterventionComponents:
+    """
+    Get the intervention component as stored in the DB from the
+    intervention component's name.
+
+    Args:
+        intervention_component_id: the id of the intervention component
+
+    Returns:
+            The intervention component as an InterventionComponents object.
+
+    """
+    session = get_db_session(DATABASE_URL)
+
+    selected = (
+        session.query(
+            InterventionComponents
+        )
+        .filter(
+            InterventionComponents.intervention_component_id == intervention_component_id
+        )
+        .one_or_none()
+    )
+
+    session.expunge(selected)
+    session.close()
+
+    return selected
+
+
 def get_user_fsm(user_id: int) -> StateMachine:
     """
     Get the state machine as saved in the DB for a single user and maps it

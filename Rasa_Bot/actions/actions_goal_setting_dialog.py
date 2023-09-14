@@ -179,6 +179,7 @@ class ActionGoalSettingChooseTestimonials(Action):
                                   key=lambda k: motiv_all[k],
                                   reverse = True)
 
+        session.close()
         return [SlotSet('goal_setting_testimonial_1',
                 selected[motiv_all_sorted[0]].testimonial_text),
                 SlotSet('goal_setting_testimonial_2',

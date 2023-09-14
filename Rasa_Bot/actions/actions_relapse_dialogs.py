@@ -310,6 +310,8 @@ class ShowChosenCopingActivity(Action):
         # prompt the message
         dispatcher.utter_message(text=instructions.intervention_activity_full_instructions)
 
+        session.close()
+
         return []
 
 

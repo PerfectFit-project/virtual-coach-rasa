@@ -108,6 +108,8 @@ class CheckIfFirstExecutionGA(Action):
         # if the query result is empty, no activity has been performed yet
         first_execution = not bool(performed_activity)
 
+        session.close()
+
         return [SlotSet("general_activity_first_execution", first_execution)]
 
 
@@ -166,6 +168,8 @@ class GeneralActivityCheckRating(Action):
             )
 
             session.commit()
+
+        session.close()
 
         if rating_value > lowest_score:
             return [SlotSet("general_activity_low_high_rating", 'high')]
@@ -242,6 +246,8 @@ class CheckUserInputRequired(Action):
                 InterventionActivity.intervention_activity_id == activity_id
             ).all()
         )
+
+        session.close()
 
         return [SlotSet("is_user_input_required", is_input_required[0].user_input_required)]
 
@@ -366,6 +372,7 @@ class SaveDescriptionInDb(Action):
         )
 
         session.commit()
+        session.close()
 
         return []
 
@@ -469,8 +476,13 @@ class GetLastPerformedActivity(Action):
         if last_activity is not None:
             activity_title = last_activity[0].intervention_activity.intervention_activity_title
             activity_id = last_activity[0].intervention_activity.intervention_activity_id
+
+            session.close()
+
             return [SlotSet("last_activity_slot", activity_title),
                     SlotSet("last_activity_id_slot", activity_id)]
+
+        session.close()
 
         return [SlotSet("last_activity_slot", None),
                 SlotSet("last_activity_id_slot", None)]
@@ -555,6 +567,9 @@ class LoadActivity(Action):
 
         # prompt the message
         dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
+
+        session.close()
+
         return []
     
     
@@ -579,12 +594,16 @@ class LoadActivityDescription(Action):
             )
             .filter(
                 InterventionActivity.intervention_activity_id == activity_id
-            ).all()
+            ).one_or_none()
         )
+
+        description = descriptions.intervention_activity_description
+
+        session.close()
 
         # prompt the message
         return [SlotSet("general_activity_chosen_activity_description_slot",
-                        descriptions[0].intervention_activity_description)]
+                        description)]
 
 
 class SetSlotGeneralActivity(Action):
@@ -605,6 +624,7 @@ def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
                     activity_rating=rating_value)
     )
     session.commit()
+    session.close()
 
 
 class ValidatePersuasionReflectionForm(FormValidationAction):
@@ -743,6 +763,7 @@ class SendPersuasiveMessageActivity(Action):
             dispatcher.utter_message(text=CONSENSUS[message_idx] + " " + benefit)
             reflective_question = REFLECTIVE_QUESTION_CONSENSUS
 
+        session.close()
         return [SlotSet("persuasion_type", pers_type),
                 SlotSet("persuasive_message_index", message_idx),
                 SlotSet("persuasion_requires_input", input_required),

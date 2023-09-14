@@ -461,10 +461,13 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                                                                         user_id,
                                                                         question_id)
 
+            session.close()
+
             return [SlotSet("future_self_dialog_step_1_repetition", True),
                     SlotSet("future_self_dialog_smoker_words_prev", smoker_words),
                     SlotSet("future_self_dialog_mover_words_prev", mover_words)]
 
+        session.close()
         # No entry exists yet for user for the future self dialog in
         # the intervention state table
         return [SlotSet("future_self_dialog_step_1_repetition", False)]
@@ -523,5 +526,6 @@ class ActionStoreFutureSelfDialogState(Action):
                 logging.error("Error: User not in Users table")
 
         session.commit()  # Update database
+        session.close()
 
         return []

@@ -133,6 +133,8 @@ class ActionFirstAidKitCheckUserInputRequired(Action):
 
         input_required = int(selected.user_input_required)
 
+        session.close()
+
         return [SlotSet('first_aid_kit_chosen_activity_input_required', 
                         input_required)]
     
@@ -182,6 +184,8 @@ class ActionFirstAidKitGetInstructions(Action):
             )
 
         instructions = selected.intervention_activity_full_instructions
+
+        session.close()
 
         return [SlotSet("first_aid_kit_instructions_slot", instructions)]
 

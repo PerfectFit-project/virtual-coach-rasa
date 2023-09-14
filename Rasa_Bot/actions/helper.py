@@ -161,7 +161,10 @@ def dialog_to_be_completed(user_id: int) -> bool:
     )
 
     if uncompleted is None:
+        session.close()
         return False
+
+    session.close()
 
     return True
 
@@ -186,11 +189,15 @@ def get_last_completed_dialog_part_from_db(user_id: int,
     )
 
     if selected is not None:
-        if selected.last_part == 0:
-            selected.last_part = -1
-        return selected.last_part
+        last_part = selected.last_part
+        if last_part == 0:
+            last_part = -1
+
+        session.close()
+        return last_part
 
     # No dialog part previously completed
+    session.close()
     return -1
 
 
@@ -210,8 +217,11 @@ def get_goal_setting_chosen_sport_from_db(user_id: int):
     )
 
     if selected is not None:
-        return selected.goal_setting_chosen_sport
+        chosen_sport = selected.goal_setting_chosen_sport
+        session.close()
+        return chosen_sport
 
+    session.close()
     return None
 
 
@@ -261,6 +271,7 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
             logging.error("Error: User not in Users table")
 
     session.commit()  # Update database
+    session.close()
 
 
 def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
@@ -304,6 +315,7 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
     selected.preferred_time = preferred_time
 
     session.commit()
+    session.close()
 
 
 def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
@@ -322,6 +334,7 @@ def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.long_term_pa_goal = long_term_pa_goal
     session.commit()
+    session.close()
 
 
 def store_quit_date_to_db(user_id: int, quit_date: str):
@@ -340,6 +353,7 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.quit_date = datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
+    session.close()
 
 
 def store_goal_setting_chosen_sport_to_db(user_id: int, chosen_sport: str):
@@ -358,6 +372,7 @@ def store_goal_setting_chosen_sport_to_db(user_id: int, chosen_sport: str):
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.goal_setting_chosen_sport = chosen_sport
     session.commit()
+    session.close()
 
 
 def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_value: int):
@@ -386,6 +401,7 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
                                 datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_closed_answers.append(entry)
     session.commit()  # Update database
+    session.close()
 
 
 def store_pf_evaluation_to_db(user_id: int, pf_evaluation_grade: int, pf_evaluation_comment: str):
@@ -404,6 +420,7 @@ def store_pf_evaluation_to_db(user_id: int, pf_evaluation_grade: int, pf_evaluat
     selected.pf_evaluation_grade = pf_evaluation_grade
     selected.pf_evaluation_comment = pf_evaluation_comment
     session.commit()
+    session.close()
 
 
 def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
@@ -419,7 +436,18 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
         ).all()
     )
 
-    return user_inputs
+    inputs_copy = [InterventionActivitiesPerformed(
+        intervention_activities_performed_id=user_input.intervention_activities_performed_id,
+        users_nicedayuid=user_input.users_nicedayuid,
+        intervention_component_id=user_input.intervention_component_id,
+        intervention_activity_id=user_input.intervention_activity_id,
+        completed_datetime=user_input.completed_datetime,
+        user_input=user_input.user_input)
+        for user_input in user_inputs]
+
+    session.close()
+
+    return inputs_copy
 
 
 def store_dialog_closed_answer_list_to_db(user_id: int, question_id: int, answers_values: str):
@@ -468,7 +496,9 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
                               answer_value=answer_value,
                               datetime=datetime.now().astimezone(TIMEZONE))
     selected.dialog_open_answers.append(entry)
+
     session.commit()  # Update database
+    session.close()
 
 
 def get_activities_from_id(activity_id: int) -> InterventionActivity:
@@ -492,6 +522,9 @@ def get_activities_from_id(activity_id: int) -> InterventionActivity:
         )
         .first()
     )
+
+    session.expunge(activity)
+    session.close()
 
     return activity
 
@@ -517,8 +550,11 @@ def get_current_user_phase(user_id: int) -> str:
         )
         .first()
     )
+    state = user_fsm.state
 
-    return user_fsm.state
+    session.close()
+
+    return state
 
 
 def get_current_phase_time(user_id: int, phase: str) -> int:
@@ -586,8 +622,10 @@ def get_dialog_completion_state(user_id: int, dialog: str) -> Optional[bool]:
     )
 
     if selected is not None:
+        session.close()
         return True
 
+    session.close()
     return False
 
 
@@ -611,8 +649,10 @@ def get_execution_week(user_id: int) -> int:
         )
         .first()
     )
+    execution_week = user.execution_week
 
-    return user.execution_week
+    session.close()
+    return execution_week
 
 
 def get_intervention_component_id(intervention_component_name: str) -> int:
@@ -639,6 +679,9 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
     )
 
     intervention_component_id = selected.intervention_component_id
+
+    session.close()
+
     return intervention_component_id
 
 
@@ -700,6 +743,8 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
         random_choice = secrets.choice(available_activities)
         rnd_activities.append(random_choice)
         available_activities.remove(random_choice)
+
+    session.close()
 
     return rnd_activities
 
@@ -778,7 +823,11 @@ def get_intensity_minutes_goal(user_id: int) -> int:
     session = get_db_session(DATABASE_URL)
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
-    return user_info.pa_intensity_minutes_weekly_goal
+    weekly_goal = user_info.pa_intensity_minutes_weekly_goal
+
+    session.close()
+
+    return weekly_goal
 
 
 def set_intensity_minutes_goal(user_id: int, goal: int):
@@ -797,6 +846,7 @@ def set_intensity_minutes_goal(user_id: int, goal: int):
     user_info.pa_intensity_minutes_weekly_goal = goal
 
     session.commit()
+    session.close()
 
 
 def get_pa_group(user_id: int) -> int:
@@ -812,7 +862,11 @@ def get_pa_group(user_id: int) -> int:
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
-    return user_info.pa_intervention_group
+    group = user_info.pa_intervention_group
+
+    session.close()
+
+    return group
 
 
 def set_pa_group_to_db(user_id: int, pa_group: int):
@@ -831,6 +885,7 @@ def set_pa_group_to_db(user_id: int, pa_group: int):
     user_info.pa_intervention_group = pa_group
 
     session.commit()
+    session.close()
 
 
 def get_start_date(user_id: int) -> date:
@@ -849,6 +904,7 @@ def get_start_date(user_id: int) -> date:
                 .one())
 
     start_date = selected.start_date
+    session.close()
 
     return start_date
 
@@ -878,7 +934,17 @@ def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswe
         .all()
     )
 
-    return closed_answers
+    answers_copy = [DialogClosedAnswers(
+        dialog_open_answers_id=answer.dialog_open_answers_id,
+        users_nicedayuid=answer.users_nicedayuid,
+        question_id=answer.question_id,
+        answer_value=answer.answer_value,
+        datetime=answer.datetime)
+        for answer in closed_answers]
+
+    session.close()
+
+    return answers_copy
 
 
 def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
@@ -903,7 +969,16 @@ def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
         .all()
     )
 
-    return closed_answers
+    answers_copy = [ClosedAnswers(
+        closed_answers_id=answer.closed_answers_id,
+        question_id=answer.question_id,
+        answer_value=answer.answer_value,
+        answer_description=answer.answer_description)
+        for answer in closed_answers]
+
+    session.close()
+
+    return answers_copy
 
 
 def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
@@ -930,7 +1005,17 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
         .all()
     )
 
-    return open_answers
+    answers_copy = [DialogOpenAnswers(
+        dialog_open_answers_id=answer.dialog_open_answers_id,
+        users_nicedayuid=answer.users_nicedayuid,
+        question_id=answer.question_id,
+        answer_value=answer.answer_value,
+        datetime=answer.datetime)
+        for answer in open_answers]
+
+    session.close()
+
+    return answers_copy
 
 
 def get_user(user_id: int) -> Users:
@@ -955,6 +1040,9 @@ def get_user(user_id: int) -> Users:
         .one()
     )
 
+    session.expunge(user_info)
+    session.close()
+
     return user_info
 
 
@@ -976,10 +1064,14 @@ def is_activity_done(activity_id: int) -> bool:
             InterventionActivitiesPerformed.intervention_activity_id == activity_id
         ).all()
     )
-    if len(activities) > 0:
-        return True
 
-    return False
+    if len(activities) > 0:
+        done = True
+    else:
+        done = False
+
+    session.close()
+    return done
 
 
 def get_user_intervention_state(user_id: int) -> List[UserInterventionState]:
@@ -1004,7 +1096,20 @@ def get_user_intervention_state(user_id: int) -> List[UserInterventionState]:
         .all()
     )
 
-    return intervention_state
+    state_copy = [UserInterventionState(id=state.id,
+                                        users_nicedayuid=state.users_nicedayuid,
+                                        intervention_phase_id=state.intervention_phase_id,
+                                        intervention_component_id=state.intervention_component_id,
+                                        completed=state.completed,
+                                        last_time=state.last_time,
+                                        last_part=state.last_part,
+                                        next_planned_date=state.next_planned_date,
+                                        task_uuid=state.task_uuid)
+                  for state in intervention_state]
+
+    session.close()
+
+    return state_copy
 
 
 def get_user_intervention_state_hrs(user_id: int) -> List[UserInterventionState]:
@@ -1034,7 +1139,20 @@ def get_user_intervention_state_hrs(user_id: int) -> List[UserInterventionState]
         .all()
     )
 
-    return intervention_state
+    state_copy = [UserInterventionState(id=state.id,
+                                        users_nicedayuid=state.users_nicedayuid,
+                                        intervention_phase_id=state.intervention_phase_id,
+                                        intervention_component_id=state.intervention_component_id,
+                                        completed=state.completed,
+                                        last_time=state.last_time,
+                                        last_part=state.last_part,
+                                        next_planned_date=state.next_planned_date,
+                                        task_uuid=state.task_uuid)
+                  for state in intervention_state]
+
+    session.close()
+
+    return state_copy
 
 
 def count_answers(answers: List[DialogClosedAnswers],
@@ -1223,6 +1341,8 @@ def get_faik_text(user_id):
             activity_ids_list.append(activity.intervention_activity.intervention_activity_id)
         filled = True
 
+    session.close()
+
     return kit_text, filled, activity_ids_list
 
 
@@ -1269,10 +1389,10 @@ def get_smoked_cigarettes_range(user_id: int,
         .join(DialogQuestions)
         .filter(DialogOpenAnswers.users_nicedayuid == user_id,
                 ((
-                    DialogQuestions.question_id == DialogQuestionsEnum
-                    .RELAPSE_LAPSE_NUMBER_CIGARETTES.value) | (
-                    DialogQuestions.question_id == DialogQuestionsEnum
-                    .RELAPSE_RELAPSE_NUMBER_CIGARETTES.value)),
+                         DialogQuestions.question_id == DialogQuestionsEnum
+                         .RELAPSE_LAPSE_NUMBER_CIGARETTES.value) | (
+                         DialogQuestions.question_id == DialogQuestionsEnum
+                         .RELAPSE_RELAPSE_NUMBER_CIGARETTES.value)),
                 DialogOpenAnswers.datetime >= start_date,
                 DialogOpenAnswers.datetime <= end_date
                 )
@@ -1282,5 +1402,7 @@ def get_smoked_cigarettes_range(user_id: int,
     if cigarettes_entries:
         for entry in cigarettes_entries:
             cigarettes += int(entry.answer_value)
+
+    session.close()
 
     return cigarettes

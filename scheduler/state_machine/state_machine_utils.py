@@ -740,19 +740,12 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
         .first()
     )
 
-    uncompleted_copy = [UserInterventionState(id=task.id,
-                                              users_nicedayuid=task.users_nicedayuid,
-                                              intervention_phase_id=task.intervention_phase_id,
-                                              intervention_component_id=task.intervention_component_id,
-                                              completed=task.completed,
-                                              last_time=task.last_time,
-                                              last_part=task.last_part,
-                                              next_planned_date=task.next_planned_date,
-                                              task_uuid=task.task_uuid) for task in uncompleted]
+    session.expunge(uncompleted)
+
     session.close()
 
-    if uncompleted_copy is not None:
-        return uncompleted_copy
+    if uncompleted is not None:
+        return uncompleted
 
     return None
 

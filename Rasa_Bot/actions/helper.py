@@ -1065,10 +1065,7 @@ def is_activity_done(activity_id: int) -> bool:
         ).all()
     )
 
-    if len(activities) > 0:
-        done = True
-    else:
-        done = False
+    done = bool(len(activities) > 0)
 
     session.close()
     return done

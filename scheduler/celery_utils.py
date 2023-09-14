@@ -62,10 +62,7 @@ def check_if_user_active(user_id: int, current_date: date, days_number) -> bool:
     )
 
     # there is at least one completed dialog in past days
-    if last_completed is not None:
-        completed = True
-    else:
-        completed = False
+    completed = bool(last_completed)
 
     session.close()
 
@@ -230,7 +227,8 @@ def get_all_fsm_from_db() -> List[UserStateMachine]:
                                  state=fsm.state,
                                  dialog_running=fsm.dialog_running,
                                  dialog_start_time=fsm.dialog_start_time,
-                                 intervention_component_id=fsm.intervention_component_id) for fsm in fsm_db]
+                                 intervention_component_id=fsm.intervention_component_id)
+                for fsm in fsm_db]
     session.close()
 
     return fsm_copy

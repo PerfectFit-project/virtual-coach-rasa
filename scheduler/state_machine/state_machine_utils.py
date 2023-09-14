@@ -273,7 +273,8 @@ def get_next_scheduled_occurrence(user_id: int,
             .one()
         )
     except NoResultFound:
-        selected = None
+        session.close()
+        return None
 
     session.expunge(selected)
     session.close()

@@ -84,20 +84,20 @@ def restore_scheduled_tasks():
                   for task in scheduled_task[workers]]
 
     # get all the tasks scheduled in the DB
-    db_tasks = get_scheduled_task_from_db()
-
-    # restore the tasks that were scheduled in the DB but are no more in the tasks list
-    for db_task in db_tasks:
-        # if the tasks saved in the DB is not in the list of the scheduled tasks
-        if db_task.task_uuid not in tasks_list:
-            # reschedule the task
-            new_task = trigger_scheduled_intervention_component.apply_async(
-                args=[db_task.users_nicedayuid,
-                      db_task.intervention_component.intervention_component_trigger],
-                eta=db_task.next_planned_date.astimezone(TIMEZONE))
-
-            # update the uuid in the DB
-            update_task_uuid_db(old_uuid=db_task.task_uuid, new_uuid=str(new_task.task_id))
+    # db_tasks = get_scheduled_task_from_db()
+    #
+    # # restore the tasks that were scheduled in the DB but are no more in the tasks list
+    # for db_task in db_tasks:
+    #     # if the tasks saved in the DB is not in the list of the scheduled tasks
+    #     if db_task.task_uuid not in tasks_list:
+    #         # reschedule the task
+    #         new_task = trigger_scheduled_intervention_component.apply_async(
+    #             args=[db_task.users_nicedayuid,
+    #                   db_task.intervention_component.intervention_component_trigger],
+    #             eta=db_task.next_planned_date.astimezone(TIMEZONE))
+    #
+    #         # update the uuid in the DB
+    #         update_task_uuid_db(old_uuid=db_task.task_uuid, new_uuid=str(new_task.task_id))
 
 
 @app.task

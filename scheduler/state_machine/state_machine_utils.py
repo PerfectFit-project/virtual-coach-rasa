@@ -914,7 +914,7 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
         # if the user completes a dialog which was scheduled, we don't
         # want that to be re-proposed
         if uuid is not None:
-            celery.control.revoke(selected.task_uuid)
+            celery.control.revoke(uuid)
 
     # if for any reason the dialog starting was not recorded in the DB, create the entry
     else:

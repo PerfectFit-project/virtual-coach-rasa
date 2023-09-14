@@ -66,7 +66,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if the user is in physical relapse
-    # sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
+    sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
     # check if a dialog has been completed
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them

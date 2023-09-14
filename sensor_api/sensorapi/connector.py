@@ -192,30 +192,26 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     if df.index.max().strftime('%y%m%d') != end_date.strftime('%y%m%d'):
         df.loc[end_date.date()] = np.nan
 
-    # Resample the data to a day-to-day basis. Add nans for empty dates
-    df = df.asfreq('D')
+    # Resample the data to a day-to-day basis. Add zeros for empty dates
+    df = df.asfreq('D', fill_value=0)
 
     # Calculate the step goals
     steps = list(df.steps)
     step_goals = []
     for i in range(7):
         steps_nine_days = steps[i:i + 9]
-        steps_nine_days = [x for x in steps_nine_days if not pd.isna(x)]  # Remove NaN values
 
         if not steps_nine_days:
             step_goals.append(MIN_VALUE_STEP_GOAL)
 
         else:
-            for _ in range(9 - len(steps_nine_days)):
-                steps_nine_days.append(np.mean(steps_nine_days))  # Add the avg value up to 9 values
-
             steps_nine_days.sort()
             step_goals.append(int(round(steps_nine_days[5], -1)))  # Definition of the goal
 
     # Minimum goal is 2000, max is 10.000 steps/per day.
     step_goals = min_max_step_goal(step_goals)
 
-    actual_steps = [int(x) if not np.isnan(x) else 0 for x in steps[-7:]]
+    actual_steps = [int(x) for x in steps[-7:]]
 
     # Calculate number of days goal is achieved
     goals_achieved = sum(np.array(step_goals)*PA_LAPSE_MODERATION < np.array(actual_steps))
@@ -258,7 +254,7 @@ def get_daily_step_goal(user_id) -> Optional[int]:
         steps_per_day.append(day['steps'])
 
     for _ in range(9 - len(steps_per_day)):
-        steps_per_day.append(np.mean(steps_per_day))  # Add with the avg value up to 9 values
+        steps_per_day.append(0)  # Add with 0 to total 9 values
 
     steps_per_day.sort()
     pa_goal = int(round(steps_per_day[5], -1))

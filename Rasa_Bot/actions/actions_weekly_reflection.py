@@ -715,7 +715,6 @@ class ValidateUserReady1Form(FormValidationAction):
 
         if not validator.validate_klaar(value):
             dispatcher.utter_message(response="utter_did_not_understand")
-            dispatcher.utter_message(response="utter_please_answer_klaar")
             return {"user_ready_1": None}
 
         return {"user_ready_1": value}

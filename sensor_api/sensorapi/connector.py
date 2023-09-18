@@ -215,7 +215,7 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     # Minimum goal is 2000, max is 10.000 steps/per day.
     step_goals = min_max_step_goal(step_goals)
 
-    actual_steps = [int(x) for x in steps[-7:]]
+    actual_steps = [int(x) if not np.isnan(x) else 0 for x in steps[-7:]]
 
     # Calculate number of days goal is achieved
     goals_achieved = sum(np.array(step_goals)*PA_LAPSE_MODERATION < np.array(actual_steps))

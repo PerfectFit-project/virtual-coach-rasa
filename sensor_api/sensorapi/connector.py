@@ -185,12 +185,12 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
 
     # Check whether the first expected date is present
     if df.index.min().strftime('%y%m%d') != start.strftime('%y%m%d'):
-        df.loc[start.date()] = np.nan
+        df.loc[start.date()] = 0
 
     # Check whether last expected date is present
     end_date = end - timedelta(days=1)  # -1 day, because the end date is not returned from the API
     if df.index.max().strftime('%y%m%d') != end_date.strftime('%y%m%d'):
-        df.loc[end_date.date()] = np.nan
+        df.loc[end_date.date()] = 0
 
     # Resample the data to a day-to-day basis. Add zeros for empty dates
     df = df.asfreq('D', fill_value=0)
@@ -200,11 +200,15 @@ def get_step_goals_and_steps(steps_data: Optional[List[Dict[Any, Any]]],
     step_goals = []
     for i in range(7):
         steps_nine_days = steps[i:i + 9]
+        steps_nine_days = [x for x in steps_nine_days if not pd.isna(x)]  # Remove NaN values
 
         if not steps_nine_days:
             step_goals.append(MIN_VALUE_STEP_GOAL)
 
         else:
+            for _ in range(9 - len(steps_nine_days)):
+                steps_nine_days.append(0)  # Add 0 up to 9 values
+
             steps_nine_days.sort()
             step_goals.append(int(round(steps_nine_days[5], -1)))  # Definition of the goal
 

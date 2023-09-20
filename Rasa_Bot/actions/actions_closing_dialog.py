@@ -12,7 +12,7 @@ from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
-from .definitions import DATABASE_URL, NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
+from .definitions import NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_smoked_cigarettes_range,
                      store_pf_evaluation_to_db, get_faik_text)
 from sensorapi.connector import get_steps_data

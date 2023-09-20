@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from sensorapi.connector import get_steps_data, get_step_goals_and_steps
 from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
-                                 NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
+                                 NOT_RUNNING, RUNNING, EXPIRED)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
                                       BufferState, ExecutionRunState, RelapseState, ClosingState,
                                       CompletedState)
@@ -343,7 +343,7 @@ def get_intervention_component_by_id(intervention_component_id: int) -> Interven
             The intervention component as an InterventionComponents object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -402,7 +402,7 @@ def get_user_fsm(user_id: int) -> StateMachine:
     else:
         state = OnboardingState(user_id)
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     component_saved = (
         session.query(

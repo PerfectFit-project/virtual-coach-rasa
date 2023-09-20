@@ -6,7 +6,7 @@ from virtual_coach_db.dbschema.models import (Testimonials,
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
-from .definitions import DATABASE_URL, FILE_PATH_IMAGE_PA, TIMEZONE
+from .definitions import FILE_PATH_IMAGE_PA, TIMEZONE
 from .helper import (get_goal_setting_chosen_sport_from_db,
                      get_intervention_component_id, 
                      get_last_completed_dialog_part_from_db,

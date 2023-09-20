@@ -16,7 +16,7 @@ from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-from .definitions import TIMEZONE, DATABASE_URL, NICEDAY_API_ENDPOINT
+from .definitions import TIMEZONE, NICEDAY_API_ENDPOINT
 
 
 # Get the user's age from the database.

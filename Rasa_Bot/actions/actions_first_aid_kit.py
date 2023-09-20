@@ -1,7 +1,7 @@
 import logging
 
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL, TRIGGER_INTENT
+from .definitions import REDIS_URL, TRIGGER_INTENT
 from .helper import (get_latest_bot_utterance,
                      get_user_intervention_activity_inputs,
                      get_faik_text, mark_completion)

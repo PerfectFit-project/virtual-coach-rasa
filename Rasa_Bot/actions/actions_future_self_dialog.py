@@ -18,7 +18,7 @@ from virtual_coach_db.dbschema.models import (Users, DialogOpenAnswers,
                                               InterventionComponents,
                                               UserInterventionState)
 
-from .definitions import DialogQuestions, TIMEZONE, DATABASE_URL
+from .definitions import DialogQuestions, TIMEZONE
 from .helper import (store_dialog_open_answer_to_db,
                      get_intervention_component_id)
 

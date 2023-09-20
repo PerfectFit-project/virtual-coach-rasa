@@ -3,7 +3,7 @@ from typing import Optional
 from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
-from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
+from state_machine.const import (REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
 from virtual_coach_db.dbschema.models import (ClosedAnswers, DialogClosedAnswers, DialogQuestions,
                                               InterventionComponents, InterventionPhases, Users,

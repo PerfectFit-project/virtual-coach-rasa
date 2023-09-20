@@ -12,7 +12,6 @@ from datetime import datetime, date
 from typing import Any, List, Optional, Tuple
 from .definitions import (AFTERNOON_SEND_TIME,
                           REDIS_URL,
-                          DATABASE_URL,
                           EVENING_SEND_TIME,
                           MORNING_SEND_TIME,
                           NUM_TOP_ACTIVITIES,

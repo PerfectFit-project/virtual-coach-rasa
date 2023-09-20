@@ -8,7 +8,6 @@ from virtual_coach_db.helper import (Components,
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
 from .definitions import (activities_categories, COMMITMENT, CONSENSUS,
-                          DATABASE_URL,
                           NUM_TOP_ACTIVITIES,
                           OPT_POLICY, STATE_FEATURE_MEANS,
                           REFLECTIVE_QUESTION_COMMITMENT,

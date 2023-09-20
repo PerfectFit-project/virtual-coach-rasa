@@ -296,7 +296,7 @@ class ShowChosenCopingActivity(Action):
 
         activity_id = activities_slot[chosen_option - 1]
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         instructions = (
             session.query(

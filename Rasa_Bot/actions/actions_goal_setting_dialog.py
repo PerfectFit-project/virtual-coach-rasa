@@ -154,7 +154,7 @@ class ActionGoalSettingChooseTestimonials(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 

@@ -228,7 +228,7 @@ class ActionGetPaGoalFromDb(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Creat session object to connect db
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         user_id = int(user_id)  # nicedayuid is an integer in the database
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()

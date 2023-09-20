@@ -94,7 +94,7 @@ def get_all_scheduled_occurrence(user_id: int,
             A list of UserInterventionState object is returned.
             In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     try:
         selected = (
@@ -139,7 +139,7 @@ def get_dialog_completion_state(user_id: int, dialog_name: str) -> Optional[bool
 
     component = get_intervention_component(dialog_name)
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -178,7 +178,7 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
             given user and intervention component. A UserInterventionState object is
             returned. In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -215,7 +215,7 @@ def get_last_scheduled_occurrence(user_id: int,
             given user and intervention component. A UserInterventionState object is
             returned. In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     try:
         selected = (
@@ -256,7 +256,7 @@ def get_next_scheduled_occurrence(user_id: int,
             given user and intervention component. A UserInterventionState object is
             returned. In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     try:
         selected = (
@@ -294,7 +294,7 @@ def get_current_phase(user_id: int) -> InterventionPhases:
             an InterventionPhases object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -331,7 +331,7 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
             The intervention component as an InterventionComponents object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -359,7 +359,7 @@ def get_hrs_last_branch(user_id: int) -> Optional[Components]:
     None otherwise
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     last_execution = (
         session.query(
@@ -459,7 +459,7 @@ def get_pa_group(user_id: int) -> int:
         Returns:
                 The PA group (1 or 2)
         """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     user = (session.query(Users).filter(Users.nicedayuid == user_id).first())
 
@@ -482,7 +482,7 @@ def get_phase_object(phase_name: str) -> InterventionPhases:
             The phase as an InterventionPhases object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     phases = (
         session.query(
@@ -511,7 +511,7 @@ def get_preferred_date_time(user_id: int) -> tuple:
     Returns: the list of preferred days and time
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
     users = (
         session.query(
             Users
@@ -547,7 +547,7 @@ def store_intervention_component_to_db(state: UserInterventionState):
 
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=state.users_nicedayuid).one()
 
     entry = UserInterventionState(
@@ -576,7 +576,7 @@ def get_start_date(user_id: int) -> date:
     Returns: the intervention starting date
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
@@ -598,7 +598,7 @@ def get_quit_date(user_id: int) -> date:
     Returns: the smoking quit starting date
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
@@ -621,7 +621,7 @@ def get_execution_week(user_id: int) -> int:
 
     """
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
@@ -680,7 +680,7 @@ def update_execution_week(user_id: int, week_number: int):
     Returns: the week number
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
@@ -701,7 +701,7 @@ def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
         dialog_running: value to be set in the dialog_running field of the fsm
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(UserStateMachine)
                 .filter(UserStateMachine.users_nicedayuid == user_id)
@@ -726,7 +726,7 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
 
     """
 
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     uncompleted = (
         session.query(
@@ -763,7 +763,7 @@ def run_uncompleted_dialog(user_id: int):
 
     if uncompleted is not None:
         # update the time in the DB and trigger it
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         component = (session.query(UserInterventionState)
                      .filter(UserInterventionState.id == uncompleted.id)
@@ -846,7 +846,7 @@ def store_rescheduled_dialog(user_id: int,
     # update the dialog entry, setting a new date an uuid
     if last_state is not None:
         last_state.last_time = datetime.now().astimezone(TIMEZONE)
-        session = get_db_session(DATABASE_URL)
+        session = get_db_session()
         selected = (session.query(UserInterventionState)
                     .filter(UserInterventionState.id == last_state.id)
                     .one())
@@ -893,7 +893,7 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
     # update the dialog entry, setting the `completed` filed to true
     if last_state is not None:
         last_state.last_time = datetime.now().astimezone(TIMEZONE)
-        session = get_db_session(DATABASE_URL)
+        session = get_db_session()
         selected = (session.query(UserInterventionState)
                     .filter(UserInterventionState.id == last_state.id)
                     .one())

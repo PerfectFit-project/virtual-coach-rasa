@@ -427,7 +427,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         return "action_get_future_self_repetition_from_database"
 
     async def run(self, dispatcher, tracker, domain):
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
         future_self_value = Components.FUTURE_SELF.value
 
@@ -481,7 +481,7 @@ class ActionStoreFutureSelfDialogState(Action):
 
     async def run(self, dispatcher, tracker, domain):
         step = tracker.get_slot("future_self_dialog_state")
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
         future_self_value = Components.FUTURE_SELF.value
 

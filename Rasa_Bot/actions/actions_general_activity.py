@@ -93,7 +93,7 @@ class CheckIfFirstExecutionGA(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         performed_activity = (
             session.query(
@@ -124,7 +124,7 @@ class GeneralActivityCheckRating(Action):
         rating_value = int(tracker.get_slot('activity_useful_rating'))
         activity_id = int(tracker.get_slot('last_activity_id_slot'))
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
 
         # get the highest scored activities
@@ -236,7 +236,7 @@ class CheckUserInputRequired(Action):
 
     async def run(self, dispatcher, tracker, domain):
         activity_id = tracker.get_slot('last_activity_id_slot')
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         is_input_required = (
             session.query(
@@ -361,7 +361,7 @@ class SaveDescriptionInDb(Action):
         user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
         row_id = user_inputs[-1].intervention_activities_performed_id
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         session.execute(
             update(InterventionActivitiesPerformed)
@@ -461,7 +461,7 @@ class GetLastPerformedActivity(Action):
     async def run(self, dispatcher, tracker, domain):
         # get the last completed activity from DB and populate the slot
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
         last_activity = (
             session.query(
@@ -537,7 +537,7 @@ class LoadActivity(Action):
         user_id = tracker.current_state()['sender_id']
 
         activity_id = activities_slot[chosen_option]
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
 
@@ -585,7 +585,7 @@ class LoadActivityDescription(Action):
         activities_slot = tracker.get_slot('rnd_activities_ids')
 
         activity_id = activities_slot[chosen_option]
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         # get the description
         descriptions = (
@@ -616,7 +616,7 @@ class SetSlotGeneralActivity(Action):
 
 
 def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     session.add(
         FirstAidKit(users_nicedayuid=user_id,
@@ -726,7 +726,7 @@ class SendPersuasiveMessageActivity(Action):
 
         activity_id = activities_slot[chosen_option - 1]
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         # Get the activity benefit
         activities = (

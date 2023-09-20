@@ -144,7 +144,7 @@ def dialog_to_be_completed(user_id: int) -> bool:
 
     """
 
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     uncompleted = (
         session.query(
@@ -173,7 +173,7 @@ def get_last_completed_dialog_part_from_db(user_id: int,
                                            intervention_component_id: int):
     """Get last completed dialog part from db."""
 
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     # Get most recent uncompleted entry for component from db
     selected = (
@@ -204,7 +204,7 @@ def get_last_completed_dialog_part_from_db(user_id: int,
 def get_goal_setting_chosen_sport_from_db(user_id: int):
     """Get chosen sport from db for user."""
 
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -229,7 +229,7 @@ def store_dialog_part_to_db(user_id: int, intervention_component_id: int,
                             part: int):
     """Store that part of dialog has been completed in db."""
 
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -301,7 +301,7 @@ def store_profile_creation_data_to_db(user_id: int, godin_activity_level: int,
         Nothing.
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
 
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
@@ -330,7 +330,7 @@ def store_long_term_pa_goal_to_db(user_id: int, long_term_pa_goal: str):
             Nothing
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.long_term_pa_goal = long_term_pa_goal
     session.commit()
@@ -349,7 +349,7 @@ def store_quit_date_to_db(user_id: int, quit_date: str):
         Nothing
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.quit_date = datetime.strptime(quit_date, '%d-%m-%Y')
     session.commit()
@@ -368,7 +368,7 @@ def store_goal_setting_chosen_sport_to_db(user_id: int, chosen_sport: str):
         Nothing
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.goal_setting_chosen_sport = chosen_sport
     session.commit()
@@ -389,7 +389,7 @@ def store_dialog_closed_answer_to_db(user_id: int, question_id: int, answer_valu
                 nothing
 
     """
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     # The answers to the closed questions are pre-defined and initialized in the DB.
     # To have a unique known ID for the answers that we can use to store the user's response,
@@ -415,7 +415,7 @@ def store_pf_evaluation_to_db(user_id: int, pf_evaluation_grade: int, pf_evaluat
 
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     selected.pf_evaluation_grade = pf_evaluation_grade
     selected.pf_evaluation_comment = pf_evaluation_comment
@@ -424,7 +424,7 @@ def store_pf_evaluation_to_db(user_id: int, pf_evaluation_grade: int, pf_evaluat
 
 
 def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     user_inputs = (
         session.query(
@@ -489,7 +489,7 @@ def store_dialog_open_answer_to_db(user_id: int, question_id: int, answer_value:
 
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
     entry = DialogOpenAnswers(question_id=question_id,
@@ -511,7 +511,7 @@ def get_activities_from_id(activity_id: int) -> InterventionActivity:
                 The InterventionActivity correspondent to the activity_id
 
         """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     activity = (
         session.query(
@@ -539,7 +539,7 @@ def get_current_user_phase(user_id: int) -> str:
                     The name of the current phase of the user state machine
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     user_fsm = (
         session.query(
@@ -605,7 +605,7 @@ def get_dialog_completion_state(user_id: int, dialog: str) -> Optional[bool]:
 
     """
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -638,7 +638,7 @@ def get_execution_week(user_id: int) -> int:
     Returns:  number of weeks spent in the execution phase
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     user = (
         session.query(
@@ -666,7 +666,7 @@ def get_intervention_component_id(intervention_component_name: str) -> int:
         Returns:
                 The intervention_component_id stored in the DB
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -725,7 +725,7 @@ def get_random_activities(avoid_activity_id: int, number_of_activities: int
                     The list of number_of_activities random InterventionActivities
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     available_activities = (
         session.query(
@@ -820,7 +820,7 @@ def get_intensity_minutes_goal(user_id: int) -> int:
     Returns: the current intensity minutes weekly goal
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
     weekly_goal = user_info.pa_intensity_minutes_weekly_goal
@@ -839,7 +839,7 @@ def set_intensity_minutes_goal(user_id: int, goal: int):
 
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
@@ -858,7 +858,7 @@ def get_pa_group(user_id: int) -> int:
     Returns: the pa group of the user
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
@@ -878,7 +878,7 @@ def set_pa_group_to_db(user_id: int, pa_group: int):
 
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     user_info = (session.query(Users).filter(Users.nicedayuid == user_id).one())
 
@@ -897,7 +897,7 @@ def get_start_date(user_id: int) -> date:
     Returns: the intervention starting date
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
@@ -920,7 +920,7 @@ def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswe
                     All the answers that the user has given for the given question
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     closed_answers = (
         session.query(
@@ -957,7 +957,7 @@ def get_all_closed_answers(question_id: int) -> List[ClosedAnswers]:
                     All the possible answers to the question specified
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     closed_answers = (
         session.query(
@@ -992,7 +992,7 @@ def get_open_answers(user_id: int, question_id: int) -> List[DialogOpenAnswers]:
                 The open answers that the user has given for the question.
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     open_answers = (
         session.query(
@@ -1028,7 +1028,7 @@ def get_user(user_id: int) -> Users:
                     The user info stored in the database
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     user_info = (
         session.query(
@@ -1055,7 +1055,7 @@ def is_activity_done(activity_id: int) -> bool:
     Returns: True if the activity has been already completed, false otherwise
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
     activities = (
         session.query(
             InterventionActivitiesPerformed
@@ -1081,7 +1081,7 @@ def get_user_intervention_state(user_id: int) -> List[UserInterventionState]:
                     The intervention state
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     intervention_state = (
         session.query(
@@ -1119,7 +1119,7 @@ def get_user_intervention_state_hrs(user_id: int) -> List[UserInterventionState]
                     The intervention state for the hrs dialogs
 
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     hrs_components = [Components.RELAPSE_DIALOG_HRS, Components.RELAPSE_DIALOG_RELAPSE,
                       Components.RELAPSE_DIALOG_LAPSE]
@@ -1310,7 +1310,7 @@ def make_step_overview(date_array: List[str], step_array: List[int], step_goal: 
 
 
 def get_faik_text(user_id):
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     kit_text = ""
     filled = False  # Whether the first aid kit has content
@@ -1355,7 +1355,7 @@ def get_weekly_intensity_minutes_goal_from_db(user_id: int) -> int:
     """
 
     # Creat session object to connect db
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
     selected = session.query(Users).filter_by(nicedayuid=user_id).one()
     pa_goal = selected.pa_intensity_minutes_weekly_goal
     session.close()
@@ -1377,7 +1377,7 @@ def get_smoked_cigarettes_range(user_id: int,
 
     Returns: the number of smoked cigarettes reported by the user.
     """
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     cigarettes = 0
 

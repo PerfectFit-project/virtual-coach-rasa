@@ -901,7 +901,8 @@ responses:
              Typ '1' voor nee.\n
              Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte omin beweging te komen? 🛑\n
+    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte om in beweging te komen?
+             🛑\n
              Typ '1' voor nee.\n
              Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "

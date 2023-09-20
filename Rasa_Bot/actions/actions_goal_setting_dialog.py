@@ -628,6 +628,9 @@ class ActionGetGoalSettingBaselineSteps(Action):
         start = end - timedelta(days=9)
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
 
+        if not steps_data:
+            return [SlotSet("goal_setting_baseline_steps", 0)]
+
         baseline_steps_total = sum(day['steps'] for day in steps_data)
 
         baseline_steps = round(baseline_steps_total/len(steps_data))  # Calculate avg. per day

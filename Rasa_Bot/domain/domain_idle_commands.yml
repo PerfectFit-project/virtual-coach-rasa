@@ -35,7 +35,7 @@ responses:
     - text: "Tot nu toe heb je {idle_commands_today_steps} stappen gezet vandaag. 🚶🏃"
 
   utter_idle_commands_today_goal:
-    - text: "Het stappendoel voor vandaag is {pa_goal} stappen. 🎯"
+    - text: "Het stappendoel voor vandaag is {notifications_daily_step_goal} stappen. 🎯"
 
 actions:
   - action_select_menu

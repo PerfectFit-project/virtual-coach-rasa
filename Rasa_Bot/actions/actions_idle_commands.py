@@ -173,6 +173,10 @@ class ActionIdleCommandsTodaySteps(Action):
 
         # get number of steps from today
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
-        today_steps = steps_data[0]['steps']
+        if not steps_data:
+            dispatcher.utter_message(text="De gegevens van het horloge komen niet binnen, zorg"
+                                          "ervoor dat bluetooth aan staat op de telefoon")
+            return [SlotSet('idle_commands_today_steps', 0)]
 
+        today_steps = steps_data[0]['steps']
         return [SlotSet('idle_commands_today_steps', today_steps)]

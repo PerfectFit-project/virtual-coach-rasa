@@ -294,6 +294,8 @@ class ActionClosingGetTotalNumberSteps(Action):
         # Get all steps stored
         steps_data = get_steps_data(user_id)
         # Sum all data
+        if not steps_data:
+            return [SlotSet('closing_total_steps_number', 0)]
         total_steps = sum(day['steps'] for day in steps_data)
 
         return [SlotSet('closing_total_steps_number', total_steps)]

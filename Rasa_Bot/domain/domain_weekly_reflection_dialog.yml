@@ -567,10 +567,14 @@ responses:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week nieuw of opnieuw gaat doen om niet te roken."
   utter_look_forward_11:
     - text: "Een voorbeeld is: 'Komende week ga ik mijn vrienden opnieuw vragen om niet te roken als ik erbij ben'. "
-  utter_look_forward_12:
-    - text: "Een ander voorbeeld is: 'Komende week ga ik buiten wandelen op momenten dat ik vroeger zou roken.' "
+  utter_look_forward_12_a:
+    - text: "Een ander voorbeeld is: 'Komende week ga ik buiten wandelen op momenten dat ik vroeger zou roken.'"
+  utter_look_forward_12_b:
+    - text: "Neem hier wat tijd voor."
   utter_ask_user_ready_1:
-    - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
+    - text: "Typ 'klaar' als je hier klaar mee bent."
+    - text: "Zodra je klaar bent, kun je verder gaan door 'klaar' te typen."
+    - text: "Laat me weten wanneer je klaar bent door 'klaar' te typen."
   utter_look_forward_13:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je altijd even kan terugkijken wat je had
              bedacht. Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren. Je kan anders ook een
@@ -897,7 +901,8 @@ responses:
              Typ '1' voor nee.\n
              Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte omin beweging te komen? 🛑\n
+    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte om in beweging te komen?
+             🛑\n
              Typ '1' voor nee.\n
              Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "

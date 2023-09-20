@@ -452,7 +452,8 @@ rules:
   - action: utter_look_forward_9
   - action: utter_look_forward_10
   - action: utter_look_forward_11
-  - action: utter_look_forward_12
+  - action: utter_look_forward_12_a
+  - action: utter_look_forward_12_b
   - action: user_ready_1_form
   - active_loop: user_ready_1_form
   wait_for_user_input: false

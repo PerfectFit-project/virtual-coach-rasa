@@ -291,6 +291,9 @@ class GoalsSettingState(State):
                           planned_date=new_date,
                           phase=1)
 
+    def on_new_day(self, current_date: date):
+        self.check_if_end_date(current_date)
+
     def on_user_trigger(self, dialog):
         # the relapse dialog is not available in this phase
         if dialog == Components.CONTINUE_UNCOMPLETED_DIALOG:
@@ -381,6 +384,19 @@ class GoalsSettingState(State):
                        dialog=Components.GOAL_SETTING,
                        planned_date=gs_time,
                        phase_id=1)
+
+    def check_if_end_date(self, current_date: date):
+        quit_date = get_quit_date(self.user_id)
+
+        if current_date >= quit_date:
+            logging.info('Goals setting state ended, starting execution state')
+
+            # on the quit date, notify the user that today is the quit date
+            if current_date == quit_date:
+                celery.send_task(TRIGGER_INTENT,
+                                 (self.user_id, NotificationsTriggers.QUIT_DATE_NOTIFICATION))
+
+            self.set_new_state(ExecutionRunState(self.user_id))
 
 
 class BufferState(State):

@@ -13,6 +13,11 @@ rules:
   - slot_was_set:
     - last_completed_goal_setting_dialog_part: -1
   - action: utter_goal_setting_greeting
+  - action: launch_ga_rescheduling
+
+- rule: continue after rescheduling
+  steps:
+  - action: action_continue_goal_setting
   - action: how_doing_form
   - active_loop: how_doing_form
   wait_for_user_input: false

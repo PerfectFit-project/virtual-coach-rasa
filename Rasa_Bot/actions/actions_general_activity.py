@@ -8,7 +8,6 @@ from virtual_coach_db.helper import (Components,
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
 from .definitions import (activities_categories, COMMITMENT, CONSENSUS,
-                          DATABASE_URL,
                           NUM_TOP_ACTIVITIES,
                           OPT_POLICY, STATE_FEATURE_MEANS,
                           REFLECTIVE_QUESTION_COMMITMENT,
@@ -93,7 +92,7 @@ class CheckIfFirstExecutionGA(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = tracker.current_state()['sender_id']
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         performed_activity = (
             session.query(
@@ -107,6 +106,8 @@ class CheckIfFirstExecutionGA(Action):
 
         # if the query result is empty, no activity has been performed yet
         first_execution = not bool(performed_activity)
+
+        session.close()
 
         return [SlotSet("general_activity_first_execution", first_execution)]
 
@@ -122,7 +123,7 @@ class GeneralActivityCheckRating(Action):
         rating_value = int(tracker.get_slot('activity_useful_rating'))
         activity_id = int(tracker.get_slot('last_activity_id_slot'))
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
 
         # get the highest scored activities
@@ -166,6 +167,8 @@ class GeneralActivityCheckRating(Action):
             )
 
             session.commit()
+
+        session.close()
 
         if rating_value > lowest_score:
             return [SlotSet("general_activity_low_high_rating", 'high')]
@@ -232,7 +235,7 @@ class CheckUserInputRequired(Action):
 
     async def run(self, dispatcher, tracker, domain):
         activity_id = tracker.get_slot('last_activity_id_slot')
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         is_input_required = (
             session.query(
@@ -242,6 +245,8 @@ class CheckUserInputRequired(Action):
                 InterventionActivity.intervention_activity_id == activity_id
             ).all()
         )
+
+        session.close()
 
         return [SlotSet("is_user_input_required", is_input_required[0].user_input_required)]
 
@@ -355,7 +360,7 @@ class SaveDescriptionInDb(Action):
         user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
         row_id = user_inputs[-1].intervention_activities_performed_id
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         session.execute(
             update(InterventionActivitiesPerformed)
@@ -366,6 +371,7 @@ class SaveDescriptionInDb(Action):
         )
 
         session.commit()
+        session.close()
 
         return []
 
@@ -454,7 +460,7 @@ class GetLastPerformedActivity(Action):
     async def run(self, dispatcher, tracker, domain):
         # get the last completed activity from DB and populate the slot
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
         last_activity = (
             session.query(
@@ -469,8 +475,13 @@ class GetLastPerformedActivity(Action):
         if last_activity is not None:
             activity_title = last_activity[0].intervention_activity.intervention_activity_title
             activity_id = last_activity[0].intervention_activity.intervention_activity_id
+
+            session.close()
+
             return [SlotSet("last_activity_slot", activity_title),
                     SlotSet("last_activity_id_slot", activity_id)]
+
+        session.close()
 
         return [SlotSet("last_activity_slot", None),
                 SlotSet("last_activity_id_slot", None)]
@@ -525,7 +536,7 @@ class LoadActivity(Action):
         user_id = tracker.current_state()['sender_id']
 
         activity_id = activities_slot[chosen_option]
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         user_inputs = get_user_intervention_activity_inputs(user_id, activity_id)
 
@@ -555,6 +566,9 @@ class LoadActivity(Action):
 
         # prompt the message
         dispatcher.utter_message(text=instructions[0].intervention_activity_full_instructions)
+
+        session.close()
+
         return []
     
     
@@ -570,7 +584,7 @@ class LoadActivityDescription(Action):
         activities_slot = tracker.get_slot('rnd_activities_ids')
 
         activity_id = activities_slot[chosen_option]
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         # get the description
         descriptions = (
@@ -579,12 +593,16 @@ class LoadActivityDescription(Action):
             )
             .filter(
                 InterventionActivity.intervention_activity_id == activity_id
-            ).all()
+            ).one_or_none()
         )
+
+        description = descriptions.intervention_activity_description
+
+        session.close()
 
         # prompt the message
         return [SlotSet("general_activity_chosen_activity_description_slot",
-                        descriptions[0].intervention_activity_description)]
+                        description)]
 
 
 class SetSlotGeneralActivity(Action):
@@ -597,7 +615,7 @@ class SetSlotGeneralActivity(Action):
 
 
 def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     session.add(
         FirstAidKit(users_nicedayuid=user_id,
@@ -605,6 +623,7 @@ def save_activity_to_fak(user_id: int, activity_id: int, rating_value: int):
                     activity_rating=rating_value)
     )
     session.commit()
+    session.close()
 
 
 class ValidatePersuasionReflectionForm(FormValidationAction):
@@ -706,7 +725,7 @@ class SendPersuasiveMessageActivity(Action):
 
         activity_id = activities_slot[chosen_option - 1]
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         # Get the activity benefit
         activities = (
@@ -743,6 +762,7 @@ class SendPersuasiveMessageActivity(Action):
             dispatcher.utter_message(text=CONSENSUS[message_idx] + " " + benefit)
             reflective_question = REFLECTIVE_QUESTION_CONSENSUS
 
+        session.close()
         return [SlotSet("persuasion_type", pers_type),
                 SlotSet("persuasive_message_index", message_idx),
                 SlotSet("persuasion_requires_input", input_required),

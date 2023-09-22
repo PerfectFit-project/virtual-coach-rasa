@@ -16,9 +16,9 @@ from state_machine.const import (REDIS_URL, TIMEZONE, MAXIMUM_DIALOG_DURATION, N
 from typing import Optional
 from celery_utils import (check_if_physical_relapse, check_if_task_executed, check_if_user_active,
                           check_if_user_exists, create_new_user, get_component_name, get_user_fsm,
-                          get_dialog_state, get_all_fsm, get_scheduled_task_from_db,
-                          save_state_machine_to_db, send_fsm_event, set_dialog_running_status,
-                          update_scheduled_task_db, update_task_uuid_db)
+                          get_dialog_state, get_all_fsm, get_intervention_component_by_id,
+                          get_scheduled_task_from_db, save_state_machine_to_db, send_fsm_event,
+                          set_dialog_running_status, update_scheduled_task_db, update_task_uuid_db)
 from virtual_coach_db.helper.definitions import (NotificationsTriggers, ComponentsTriggers,
                                                  Components)
 
@@ -66,7 +66,7 @@ def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     # check if the user is active and send notification
     sender.add_periodic_task(crontab(hour=10, minute=00), check_inactivity.s())
     # check if the user is in physical relapse
-    # sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
+    sender.add_periodic_task(crontab(hour=10, minute=00), check_physical_relapse.s())
     # check if a dialog has been completed
     sender.add_periodic_task(MAXIMUM_DIALOG_DURATION, check_dialogs_status.s())
     # check if new connections are pending and, in case, accept them
@@ -91,9 +91,10 @@ def restore_scheduled_tasks():
         # if the tasks saved in the DB is not in the list of the scheduled tasks
         if db_task.task_uuid not in tasks_list:
             # reschedule the task
+            component = get_intervention_component_by_id(db_task.intervention_component_id)
             new_task = trigger_scheduled_intervention_component.apply_async(
                 args=[db_task.users_nicedayuid,
-                      db_task.intervention_component.intervention_component_trigger],
+                      component.intervention_component_trigger],
                 eta=db_task.next_planned_date.astimezone(TIMEZONE))
 
             # update the uuid in the DB

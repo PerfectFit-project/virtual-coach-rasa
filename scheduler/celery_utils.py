@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from sensorapi.connector import get_steps_data, get_step_goals_and_steps
 from state_machine.const import (TIMEZONE, MAXIMUM_DIALOG_DURATION, NOTIFY,
-                                 NOT_RUNNING, RUNNING, EXPIRED, DATABASE_URL)
+                                 NOT_RUNNING, RUNNING, EXPIRED)
 from state_machine.controller import (OnboardingState, TrackingState, GoalsSettingState,
                                       BufferState, ExecutionRunState, RelapseState, ClosingState,
                                       CompletedState)
@@ -23,9 +23,11 @@ def check_if_user_exists(user_id: int) -> bool:
         user_id: the ID of the user
     Returns: True if the user exists, false otherwise
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     users = (session.query(Users).filter(Users.nicedayuid == user_id).all())
+
+    session.close()
 
     if len(users) > 0:
         return True
@@ -42,7 +44,7 @@ def check_if_user_active(user_id: int, current_date: date, days_number) -> bool:
         days_number: number of days to check the inactivity
     Returns: True if the user has been active, false otherwise
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     latest_date = current_date - timedelta(days=days_number)
 
@@ -60,10 +62,11 @@ def check_if_user_active(user_id: int, current_date: date, days_number) -> bool:
     )
 
     # there is at least one completed dialog in past days
-    if last_completed is not None:
-        return True
+    completed = bool(last_completed)
 
-    return False
+    session.close()
+
+    return completed
 
 
 def check_if_physical_relapse(user_id: int, current_date: datetime) -> bool:
@@ -110,7 +113,7 @@ def check_if_task_executed(task_uuid: str) -> bool:
         task_uuid: the ID of the task
     Returns: True if the dialog has been already completed
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     tasks = (session.query(UserInterventionState)
              .filter(
@@ -120,9 +123,12 @@ def check_if_task_executed(task_uuid: str) -> bool:
              .all())
 
     if len(tasks) > 0:
-        return False
+        completed = False
+    else:
+        completed = True
 
-    return True
+    session.close()
+    return completed
 
 
 def create_new_user(user_id: int):
@@ -140,10 +146,12 @@ def create_new_user(user_id: int):
     new_user_profile = create_new_user_profile(user_id)
     new_fsm = create_new_user_fsm(user_id)
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
     session.merge(new_user_profile)
     session.merge(new_fsm)
     session.commit()
+
+    session.close()
 
 
 def create_new_user_profile(user_id: int) -> Users:
@@ -208,13 +216,22 @@ def get_all_fsm_from_db() -> List[UserStateMachine]:
        user_state_machine table on the DB
 
        """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     fsm_db = (session.query(UserStateMachine)
               .filter(UserStateMachine.state != State.COMPLETED)
               .all())
 
-    return fsm_db
+    fsm_copy = [UserStateMachine(state_machine_id=fsm.state_machine_id,
+                                 users_nicedayuid=fsm.users_nicedayuid,
+                                 state=fsm.state,
+                                 dialog_running=fsm.dialog_running,
+                                 dialog_start_time=fsm.dialog_start_time,
+                                 intervention_component_id=fsm.intervention_component_id)
+                for fsm in fsm_db]
+    session.close()
+
+    return fsm_copy
 
 
 def get_component_name(intervention_component_trigger: str) -> str:
@@ -230,7 +247,7 @@ def get_component_name(intervention_component_trigger: str) -> str:
             The intervention component name.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -241,8 +258,9 @@ def get_component_name(intervention_component_trigger: str) -> str:
         )
         .first()
     )
-
-    return selected.intervention_component_name
+    component_name = selected.intervention_component_name
+    session.close()
+    return component_name
 
 
 def get_dialog_state(state_machine: StateMachine) -> int:
@@ -295,7 +313,7 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
             The intervention component as an InterventionComponents object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -304,10 +322,43 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
         .filter(
             InterventionComponents.intervention_component_name == intervention_component_name
         )
-        .all()
+        .one_or_none()
     )
 
-    return selected[0]
+    session.expunge(selected)
+    session.close()
+
+    return selected
+
+
+def get_intervention_component_by_id(intervention_component_id: int) -> InterventionComponents:
+    """
+    Get the intervention component as stored in the DB from the
+    intervention component's name.
+
+    Args:
+        intervention_component_id: the id of the intervention component
+
+    Returns:
+            The intervention component as an InterventionComponents object.
+
+    """
+    session = get_db_session()
+
+    selected = (
+        session.query(
+            InterventionComponents
+        )
+        .filter(
+            InterventionComponents.intervention_component_id == intervention_component_id
+        )
+        .one_or_none()
+    )
+
+    session.expunge(selected)
+    session.close()
+
+    return selected
 
 
 def get_user_fsm(user_id: int) -> StateMachine:
@@ -323,7 +374,6 @@ def get_user_fsm(user_id: int) -> StateMachine:
     fsm = get_user_fsm_from_db(user_id)
 
     state_saved = fsm.state
-    component_saved = fsm.intervention_component
 
     if state_saved == State.ONBOARDING:
         state = OnboardingState(user_id)
@@ -352,10 +402,23 @@ def get_user_fsm(user_id: int) -> StateMachine:
     else:
         state = OnboardingState(user_id)
 
+    session = get_db_session()
+
+    component_saved = (
+        session.query(
+            InterventionComponents
+        )
+        .filter(
+            InterventionComponents.intervention_component_id == fsm.intervention_component_id
+        )
+        .one()
+    )
+
     dialog_state = DialogState(running=fsm.dialog_running,
                                starting_time=fsm.dialog_start_time,
                                current_dialog=component_saved.intervention_component_name)
 
+    session.close()
     user_fsm = StateMachine(state, dialog_state)
 
     return user_fsm
@@ -370,7 +433,7 @@ def get_scheduled_task_from_db() -> List[UserInterventionState]:
 
     now = datetime.now().astimezone(TIMEZONE)
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     tasks = (session.query(UserInterventionState)
              .filter(
@@ -380,7 +443,19 @@ def get_scheduled_task_from_db() -> List[UserInterventionState]:
         UserInterventionState.next_planned_date >= now)
              .all())
 
-    return tasks
+    tasks_copy = [UserInterventionState(id=task.id,
+                                        users_nicedayuid=task.users_nicedayuid,
+                                        intervention_phase_id=task.intervention_phase_id,
+                                        intervention_component_id=task.intervention_component_id,
+                                        completed=task.completed,
+                                        last_time=task.last_time,
+                                        last_part=task.last_part,
+                                        next_planned_date=task.next_planned_date,
+                                        task_uuid=task.task_uuid) for task in tasks]
+
+    session.close()
+
+    return tasks_copy
 
 
 def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
@@ -392,11 +467,14 @@ def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
     Returns: The UserStateMachine object representing the user_state_machine table on the DB
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     fsm_db = (session.query(UserStateMachine)
               .filter(UserStateMachine.users_nicedayuid == user_id)
               .first())
+
+    session.expunge(fsm_db)
+    session.close()
 
     return fsm_db
 
@@ -431,7 +509,7 @@ def update_scheduled_task_db(user_id: int, task_uuid: str):
         user_id: the ID of the user to send the trigger to
         task_uuid: uuid of the task
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     task_entry = (session.query(UserInterventionState)
                   .filter(UserInterventionState.users_nicedayuid == user_id,
@@ -439,6 +517,7 @@ def update_scheduled_task_db(user_id: int, task_uuid: str):
                   .one_or_none())
 
     if task_entry is None:
+        session.close()
         return
 
     # update the last time value to the current time
@@ -453,6 +532,8 @@ def update_scheduled_task_db(user_id: int, task_uuid: str):
         task_entry.completed = True
 
     session.commit()
+
+    session.close()
 
 
 def save_user_to_db(user: Users):
@@ -469,9 +550,11 @@ def save_user_to_db(user: Users):
         logging.warning('User profile already in the DB')
         return
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
     session.merge(user)
     session.commit()
+
+    session.close()
 
 
 def save_state_machine_to_db(state_machine: StateMachine):
@@ -492,9 +575,11 @@ def save_state_machine_to_db(state_machine: StateMachine):
     if user_fsm is not None:
         fsm_db.state_machine_id = user_fsm.state_machine_id
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
     session.merge(fsm_db)
     session.commit()
+
+    session.close()
 
 
 def send_fsm_event(user_id: int, event: Event):
@@ -544,7 +629,7 @@ def update_task_uuid_db(old_uuid: str, new_uuid: str):
 
     """
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     task = (session.query(UserInterventionState)
             .filter(
@@ -556,3 +641,5 @@ def update_task_uuid_db(old_uuid: str, new_uuid: str):
         task.task_uuid = new_uuid
 
         session.commit()
+
+    session.close()

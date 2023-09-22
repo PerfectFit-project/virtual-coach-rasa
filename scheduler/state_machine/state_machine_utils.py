@@ -786,6 +786,8 @@ def save_fsm_state_in_db(user_id: int, state: str):
         session.merge(user_fsm)
         session.commit()
 
+    session.close()
+
 
 def store_rescheduled_dialog(user_id: int,
                              dialog_id: int,

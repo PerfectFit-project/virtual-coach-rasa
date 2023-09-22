@@ -11,4 +11,4 @@ sqlalchemy
 git+https://github.com/PerfectFit-project/virtual-coach-db@v1.0.0
 git+https://github.com/PerfectFit-project/pa-algorithms
 git+https://github.com/PerfectFit-project/niceday_client@v0.1.5
-git+https://github.com/PerfectFit-project/virtual-coach-rasa@sensors-testing#subdirectory=sensor_api
+git+https://github.com/PerfectFit-project/virtual-coach-rasa@main#subdirectory=sensor_api

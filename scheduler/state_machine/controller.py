@@ -13,6 +13,7 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                reschedule_dialog,
                                                retrieve_tracking_day, revoke_execution,
                                                run_uncompleted_dialog, run_option_menu,
+                                               save_fsm_state_in_db,
                                                schedule_next_execution, store_completed_dialog,
                                                store_scheduled_dialog, update_execution_week,
                                                update_fsm_dialog_running_status)
@@ -116,6 +117,7 @@ class OnboardingState(State):
 
     def run(self):
         logging.info('Onboarding State running')
+        save_fsm_state_in_db(self.user_id, self.state)
         # the first dialog is the introduction video
         plan_and_store(user_id=self.user_id,
                        dialog=Components.PREPARATION_INTRODUCTION,
@@ -227,6 +229,7 @@ class TrackingState(State):
 
     def run(self):
         logging.info('Starting Tracking state')
+        save_fsm_state_in_db(self.user_id, self.state)
 
         current_date = date.today()
         self.check_if_end_date(current_date)
@@ -290,6 +293,9 @@ class GoalsSettingState(State):
                           dialog=dialog,
                           planned_date=new_date,
                           phase=1)
+
+    def on_new_day(self, current_date: date):
+        self.check_if_end_date(current_date)
 
     def on_user_trigger(self, dialog):
         # the relapse dialog is not available in this phase
@@ -364,6 +370,7 @@ class GoalsSettingState(State):
                                  last_date=last_date)
 
     def run(self):
+        save_fsm_state_in_db(self.user_id, self.state)
 
         start_date = get_start_date(self.user_id)
 
@@ -382,6 +389,19 @@ class GoalsSettingState(State):
                        planned_date=gs_time,
                        phase_id=1)
 
+    def check_if_end_date(self, current_date: date):
+        quit_date = get_quit_date(self.user_id)
+
+        if current_date >= quit_date:
+            logging.info('Goals setting state ended, starting execution state')
+
+            # on the quit date, notify the user that today is the quit date
+            if current_date == quit_date:
+                celery.send_task(TRIGGER_INTENT,
+                                 (self.user_id, NotificationsTriggers.QUIT_DATE_NOTIFICATION))
+
+            self.set_new_state(ExecutionRunState(self.user_id))
+
 
 class BufferState(State):
 
@@ -392,6 +412,7 @@ class BufferState(State):
 
     def run(self):
         logging.info('Buffer State running')
+        save_fsm_state_in_db(self.user_id, self.state)
         # if the user sets the quit date to the day after the goal
         # setting dialog, the buffer phase can also be immediately over
         self.check_if_end_date(date.today())
@@ -587,6 +608,7 @@ class ExecutionRunState(State):
 
     def run(self):
         logging.info("Running state %s", self.state)
+        save_fsm_state_in_db(self.user_id, self.state)
 
         # if the execution week is not 0, it means that we are returning to
         # this state after a relapse, and the week should not be reset.
@@ -686,6 +708,7 @@ class RelapseState(State):
 
     def run(self):
         logging.info("Running state %s", self.state)
+        save_fsm_state_in_db(self.user_id, self.state)
 
     def on_dialog_completed(self, dialog):
         logging.info('A dialog has been completed  %s ', dialog)
@@ -807,6 +830,7 @@ class ClosingState(State):
 
     def run(self):
         logging.info("Running state %s", self.state)
+        save_fsm_state_in_db(self.user_id, self.state)
         # plan the execution of the closing dialog
 
         closing_date = get_next_planned_date(
@@ -856,6 +880,7 @@ class CompletedState(State):
 
     def run(self):
         logging.info("Running state %s", self.state)
+        save_fsm_state_in_db(self.user_id, self.state)
 
     def on_user_trigger(self, dialog):
         return

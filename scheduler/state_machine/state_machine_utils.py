@@ -823,6 +823,30 @@ def retrieve_tracking_day(user_id: int, current_date: date) -> int:
     return tracking_day
 
 
+def save_fsm_state_in_db(user_id: int, state: str):
+    """
+    Save the state in the fsm in the db
+    Args:
+        user_id: id of the user
+        state: state to be saved
+
+    """
+    session = get_db_session()
+
+    user_fsm = (session.query(UserStateMachine)
+                .filter(UserStateMachine.users_nicedayuid == user_id)
+                .first())
+
+    # if a machine already exists, use the same primary key to update the row
+    if user_fsm is not None:
+        user_fsm.state = state
+
+        session.merge(user_fsm)
+        session.commit()
+
+    session.close()
+
+
 def store_rescheduled_dialog(user_id: int,
                              dialog_id: int,
                              phase_id: int,

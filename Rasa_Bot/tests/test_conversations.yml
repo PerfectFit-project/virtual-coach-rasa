@@ -68,3 +68,13 @@ stories:
   - action: utter_default
   - action: action_select_menu
   - action: action_end_dialog
+
+- story: Test stappendoel
+  steps:
+  - user: |
+      doel
+    intent: doel_intent
+  - action: action_idle_commands_today_steps
+  - action: action_notifications_get_daily_step_goal
+  - action: utter_idle_commands_today_steps
+  - action: utter_idle_commands_today_goal

@@ -59,6 +59,14 @@ rules:
   - action: action_set_medication_video_link
   - action: action_launch_watch_video_dialog
 
+- rule: doel command
+  steps:
+  - intent: doel_intent
+  - action: action_idle_commands_today_steps
+  - action: action_notifications_get_daily_step_goal
+  - action: utter_idle_commands_today_steps
+  - action: utter_idle_commands_today_goal
+
 - rule: continue dialog
   steps:
   - intent: continue_dialog_intent

@@ -817,6 +817,11 @@ def retrieve_tracking_day(user_id: int, current_date: date) -> int:
     else:
         start_date = track_dialog.last_time
 
+        try:
+            start_date = start_date.date()
+        except:
+            pass
+
         # add +1 because the count starts at day 1
         tracking_day = (current_date - start_date).days + 1
 

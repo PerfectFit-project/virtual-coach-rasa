@@ -7,7 +7,7 @@ from state_machine.controller import (OnboardingState, TrackingState, GoalsSetti
                                       CompletedState)
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
-from typing import List
+from typing import List, Optional
 from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
                                               UserStateMachine)
 from virtual_coach_db.helper.definitions import Components, Notifications
@@ -458,7 +458,7 @@ def get_scheduled_task_from_db() -> List[UserInterventionState]:
     return tasks_copy
 
 
-def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
+def get_user_fsm_from_db(user_id: int) -> Optional[UserStateMachine]:
     """
     Get the state machine as saved in the DB for a single user
     Args:
@@ -473,10 +473,15 @@ def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
               .filter(UserStateMachine.users_nicedayuid == user_id)
               .first())
 
-    session.expunge(fsm_db)
-    session.close()
+    if fsm_db is not None:
+        session.expunge(fsm_db)
 
-    return fsm_db
+        session.close()
+
+        return fsm_db
+    else:
+        session.close()
+        return None
 
 
 def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:

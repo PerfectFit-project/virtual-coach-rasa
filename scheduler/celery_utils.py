@@ -373,7 +373,10 @@ def get_user_fsm(user_id: int) -> StateMachine:
     """
     fsm = get_user_fsm_from_db(user_id)
 
-    state_saved = fsm.state
+    if fsm is None:
+        state_saved = State.ONBOARDING
+    else:
+        state_saved = fsm.state
 
     if state_saved == State.ONBOARDING:
         state = OnboardingState(user_id)

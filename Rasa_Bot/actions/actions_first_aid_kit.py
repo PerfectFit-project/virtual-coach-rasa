@@ -1,7 +1,7 @@
 import logging
 
 from . import validator
-from .definitions import DATABASE_URL, REDIS_URL, TRIGGER_INTENT
+from .definitions import REDIS_URL, TRIGGER_INTENT
 from .helper import (get_latest_bot_utterance,
                      get_user_intervention_activity_inputs,
                      get_faik_text, mark_completion)
@@ -121,7 +121,7 @@ class ActionFirstAidKitCheckUserInputRequired(Action):
         activity_id = tracker.get_slot('first_aid_kit_chosen_activity_slot')
 
         # Check in database if activity requires user input
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         selected = (
             session.query(
                 InterventionActivity
@@ -132,6 +132,8 @@ class ActionFirstAidKitCheckUserInputRequired(Action):
             )
 
         input_required = int(selected.user_input_required)
+
+        session.close()
 
         return [SlotSet('first_aid_kit_chosen_activity_input_required', 
                         input_required)]
@@ -171,7 +173,7 @@ class ActionFirstAidKitGetInstructions(Action):
         # Get ID of chosen activity
         activity_id = tracker.get_slot('first_aid_kit_chosen_activity_slot')
 
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         selected = (
             session.query(
                 InterventionActivity
@@ -182,6 +184,8 @@ class ActionFirstAidKitGetInstructions(Action):
             )
 
         instructions = selected.intervention_activity_full_instructions
+
+        session.close()
 
         return [SlotSet("first_aid_kit_instructions_slot", instructions)]
 

@@ -11,11 +11,13 @@ nlu:
   examples: |
     - "ehbo"
     - "ik wil ehbo"
+    - "mijn ehbo"
 
 - intent: uitleg_intent
   examples: |
     - "uitleg"
     - "ik wil een uitleg"
+    - "iutleg
 
 - intent: oefening_intent
   examples: |
@@ -28,6 +30,12 @@ nlu:
     - "medicijn"
     - "medicatie"
     - "medicijnen"
+
+- intent: doel_intent
+  examples: |
+    - "doel"
+    - "stappendoel"
+    - "deol"
 
 - intent: continue_dialog_intent
   examples: |

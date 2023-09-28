@@ -52,6 +52,10 @@ responses:
   utter_central_mode_options_medicatie:
     - text: "Typ 'medicatie' om de video over nicotinevervangende middelen en medicatie opnieuw te bekijken. 💊"
 
+  utter_central_mode_options_doel:
+    - text: "Typ 'doel' om te kijken hoeveel stappen je vandaag al gezet hebt en wat het stappendoel
+             van vandaag is. 🚶🏃"
+
   utter_central_mode_options_verder:
     - text: "Typ 'verder' om een onafgemaakte dialoog af te ronden. ✔"
 
@@ -61,7 +65,7 @@ responses:
             De Stoplijn is van maandag t/m vrijdag bereikbaar van 9 tot 17 uur."
 
   utter_help_not_available:
-    - text: "Je bent nu in de voorbereidingsfase. Je kunt ‘help’ gebruiken tijdens de uitvoeringsfase."
+    - text: "Je bent nu niet in de uitvoeringsfase. Je kunt 'help' gebruiken tijdens de uitvoeringsfase."
 
 
   utter_ehbo_not_available:

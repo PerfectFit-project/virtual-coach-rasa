@@ -28,19 +28,18 @@ slots:
       - type: custom
 
   step_goal_days:
-    type: categorical
-    values:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
+    type: float
     mappings:
       - type: custom
 
   intensity_minutes:
+    type: float
+    min_value: 0
+    max_value: 150
+    mappings:
+      - type: custom
+
+  intensity_minutes_goal_previous:
     type: float
     min_value: 0
     max_value: 150
@@ -568,10 +567,14 @@ responses:
     - text: "🖊️ Pak pen en papier en schrijf 1 of 2 dingen op die jij komende week nieuw of opnieuw gaat doen om niet te roken."
   utter_look_forward_11:
     - text: "Een voorbeeld is: 'Komende week ga ik mijn vrienden opnieuw vragen om niet te roken als ik erbij ben'. "
-  utter_look_forward_12:
-    - text: "Een ander voorbeeld is: 'Komende week ga ik buiten wandelen op momenten dat ik vroeger zou roken.' "
+  utter_look_forward_12_a:
+    - text: "Een ander voorbeeld is: 'Komende week ga ik buiten wandelen op momenten dat ik vroeger zou roken.'"
+  utter_look_forward_12_b:
+    - text: "Neem hier wat tijd voor."
   utter_ask_user_ready_1:
-    - text: "Neem hier wat tijd voor. Typ 'klaar' als je hier klaar mee bent. "
+    - text: "Typ 'klaar' als je hier klaar mee bent."
+    - text: "Zodra je klaar bent, kun je verder gaan door 'klaar' te typen."
+    - text: "Laat me weten wanneer je klaar bent door 'klaar' te typen."
   utter_look_forward_13:
     - text: "Mooi! Het is handig om je plan bij de hand te houden zodat je altijd even kan terugkijken wat je had
              bedacht. Je kan het papier bijvoorbeeld in het hoesje van je telefoon bewaren. Je kan anders ook een
@@ -702,7 +705,7 @@ responses:
     - text: "Dit overzicht toont het aantal stappen dat je hebt gezet en je persoonlijke stappendoel van de afgelopen week: "
     - text: "Bekijk hier je resultaten van afgelopen week: het aantal stappen dat je hebt gezet en je persoonlijke stappendoel: "
   utter_overview_group1_3:
-    - text: "Je hebt op {step_goal_days} dagen je stappendoel gehaald."
+    - text: "Je hebt op {step_goal_days} dagen je stappendoel (bijna) gehaald."
   utter_overview_group1_4:
     - text: "Fantastisch gedaan! 👏 Actiever worden is niet makkelijk. Knap dat je afgelopen week zo actief bent geweest."
     - text: "Geweldig gedaan! 👏 Het is niet gemakkelijk om actiever te worden, dus het is fantastisch om te zien dat je
@@ -744,7 +747,7 @@ responses:
   # 6b Overview physical activity group 2
   utter_overview_group2_1:
     - text: "Laten wij nu terugkijken op je beweging van afgelopen week. Je stappendoel 🦶🏼 stond elke dag op 8000
-             en daarnaast was het doel om minimaal {intensity_minutes_goal} minuten intensief te bewegen ☀."
+             en daarnaast was het doel om minimaal {intensity_minutes_goal_previous} minuten intensief te bewegen ☀."
   utter_overview_group2_2:
     - text: "Dit is het overzicht van jouw gezette stappen, persoonlijk stappendoel en intensieve bewegingsminuten
              van afgelopen week: "
@@ -756,7 +759,7 @@ responses:
     - text: "Bekijk hier je stappen, persoonlijk stappendoel en intensieve bewegingsminuten van de afgelopen week:"
     - text: "Een overzicht van je stappen, persoonlijk stappendoel en intensieve bewegingsminuten van afgelopen week vind je hier: "
   utter_overview_group2_3:
-    - text: "Je hebt op {step_goal_days} dagen je stappendoel gehaald en {intensity_minutes}
+    - text: "Je hebt op {step_goal_days} dagen je stappendoel (bijna) gehaald en {intensity_minutes}
              minuten intensief bewogen."
   utter_overview_group2_4:
     - text: "Fantastisch gedaan! 👏 Actiever worden is niet makkelijk. Knap dat je afgelopen week zo actief bent geweest.  "
@@ -898,7 +901,8 @@ responses:
              Typ '1' voor nee.\n
              Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
-    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte omin beweging te komen? 🛑\n
+    - text: "Heb je momenten gehad waarop het afgelopen week niet lukte om in beweging te komen?
+             🛑\n
              Typ '1' voor nee.\n
              Typ '2' voor ja.\n
              Typ '3' als je het niet weet. "
@@ -1425,10 +1429,12 @@ actions:
   - action_set_pa_group
   - action_set_intensity_minutes
   - action_set_intensity_minutes_goal
+  - action_set_intensity_minutes_goal_previous
   - action_set_step_goal_days
   - action_step_goal_utterances
   - action_get_week_number
   - action_get_long_term_pa_goal
+  - action_save_new_goal
   - action_set_slot_weekly_reflection
   - action_user_completed_hrs
   - action_show_pa_overview

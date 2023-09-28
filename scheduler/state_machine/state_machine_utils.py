@@ -3,7 +3,7 @@ from typing import Optional
 from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
-from state_machine.const import (DATABASE_URL, REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
+from state_machine.const import (REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
 from virtual_coach_db.dbschema.models import (ClosedAnswers, DialogClosedAnswers, DialogQuestions,
                                               InterventionComponents, InterventionPhases, Users,
@@ -94,7 +94,7 @@ def get_all_scheduled_occurrence(user_id: int,
             A list of UserInterventionState object is returned.
             In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     try:
         selected = (
@@ -110,9 +110,20 @@ def get_all_scheduled_occurrence(user_id: int,
             .all()
         )
     except NoResultFound:
-        selected = None
+        result = None
+    else:
+        result = [UserInterventionState(id=task.id,
+                                        users_nicedayuid=task.users_nicedayuid,
+                                        intervention_phase_id=task.intervention_phase_id,
+                                        intervention_component_id=task.intervention_component_id,
+                                        completed=task.completed,
+                                        last_time=task.last_time,
+                                        last_part=task.last_part,
+                                        next_planned_date=task.next_planned_date,
+                                        task_uuid=task.task_uuid) for task in selected]
+    session.close()
 
-    return selected
+    return result
 
 
 def get_dialog_completion_state(user_id: int, dialog_name: str) -> Optional[bool]:
@@ -128,7 +139,7 @@ def get_dialog_completion_state(user_id: int, dialog_name: str) -> Optional[bool
 
     component = get_intervention_component(dialog_name)
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -144,8 +155,11 @@ def get_dialog_completion_state(user_id: int, dialog_name: str) -> Optional[bool
     )
 
     if selected is not None:
-        return selected.completed
+        completed = selected.completed
+        session.close()
+        return completed
 
+    session.close()
     return None
 
 
@@ -164,7 +178,7 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
             given user and intervention component. A UserInterventionState object is
             returned. In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -178,6 +192,10 @@ def get_last_component_state(user_id: int, intervention_component_id: int) -> Us
         .limit(1)  # get only the first result
         .one_or_none()
     )
+    if selected is not None:
+        session.expunge(selected)
+
+    session.close()
 
     return selected
 
@@ -197,7 +215,7 @@ def get_last_scheduled_occurrence(user_id: int,
             given user and intervention component. A UserInterventionState object is
             returned. In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     try:
         selected = (
@@ -214,6 +232,9 @@ def get_last_scheduled_occurrence(user_id: int,
         )
     except NoResultFound:
         selected = None
+
+    session.expunge(selected)
+    session.close()
 
     return selected
 
@@ -235,7 +256,7 @@ def get_next_scheduled_occurrence(user_id: int,
             given user and intervention component. A UserInterventionState object is
             returned. In case no entry is found, it returns None
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     try:
         selected = (
@@ -252,7 +273,11 @@ def get_next_scheduled_occurrence(user_id: int,
             .one()
         )
     except NoResultFound:
-        selected = None
+        session.close()
+        return None
+
+    session.expunge(selected)
+    session.close()
 
     return selected
 
@@ -269,7 +294,7 @@ def get_current_phase(user_id: int) -> InterventionPhases:
             an InterventionPhases object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -285,6 +310,10 @@ def get_current_phase(user_id: int) -> InterventionPhases:
     )
 
     phase = selected[0].phase
+
+    session.expunge(phase)
+    session.close()
+
     return phase
 
 
@@ -302,7 +331,7 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
             The intervention component as an InterventionComponents object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (
         session.query(
@@ -311,10 +340,12 @@ def get_intervention_component(intervention_component_name: str) -> Intervention
         .filter(
             InterventionComponents.intervention_component_name == intervention_component_name
         )
-        .all()
+        .one_or_none()
     )
+    session.expunge(selected)
+    session.close()
 
-    return selected[0]
+    return selected
 
 
 def get_hrs_last_branch(user_id: int) -> Optional[Components]:
@@ -328,7 +359,7 @@ def get_hrs_last_branch(user_id: int) -> Optional[Components]:
     None otherwise
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     last_execution = (
         session.query(
@@ -347,6 +378,7 @@ def get_hrs_last_branch(user_id: int) -> Optional[Components]:
     )
 
     if last_execution is None:
+        session.close()
         return None
 
     last_answer = (
@@ -382,6 +414,8 @@ def get_hrs_last_branch(user_id: int) -> Optional[Components]:
         component = Components.RELAPSE_DIALOG_RELAPSE
     else:
         component = None
+
+    session.close()
 
     return component
 
@@ -425,9 +459,12 @@ def get_pa_group(user_id: int) -> int:
         Returns:
                 The PA group (1 or 2)
         """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     user = (session.query(Users).filter(Users.nicedayuid == user_id).first())
+
+    session.expunge(user)
+    session.close()
 
     return user.pa_intervention_group
 
@@ -445,7 +482,7 @@ def get_phase_object(phase_name: str) -> InterventionPhases:
             The phase as an InterventionPhases object.
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     phases = (
         session.query(
@@ -454,10 +491,13 @@ def get_phase_object(phase_name: str) -> InterventionPhases:
         .filter(
             InterventionPhases.phase_name == phase_name
         )
-        .all()
+        .one_or_none()
     )
 
-    return phases[0]
+    session.expunge(phases)
+    session.close()
+
+    return phases
 
 
 def get_preferred_date_time(user_id: int) -> tuple:
@@ -471,7 +511,7 @@ def get_preferred_date_time(user_id: int) -> tuple:
     Returns: the list of preferred days and time
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
     users = (
         session.query(
             Users
@@ -493,6 +533,8 @@ def get_preferred_date_time(user_id: int) -> tuple:
     else:
         preferred_time = None
 
+    session.close()
+
     return days_list, preferred_time
 
 
@@ -505,7 +547,7 @@ def store_intervention_component_to_db(state: UserInterventionState):
 
     """
 
-    session = get_db_session(db_url=DATABASE_URL)  # Create session object to connect db
+    session = get_db_session()  # Create session object to connect db
     selected = session.query(Users).filter_by(nicedayuid=state.users_nicedayuid).one()
 
     entry = UserInterventionState(
@@ -522,6 +564,8 @@ def store_intervention_component_to_db(state: UserInterventionState):
 
     session.commit()  # Update database
 
+    session.close()
+
 
 def get_start_date(user_id: int) -> date:
     """
@@ -532,13 +576,15 @@ def get_start_date(user_id: int) -> date:
     Returns: the intervention starting date
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
                 .one())
 
     start_date = selected.start_date
+
+    session.close()
 
     return start_date
 
@@ -552,13 +598,15 @@ def get_quit_date(user_id: int) -> date:
     Returns: the smoking quit starting date
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
                 .one())
 
     quit_date = selected.quit_date
+
+    session.close()
 
     return quit_date
 
@@ -573,13 +621,14 @@ def get_execution_week(user_id: int) -> int:
 
     """
 
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
                 .one())
-
     week_number = int(selected.execution_week)
+
+    session.close()
 
     return week_number
 
@@ -631,7 +680,7 @@ def update_execution_week(user_id: int, week_number: int):
     Returns: the week number
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(Users)
                 .filter(Users.nicedayuid == user_id)
@@ -640,6 +689,8 @@ def update_execution_week(user_id: int, week_number: int):
     selected.execution_week = week_number
 
     session.commit()
+
+    session.close()
 
 
 def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
@@ -650,7 +701,7 @@ def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
         dialog_running: value to be set in the dialog_running field of the fsm
 
     """
-    session = get_db_session(DATABASE_URL)
+    session = get_db_session()
 
     selected = (session.query(UserStateMachine)
                 .filter(UserStateMachine.users_nicedayuid == user_id)
@@ -659,6 +710,8 @@ def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
     selected.dialog_running = dialog_running
 
     session.commit()
+
+    session.close()
 
 
 def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
@@ -673,7 +726,7 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
 
     """
 
-    session = get_db_session(db_url=DATABASE_URL)
+    session = get_db_session()
 
     uncompleted = (
         session.query(
@@ -686,6 +739,10 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
         )
         .first()
     )
+
+    session.expunge(uncompleted)
+
+    session.close()
 
     if uncompleted is not None:
         return uncompleted
@@ -706,7 +763,7 @@ def run_uncompleted_dialog(user_id: int):
 
     if uncompleted is not None:
         # update the time in the DB and trigger it
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         component = (session.query(UserInterventionState)
                      .filter(UserInterventionState.id == uncompleted.id)
@@ -714,10 +771,12 @@ def run_uncompleted_dialog(user_id: int):
 
         component.last_time = datetime.now().astimezone(TIMEZONE)
         session.commit()
+
         celery.send_task(
             TRIGGER_COMPONENT,
             (user_id, component.intervention_component.intervention_component_trigger)
         )
+        session.close()
     else:
         run_option_menu(user_id)
 
@@ -748,9 +807,9 @@ def retrieve_tracking_day(user_id: int, current_date: date) -> int:
 
     """
     track_dialog_id = get_intervention_component(Components.PROFILE_CREATION)
-    track_dialog = get_last_component_state(user_id, track_dialog_id)
+    track_dialog = get_last_component_state(user_id, track_dialog_id.intervention_component_id)
 
-    # if the dialog has not been admnistered or not completed, return 0
+    # if the dialog has not been administered or not completed, return 0
     if track_dialog is None:
         tracking_day = 0
     elif not track_dialog.completed:
@@ -762,6 +821,30 @@ def retrieve_tracking_day(user_id: int, current_date: date) -> int:
         tracking_day = (current_date - start_date).days + 1
 
     return tracking_day
+
+
+def save_fsm_state_in_db(user_id: int, state: str):
+    """
+    Save the state in the fsm in the db
+    Args:
+        user_id: id of the user
+        state: state to be saved
+
+    """
+    session = get_db_session()
+
+    user_fsm = (session.query(UserStateMachine)
+                .filter(UserStateMachine.users_nicedayuid == user_id)
+                .first())
+
+    # if a machine already exists, use the same primary key to update the row
+    if user_fsm is not None:
+        user_fsm.state = state
+
+        session.merge(user_fsm)
+        session.commit()
+
+    session.close()
 
 
 def store_rescheduled_dialog(user_id: int,
@@ -787,7 +870,7 @@ def store_rescheduled_dialog(user_id: int,
     # update the dialog entry, setting a new date an uuid
     if last_state is not None:
         last_state.last_time = datetime.now().astimezone(TIMEZONE)
-        session = get_db_session(DATABASE_URL)
+        session = get_db_session()
         selected = (session.query(UserInterventionState)
                     .filter(UserInterventionState.id == last_state.id)
                     .one())
@@ -796,6 +879,9 @@ def store_rescheduled_dialog(user_id: int,
         selected.task_uuid = task_uuid
 
         session.commit()
+
+        session.close()
+
 
     # if for any reason the dialog starting was not recorded in the DB, create the entry
     else:
@@ -831,18 +917,22 @@ def store_completed_dialog(user_id: int, dialog: str, phase_id: int):
     # update the dialog entry, setting the `completed` filed to true
     if last_state is not None:
         last_state.last_time = datetime.now().astimezone(TIMEZONE)
-        session = get_db_session(DATABASE_URL)
+        session = get_db_session()
         selected = (session.query(UserInterventionState)
                     .filter(UserInterventionState.id == last_state.id)
                     .one())
 
+        uuid = selected.task_uuid
         selected.completed = True
 
         session.commit()
+
+        session.close()
+
         # if the user completes a dialog which was scheduled, we don't
         # want that to be re-proposed
-        if selected.task_uuid is not None:
-            celery.control.revoke(selected.task_uuid)
+        if uuid is not None:
+            celery.control.revoke(uuid)
 
     # if for any reason the dialog starting was not recorded in the DB, create the entry
     else:

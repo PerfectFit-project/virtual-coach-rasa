@@ -16,7 +16,7 @@ from rasa_sdk.forms import FormValidationAction
 from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 
-from .definitions import TIMEZONE, DATABASE_URL, NICEDAY_API_ENDPOINT
+from .definitions import TIMEZONE, NICEDAY_API_ENDPOINT
 
 
 # Get the user's age from the database.
@@ -30,7 +30,7 @@ class GetAgeFromDatabase(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database
@@ -70,7 +70,7 @@ class GetNameFromDatabase(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Creat session object to connect db
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         try:
             user_id = int(user_id)  # nicedayuid is an integer in the database

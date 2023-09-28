@@ -18,7 +18,7 @@ from virtual_coach_db.dbschema.models import (Users, DialogOpenAnswers,
                                               InterventionComponents,
                                               UserInterventionState)
 
-from .definitions import DialogQuestions, TIMEZONE, DATABASE_URL
+from .definitions import DialogQuestions, TIMEZONE
 from .helper import (store_dialog_open_answer_to_db,
                      get_intervention_component_id)
 
@@ -427,7 +427,7 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
         return "action_get_future_self_repetition_from_database"
 
     async def run(self, dispatcher, tracker, domain):
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
         future_self_value = Components.FUTURE_SELF.value
 
@@ -461,10 +461,13 @@ class ActionGetFutureSelfRepetitionFromDatabase(Action):
                                                                         user_id,
                                                                         question_id)
 
+            session.close()
+
             return [SlotSet("future_self_dialog_step_1_repetition", True),
                     SlotSet("future_self_dialog_smoker_words_prev", smoker_words),
                     SlotSet("future_self_dialog_mover_words_prev", mover_words)]
 
+        session.close()
         # No entry exists yet for user for the future self dialog in
         # the intervention state table
         return [SlotSet("future_self_dialog_step_1_repetition", False)]
@@ -478,7 +481,7 @@ class ActionStoreFutureSelfDialogState(Action):
 
     async def run(self, dispatcher, tracker, domain):
         step = tracker.get_slot("future_self_dialog_state")
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
         user_id = tracker.current_state()['sender_id']
         future_self_value = Components.FUTURE_SELF.value
 
@@ -523,5 +526,6 @@ class ActionStoreFutureSelfDialogState(Action):
                 logging.error("Error: User not in Users table")
 
         session.commit()  # Update database
+        session.close()
 
         return []

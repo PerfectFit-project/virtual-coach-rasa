@@ -819,7 +819,7 @@ def retrieve_tracking_day(user_id: int, current_date: date) -> int:
 
         try:
             start_date = start_date.date()
-        except:
+        except AttributeError:
             pass
 
         # add +1 because the count starts at day 1

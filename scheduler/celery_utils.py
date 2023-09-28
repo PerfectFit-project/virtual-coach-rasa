@@ -479,9 +479,9 @@ def get_user_fsm_from_db(user_id: int) -> Optional[UserStateMachine]:
         session.close()
 
         return fsm_db
-    else:
-        session.close()
-        return None
+
+    session.close()
+    return None
 
 
 def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:

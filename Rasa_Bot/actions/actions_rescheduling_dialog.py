@@ -27,8 +27,7 @@ class ActionContinueGeneralActivityDialog(Action):
     async def run(self, dispatcher, tracker, domain):
         if tracker.get_slot("dialog_to_continue") == 'goal_setting':
             return [FollowupAction('action_continue_goal_setting')]
-        else:
-            return [FollowupAction('check_if_first_execution_ga')]
+        return [FollowupAction('check_if_first_execution_ga')]
 
 
 class ActionResetReschedulingNowSlot(Action):

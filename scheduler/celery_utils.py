@@ -7,7 +7,7 @@ from state_machine.controller import (OnboardingState, TrackingState, GoalsSetti
                                       CompletedState)
 from state_machine.state import State
 from state_machine.state_machine import StateMachine, DialogState, Event
-from typing import List
+from typing import List, Optional
 from virtual_coach_db.dbschema.models import (InterventionComponents, Users, UserInterventionState,
                                               UserStateMachine)
 from virtual_coach_db.helper.definitions import Components, Notifications
@@ -373,52 +373,59 @@ def get_user_fsm(user_id: int) -> StateMachine:
     """
     fsm = get_user_fsm_from_db(user_id)
 
-    state_saved = fsm.state
-
-    if state_saved == State.ONBOARDING:
+    if fsm is None:
         state = OnboardingState(user_id)
-
-    elif state_saved == State.TRACKING:
-        state = TrackingState(user_id)
-
-    elif state_saved == State.GOALS_SETTING:
-        state = GoalsSettingState(user_id)
-
-    elif state_saved == State.BUFFER:
-        state = BufferState(user_id)
-
-    elif state_saved == State.EXECUTION_RUN:
-        state = ExecutionRunState(user_id)
-
-    elif state_saved == State.RELAPSE:
-        state = RelapseState(user_id)
-
-    elif state_saved == State.CLOSING:
-        state = ClosingState(user_id)
-
-    elif state_saved == State.COMPLETED:
-        state = CompletedState(user_id)
-
+        dialog_state = DialogState(running=False,
+                                   starting_time=datetime.now(tz=TIMEZONE),
+                                   current_dialog=Components.PREPARATION_INTRODUCTION)
     else:
-        state = OnboardingState(user_id)
+        state_saved = fsm.state
 
-    session = get_db_session()
+        if state_saved == State.ONBOARDING:
+            state = OnboardingState(user_id)
 
-    component_saved = (
-        session.query(
-            InterventionComponents
+        elif state_saved == State.TRACKING:
+            state = TrackingState(user_id)
+
+        elif state_saved == State.GOALS_SETTING:
+            state = GoalsSettingState(user_id)
+
+        elif state_saved == State.BUFFER:
+            state = BufferState(user_id)
+
+        elif state_saved == State.EXECUTION_RUN:
+            state = ExecutionRunState(user_id)
+
+        elif state_saved == State.RELAPSE:
+            state = RelapseState(user_id)
+
+        elif state_saved == State.CLOSING:
+            state = ClosingState(user_id)
+
+        elif state_saved == State.COMPLETED:
+            state = CompletedState(user_id)
+
+        else:
+            state = OnboardingState(user_id)
+
+        session = get_db_session()
+
+        component_saved = (
+            session.query(
+                InterventionComponents
+            )
+            .filter(
+                InterventionComponents.intervention_component_id == fsm.intervention_component_id
+            )
+            .one()
         )
-        .filter(
-            InterventionComponents.intervention_component_id == fsm.intervention_component_id
-        )
-        .one()
-    )
 
-    dialog_state = DialogState(running=fsm.dialog_running,
-                               starting_time=fsm.dialog_start_time,
-                               current_dialog=component_saved.intervention_component_name)
+        dialog_state = DialogState(running=fsm.dialog_running,
+                                   starting_time=fsm.dialog_start_time,
+                                   current_dialog=component_saved.intervention_component_name)
 
-    session.close()
+        session.close()
+
     user_fsm = StateMachine(state, dialog_state)
 
     return user_fsm
@@ -458,7 +465,7 @@ def get_scheduled_task_from_db() -> List[UserInterventionState]:
     return tasks_copy
 
 
-def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
+def get_user_fsm_from_db(user_id: int) -> Optional[UserStateMachine]:
     """
     Get the state machine as saved in the DB for a single user
     Args:
@@ -473,10 +480,15 @@ def get_user_fsm_from_db(user_id: int) -> UserStateMachine:
               .filter(UserStateMachine.users_nicedayuid == user_id)
               .first())
 
-    session.expunge(fsm_db)
-    session.close()
+    if fsm_db is not None:
+        session.expunge(fsm_db)
 
-    return fsm_db
+        session.close()
+
+        return fsm_db
+
+    session.close()
+    return None
 
 
 def map_state_machine_to_db(state_machine: StateMachine) -> UserStateMachine:

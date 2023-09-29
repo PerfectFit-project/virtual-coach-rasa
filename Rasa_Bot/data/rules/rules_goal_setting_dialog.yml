@@ -17,7 +17,6 @@ rules:
 
 - rule: continue after rescheduling
   steps:
-  - action: action_continue_goal_setting
   - action: how_doing_form
   - active_loop: how_doing_form
   wait_for_user_input: false

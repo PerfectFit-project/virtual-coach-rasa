@@ -241,7 +241,8 @@ class TrackingState(State):
         # at day 7 activity C2.9 has to be proposed
         start_date = get_start_date(self.user_id)
         choose_sport_completed = get_activity_completion_state(self.user_id, 29)
-        if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER and not choose_sport_completed:
+        if ((current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER
+                and not choose_sport_completed):
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)

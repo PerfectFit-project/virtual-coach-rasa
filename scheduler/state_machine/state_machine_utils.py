@@ -6,6 +6,7 @@ from sqlalchemy.exc import NoResultFound
 from state_machine.const import (REDIS_URL, TIMEZONE, TRIGGER_COMPONENT,
                                  SCHEDULE_TRIGGER_COMPONENT, TRIGGER_INTENT)
 from virtual_coach_db.dbschema.models import (ClosedAnswers, DialogClosedAnswers, DialogQuestions,
+                                              InterventionActivitiesPerformed,
                                               InterventionComponents, InterventionPhases, Users,
                                               UserStateMachine, UserInterventionState)
 from virtual_coach_db.helper.definitions import Components, ComponentsTriggers, DialogQuestionsEnum
@@ -74,6 +75,40 @@ def create_new_date(start_date: date,
                             tzinfo=TIMEZONE)
 
     return new_timedate
+
+
+def get_activity_completion_state(user_id: int, activity_id: int) -> Optional[bool]:
+    """
+    Get the completion state of an intervention activity
+    (they are completed in the general activity dialog)
+    Args:
+        user_id: the id of the user
+        activity_id: id of the activity, as reported in the intervention_activity table
+
+    Returns: True if the activity has been completed, False otherwise
+
+    """
+
+    session = get_db_session()
+
+    activities = (
+        session.query(
+            InterventionActivitiesPerformed
+        )
+        .filter(
+            InterventionActivitiesPerformed.users_nicedayuid == user_id,
+            InterventionActivitiesPerformed.intervention_activity_id == activity_id
+        )
+        .limit(1)  # get only the first result
+        .one_or_none()
+    )
+
+    if activities is not None:
+        session.close()
+        return True
+
+    session.close()
+    return False
 
 
 def get_all_scheduled_occurrence(user_id: int,

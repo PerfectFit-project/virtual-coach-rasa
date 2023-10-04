@@ -3,6 +3,7 @@ from celery import Celery
 from datetime import date, datetime, timedelta
 from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
+                                               get_activity_completion_state,
                                                get_all_scheduled_occurrence,
                                                get_last_component_state,
                                                get_next_planned_date, get_next_scheduled_occurrence,
@@ -239,8 +240,9 @@ class TrackingState(State):
 
         # at day 7 activity C2.9 has to be proposed
         start_date = get_start_date(self.user_id)
-        ga_completed = get_dialog_completion_state(self.user_id, Components.GENERAL_ACTIVITY)
-        if (current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER and not ga_completed:
+        choose_sport_completed = get_activity_completion_state(self.user_id, 29)
+        if ((current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER
+                and not choose_sport_completed):
             plan_and_store(user_id=self.user_id,
                            dialog=Components.GENERAL_ACTIVITY,
                            phase_id=1)
@@ -332,7 +334,7 @@ class GoalsSettingState(State):
         # this is the intro video to be sent the first time
         # the execution starts (not after lapse/relapse)
         quit_date = get_quit_date(self.user_id)
-        planned_date = create_new_date(start_date=quit_date)
+        planned_date = create_new_date(start_date=quit_date, minute=5)
 
         plan_and_store(user_id=self.user_id,
                        dialog=Components.EXECUTION_INTRODUCTION,

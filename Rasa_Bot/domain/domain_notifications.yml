@@ -123,9 +123,12 @@ responses:
     - text: "Zorg ervoor dat je het horloge draagt en controleer of bluetooth op de telefoon aan
              staat ⌚."
   utter_notifications_reminder_wear_watch_2:
-    - text: "Ook kan het helpen om de SenSeeAct app op de telefoon even te openen 📱."
-    - text: "Het openen van de SenSeeAct app op de telefoon kan ook helpen 📱."
-    - text: "De SenSeeAct app op de telefoon even openen kan ook helpen 📱."
+    - text: "Ook kan het helpen om de SenSeeAct app op de telefoon even te openen om te zorgen dat
+             de data goed binnenkomt 📱."
+    - text: "Het openen van de SenSeeAct app op de telefoon kan ook helpen om te zorgen dat de data
+             binnenkomt 📱."
+    - text: "Om te zorgen dat de data goed binnenkomt kan het helpen SenSeeAct app op de telefoon
+             even te openen 📱."
   utter_notifications_reminder_wear_watch_3:
     - text: "Mocht je even niet meer weten hoe je dit doet? Kijk dan in de handleiding die je van
              onderzoekers gekregen hebt of neem contact op met de onderzoekers voor hulp."
@@ -134,7 +137,7 @@ responses:
     - text: "Als je even niet meer weet hoe dit moet kun je in de handleiding kijken die je van de
              onderzoekers hebt gekregen. Je mag ook contact opnemen met de onderzoekers voor hulp."
   utter_notifications_contact_researcher_no_data:
-    - text: "Het lijkt er op dat de data van de smartwatch helaas niet goed binnenkomt. Neem contact
+    - text: "Het lijkt erop dat de data van de smartwatch helaas niet goed binnenkomt. Neem contact
              op met de onderzoeker. Dit kan via perfectfit@lumc.nl 📧"
 
 #forms:

@@ -81,6 +81,7 @@ class ActionNoticiationsCheckWatchWear(Action):
                 steps_data[-1]['steps'] < INACTIVE_THRESHOLD_STEPS:
             dispatcher.utter_message(response="utter_notifications_reminder_wear_watch_1")
             dispatcher.utter_message(response="utter_notifications_reminder_wear_watch_2")
+            dispatcher.utter_message(response="utter_notifications_reminder_wear_watch_3")
             return []
 
         return []

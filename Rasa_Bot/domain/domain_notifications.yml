@@ -116,22 +116,29 @@ responses:
     - text: "Succes! 💪🏼"
 
   utter_notifications_reminder_wear_watch_1:
-    - text: "Vergeet vandaag niet om het horloge om te doen en controleer of bluetooth op de
-             telefoon aan staat."
-    - text: "Controleer of bluetooth op de telefoon aan staan en vergeet natuurlijk niet het
-             horloge te dragen vandaag."
-    - text: "Zorg ervoor dat je het horloge draagt en controleer of bluetooth op de telefoon aan
-             staat."
+    - text: "Vergeet vandaag niet om het horloge om te doen en controleer of bluetooth op je
+             telefoon aan staat ⌚."
+    - text: "Controleer of bluetooth op je telefoon aan staan en vergeet natuurlijk niet het
+             horloge te dragen vandaag ⌚."
+    - text: "Zorg ervoor dat je het horloge draagt en controleer of bluetooth op je telefoon aan
+             staat ⌚."
   utter_notifications_reminder_wear_watch_2:
+    - text: "Ook kan het helpen om de SenSeeAct app op je telefoon even te openen om te zorgen dat
+             de jouw stappen goed doorkomen naar coach Sam 📱."
+    - text: "Het openen van de SenSeeAct app op je telefoon kan ook helpen om te zorgen dat de het
+             aantal stappen goed binnenkomt bij coach Sam 📱."
+    - text: "Om te zorgen dat het aantal stappen goed binnenkomt bij coach Sam kan het helpen
+             SenSeeAct app op je telefoon even te openen 📱."
+  utter_notifications_reminder_wear_watch_3:
     - text: "Mocht je even niet meer weten hoe je dit doet? Kijk dan in de handleiding die je van
-             onderzoekers gekregen hebt of neem contact op met de onderzoekers voor hulp."
+             de onderzoekers gekregen hebt of neem contact op met de onderzoekers voor hulp."
     - text: "In de handleiding die je hebt gekregen van de onderzoekers staat hoe je dit kunt doen.
-             Je mag ook de onderzoekers een bericht sturen voor hulp."
+             Je mag ook de onderzoekers een e-mail sturen voor hulp."
     - text: "Als je even niet meer weet hoe dit moet kun je in de handleiding kijken die je van de
              onderzoekers hebt gekregen. Je mag ook contact opnemen met de onderzoekers voor hulp."
   utter_notifications_contact_researcher_no_data:
-    - text: "Het lijkt er op dat de data van de smartwatch helaas niet goed binnenkomt. Neem contact
-             op met de onderzoeker."
+    - text: "Het lijkt erop dat de data van de smartwatch helaas niet goed binnenkomt. Neem contact
+             op met de onderzoeker. Dit kan via perfectfit@lumc.nl 📧"
 
 #forms:
 

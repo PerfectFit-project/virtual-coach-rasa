@@ -25,7 +25,8 @@ class ActionContinueGeneralActivityDialog(Action):
         return "action_continue_with_general_activity"
 
     async def run(self, dispatcher, tracker, domain):
-
+        if tracker.get_slot("dialog_to_continue") == 'goal_setting':
+            return [FollowupAction('how_doing_form')]
         return [FollowupAction('check_if_first_execution_ga')]
 
 

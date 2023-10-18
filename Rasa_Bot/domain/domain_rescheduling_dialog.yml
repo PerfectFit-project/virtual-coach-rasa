@@ -50,6 +50,7 @@ slots:
       - relapse_dialog_hrs
       - relapse_dialog_lapse
       - relapse_dialog_relapse
+      - goal_setting
     influence_conversation: true
     mappings:
       - type: custom

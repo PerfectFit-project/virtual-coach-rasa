@@ -6,7 +6,7 @@ from virtual_coach_db.dbschema.models import (Testimonials,
 from virtual_coach_db.helper.definitions import Components
 from virtual_coach_db.helper.helper_functions import get_db_session
 from . import validator
-from .definitions import DATABASE_URL, FILE_PATH_IMAGE_PA, TIMEZONE
+from .definitions import FILE_PATH_IMAGE_PA, TIMEZONE
 from .helper import (get_goal_setting_chosen_sport_from_db,
                      get_intervention_component_id, 
                      get_last_completed_dialog_part_from_db,
@@ -154,7 +154,7 @@ class ActionGoalSettingChooseTestimonials(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Create session object to connect db
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
 
@@ -179,6 +179,7 @@ class ActionGoalSettingChooseTestimonials(Action):
                                   key=lambda k: motiv_all[k],
                                   reverse = True)
 
+        session.close()
         return [SlotSet('goal_setting_testimonial_1',
                 selected[motiv_all_sorted[0]].testimonial_text),
                 SlotSet('goal_setting_testimonial_2',
@@ -627,6 +628,9 @@ class ActionGetGoalSettingBaselineSteps(Action):
         end = datetime.now()
         start = end - timedelta(days=9)
         steps_data = get_steps_data(user_id=user_id, start_date=start, end_date=end)
+
+        if not steps_data:
+            return [SlotSet("goal_setting_baseline_steps", 0)]
 
         baseline_steps_total = sum(day['steps'] for day in steps_data)
 

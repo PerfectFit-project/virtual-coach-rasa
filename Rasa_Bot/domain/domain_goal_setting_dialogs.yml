@@ -648,7 +648,6 @@ actions:
   - action_continue_change_pa_goal
   - action_continue_step_goal_pa
   - action_get_goal_setting_baseline_steps
-
   - validate_chosen_quit_date_form
   - validate_goal_setting_plan_finished_form
   - validate_how_doing_form

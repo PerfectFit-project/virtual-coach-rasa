@@ -12,7 +12,7 @@ from virtual_coach_db.dbschema.models import Users
 from virtual_coach_db.helper.helper_functions import get_db_session
 from virtual_coach_db.helper.definitions import (Components,
                                                  ComponentsTriggers)
-from .definitions import DATABASE_URL, NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
+from .definitions import NICEDAY_API_ENDPOINT, PAUSE_AND_TRIGGER, REDIS_URL
 from .helper import (get_latest_bot_utterance, get_smoked_cigarettes_range,
                      store_pf_evaluation_to_db, get_faik_text)
 from sensorapi.connector import get_steps_data
@@ -228,7 +228,7 @@ class ActionGetPaGoalFromDb(Action):
         user_id = tracker.current_state()['sender_id']
 
         # Creat session object to connect db
-        session = get_db_session(db_url=DATABASE_URL)
+        session = get_db_session()
 
         user_id = int(user_id)  # nicedayuid is an integer in the database
         selected = session.query(Users).filter_by(nicedayuid=user_id).one()
@@ -294,6 +294,8 @@ class ActionClosingGetTotalNumberSteps(Action):
         # Get all steps stored
         steps_data = get_steps_data(user_id)
         # Sum all data
+        if not steps_data:
+            return [SlotSet('closing_total_steps_number', 0)]
         total_steps = sum(day['steps'] for day in steps_data)
 
         return [SlotSet('closing_total_steps_number', total_steps)]

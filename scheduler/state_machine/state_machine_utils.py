@@ -46,7 +46,13 @@ def compute_next_day(selectable_days: list, current_date: datetime) -> date:
         next_weekday = selectable_days[0]
 
     # compute the date of the next selected day
-    next_date = today + timedelta((next_weekday - today_weekday) % 7)
+    # if the day computed is today, go to the next week
+    delta = (next_weekday - today_weekday) % 7
+
+    if delta == 0:
+        delta = 7
+
+    next_date = today + timedelta(delta)
 
     return next_date
 

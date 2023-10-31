@@ -438,7 +438,6 @@ def get_user_intervention_activity_inputs(user_id: int, activity_id: int):
     inputs_copy = [InterventionActivitiesPerformed(
         intervention_activities_performed_id=user_input.intervention_activities_performed_id,
         users_nicedayuid=user_input.users_nicedayuid,
-        intervention_component_id=user_input.intervention_component_id,
         intervention_activity_id=user_input.intervention_activity_id,
         completed_datetime=user_input.completed_datetime,
         user_input=user_input.user_input)
@@ -934,10 +933,8 @@ def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswe
     )
 
     answers_copy = [DialogClosedAnswers(
-        dialog_open_answers_id=answer.dialog_open_answers_id,
+        dialog_closed_answers_id=answer.dialog_closed_answers_id,
         users_nicedayuid=answer.users_nicedayuid,
-        question_id=answer.question_id,
-        answer_value=answer.answer_value,
         datetime=answer.datetime)
         for answer in closed_answers]
 

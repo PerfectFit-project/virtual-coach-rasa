@@ -144,10 +144,8 @@ def get_intensity_minutes_data(user_id: int,
         for hour in res_json:
             intensity_minutes += sum(val > HR_INTENSITY_THRESHOLD for val in hour['values'])
 
-        if intensity_minutes > MAX_VALUE_INTENSITY_GOAL:
-            return MAX_VALUE_INTENSITY_GOAL
+        return min(intensity_minutes, MAX_VALUE_INTENSITY_GOAL)
 
-        return intensity_minutes
 
     except ValueError:
         logging.error(f"Error in returned value from sensors: '{res}'")

@@ -73,7 +73,8 @@ class ActionNoticiationsCheckWatchWear(Action):
         days_insufficient = sum(np.array(steps) < INACTIVE_THRESHOLD_STEPS)
         # Check for last 3 days: if data is missing, or if present <1000
         if num_days == days_insufficient:
-            dispatcher.utter_message(response="utter_notifications_contact_researcher_no_data")
+            dispatcher.utter_message(response="utter_notifications_contact_researcher_no_data_1")
+            dispatcher.utter_message(response="utter_notifications_contact_researcher_no_data_2")
             return []
 
         # Check if yesterday is available in sensor data, or, if present < 1000

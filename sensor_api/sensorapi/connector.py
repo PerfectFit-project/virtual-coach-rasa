@@ -30,6 +30,7 @@ MIN_VALUE_STEP_GOAL = 2000
 MAX_VALUE_STEP_GOAL = 10000
 TOKEN_HEADER = 'X-PerfectFit-Auth-Token'
 PA_LAPSE_MODERATION = 0.95
+MAX_VALUE_INTENSITY_GOAL = 150
 
 
 # functions for sensors data querying
@@ -143,7 +144,8 @@ def get_intensity_minutes_data(user_id: int,
         for hour in res_json:
             intensity_minutes += sum(val > HR_INTENSITY_THRESHOLD for val in hour['values'])
 
-        return intensity_minutes
+        return min(intensity_minutes, MAX_VALUE_INTENSITY_GOAL)
+
 
     except ValueError:
         logging.error(f"Error in returned value from sensors: '{res}'")

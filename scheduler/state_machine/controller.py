@@ -620,11 +620,15 @@ class ExecutionRunState(State):
         # preferred day was in the running phase (i.e., after the quit date )
         if last_preferred_day != current_date and last_preferred_day > quit_date:
             component = get_intervention_component(Components.WEEKLY_REFLECTION)
+
+            # convert to datetime
+            pref_timedate = datetime.combine(last_preferred_day, datetime.min.time())
+
             # get the general activity dialog that have been scheduled after the
             # last preferred date
             next_scheduled = get_next_scheduled_occurrence(self.user_id,
                                                            component.intervention_component_id,
-                                                           last_preferred_day)
+                                                           pref_timedate)
             # if none have been scheduled, trigger one
             if not next_scheduled:
                 plan_and_store(user_id=self.user_id,

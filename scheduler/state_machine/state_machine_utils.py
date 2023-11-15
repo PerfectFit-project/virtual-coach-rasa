@@ -72,7 +72,10 @@ def compute_previous_day(user_id: int, current_date: date) -> date:
     date_time = get_preferred_date_time(user_id=user_id)
 
     # first element of the tuple is the list of days
-    pref_day = date_time[0][0]
+    try:
+        pref_day = date_time[0][0]
+    except TypeError:
+        pref_day = 1
 
     days_to_pref_day = (current_date.isoweekday() - pref_day) % 7
     days_ago = (days_to_pref_day + 7) % 7

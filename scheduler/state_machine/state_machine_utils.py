@@ -57,6 +57,31 @@ def compute_next_day(selectable_days: list, current_date: datetime) -> date:
     return next_date
 
 
+def compute_previous_day(user_id: int, current_date: datetime) -> date:
+    """
+    Gets the date of the last preferred day for a user.
+
+    Args:
+        user_id: the id of the user
+        current_date: the date to start from
+
+    Returns:
+        The date of the last preferred day for a user.
+    """
+
+    date_time = get_preferred_date_time(user_id=user_id)
+
+    # first element of the tuple is the list of days
+    pref_day = date_time[0][0]
+
+    days_to_pref_day = (current_date.isoweekday() - pref_day) % 7
+    days_ago = (days_to_pref_day + 7) % 7
+
+    pref_day_before_today = current_date - timedelta(days=days_ago)
+
+    return pref_day_before_today
+
+
 def create_new_date(start_date: date,
                     time_delta: int = 0,
                     hour: int = 10,

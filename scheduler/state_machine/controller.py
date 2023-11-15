@@ -1,7 +1,8 @@
 import logging
 from celery import Celery
 from datetime import date, datetime, timedelta
-from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
+from state_machine.state_machine_utils import (compute_previous_day,
+                                               create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
                                                get_activity_completion_state,
                                                get_all_scheduled_occurrence,
@@ -607,6 +608,26 @@ class ExecutionRunState(State):
             # we don't compute directly the number of weeks, because in case of relapse, the
             # number of weeks doesn't increase
             update_execution_week(self.user_id, week_number + 1)
+
+        # if the preferred day is passed, and the weekly reflection has not been
+        # completed nor planned, send it now.
+
+        # get the date of the previous preferred day
+        last_preferred_day = compute_previous_day(self.user_id, current_date)
+
+        # make sure that today is not the preferred day
+        if last_preferred_day != current_date:
+            component = get_intervention_component(Components.WEEKLY_REFLECTION)
+            # get the general activity dialog that have been scheduled after the
+            # last preferred date
+            next_scheduled = get_next_scheduled_occurrence(self.user_id,
+                                                           component.intervention_component_id,
+                                                           last_preferred_day)
+            # if none have been scheduled, trigger one
+            if not next_scheduled:
+                plan_and_store(user_id=self.user_id,
+                               dialog=Components.WEEKLY_REFLECTION,
+                               phase_id=2)
 
     def run(self):
         logging.info("Running state %s", self.state)

@@ -614,9 +614,11 @@ class ExecutionRunState(State):
 
         # get the date of the previous preferred day
         last_preferred_day = compute_previous_day(self.user_id, current_date)
+        quit_date = get_quit_date()
 
-        # make sure that today is not the preferred day
-        if last_preferred_day != current_date:
+        # make sure that today is not the preferred day, and that the previous
+        # preferred day was in the running phase (i.e., after the quit date )
+        if last_preferred_day != current_date and last_preferred_day > quit_date:
             component = get_intervention_component(Components.WEEKLY_REFLECTION)
             # get the general activity dialog that have been scheduled after the
             # last preferred date

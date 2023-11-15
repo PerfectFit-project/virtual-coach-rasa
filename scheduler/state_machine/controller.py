@@ -17,7 +17,8 @@ from state_machine.state_machine_utils import (create_new_date, get_dialog_compl
                                                save_fsm_state_in_db,
                                                schedule_next_execution, store_completed_dialog,
                                                store_scheduled_dialog, update_execution_week,
-                                               update_fsm_dialog_running_status)
+                                               update_fsm_dialog_running_status,
+                                               dialogs_to_be_completed, get_component_id)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
                                  MAX_PREPARATION_DURATION, HIGH_PA_GROUP,
@@ -243,9 +244,12 @@ class TrackingState(State):
         choose_sport_completed = get_activity_completion_state(self.user_id, 29)
         if ((current_date - start_date).days >= ACTIVITY_C2_9_DAY_TRIGGER
                 and not choose_sport_completed):
-            plan_and_store(user_id=self.user_id,
-                           dialog=Components.GENERAL_ACTIVITY,
-                           phase_id=1)
+            if self.check_if_general_activity_dialog_exists():
+                run_uncompleted_dialog(self.user_id, dialog_preference=Components.GENERAL_ACTIVITY)
+            else:
+                plan_and_store(user_id=self.user_id,
+                               dialog=Components.GENERAL_ACTIVITY,
+                               phase_id=1)
 
         self.check_if_end_date(current_date)
 
@@ -257,6 +261,16 @@ class TrackingState(State):
             return True
 
         return False
+
+    def check_if_general_activity_dialog_exists(self):
+        """
+        Check if there is an uncompleted general activity dialog in the database for the given user.
+        """
+        general_activity_id = get_component_id(Components.GENERAL_ACTIVITY)
+        uncompleted_dialogs = dialogs_to_be_completed(self.user_id)
+        dialog_ids = list(map(lambda dialog: dialog.intervention_component_id, uncompleted_dialogs))
+
+        return general_activity_id in dialog_ids
 
 
 class GoalsSettingState(State):

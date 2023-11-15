@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from celery import Celery
 from datetime import datetime, date, timedelta
@@ -755,7 +755,7 @@ def update_fsm_dialog_running_status(user_id: int, dialog_running: bool):
     session.close()
 
 
-def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
+def dialogs_to_be_completed(user_id: int) -> List[UserInterventionState]:
     """
     Checks if a dialog has to be completed and, in this case returns it. If no dialogs have to be
     completed, it triggers the menu message without the option of resuming a dialog
@@ -778,29 +778,28 @@ def dialog_to_be_completed(user_id: int) -> Optional[UserInterventionState]:
             UserInterventionState.completed.is_(False),
             UserInterventionState.last_time.isnot(None)
         )
-        .first()
+        .all()
     )
 
-    session.expunge(uncompleted)
+    for dialog in uncompleted:
+        session.expunge(dialog)
 
     session.close()
 
-    if uncompleted is not None:
-        return uncompleted
-
-    return None
+    return uncompleted
 
 
-def run_uncompleted_dialog(user_id: int):
+def run_uncompleted_dialog(user_id: int, dialog_preference: Components = None):
     """
     Checks if a dialog has to be completed and, in this case runs it from the latest completed part.
 
     Args:
         user_id: ID of the user
+        dialog_preference: Dialog to prioritize when selecting which one to run
 
     """
-
-    uncompleted = dialog_to_be_completed(user_id)
+    uncompleted = dialogs_to_be_completed(user_id)
+    uncompleted = select_dialog_to_complete(uncompleted, dialog_preference)
 
     if uncompleted is not None:
         # update the time in the DB and trigger it
@@ -820,6 +819,60 @@ def run_uncompleted_dialog(user_id: int):
         session.close()
     else:
         run_option_menu(user_id)
+
+def select_dialog_to_complete(uncompleted_dialogs: List[UserInterventionState], dialog_preference: Components) -> \
+        Optional[UserInterventionState]:
+    """
+    Selects the dialog from the list of uncompleted dialogs for the user to go through with. If there is no preference,
+    then we select a random dialog which isn't a general activity dialog. If all else fails we take the first one.
+
+    Args:
+        uncompleted_dialogs: A list of dialogs that are marked as uncompleted in the database
+        dialog_preference: A specific dialog that takes priority for selection
+    """
+    if len(uncompleted_dialogs) == 0:
+        return None
+
+    general_activity_id = get_component_id(Components.GENERAL_ACTIVITY)
+
+    if dialog_preference is not None:
+        preference_id = get_component_id(dialog_preference)
+        for dialog in uncompleted_dialogs:
+            if dialog.intervention_component_id == preference_id:
+                return dialog
+    else:
+        for dialog in uncompleted_dialogs:
+            if dialog.intervention_component_id != general_activity_id:
+                return dialog
+
+    return uncompleted_dialogs[0]
+
+def get_component_id(dialog: Components) -> Optional[int]:
+    """
+    For a given dialog, retrieve its ID from the database.
+
+    Args:
+        dialog: The component for which to retrieve the ID
+    """
+    session = get_db_session()
+
+    intervention_component = (
+        session.query(
+            InterventionComponents
+        )
+        .filter(
+            InterventionComponents.intervention_component_name == dialog.value
+        )
+        .first()
+    )
+
+    session.close()
+
+    if intervention_component is None:
+        logging.error(dialog.value, " not found in the database")
+        return None
+
+    return intervention_component.intervention_component_id
 
 
 def run_option_menu(user_id: int):

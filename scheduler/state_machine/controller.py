@@ -1,7 +1,8 @@
 import logging
 from celery import Celery
 from datetime import date, datetime, timedelta
-from state_machine.state_machine_utils import (create_new_date, get_dialog_completion_state,
+from state_machine.state_machine_utils import (compute_previous_day,
+                                               create_new_date, get_dialog_completion_state,
                                                get_execution_week, get_intervention_component,
                                                get_activity_completion_state,
                                                get_all_scheduled_occurrence,
@@ -607,6 +608,32 @@ class ExecutionRunState(State):
             # we don't compute directly the number of weeks, because in case of relapse, the
             # number of weeks doesn't increase
             update_execution_week(self.user_id, week_number + 1)
+
+        # if the preferred day is passed, and the weekly reflection has not been
+        # completed nor planned, send it now.
+
+        # get the date of the previous preferred day
+        last_preferred_day = compute_previous_day(self.user_id, current_date)
+        quit_date = get_quit_date(self.user_id)
+
+        # make sure that today is not the preferred day, and that the previous
+        # preferred day was in the running phase (i.e., after the quit date )
+        if last_preferred_day != current_date and last_preferred_day > quit_date:
+            component = get_intervention_component(Components.WEEKLY_REFLECTION)
+
+            # convert to datetime
+            pref_timedate = datetime.combine(last_preferred_day, datetime.min.time())
+
+            # get the general activity dialog that have been scheduled after the
+            # last preferred date
+            next_scheduled = get_next_scheduled_occurrence(self.user_id,
+                                                           component.intervention_component_id,
+                                                           pref_timedate)
+            # if none have been scheduled, trigger one
+            if not next_scheduled:
+                plan_and_store(user_id=self.user_id,
+                               dialog=Components.WEEKLY_REFLECTION,
+                               phase_id=2)
 
     def run(self):
         logging.info("Running state %s", self.state)

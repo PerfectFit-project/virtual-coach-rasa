@@ -614,7 +614,7 @@ class ExecutionRunState(State):
 
         # get the date of the previous preferred day
         last_preferred_day = compute_previous_day(self.user_id, current_date)
-        quit_date = get_quit_date()
+        quit_date = get_quit_date(self.user_id)
 
         # make sure that today is not the preferred day, and that the previous
         # preferred day was in the running phase (i.e., after the quit date )

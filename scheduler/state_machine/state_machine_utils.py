@@ -57,7 +57,7 @@ def compute_next_day(selectable_days: list, current_date: datetime) -> date:
     return next_date
 
 
-def compute_previous_day(user_id: int, current_date: datetime) -> date:
+def compute_previous_day(user_id: int, current_date: date) -> date:
     """
     Gets the date of the last preferred day for a user.
 

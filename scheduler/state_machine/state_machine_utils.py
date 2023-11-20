@@ -793,7 +793,7 @@ def dialogs_to_be_completed(user_id: int) -> List[UserInterventionState]:
 
     session.close()
 
-    return uncompleted
+    return result
 
 
 def run_uncompleted_dialog(user_id: int, dialog_preference: Components = None):
@@ -837,7 +837,7 @@ def select_dialog_to_complete(uncompleted_dialogs: List[UserInterventionState], 
         uncompleted_dialogs: A list of dialogs that are marked as uncompleted in the database
         dialog_preference: A specific dialog that takes priority for selection
     """
-    if len(uncompleted_dialogs) == 0:
+    if uncompleted_dialogs is None or len(uncompleted_dialogs) == 0:
         return None
 
     general_activity_id = get_component_id(Components.GENERAL_ACTIVITY)
@@ -873,14 +873,14 @@ def get_component_id(dialog: Components) -> Optional[int]:
         .first()
     )
 
-    id = intervention_component.intervention_component_id
+    user_id = intervention_component.intervention_component_id
     session.close()
 
     if intervention_component is None:
         logging.error(dialog.value, " not found in the database")
         return None
 
-    return id
+    return user_id
 
 
 

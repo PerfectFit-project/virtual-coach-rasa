@@ -781,8 +781,15 @@ def dialogs_to_be_completed(user_id: int) -> List[UserInterventionState]:
         .all()
     )
 
-    for dialog in uncompleted:
-        session.expunge(dialog)
+    result = [UserInterventionState(id=task.id,
+                                        users_nicedayuid=task.users_nicedayuid,
+                                        intervention_phase_id=task.intervention_phase_id,
+                                        intervention_component_id=task.intervention_component_id,
+                                        completed=task.completed,
+                                        last_time=task.last_time,
+                                        last_part=task.last_part,
+                                        next_planned_date=task.next_planned_date,
+                                        task_uuid=task.task_uuid) for task in uncompleted]
 
     session.close()
 
@@ -866,13 +873,15 @@ def get_component_id(dialog: Components) -> Optional[int]:
         .first()
     )
 
+    id = intervention_component.intervention_component_id
     session.close()
 
     if intervention_component is None:
         logging.error(dialog.value, " not found in the database")
         return None
 
-    return intervention_component.intervention_component_id
+    return id
+
 
 
 def run_option_menu(user_id: int):

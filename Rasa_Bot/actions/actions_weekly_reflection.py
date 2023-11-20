@@ -282,6 +282,13 @@ class StepGoalUtterances(Action):
 
     async def run(self, dispatcher, tracker, domain):
         step_goal_days = tracker.get_slot('step_goal_days')
+        user_id = int(tracker.current_state()['sender_id'])
+
+        if step_goal_days is None:
+            logging.error(f'User id: {user_id}, dialog: weekly reflection,'
+                          'action: action_step_goal_utterances')
+            step_goal_days = 0
+
         if step_goal_days > 5:
             dispatcher.utter_message(response="utter_overview_group1_4")
         elif 3 < step_goal_days < 6:

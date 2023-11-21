@@ -1,5 +1,5 @@
+import logging
 from typing import Optional, List
-
 from celery import Celery
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import NoResultFound
@@ -827,11 +827,12 @@ def run_uncompleted_dialog(user_id: int, dialog_preference: Components = None):
     else:
         run_option_menu(user_id)
 
-def select_dialog_to_complete(uncompleted_dialogs: List[UserInterventionState], dialog_preference: Components) -> \
-        Optional[UserInterventionState]:
+def select_dialog_to_complete(uncompleted_dialogs: List[UserInterventionState],
+                dialog_preference: Components) -> Optional[UserInterventionState]:
     """
-    Selects the dialog from the list of uncompleted dialogs for the user to go through with. If there is no preference,
-    then we select a random dialog which isn't a general activity dialog. If all else fails we take the first one.
+    Selects the dialog from the list of uncompleted dialogs for the user to go through with.
+    If there is no preference, then we select a random dialog which isn't a general activity
+    dialog. If all else fails we take the first one.
 
     Args:
         uncompleted_dialogs: A list of dialogs that are marked as uncompleted in the database

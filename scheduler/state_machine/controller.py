@@ -414,7 +414,7 @@ class GoalsSettingState(State):
 
         if quit_date is None:
             logging.warning('Quit date is not found for user ', self.user_id)
-        elif quit_date is not None and current_date >= quit_date:
+        elif current_date >= quit_date:
             logging.info('Goals setting state ended, starting execution state')
 
             # on the quit date, notify the user that today is the quit date

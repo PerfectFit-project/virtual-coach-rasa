@@ -257,7 +257,10 @@ class TrackingState(State):
     def check_if_end_date(self, date_to_check: date) -> bool:
         tracking_day = retrieve_tracking_day(self.user_id, date_to_check)
         # the Goal Setting state starts on day 10 of the intervention
-        if tracking_day >= TRACKING_DURATION:
+
+        if tracking_day is None:
+            logging.warning(f'Tracking day is not found for user {self.user_id}')
+        elif tracking_day >= TRACKING_DURATION:
             self.set_new_state(GoalsSettingState(self.user_id))
             return True
 
@@ -409,7 +412,9 @@ class GoalsSettingState(State):
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
 
-        if current_date >= quit_date:
+        if quit_date is None:
+            logging.warning(f'Quit date is not found for user {self.user_id}')
+        elif current_date >= quit_date:
             logging.info('Goals setting state ended, starting execution state')
 
             # on the quit date, notify the user that today is the quit date
@@ -465,7 +470,9 @@ class BufferState(State):
     def check_if_end_date(self, current_date: date):
         quit_date = get_quit_date(self.user_id)
 
-        if current_date >= quit_date:
+        if quit_date is None:
+            logging.warning(f'Quit date is not found for user {self.user_id}')
+        elif current_date >= quit_date:
             logging.info('Buffer state ended, starting execution state')
 
             # on the quit date, notify the user that today is the quit date

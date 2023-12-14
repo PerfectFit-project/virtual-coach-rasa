@@ -8,6 +8,7 @@ rules:
   - action: utter_notifications_tracking_1
   - action: utter_notifications_tracking_2
   - action: utter_notifications_tracking_3
+  - action: action_notifications_check_watch_wear
   - action: pause_one_minute
 
 ## Step goal notification

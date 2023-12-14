@@ -38,7 +38,8 @@ class ActionCheckReasons(Action):
 
         if '6' in reasons:
             dispatcher.utter_message(response="utter_pa_sick")
-            return [FollowupAction("action_end_dialog")]
+            return [FollowupAction('action_end_dialog'),
+                    FollowupAction('mark_dialog_as_completed')]
 
         return []
 

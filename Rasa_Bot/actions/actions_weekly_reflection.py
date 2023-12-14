@@ -190,8 +190,8 @@ class GetWeekNumber(Action):
         user_info = get_user(user_id)
         exec_week = user_info.execution_week
         if exec_week > 11:
-            return [FollowupAction('action_end_dialog'),
-                    FollowupAction('mark_dialog_as_completed')]
+            return [FollowupAction('mark_dialog_as_completed'),
+                    FollowupAction('action_end_dialog')]
         return [SlotSet('week_number', str(exec_week))]
 
 

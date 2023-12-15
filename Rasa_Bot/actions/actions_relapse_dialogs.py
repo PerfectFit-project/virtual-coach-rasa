@@ -13,7 +13,8 @@ from .helper import (figure_has_data,
                      populate_fig,
                      store_dialog_closed_answer_list_to_db,
                      store_dialog_closed_answer_to_db,
-                     store_dialog_open_answer_to_db)
+                     store_dialog_open_answer_to_db,
+                     mark_completion)
 from celery import Celery
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, FollowupAction
@@ -36,10 +37,13 @@ class ActionCheckReasons(Action):
     async def run(self, dispatcher, tracker, domain):
         reasons = tracker.get_slot('pa_why_fail')
 
+        user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        slot = tracker.get_slot("current_intervention_component")
+
         if '6' in reasons:
             dispatcher.utter_message(response="utter_pa_sick")
-            return [FollowupAction('mark_dialog_as_completed'),
-                    FollowupAction('action_end_dialog')]
+            mark_completion(user_id, slot)
+            return [FollowupAction('action_end_dialog')]
 
         return []
 

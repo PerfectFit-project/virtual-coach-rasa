@@ -27,7 +27,8 @@ from .helper import (get_intensity_minutes_goal,
                      make_step_overview,
                      set_intensity_minutes_goal,
                      set_pa_group_to_db,
-                     store_dialog_part_to_db)
+                     store_dialog_part_to_db,
+                     mark_completion)
 from virtual_coach_db.helper.definitions import Components
 from sensorapi.connector import get_steps_data, get_step_goals_and_steps, get_intensity_minutes_data
 
@@ -187,11 +188,12 @@ class GetWeekNumber(Action):
 
     async def run(self, dispatcher, tracker, domain):
         user_id = int(tracker.current_state()['sender_id'])  # retrieve userID
+        slot = tracker.get_slot("current_intervention_component")
         user_info = get_user(user_id)
         exec_week = user_info.execution_week
         if exec_week > 11:
-            return [FollowupAction('mark_dialog_as_completed'),
-                    FollowupAction('action_end_dialog')]
+            mark_completion(user_id, slot)
+            return [FollowupAction('action_end_dialog')]
         return [SlotSet('week_number', str(exec_week))]
 
 

@@ -191,7 +191,7 @@ class GetWeekNumber(Action):
         slot = tracker.get_slot("current_intervention_component")
         user_info = get_user(user_id)
         exec_week = user_info.execution_week
-        if exec_week > 11:
+        if exec_week > 12:
             mark_completion(user_id, slot)
             return [FollowupAction('action_end_dialog')]
         return [SlotSet('week_number', str(exec_week))]

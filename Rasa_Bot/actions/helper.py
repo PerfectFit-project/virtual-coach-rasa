@@ -934,6 +934,7 @@ def get_closed_answers(user_id: int, question_id: int) -> List[DialogClosedAnswe
 
     answers_copy = [DialogClosedAnswers(
         dialog_closed_answers_id=answer.dialog_closed_answers_id,
+        closed_answers_id=answer.closed_answers_id,
         users_nicedayuid=answer.users_nicedayuid,
         datetime=answer.datetime)
         for answer in closed_answers]

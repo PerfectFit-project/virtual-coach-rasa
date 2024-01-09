@@ -9,8 +9,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
-  - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_week_number
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: -1
@@ -28,8 +28,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
-  - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_week_number
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 1
@@ -43,8 +43,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
-  - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_week_number
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 2
@@ -72,8 +72,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
-  - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_week_number
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 2
@@ -99,8 +99,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
-  - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_week_number
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 3
@@ -114,8 +114,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
-  - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_week_number
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 4
@@ -136,8 +136,8 @@ rules:
 - rule: Trigger weekly reflection dialog
   steps:
   - intent: EXTERNAL_weekly_reflection
-  - action: action_get_week_number
   - action: action_set_slot_weekly_reflection
+  - action: action_get_week_number
   - action: action_get_last_completed_weekly_reflection_part
   - slot_was_set:
     - last_completed_weekly_reflection_dialog_part: 5

@@ -31,11 +31,14 @@ class ActionSaveGoalSettingDialogPart1(Action):
         return "action_save_goal_setting_dialog_part1"
 
     async def run(self, dispatcher, tracker, domain):
+        # checks in which dialog the user is, and resumes the correct flow accordingly
+        current_dialog = tracker.get_slot('current_intervention_component')
 
-        store_dialog_part_to_db(tracker.current_state()['sender_id'], 
-                                get_intervention_component_id(Components.GOAL_SETTING), 
-                                part = 1)
-
+        if current_dialog == Components.GOAL_SETTING:
+            store_dialog_part_to_db(tracker.current_state()['sender_id'],
+                                    get_intervention_component_id(Components.GOAL_SETTING),
+                                    part=1)
+            
         return []
     
 

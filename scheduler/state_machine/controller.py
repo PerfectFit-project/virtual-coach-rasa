@@ -595,6 +595,23 @@ class ExecutionRunState(State):
                 # for the next week are planned
                 self.schedule_pa_notifications()
 
+
+            quit_date = get_quit_date(self.user_id)
+            current_date = date.today()
+
+            # if the quit date is in the future, it has been reset
+            # during the weekly reflection dialog
+            if quit_date > current_date:
+                # if a new quit date has been set, the weekly reflection might be rescheduled,
+                # a notification on the day before and on the new date are planned.
+                # Then we go back to the buffer state
+                self.reschedule_weekly_reflection(quit_date)
+                self.plan_new_date_notifications(quit_date)
+                self.set_new_state(BufferState(self.user_id))
+                store_completed_dialog(user_id=self.user_id,
+                                       dialog=Components.RELAPSE_DIALOG,
+                                       phase_id=3)
+
     def on_dialog_rescheduled(self, dialog, new_date):
 
         reschedule_dialog(user_id=self.user_id,

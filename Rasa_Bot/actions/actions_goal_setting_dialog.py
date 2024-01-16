@@ -199,6 +199,9 @@ class ActionGoalSettingContinueAfterPlan(Action):
             dispatcher.utter_message(response="utter_smoke_relapse_8")
             return [FollowupAction('relapse_medication_info_form')]
 
+        if current_dialog == Components.WEEKLY_REFLECTION:
+            return [FollowupAction('utter_look_forward_1')]
+
         if current_dialog == Components.GOAL_SETTING:
             return [FollowupAction('utter_goal_setting_pa_expl_1')]
 

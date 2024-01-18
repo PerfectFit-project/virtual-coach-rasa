@@ -9,7 +9,8 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers, DialogClosedAnswers
                                               InterventionActivitiesPerformed,
                                               InterventionComponents, InterventionPhases, Users,
                                               UserStateMachine, UserInterventionState)
-from virtual_coach_db.helper.definitions import Components, ComponentsTriggers, DialogQuestionsEnum, Notifications
+from virtual_coach_db.helper.definitions import (Components, ComponentsTriggers,
+                                                DialogQuestionsEnum, Notifications)
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)

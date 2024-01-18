@@ -13,13 +13,15 @@ from state_machine.state_machine_utils import (compute_previous_day,
                                                get_quit_date, get_pa_group, get_start_date,
                                                is_new_week, plan_and_store, plan_every_day_range,
                                                reschedule_dialog,
-                                               retrieve_tracking_day, revoke_execution,
+                                               retrieve_tracking_day,
                                                run_uncompleted_dialog, run_option_menu,
                                                save_fsm_state_in_db,
                                                schedule_next_execution, store_completed_dialog,
                                                store_scheduled_dialog, update_execution_week,
                                                update_fsm_dialog_running_status,
-                                               dialogs_to_be_completed, get_component_id)
+                                               dialogs_to_be_completed, get_component_id,
+                                               reschedule_weekly_reflection,
+                                               plan_new_date_notifications)
 from state_machine.const import (ACTIVITY_C2_9_DAY_TRIGGER, FUTURE_SELF_INTRO, GOAL_SETTING,
                                  TRACKING_DURATION, TIMEZONE, PREPARATION_GA, PAUSE_AND_TRIGGER,
                                  MAX_PREPARATION_DURATION, HIGH_PA_GROUP,
@@ -528,6 +530,23 @@ class ExecutionRunState(State):
         elif dialog == Components.WEEKLY_REFLECTION:
             logging.info('Weekly reflection completed')
 
+            quit_date = get_quit_date(self.user_id)
+            current_date = date.today()
+
+            # if the quit date is in the future, it has been reset
+            # during the weekly reflection dialog
+            if quit_date > current_date:
+                # if a new quit date has been set, the weekly reflection might be rescheduled,
+                # a notification on the day before and on the new date are planned.
+                # Then we go back to the buffer state
+                reschedule_weekly_reflection(self.user_id, quit_date)
+                plan_new_date_notifications(self.user_id, quit_date)
+                self.set_new_state(BufferState(self.user_id))
+                store_completed_dialog(user_id=self.user_id,
+                                       dialog=Components.RELAPSE_DIALOG,
+                                       phase_id=3)
+                return
+
             week = get_execution_week(user_id=self.user_id)
 
             # on the first week, the execution of the general activity dialog 
@@ -790,8 +809,8 @@ class RelapseState(State):
                 # if a new quit date has been set, the weekly reflection might be rescheduled,
                 # a notification on the day before and on the new date are planned.
                 # Then we go back to the buffer state
-                self.reschedule_weekly_reflection(quit_date)
-                self.plan_new_date_notifications(quit_date)
+                reschedule_weekly_reflection(self.user_id, quit_date)
+                plan_new_date_notifications(self.user_id, quit_date)
                 self.set_new_state(BufferState(self.user_id))
 
             else:
@@ -838,37 +857,6 @@ class RelapseState(State):
             plan_and_store(user_id=self.user_id,
                            dialog=dialog,
                            phase_id=3)
-
-    def plan_new_date_notifications(self, quit_date: date):
-        # plan the notification for the day before the quit date
-
-        quit_datetime = create_new_date(quit_date)
-
-        plan_and_store(user_id=self.user_id,
-                       dialog=Notifications.BEFORE_QUIT_NOTIFICATION,
-                       planned_date=quit_datetime - timedelta(days=1),
-                       phase_id=3)
-
-    def reschedule_weekly_reflection(self, quit_date: date):
-
-        component = get_intervention_component(Components.WEEKLY_REFLECTION)
-
-        next_occurrence = get_next_scheduled_occurrence(
-            user_id=self.user_id,
-            intervention_component_id=component.intervention_component_id,
-            current_date=datetime.now()
-        )
-
-        quit_datetime = create_new_date(quit_date)
-
-        if next_occurrence is not None and next_occurrence.next_planned_date < quit_datetime:
-            # revoke the planned task
-            revoke_execution(next_occurrence.task_uuid)
-            # plan a new one
-            schedule_next_execution(user_id=self.user_id,
-                                    dialog=Components.WEEKLY_REFLECTION,
-                                    current_date=quit_datetime,
-                                    phase_id=2)
 
 
 class ClosingState(State):

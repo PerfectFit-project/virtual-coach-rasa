@@ -368,6 +368,38 @@ rules:
   - active_loop: possible_smoking_situations_form
   wait_for_user_input: false
 
+- rule: Back to weekly reflection from goal setting, user has no data
+  steps:
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: action_check_barchart_difficult_situations_has_data
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: false
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
+
+- rule: Back to weekly reflection from goal setting, user has data
+  steps:
+  - action: utter_look_forward_1
+  - action: utter_look_forward_2
+  - action: utter_look_forward_3
+  - action: action_check_barchart_difficult_situations_has_data
+  - slot_was_set:
+    - figure_previous_difficult_smoking_situations_has_data: true
+  - action: utter_look_forward_4
+  - action: show_barchart_difficult_situations
+  - action: action_upload_file
+  - action: action_send_metadata
+  - action: action_delete_file
+  - action: utter_look_forward_5
+  - action: utter_look_forward_6
+  - action: possible_smoking_situations_form
+  - active_loop: possible_smoking_situations_form
+  wait_for_user_input: false
 
 ## User answered 2
 - rule: There were difficult moments

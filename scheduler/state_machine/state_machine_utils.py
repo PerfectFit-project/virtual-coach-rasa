@@ -9,7 +9,7 @@ from virtual_coach_db.dbschema.models import (ClosedAnswers, DialogClosedAnswers
                                               InterventionActivitiesPerformed,
                                               InterventionComponents, InterventionPhases, Users,
                                               UserStateMachine, UserInterventionState)
-from virtual_coach_db.helper.definitions import Components, ComponentsTriggers, DialogQuestionsEnum
+from virtual_coach_db.helper.definitions import Components, ComponentsTriggers, DialogQuestionsEnum, Notifications
 from virtual_coach_db.helper.helper_functions import get_db_session
 
 celery = Celery(broker=REDIS_URL)
@@ -1243,3 +1243,47 @@ def schedule_next_execution(user_id: int, dialog: str, phase_id: int, current_da
                    dialog=dialog,
                    planned_date=planned_date,
                    phase_id=phase_id)
+
+def plan_new_date_notifications(user_id: int, quit_date: date):
+    """
+    Plan the user notification for the day before the quit date
+    Args:
+        user_id: id of the user
+        quit_date: new quit date selected by user
+
+    """
+    quit_datetime = create_new_date(quit_date)
+
+    plan_and_store(user_id=user_id,
+                   dialog=Notifications.BEFORE_QUIT_NOTIFICATION,
+                   planned_date=quit_datetime - timedelta(days=1),
+                   phase_id=3)
+
+def reschedule_weekly_reflection(user_id: int, quit_date: date):
+    """
+    Reschedule the weekly reflection dialog to after the
+    new quit date
+    Args:
+        user_id: id of the user
+        quit_date: new quit date selected by user
+
+    """
+
+    component = get_intervention_component(Components.WEEKLY_REFLECTION)
+
+    next_occurrence = get_next_scheduled_occurrence(
+        user_id=user_id,
+        intervention_component_id=component.intervention_component_id,
+        current_date=datetime.now()
+    )
+
+    quit_datetime = create_new_date(quit_date)
+
+    if next_occurrence is not None and next_occurrence.next_planned_date < quit_datetime:
+        # revoke the planned task
+        revoke_execution(next_occurrence.task_uuid)
+        # plan a new one
+        schedule_next_execution(user_id=user_id,
+                                dialog=Components.WEEKLY_REFLECTION,
+                                current_date=quit_datetime,
+                                phase_id=2)

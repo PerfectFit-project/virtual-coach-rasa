@@ -50,10 +50,16 @@ responses:
              op je horloge kijken!"
     - text: "Vergeet ook niet om je horloge om te doen. ⌚ Wil je weten hoe actief je vandaag bent geweest? Kijk dan
              gewoon op je horloge!"
+  utter_notifications_tracking_4:
+    - text: "Om te zorgen dat ik jouw stappen kan zien, helpt het om de
+             RRD activity coach app (als je een iPhone hebt) of SenSeeAct app (als je een andere
+             telefoon hebt) op je telefoon iedere dag te openen 📱."
+    - text: "Als je iedere dag de RRD activity coach app (als je een iPhone hebt) of SenSeeAct app
+            (als je een andere telefoon hebt) opent, krijg ik jouw stappen beter binnen"
 
 # Step goal notification
   utter_notifications_step_goal_1a:
-    - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm op weer!"
+    - text: "Je stappendoel voor vandaag is: {notifications_daily_step_goal}. 🚶🏿 Zet 'm weer op!"
     - text: "Voor vandaag heb je als stappendoel: {notifications_daily_step_goal}. 🚶🏿 Succes, zet 'm op!"
     - text: "Vandaag is je stappendoel: {notifications_daily_step_goal}. 🚶🏿 Je kunt het!"
   utter_notifications_step_goal_1b:

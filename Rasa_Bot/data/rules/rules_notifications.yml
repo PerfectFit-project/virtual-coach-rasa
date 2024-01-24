@@ -8,6 +8,7 @@ rules:
   - action: utter_notifications_tracking_1
   - action: utter_notifications_tracking_2
   - action: utter_notifications_tracking_3
+  - action: utter_notifications_tracking_4
   - action: action_notifications_check_watch_wear
   - action: pause_one_minute
 
@@ -20,6 +21,7 @@ rules:
   - action: utter_notifications_step_goal_1a
   - action: utter_notifications_step_goal_1b
   - action: utter_notifications_step_goal_2
+  - action: utter_notifications_tracking_4
   - action: action_notifications_check_watch_wear
   - action: pause_one_minute
 
